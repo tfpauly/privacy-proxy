@@ -16,11 +16,11 @@ This repository collects various specifications and Internet drafts that will be
 
 ## The Geohash HTTP Client Hint
 
-* [Markdown](https://github.com/tfpauly/privacy-proxy/blob/main/draft-geohash-hint.md)
+* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-geohash-hint.html)
 
-## HTTP CONNECT DNS Metadata Header Fields
+## HTTP Header Fields for Proxied SVCB Metadata
 
-* [Markdown](https://github.com/tfpauly/privacy-proxy/blob/main/draft-ppw-httpbis-connect-dns-metadata.md)
+* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-proxied-svcb-headers.html)
 
 ## Oblivious DNS Over HTTPS
 
