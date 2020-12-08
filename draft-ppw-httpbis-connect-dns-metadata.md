@@ -55,10 +55,6 @@ benefit from having the "echconfig" SVCB parameter, as that allows them to make 
 TLS Encrypted Client Hello {{!I-D.ietf-tls-esni}}. In general, SVCB parameters contain useful
 origin-specific information that may augment client connection behavior.
 
-Clients may also wish to share geo-specific information with proxies to aid resolution, e.g.,
-via the use of the EDNS(0) Client Subnet mask {{!RFC7871}}. This is useful for upstream
-resolvers that use geo-specific inforamtion for traffic engineering purposes.
-
 This document specifies HTTP header fields that proxy servers may use to relay this DNS-specific
 between clients and proxies to accompany CONNECT and CONNECT-UDP requests and responses.
 

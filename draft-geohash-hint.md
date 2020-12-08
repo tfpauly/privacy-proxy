@@ -50,12 +50,9 @@ where the server cannot directly ascertain the location of the client. For examp
 that is accessing a server through a proxy or a VPN might provide a rough hint to a server
 when looking up information that may vary depending on location.
 
-## Conventions and Definitions {#conventions}
+## Requirements
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}}
-when, and only when, they appear in all capitals, as shown here.
+{::boilerplate bcp14}
 
 # Geohash Header
 
