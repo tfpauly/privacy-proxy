@@ -1,3 +1,6 @@
+# Privacy Proxy Specifications
+
+This repository collects various specifications and Internet drafts that will be supported by privacy proxies.
 
 ## QUIC-Aware Proxying Using CONNECT-UDP
 
@@ -18,6 +21,14 @@
 ## HTTP CONNECT DNS Metadata Header Fields
 
 * [Markdown](https://github.com/tfpauly/privacy-proxy/blob/main/draft-ppw-httpbis-connect-dns-metadata.md)
+
+## Oblivious DNS Over HTTPS
+
+[Repository](https://github.com/tfpauly/draft-pauly-adaptive-dns-privacy)
+
+* [Editor's Copy](https://tfpauly.github.io/draft-pauly-adaptive-dns-privacy/#go.draft-pauly-dprive-oblivious-doh.html)
+* [Individual Draft](https://tools.ietf.org/html/draft-pauly-dprive-oblivious-doh)
+* [Compare Editor's Copy to Individual Draft](https://tfpauly.github.io/draft-pauly-adaptive-dns-privacy/#go.draft-pauly-dprive-oblivious-doh.diff)
 
 ## Building the Drafts
 
