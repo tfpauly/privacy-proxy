@@ -40,7 +40,7 @@ In some circumstances, some DNS metadata may be useful to clients. This is espec
 information contained in Service Binding (SVCB or HTTPS) records {{!I-D.ietf-dnsop-svcb-https}}.
 These records can influence client behavior even when clients are not directly interacting with
 target IP addresses. The records can be used to determine which application-level protocols
-are supported by an endpoint. These records also can include a  TLS Encrypted Client Hello
+are supported by an endpoint. These records also can include a TLS Encrypted Client Hello
 {{!I-D.ietf-tls-esni}} configuration, which can be used in protecting the end-to-end TLS handshake.
 
 This document specifies HTTP header fields that proxy servers may use to relay information retrieved
@@ -61,7 +61,7 @@ ABNF is:
 DNS-SVCB-Keys = sf-list
 ~~~
 
-Each list member corresponds to the numeric verion of an SvcParamKey.
+Each list member corresponds to the numeric version of an SvcParamKey.
 
 For example, a client wanting to receive ALPN and ECH Config parameters would
 send a request for 1 (alpn) and 5 (echconfig):
