@@ -100,8 +100,10 @@ the ALPN SvcParamKey, with the numeric value 1, would have a parameter key "p1".
 of each parameter MUST be an sf-binary item that contains the bytes of the SvcParamValue.
 
 Proxy servers MUST NOT include "DNS-SVCB-Params" response header field if the
-corresponding request did not include a "DNS-SVCB-Keys". Servers also MUST NOT include
-specific SvcParamKey values that were not requested.
+corresponding request did not include a "DNS-SVCB-Keys". Servers MAY include
+specific SvcParamKey values that were not requested. Specifically, servers SHOULD include
+the "mandatory" parameter if present, which would be presented as "p0", along with any
+parameters that are defined as mandatory for that record.
 
 As an example, assume that the server received the following "svc.example.com" SVCB records:
 
