@@ -48,43 +48,48 @@ used with RSA Blind Signatures {{RSASIG}}.
 
 {::boilerplate bcp14}
 
+# Privacy Token Structure {#struct}
+
+A privacy token is a structure that begins with a single byte that indicates
+a version. This document defines version, 1, which indicates use of
+private tokens based on RSA Blind Signatures, and determines the rest
+of the structure contents.
+
+~~~
+struct {
+    uint8_t version;
+    uint8_t key_id[4];
+    uint8_t message[32];
+    uint8_t signature[512];
+} token;
+~~~
+
+The structure fields are defined as follows:
+
+- "version" is a 1-octet integer. This document defines version 1.
+
+- "key_id" is a 4-octet truncated key ID that identifies the key used to produce
+the signature. This is generated as SHA256(public key)[0:32].
+
+- "message" is a 32-octet random message that is signed by the
+signature.
+
+- "signature" is a 512-octet RSA Blind Signature that covers the message.
+
 # PrivacyToken Authentication Scheme {#scheme}
 
-The "PrivacyToken" authentication scheme defines four parameters: "v", "k", "m", and "s".
+The "PrivacyToken" authentication scheme defines one parameter, "token".
 All unknown or unsupported parameters to "PrivacyToken" authentication
 credentials MUST be ignored.
+
+The value of the "token" parameter is a Privacy Token Structure {{struct}},
+encoded using base64url encoding {{!RFC4648}}.
 
 As an example, a Proxy-Authorization field in an HTTP request would look like:
 
 ~~~
-Proxy-Authorization: PrivacyToken v=1 k=dzAwdA m=123... s=abc...
+Proxy-Authorization: PrivacyToken token=abc...
 ~~~
-
-## Version Parameter ("v")
-
-The value of the "v" parameter is an integer version identifier that identifies the
-signature algorithm being used.
-
-This document defines a single version, 1, that indicates use of
-private tokens based on RSA Blind Signatures.
-
-## Key ID Parameter ("k")
-
-The value of the "k" parameter is a truncated key ID that identifies
-the key used to produce the signature. This is a four-byte value, encoded
-using base64url encoding {{!RFC4648}}.
-
-## Message Parameter ("m")
-
-The value of the "m" parameter is a random message that is signed by the
-signature in "s", encoded using base64url encoding {{!RFC4648}}.
-
-## Signature Parameter ("s")
-
-The value of the "s" parameter is a signature that covers the message,
-encoded using base64url encoding {{!RFC4648}}.
-
-For version 1, this signature is a RSA Blind Signature.
 
 # IANA Considerations {#iana}
 
