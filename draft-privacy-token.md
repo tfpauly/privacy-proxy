@@ -61,7 +61,7 @@ struct {
     uint8_t key_id[4];
     uint8_t message[32];
     uint8_t signature[512];
-} token;
+} Token;
 ~~~
 
 The structure fields are defined as follows:
@@ -90,6 +90,14 @@ As an example, a Proxy-Authorization field in an HTTP request would look like:
 ~~~
 Proxy-Authorization: PrivacyToken token=abc...
 ~~~
+
+# Security Considerations {#security}
+
+Note that the KeyID is only a hint to identify the public verification key. With
+a sufficiently large number of public keys, KeyID collisions may occur.
+By approximation, a KeyID collision between two distinct keys will occur
+with probability sqrt(p * 2^33). In such cases, servers SHOULD attempt
+verification using both keys.
 
 # IANA Considerations {#iana}
 
