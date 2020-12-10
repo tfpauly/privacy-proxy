@@ -14,6 +14,10 @@ This repository collects various specifications and Internet drafts that will be
 
 * [Editor's Copy](https://chris-wood.github.io/draft-wood-cfrg-blind-signatures/draft-wood-cfrg-rsa-blind-signatures.html)
 
+## The Privacy Token HTTP Authentication Scheme
+
+* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-privacy-token.html)
+
 ## The Geohash HTTP Client Hint
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-geohash-hint.html)
