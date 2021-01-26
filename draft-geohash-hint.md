@@ -88,6 +88,23 @@ the cached content, using the "Vary" header.
     Vary: Sec-CH-Geohash
 ~~~
 
+# Server Behavior
+
+Upon receiving a Geohash Client Hint, a server can use the information to influence its behavior
+in various ways.
+
+The server can use the Geohash to determine the content of HTTP responses, as a
+replacement for inferring location from client IP addresses.
+
+If the server is acting as a forward proxy, such as a CONNECT proxy, it can use the Geohash
+to determine an appropriate geo-mapped IP address to use for outbound connections, or a
+client subnet to present in the EDNS0 Client Subnet extension for DNS queries {{?RFC6891}}
+{{?RFC7871}}.
+
+If a proxy receiving the Geohash hint cannot respect the location indicated by the hint,
+it SHOULD include a Proxy-Status header {{!I-D.ietf-httpbis-proxy-status}} in its response,
+with the "details" parameter containing the string "Geohash ignored".
+
 # Security Considerations {#security}
 
 The use of the Geohash Client Hint MUST use the Sec- header prefix as recommended
