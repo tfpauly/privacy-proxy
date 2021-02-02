@@ -122,6 +122,9 @@ Client location can be used to fingerprint and tracker users, so clients MUST ha
 default policy around when to allow use of the Geohash Client Hint, as well as a default
 length of Geohash. Shorter, truncated Geohashes provide less specific locality.
 
+Servers MUST NOT use Geohash Client Hints for making security or access-control decisions,
+as the value can be spoofed by a client. The hint is intended only for use in optimizing behavior.
+
 # IANA Considerations {#iana}
 
 ## HTTP Headers {#iana-header}
