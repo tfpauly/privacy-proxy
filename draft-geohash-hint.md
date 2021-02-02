@@ -50,15 +50,17 @@ where the server cannot directly ascertain the location of the client. For examp
 that is accessing a server through a proxy or a VPN might provide a rough hint to a server
 when looking up information that may vary depending on location.
 
+This document also defines a how forward proxies can use proxy status fields to inform clients
+about the result of their Geohash hints.
+
 ## Requirements
 
 {::boilerplate bcp14}
 
 # Geohash Header
 
-The "Sec-CH-Geohash" and "Server-Connection-Id" are Item Structured
-Headers {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a
-String, and MUST have at least 1 character and no more than 12 characters.
+The "Sec-CH-Geohash" is an Item Structured Header {{!I-D.ietf-httpbis-header-structure}}.
+Its value MUST be a String, and MUST have at least 1 character and no more than 12 characters.
 The ABNF is:
 
 ~~~
@@ -101,9 +103,15 @@ to determine an appropriate geo-mapped IP address to use for outbound connection
 client subnet to present in the EDNS0 Client Subnet extension for DNS queries {{?RFC6891}}
 {{?RFC7871}}.
 
+## Proxy Behavior
+
 If a proxy receiving the Geohash hint cannot respect the location indicated by the hint,
 it SHOULD include a Proxy-Status header {{!I-D.ietf-httpbis-proxy-status}} in its response,
-with the "details" parameter containing the string "Geohash ignored".
+with the "details" parameter containing the string "invalid geohash".
+
+~~~
+Proxy-Status: ExampleProxy; details="invalid geohash"
+~~~
 
 # Security Considerations {#security}
 
@@ -119,7 +127,7 @@ length of Geohash. Shorter, truncated Geohashes provide less specific locality.
 ## HTTP Headers {#iana-header}
 
 This document registers the "Sec-CH-Geohash" header in the
-"Permanent Message Header Field Names"
+"Permanent Message Header Field Names" registry
 <[](https://www.iana.org/assignments/message-headers)>.
 
 ~~~
