@@ -19,6 +19,10 @@ author:
     city: Cupertino, California 95014
     country: United States of America
     email: tpauly@apple.com
+ -  ins: C. A. Wood
+    name: Christopher A. Wood
+    org: Cloudflare
+    email: caw@heapingbits.net
 
 
 normative:
@@ -58,9 +62,9 @@ of the structure contents.
 ~~~
 struct {
     uint8_t version;
-    uint8_t key_id[4];
+    uint8_t key_id[8];
     uint8_t message[32];
-    uint8_t signature[512];
+    uint8_t signature[Nk];
 } Token;
 ~~~
 
@@ -68,13 +72,15 @@ The structure fields are defined as follows:
 
 - "version" is a 1-octet integer. This document defines version 1.
 
-- "key_id" is a 4-octet truncated key ID that identifies the key used to produce
-the signature. This is generated as SHA256(public key)[0:32].
+- "key_id" is a 8-octet truncated key ID that identifies the key used to produce
+the signature. This is generated as SHA256(public_key)[0:32], where public_key
+is a DER-encoded SubjectPublicKeyInfo object carrying the public key.
 
 - "message" is a 32-octet random message that is signed by the
 signature.
 
-- "signature" is a 512-octet RSA Blind Signature that covers the message.
+- "signature" is a Nk-octet RSA Blind Signature that covers the message.
+For version 1, Nk is 512.
 
 # PrivacyToken Authentication Scheme {#scheme}
 
