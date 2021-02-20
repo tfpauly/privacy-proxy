@@ -53,7 +53,7 @@ from SVCB records from proxy servers to clients when using CONNECT or CONNECT-UD
 # SVCB Request Header Field {#svcb-params-request}
 
 Clients can request SVCB parameters with the Structured Header
-{{!STRUCT=I-D.ietf-httpbis-header-structure}} "DNS-SVCB-Keys". Its value MUST
+{{!RFC8941}} "DNS-SVCB-Keys". Its value MUST
 be an sf-list whose members are sf-integer items that MUST NOT contain parameters. Its
 ABNF is:
 

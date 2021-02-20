@@ -36,7 +36,7 @@ using the Geohash format.
 
 # Introduction {#introduction}
 
-HTTP Client Hints {{!I-D.ietf-httpbis-client-hints}} defines a convention for HTTP headers
+HTTP Client Hints {{!RFC8942}} defines a convention for HTTP headers
 to communicate optional information from clients to servers as hints. This can be done
 conditionally based on if a server claims supports for a particular hint.
 
@@ -59,7 +59,7 @@ about the result of their Geohash hints.
 
 # Geohash Header
 
-The "Sec-CH-Geohash" is an Item Structured Header {{!I-D.ietf-httpbis-header-structure}}.
+The "Sec-CH-Geohash" is an Item Structured Header {{!RFC8941}}.
 Its value MUST be a String, and MUST have at least 1 character and no more than 12 characters.
 The ABNF is:
 
@@ -116,7 +116,7 @@ Proxy-Status: ExampleProxy; details="invalid geohash"
 # Security Considerations {#security}
 
 The use of the Geohash Client Hint MUST use the Sec- header prefix as recommended
-in {{!I-D.ietf-httpbis-client-hints}}.
+in {{!RFC8942}}.
 
 Client location can be used to fingerprint and tracker users, so clients MUST have a
 default policy around when to allow use of the Geohash Client Hint, as well as a default
