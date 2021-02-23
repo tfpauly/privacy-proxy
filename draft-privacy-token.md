@@ -19,6 +19,14 @@ author:
     city: Cupertino, California 95014
     country: United States of America
     email: tpauly@apple.com
+ -
+    ins: F. Jacobs
+    name: Frederic Jacobs
+    org: Apple Inc.
+    street: One Apple Park Way
+    city: Cupertino, California 95014
+    country: United States of America
+    email: frederic.jacobs@apple.com
  -  ins: C. A. Wood
     name: Christopher A. Wood
     org: Cloudflare
