@@ -62,7 +62,7 @@ of the structure contents.
 ~~~
 struct {
     uint8_t version;
-    uint8_t key_id[8];
+    uint8_t key_id[32];
     uint8_t message[32];
     uint8_t signature[Nk];
 } Token;
@@ -72,8 +72,8 @@ The structure fields are defined as follows:
 
 - "version" is a 1-octet integer. This document defines version 1.
 
-- "key_id" is a 8-octet truncated key ID that identifies the key used to produce
-the signature. This is generated as SHA256(public_key)[0:32], where public_key
+- "key_id" is a collision-resistant hash that identifies the key used to produce
+the signature. This is generated as SHA256(public_key), where public_key
 is a DER-encoded SubjectPublicKeyInfo object carrying the public key.
 
 - "message" is a 32-octet random message that is signed by the
