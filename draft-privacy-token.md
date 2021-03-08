@@ -35,9 +35,9 @@ author:
 
 normative:
     RSASIG:
-      target: https://chris-wood.github.io/draft-wood-cfrg-blind-signatures/draft-wood-cfrg-rsa-blind-signatures.html
+      target: https://tools.ietf.org/html/draft-wood-cfrg-rsa-blind-signatures-00
       title: RSA Blind Signatures
-      date: 2020
+      date: March 2020
 
 --- abstract
 
@@ -64,8 +64,8 @@ used with RSA Blind Signatures {{RSASIG}}.
 
 A privacy token is a structure that begins with a single byte that indicates
 a version. This document defines version, 1, which indicates use of
-private tokens based on RSA Blind Signatures, and determines the rest
-of the structure contents.
+private tokens based on RSA Blind Signatures {{RSASIG}}, and determines the
+rest of the structure contents.
 
 ~~~
 struct {
