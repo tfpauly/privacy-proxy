@@ -1,4 +1,4 @@
----
+≈---
 title: HTTP Header Fields for Proxied SVCB Metadata
 abbrev: Proxied SVCB Headers
 docname: draft-proxied-svcb-headers-latest
@@ -44,7 +44,7 @@ are supported by an endpoint. These records also can include a TLS Encrypted Cli
 {{!I-D.ietf-tls-esni}} configuration, which can be used in protecting the end-to-end TLS handshake.
 
 This document specifies HTTP header fields that proxy servers may use to relay information retrieved
-from SVCB records from proxy servers to clients when using CONNECT or CONNECT-UDP.
+from SVCB records fr≈om proxy servers to clients when using CONNECT or CONNECT-UDP.
 
 ## Requirements
 
@@ -54,8 +54,8 @@ from SVCB records from proxy servers to clients when using CONNECT or CONNECT-UD
 
 Clients can request SVCB parameters with the Structured Header
 {{!RFC8941}} "DNS-SVCB-Keys". Its value MUST
-be an sf-list whose members are sf-integer items that MUST NOT contain parameters. Its
-ABNF is:
+be an sf-list whose members are sf-integer items that MUST NOT contain parameters.
+Its ABNF is:
 
 ~~~ abnf
 DNS-SVCB-Keys = sf-list
@@ -72,6 +72,8 @@ HEADERS
 :authority = svc.example.com:443
 dns-svcb-keys = 1, 5
 ~~~
+
+
 
 # SVCB Response Header Fields {#svcb-params-response}
 
@@ -95,14 +97,14 @@ sf-integer. Alias forms, with priority 0, MUST NOT be included.
 The TTL of the record MUST be a parameter with the key "ttl", and a value as an sf-integer.
 
 Each SvcParam that matches a key requested by the client is a parameters with a key
-that is the character "p" followed by the numeric version of the SvcParamKey. For example,
-the ALPN SvcParamKey, with the numeric value 1, would have a parameter key "p1". The value
+that is the string "key" followed by the numeric version of the SvcParamKey. For example,
+the ALPN SvcParamKey, with the numeric value 1, would have a parameter key "key1". The value
 of each parameter MUST be an sf-binary item that contains the bytes of the SvcParamValue.
 
 Proxy servers MUST NOT include the "DNS-SVCB-Params" response header field if the
 corresponding request did not include a "DNS-SVCB-Keys". Servers MAY include
 specific SvcParamKey values that were not requested. Specifically, servers SHOULD include
-the "mandatory" parameter if present, which would be presented as "p0", along with any
+the "mandatory" parameter if present, which would be presented as "key0", along with any
 parameters that are defined as mandatory for that record.
 
 As an example, assume that the server received the following "svc.example.com" SVCB records:
@@ -119,8 +121,8 @@ A successful CONNECT response would include the following headers, if the client
 HEADERS
 :method = CONNECT
 :status = 200
-dns-svcb-params = "svc2.example.com.";priority=1;ttl=3600;p1=:aDIsaDM=:;p5=:MTIzLi4u:,
-                  "svc.example.com.";priority=2;ttl=3600;p1=:aDI=:;p5=:YWJjLi4u:
+dns-svcb-params = "svc2.example.com.";priority=1;ttl=3600;key1=:aDIsaDM=:;key5=:MTIzLi4u:,
+                  "svc.example.com.";priority=2;ttl=3600;key1=:aDI=:;key5=:YWJjLi4u:
 ~~~
 
 # IANA Considerations
