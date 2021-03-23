@@ -185,9 +185,16 @@ Additional examples are below in {{#examples}}.
 ## Proxy-DNS-SVCB Response Header Field {#proxy-dns-svcb}
 
 A proxy server that receives a request with "Proxy-DNS-Request" MAY respond with
-the Structured Header "Proxy-DNS-SVCB" response header fields. The value of
-"Proxy-DNS-SVCB" MUST be an sf-list whose members are sf-string, each of
-which MUST contain parameters.
+the Structured Header "Proxy-DNS-SVCB" response header fields.
+
+The intent of this header is to provide SVCB-optional clients with
+enough information to implement {{SVCB} without performing additional
+DNS lookups, including Sections 3 and 8.  This includes providing them
+with a list of alternative endpoints, as well as being explicit about
+whether SVCB records do and do not exist.
+
+The value of "Proxy-DNS-SVCB" MUST be an sf-list whose members are
+sf-string, each of which MUST contain parameters.
 
 ~~~ abnf
 Proxy-DNS-SVCB = sf-list
@@ -231,8 +238,8 @@ obtain the SVCB RRset to return in this header.  If this resolves to a
 SVCB AliasMode record, proxy servers MUST resolve the TargetName of
 that AliasMode record to obtain a ServiceMode record.  Both
 resolutions MUST use the same RR type specified in the "t" parameter
-of Proxy-DNS-Request.  Which records are returned in this header is
-determined by:
+of Proxy-DNS-Request.
+Which records are returned in this header is determined by:
 
 * If the SVCB DNS query name resolves to a SVCB ServiceMode record,
   only the ServiceMode records SHALL be included in the Proxy-DNS-SVCB
@@ -295,6 +302,9 @@ which MUST contain parameters.
 ~~~ abnf
 Proxy-DNS-Used = sf-list
 ~~~
+
+The intent of this header is to provide clients with enough
+information to implement Section 5 of {{SVCB}}.
 
 Proxy servers MUST NOT include the "Proxy-DNS-Used" response header field if the
 corresponding request did not include a "Proxy-DNS-Request" or if its "u"
@@ -379,9 +389,69 @@ be used by proxies for making connections.
 
 # Client Behavior
 
-* How this maps to SVCB record behavior, and how clients optimize,
-  and how things relate back to Proxy-DNS-Used.
-* What clients should send in each request
+Clients that are SVCB-required ({{SVCB}} Section 3) MUST perform a DNS
+resolution prior to making a CONNECT* request, as they will need to
+obtain SVCB records and a TargetName.
+
+Clients that are SVCB-optional MAY use a proxy implementing this
+specification to use SVCB records without performing additional DNS
+resolutions.  Clients doing so MUST implement other requirements
+specified in {{SVCB}} with the following providing a mechanism for
+doing so through a proxy.  As an example, if the client has a valid
+Proxy-DNS-SVCB header cached corresponding to a HTTPS RR, the client
+SHOULD upgrade to the "https" scheme as described in Section 3.5 of
+{{SVCB}}, which may involve abandoning a CONNECT to port 80
+through which it learned about the HTTPS RR.
+
+If a client has a valid SVCB RRset or Proxy-DNS-SVCB cached for a
+given service, it SHOULD use CONNECT* with the authority hostname and
+port equal to the TargetName and port for the selected alternative
+endpoint.  It also SHOULD include Proxy-DNS-Request (with a SVCB DNS
+query name or the original service name to refresh its SVCB RRset
+cache.
+
+If a client has no valid SVCB RRset cached for a given service,
+it SHOULD opportunistically CONNECT* with an authority hostname
+of the service name.  If the response contains a Proxy-DNS-SVCB
+header, the client SHOULD select an alternative endpoint
+from the provided list.  Based on the selected alternative
+endpoint, the client decides whether it can continue to use
+this opportunistically-created connection or needs to establish
+a new connection:
+
+1) If the IP address in the Proxy-DNS-Used list matches an ipv6hint
+   or ipv4hint SvcParam on the selected alternative endpoint,
+   and if the port used in the CONNECT* matches the selected
+   alternative endpoint, and if the transport protocol is compatible
+   with the selected alpn (eg, CONNECT for "h2" and CONNECT-UDP
+   for "h3"), the client SHOULD use the established connection.
+
+2) If either the authority hostname or any of the hostnames returned
+   in the Proxy-DNS-Used list match the TargetName of the selected
+   alternative endpoint, and if the port used in the CONNECT* matches
+   the selected alternative endpoint, and if the transport protocol is
+   compatible with the selected alpn (eg, CONNECT for "h2" and
+   CONNECT-UDP for "h3"), the client SHOULD use the established
+   connection.
+
+3) If no alternative endpoint has a match with either condition 1
+   or 2, the client MUST NOT use the connection and will instead
+   abandon it.  Clients then MUST establish a new CONNECT*
+   based on the TargetName and other SvcParams from the selected
+   alternative endpoint.
+
+Note that clients MAY select to use a less preferred alternative
+endpoint (if only temporarily) if it allows use of the
+opportunistically established connection, but only provided
+either condition 1 or 2 matches.
+
+For all of the above, clients MUST age out information learned
+about Proxy-DNS-Used and Proxy-DNS-SVCB based on the TTLs
+returned in those headers.  Clients SHOULD continue to refresh
+them as requests are made to the proxy.  Clients SHOULD periodically
+re-evaluate if new connections need to be established based on
+expiry of these TTLs.
+
 
 
 # IANA Considerations
@@ -432,5 +502,4 @@ verifying its contents.
 # Appendix: Additional Examples {#examples}
 
 
-
-
+*TODO*: Add additional examples.
