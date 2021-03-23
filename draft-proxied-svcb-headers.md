@@ -398,10 +398,10 @@ specification to use SVCB records without performing additional DNS
 resolutions.  Clients doing so MUST implement other requirements
 specified in {{SVCB}} with the following providing a mechanism for
 doing so through a proxy.  As an example, if the client has a valid
-Proxy-DNS-SVCB header cached corresponding to a HTTPS RR, the client
-SHOULD upgrade to the "https" scheme as described in Section 3.5 of
-{{SVCB}}, which may involve abandoning a CONNECT to port 80
-through which it learned about the HTTPS RR.
+Proxy-DNS-SVCB header cached corresponding to a HTTPS RR (even if only
+for AliasMode), the client SHOULD upgrade to the "https" scheme as
+described in Section 3.5 of {{SVCB}}, which may involve abandoning a
+CONNECT to port 80 through which it learned about the HTTPS RR.
 
 If a client has a valid SVCB RRset or Proxy-DNS-SVCB cached for a
 given service, it SHOULD use CONNECT* with the authority hostname and
@@ -452,6 +452,21 @@ them as requests are made to the proxy.  Clients SHOULD periodically
 re-evaluate if new connections need to be established based on
 expiry of these TTLs.
 
+
+## SVCB-required clients
+
+SVCB-required clients must either perform additional SVCB
+DNS requests, or MUST use a proxy that is known and configured
+to always return Proxy-DNS-SVCB and Proxy-DNS-Used headers.
+
+SVCB-required clients SHOULD set high values for "wait" in
+Proxy-DNS-Request and MUST treat the absence of a Proxy-DNS-SVCB
+response header as an error.
+
+SVCB-required clients may also need to make their initial request to
+an authority with no expectation of being able to use that connection.
+Protocols specifying for SVCB-required clients will need to describe
+what clients should use in this case.
 
 
 # IANA Considerations
