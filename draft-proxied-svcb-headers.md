@@ -445,12 +445,27 @@ endpoint (if only temporarily) if it allows use of the
 opportunistically established connection, but only provided
 either condition 1 or 2 matches.
 
+If a CONNECT* request does not include a Proxy-DNS-SVCB header, and if
+clients do not have a cached SVCB RR, SVCB-optional clients SHOULD
+proceed with using the established connection.
+
 For all of the above, clients MUST age out information learned
 about Proxy-DNS-Used and Proxy-DNS-SVCB based on the TTLs
 returned in those headers.  Clients SHOULD continue to refresh
 them as requests are made to the proxy.  Clients SHOULD periodically
 re-evaluate if new connections need to be established based on
 expiry of these TTLs.
+
+*TODO*: Most of this section assumes ServiceMode records.
+	We should better structure to handle AliasMode records.
+	(I'm not sure the second condition ever applies?)
+	Below is some partial text:
+
+When Proxy-DNS-SVCB (or a cached SVCB) contains an AliasMode record,
+clients SHOULD either use a connection made to the TargetName
+of the AliasMode record, or they SHOULD use a connection
+where any of the hostnames returned in Proxy-DNS-Used
+matches the TargetName of the AliasMode record.
 
 
 ## SVCB-required clients
@@ -467,6 +482,27 @@ SVCB-required clients may also need to make their initial request to
 an authority with no expectation of being able to use that connection.
 Protocols specifying for SVCB-required clients will need to describe
 what clients should use in this case.
+
+
+## Connection coalescing
+
+*TODO*: Do we want to include text on how clients
+can also use Proxy-DNS-Used for connection coalescing?
+(One thing missing there is the full set of IP addresses
+to look for overlaps within an address family.   I'm not
+sure this is worth the complexity.  Or do we remove this
+sub-section entirely?)
+
+
+## Interaction with Alt-Svc
+
+*TODO*: Write this section...
+
+
+## Interaction with SVCB records obtained through the DNS
+
+*TODO*: Write this section...
+
 
 
 # IANA Considerations
@@ -512,6 +548,11 @@ information. Clients that depend on the contents of the SVCB record
 being DNSSEC-validated MUST NOT use this metadata without otherwise
 fetching the record and its corresponding RRSIG record and locally
 verifying its contents.
+
+Clients relying on ECH should avoid sending anything on
+opportunistically created connections until verifying whether
+there is a preferred alternative service that supports ECH
+which they should use.
 
 
 # Appendix: Additional Examples {#examples}
