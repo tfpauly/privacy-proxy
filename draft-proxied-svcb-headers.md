@@ -1,4 +1,4 @@
-≈---
+---
 title: HTTP header fields for utilizing SVCB and HTTPS RRs via proxies
 abbrev: Proxied SVCB Headers
 docname: draft-proxied-svcb-headers-latest
@@ -78,7 +78,7 @@ for performing additional DNS lookups:
    by the proxy, allowing clients can proceed with the opportunistically
    established connection.  For services with SVCB records,
    the proxy will provide enough information to allow clients
-   to decide whether they can proceeed with using the connection
+   to decide whether they can proceed with using the connection
    or whether the client needs to establish a new connection
    through the proxy to the alternative endpoint specified
    in a SVCB record.  
@@ -179,7 +179,7 @@ HEADERS
 proxy-dns-request = "_foo.svc.example.com"; t=64; wait=400; params=(1 5); u; version=("draft-01")
 ~~~
 
-Additional examples are below in {{#examples}}.
+Additional examples are below in {#examples}.
 
 
 ## Proxy-DNS-SVCB Response Header Field {#proxy-dns-svcb}
@@ -188,7 +188,7 @@ A proxy server that receives a request with "Proxy-DNS-Request" MAY respond with
 the Structured Header "Proxy-DNS-SVCB" response header fields.
 
 The intent of this header is to provide SVCB-optional clients with
-enough information to implement {{SVCB} without performing additional
+enough information to implement {{SVCB}} without performing additional
 DNS lookups, including Sections 3 and 8.  This includes providing them
 with a list of alternative endpoints, as well as being explicit about
 whether SVCB records do and do not exist.
@@ -217,7 +217,7 @@ The TTL of the record MUST be a parameter with the key "ttl", and a value as an 
 This value must be the minimum TTL value of any CNAME or SVCB record encountered while
 resolving this SVCB record.
 
-SvcParams are represented with a parameter string contructed
+SvcParams are represented with a parameter string constructed
 prepending the string "key" to the numeric version of the
 SvcParamKey. For example, the ALPN SvcParamKey, with the numeric value
 1, would have a parameter key "key1". The value of each parameter MUST
@@ -364,18 +364,18 @@ HEADERS
 :method = CONNECT
 :status = 200
 proxy-dns-used = "svc.example.net.";ttl=7200;t=5;o="svc.example.com.",
-	         "svc2.example.net.";ttl=1800;t=5;o="svc.example.net.",
-	         "2001:db8::75";ttl=60;t=28;o="svc2.example.net."
+                 "svc2.example.net.";ttl=1800;t=5;o="svc.example.net.",
+                 "2001:db8::75";ttl=60;t=28;o="svc2.example.net."
 ~~~
 
 
 *TODO*: Do we need the "o=" parameter or is it redundant?
-	If we include it, should it be a MUST or MAY?
-	
+        If we include it, should it be a MUST or MAY?
+        
 *TODO*: Do we need to cover DNAME as well? 
 
 *TODO*: Should a future version be able to include NS record
-  	and DNSSEC information?
+        and DNSSEC information?
 
 
 # Proxy Behavior
@@ -457,9 +457,9 @@ re-evaluate if new connections need to be established based on
 expiry of these TTLs.
 
 *TODO*: Most of this section assumes ServiceMode records.
-	We should better structure to handle AliasMode records.
-	(I'm not sure the second condition ever applies?)
-	Below is some partial text:
+        We should better structure to handle AliasMode records.
+        (I'm not sure the second condition ever applies?)
+        Below is some partial text:
 
 When Proxy-DNS-SVCB (or a cached SVCB) contains an AliasMode record,
 clients SHOULD either use a connection made to the TargetName
