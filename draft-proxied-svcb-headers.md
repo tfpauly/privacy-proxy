@@ -140,7 +140,7 @@ The item has the following parameters:
   as an sf-integer (so 64 for SVCB and 65 for HTTPS).  If not
   specified, the value of 65 (HTTPS) is the default.
 
-* wait: The maximum time the proxy should wait before responding to
+* wait: The maximum time in milliseconds the proxy should wait before responding to
   the CONNECT* request while waiting for the SVCB resolution to
   complete, specified as an sf-integer.  The proxy MAY choose to not
   wait this long before responding.  If this value is less than 1
