@@ -71,20 +71,23 @@ This document specifies a mechanism for clients to utilize SVCB records
 through proxies supporting this specification while reducing the need
 for performing additional DNS lookups:
 
-1) Clients provide additional information in HTTP request header fields,
+1. Clients provide additional information in HTTP request header fields,
    allowing the proxy to perform appropriate SVCB lookups alongside
    its AAAA and A lookups.
-2) Proxies return HTTP response header fields specified in this
+
+2. Proxies return HTTP response header fields specified in this
    document while opportunistically establishing connections.
-3) Services with no SVCB records will be indicated as such
+
+3. Services with no SVCB records will be indicated as such
    by the proxy, allowing clients can proceed with the opportunistically
    established connection.  For services with SVCB records,
    the proxy will provide enough information to allow clients
    to decide whether they can proceed with using the connection
    or whether the client needs to establish a new connection
    through the proxy to the alternative endpoint specified
-   in a SVCB record.  
-4) For subsequent CONNECT* requests, clients provide information
+   in a SVCB record.
+
+4. For subsequent CONNECT* requests, clients provide information
    about the service name.  The proxy uses this to provide
    refreshed SVCB records, and the proxy also continues to
    provide additional information to the client about how
