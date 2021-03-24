@@ -57,11 +57,13 @@ target IP addresses. The records can be used to determine which application-leve
 are supported by an endpoint. These records also can include a TLS Encrypted Client Hello
 {{!I-D.ietf-tls-esni}} configuration, which can be used in protecting the end-to-end TLS handshake.
 
-Performing a separate DNS resolution for SVCB records may not make
-sense for some clients: 1) this adds a performance penalty for clients
-to perform the DNS lookup even when SVCB records aren't present, as
-normally only the proxy is performing a DNS lookup; 2) if the client
-is using the proxy for providing additional privacy, performing
+It is not always optimal for client that want to use SVCB to perform a separate
+DNS resolution prior to using a CONNECT* proxy, for a couple reasons:
+
+1. The extra DNS lookup incurs a performance penalty in delaying the client's
+connection establishment, which might be wasted if there aren't any SVCB records present.
+
+2. If the client is using the proxy for providing additional privacy, performing
 DNS lookups not through the proxy might disclose the client's destination
 to an additional party.
 
