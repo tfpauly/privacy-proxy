@@ -63,9 +63,10 @@ used with RSA Blind Signatures {{RSASIG}}.
 # Privacy Token Structure {#struct}
 
 A privacy token is a structure that begins with a single byte that indicates
-a version. This document defines version, 1, which indicates use of
+a version. This document defines two versions, 1 and 2, which indicate use of
 private tokens based on RSA Blind Signatures {{RSASIG}}, and determines the
-rest of the structure contents.
+rest of the structure contents.  Version 1 uses 4096-bit RSA keys and version 2 
+uses 2048-bit RSA keys.
 
 ~~~
 struct {
@@ -78,7 +79,7 @@ struct {
 
 The structure fields are defined as follows:
 
-- "version" is a 1-octet integer. This document defines version 1.
+- "version" is a 1-octet integer. This document defines version 1 and 2.
 
 - "key_id" is a collision-resistant hash that identifies the key used to produce
 the signature. This is generated as SHA256(public_key), where public_key
@@ -88,7 +89,7 @@ is a DER-encoded SubjectPublicKeyInfo object carrying the public key.
 signature.
 
 - "signature" is a Nk-octet RSA Blind Signature that covers the message.
-For version 1, Nk is 512.
+For version 1, Nk is 512.  For version 2, Nk is 256.  
 
 # PrivacyToken Authentication Scheme {#scheme}
 
@@ -112,6 +113,9 @@ a sufficiently large number of public keys, KeyID collisions may occur.
 By approximation, a KeyID collision between two distinct keys will occur
 with probability sqrt(p * 2^33). In such cases, servers SHOULD attempt
 verification using both keys.
+
+Despite being a higher numeric version, version=2 is not more secure than version=1.
+They only differ based on RSA key size.
 
 # IANA Considerations {#iana}
 
