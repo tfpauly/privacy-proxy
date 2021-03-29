@@ -87,8 +87,12 @@ is a DER-encoded SubjectPublicKeyInfo object carrying the public key.
 - "message" is a 32-octet random message that is signed by the
 signature.
 
-- "signature" is a Nk-octet RSA Blind Signature that covers the message.
-For version 1, Nk is 512.
+- "signature" is a Nk-octet RSA Blind Signature that covers the
+message.  For version 1, Nk is indicated by size of the Token
+structure and may be 256, 384, or 512.
+These correspond to RSA 2048, 3072, and 4096 bit keys.
+Clients implementing version 1 MUST support signature
+sizes with Nk of 512 and 256.
 
 # PrivacyToken Authentication Scheme {#scheme}
 
