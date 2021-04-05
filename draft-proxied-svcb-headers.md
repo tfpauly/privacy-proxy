@@ -48,7 +48,7 @@ in authority-form (and may use something closer to what is specified in rfc8441)
 and we should update accordingly.  
 
 Clients using Service Binding (SVCB or HTTPS) records {{!SVCB=I-D.ietf-dnsop-svcb-https}}
-need perform additional DNS resolutions prior to issuing a CONNECT* request, as clients
+might need to perform additional DNS resolutions prior to issuing a CONNECT* request, as clients
 connect to the "alternative endpoint" specified by the SVCB record (Section 3.2 of {{SVCB}}),
 which includes a TargetName that may be distinct from the server name.
 
@@ -57,15 +57,18 @@ target IP addresses. The records can be used to determine which application-leve
 are supported by an endpoint. These records also can include a TLS Encrypted Client Hello
 {{!I-D.ietf-tls-esni}} configuration, which can be used in protecting the end-to-end TLS handshake.
 
-It is not always optimal for client that want to use SVCB to perform a separate
+It is not always optimal for a client that wants to use SVCB to perform a separate
 DNS resolution prior to using a CONNECT* proxy, for a couple reasons:
 
 1. The extra DNS lookup incurs a performance penalty in delaying the client's
 connection establishment, which might be wasted if there aren't any SVCB records present.
 
 2. If the client is using the proxy for providing additional privacy, performing
-DNS lookups not through the proxy might disclose the client's destination
+DNS lookups without going through the proxy might disclose the client's destination
 to an additional party.
+
+3. If DNS responses vary based on the client's network location, DNS lookups performed by the
+client might not be appropriate for a connection made via the proxy.
 
 This document specifies a mechanism for clients to utilize SVCB records
 through proxies supporting this specification while reducing the need
@@ -79,12 +82,12 @@ for performing additional DNS lookups:
    document while opportunistically establishing connections.
 
 3. Services with no SVCB records will be indicated as such
-   by the proxy, allowing clients can proceed with the opportunistically
+   by the proxy, allowing clients to proceed with the opportunistically
    established connection.  For services with SVCB records,
    the proxy will provide enough information to allow clients
    to decide whether they can proceed with using the connection
    or whether the client needs to establish a new connection
-   through the proxy to the alternative endpoint specified
+   through the proxy to an alternative endpoint specified
    in a SVCB record.
 
 4. For subsequent CONNECT* requests, clients provide information
@@ -150,7 +153,7 @@ The item has the following parameters:
   a reasonable default.
 
 * params: Clients can optionally limit which SVCB parameters they'd like
-  to receive by optionally specifying this parameter.  Its value MUST
+  to receive by specifying this parameter.  Its value MUST
   be an inner-list whose members are sf-integer items.
   Each list member corresponds to the numeric version of an SvcParamKey.
   If not specified, proxies SHOULD return the full set of SVCB parameters
@@ -158,7 +161,7 @@ The item has the following parameters:
 
 * version: Clients can optionally specify which versions of this specification
   they support.  Its value MUST be an inner-list whose members are sf-string
-  values.  This current draft specifies version "draft-01".
+  values.  This draft specifies version "draft-01".
 
 * u: Clients can indicate whether they want DNS information about
   the IP address that the proxy connected to through this parameter.
@@ -244,7 +247,8 @@ SVCB AliasMode record, proxy servers MUST resolve the TargetName of
 that AliasMode record to obtain a ServiceMode record.  Both
 resolutions MUST use the same RR type specified in the "t" parameter
 of Proxy-DNS-Request.
-Which records are returned in this header is determined by:
+
+Multiple factors influence which records are returned in this header:
 
 * If the SVCB DNS query name resolves to a SVCB ServiceMode record,
   only the ServiceMode records SHALL be included in the Proxy-DNS-SVCB
@@ -292,8 +296,8 @@ A successful CONNECT response would include the following headers, if the client
 HEADERS
 :method = CONNECT
 :status = 200
-proxy-dns-svcb = "svc2.example.net.";priority=1;ttl=1800;key1=:aDIsaDM=:;key5=:MTIzLi4u:,
-                 "svc.example.net.";priority=2;ttl=1800;key1=:aDI=:;key5=:YWJjLi4u:
+proxy-dns-svcb = "svc2.example.net.";priority=1;ttl=1800;key1=:aDIsaDM=:;key5=:MTIz...:,
+                 "svc.example.net.";priority=2;ttl=1800;key1=:aDI=:;key5=:YWJj...:
 ~~~
 
 
@@ -327,7 +331,7 @@ address, it MUST follow the canonical string form from {{!RFC5952}}.
 
 *TODO*: Is there an IPv4 canonical form RFC we should reference here?
 
-If the hostname connected to by the proxy was a series of CNAMEs,
+If the hostname connected to by the proxy aliased to one or more CNAMEs,
 these should be included at the front of the list, starting with
 the CNAME that the hostname resolved to and proceeding sequentially.
 
@@ -343,7 +347,7 @@ Each item in the list has the following parameters:
   entry, containing the minimum TTL value across the CNAMEs.
 
 * o: The owner name of the DNS record MAY be included.
-  This this parameter is specified, its value MUST be an sf-string
+  If this parameter is specified, its value MUST be an sf-string
   whose value is the owner name of the record.
 
 
@@ -489,14 +493,6 @@ Protocols specifying for SVCB-required clients will need to describe
 what clients should use in this case.
 
 
-## Connection coalescing
-
-*TODO*: Do we want to include text on how clients
-can also use Proxy-DNS-Used for connection coalescing?
-(One thing missing there is the full set of IP addresses
-to look for overlaps within an address family.   I'm not
-sure this is worth the complexity.  Or do we remove this
-sub-section entirely?)
 
 
 ## Interaction with Alt-Svc
@@ -513,6 +509,8 @@ sub-section entirely?)
 # IANA Considerations
 
 ## HTTP Headers {#iana-header}
+
+*TODO*: Move the registries below to the new HTTP-core registry.
 
 This document registers the "Proxy-DNS-Request" and "Proxy-DNS-SVCB",
 headers in the "Permanent Message Header Field Names"
