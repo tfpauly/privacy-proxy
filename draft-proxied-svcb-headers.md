@@ -28,7 +28,7 @@ author:
 This document defines a mechanism to utilize Service Binding (SVCB and
 HTTPS) DNS records through HTTP proxies while using the proxies
 to perform the SVCB record lookups.  This includes defining HTTP header
-fields for the passing DNS metadata in HTTP responses.
+fields for passing DNS metadata in HTTP responses.
 
 --- middle
 
@@ -564,4 +564,3 @@ which they should use.
 
 
 *TODO*: Add additional examples.
-
