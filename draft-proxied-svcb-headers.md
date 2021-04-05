@@ -558,6 +558,9 @@ there is a preferred alternative service that supports ECH
 which they should use.
 
 
+# Acknowledgments
+
+Thank you to Mike Bishop, Chris Wood, and others for their feedback and suggestions on this draft.
 # Appendix: Additional Examples {#examples}
 
 
