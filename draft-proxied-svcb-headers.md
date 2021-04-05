@@ -163,7 +163,8 @@ The item has the following parameters:
   they support.  Its value MUST be an inner-list whose members are sf-string
   values.  This draft specifies version "draft-01".
 
-* u: Clients can indicate whether they want DNS information about
+* u: Clients can indicate whether they want DNS information (A, AAAA,
+    and CNAME records) about
   the IP address that the proxy connected to through this parameter.
   Its value MUST be an sf-boolean.
 
