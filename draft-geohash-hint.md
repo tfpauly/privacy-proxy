@@ -51,7 +51,7 @@ that is accessing a server through a proxy or a VPN might provide a rough hint t
 when looking up information that may vary depending on location.
 
 This document also defines a how forward proxies can use proxy status fields to inform clients
-about the result of their Geohash hints.
+about the result of their Geohash hints. Test
 
 ## Requirements
 
