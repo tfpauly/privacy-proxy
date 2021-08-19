@@ -167,7 +167,7 @@ Issuance assumes the Client has the following information:
 - Origin name (ORIGIN_NAME), a URI referring to the Redeemer (origin) {{!RFC6454}};
 - Origin token public key (ORIGIN_KEY), a blind signature public key; and
 - Origin identifier (ORIGIN_ID), a 32-byte collision-resistant hash that identifies
-  the origin token public key. See {{origin-id for details about its construction}}.
+  the origin token public key. See {{origin-id}} for details about its construction.
 
 Moreover, it assumes that the Client and Mediator have a secure and Mediator-authenticated
 HTTPS connection. See {{sec-considerations}} for additional about this channel.
