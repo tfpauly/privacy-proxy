@@ -55,11 +55,11 @@ This document describes a protocol for mediating the issuance and redemption
 of Private Access Tokens with the following properties:
 
 1. The Mediator enforces and maintains a mapping between client identifiers
-   and anonymous identifiers;
-1. The Issuer enforces policies keyed by anonymous client identifier and origin
+   and anonymous redeemer identifiers;
+1. The Issuer enforces policies keyed by anonymous client identifier and redeemer
    identifier, without learning the real client identity; and
 1. The Redeemer learns whether a given client has a valid Private Access Token for
-   its origin policy.
+   its policy.
 
 ## Requirements
 
@@ -83,11 +83,11 @@ functionality. The pieces of information are identified in {{terms}}.
 
 The Mediator is able to see the Client's actual identity information (CLIENT_ID), the Issuer
 being targeted (ISSUER_NAME), and the period of time for which the Issuer's policy is valid
-(ISSUER_POLICY_WINDOW). The Mediator does not know the identity of the service the Client
+(ISSUER_POLICY_WINDOW). The Mediator does not know the identity of the Redeemer the Client
 is trying to access (ORIGIN_ID), but instead sees an anonymous version (ANON_ORIGIN_ID).
 
-The Issuer is able to see the identity of the service (ORIGIN_ID), but only sees an
-anonymous identifier for a client (ANON_CLIENT_ID). Issues maintain the details of
+The Issuer is able to see the identity of the Redeemer (ORIGIN_ID), but only sees an
+anonymous identifier for a client (ANON_CLIENT_ID). Issuers maintain the details of
 policy enforcement on behalf of the Redeemer. For example, a given policy might be,
 "issue at most N tokens to each client." Example policies and their use cases are
 discussed in {{policies}}.
@@ -136,7 +136,7 @@ and corresponds to a unique ANON_ORIGIN_ID and a unique ANON_CLIENT_ID.
 
 # API Endpoints
 
-It is assumed that issuers make Oblivious HTTP configurations and policy verification
+It is assumed that Issuers make Oblivious HTTP configurations and policy verification
 keys available via the following API endpoints:
 
 - OHTTP configuration: /.well-known/ohttp-config
@@ -149,64 +149,92 @@ The public verification key is a struct of the following format:
 
 ~~~
 struct {
-  opaque public_key[Nk]; // Defined in I-D.irtf-cfrg-rsa-blind-signatures
+  opaque public_key[Nk]; // Defined in [BLINDSIG]
 } VerificationKey;
 ~~~
 
 The contents of VerificationKey are an RSA public key for use with the RSA Blind
 Signature protocol {{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}}.
 
-Mediators advertise an Oblivious HTTP URI template for proxying protocol messages
-to issuers with a known URI Template {{!RFC6570}}. For example, one template
-for the Mediator might be https://mediator.net/proxy-token-request{?request}.
+Issuers also advertise a Private Access Token request URI template {{!RFC6570}}
+for generating access tokens. For example, one template for the Issuer might
+be https://issuer.net/access-token-request.
+
+Mediators advertise an Oblivious HTTP URI template {{!RFC6570}} for proxying
+protocol messages to Issuers. For example, one template
+for the Mediator might be https://mediator.net/relay-access-token-request.
 
 # Issuance
 
 Issuance assumes the Client has the following information:
 
-- Origin token public key, a blind signature public key, denoted `pkO`
-- ORIGIN_ID, a 32-byte collision-resistant hash that identifies the origin token public key
+- Origin name (ORIGIN_NAME), a URI referring to the Redeemer (origin) {{!RFC6454}};
+- Origin token public key (ORIGIN_KEY), a blind signature public key; and
+- Origin identifier (ORIGIN_ID), a 32-byte collision-resistant hash that identifies
+  the origin token public key. See {{origin-id}} for details about its construction.
 
-Moreover, it assumes that the Client and Mediator have a secure and
-mutually authenticated connection. This is necessary for the Mediator to identify
-the Client.
-
-Before starting the issuance process, the Client generates the ANON_ORIGIN_ID,
-a random collision-resistant 32-byte value. The Client stores a mapping between the
-ORIGIN_ID and the generated ANON_ORIGIN_ID for future requests.
+Moreover, it assumes that the Client and Mediator have a secure and Mediator-authenticated
+HTTPS connection. See {{sec-considerations}} for additional about this channel.
 
 Issuance begins by Clients generating a Private Access Token request, starting as follows:
 
 ~~~
 nonce = random(32)
-blinded_req, blind_inv = rsabssa_blind(pkO, nonce)
+blinded_req, blind_inv = rsabssa_blind(ORIGIN_KEY, nonce)
 ~~~
-
-[OPEN ISSUE: where do we talk about where the Client sends the actual ORIGIN_ID to the Issuer?]
 
 [OPEN ISSUE: rewrite this in terms of a generic blind signature scheme (not RSA specific)]
 
-The Client then constructs a policy-based Private Access Token request of the following
-structure, encoded using TLS notation from {{!TLS13=RFC8446}}, Section 3:
+The Client then constructs a Private Access Token request using blinded_req, encoded 
+using TLS notation from {{!TLS13=RFC8446}}, Section 3:
 
 ~~~
 struct {
-  uint8_t anon_origin_id[32];
   opaque blinded_req[Nk];
-} PrivateAccessTokenRequest;
+} AccessTokenRequest;
 ~~~
 
 The Client then generates an HTTP POST request to the Issuer with this request
-as the body. The media type for this request is "application/policy-token-request".
-Then the Client encapsulates this request using Oblivious HTTP and sends the response
-to the Mediator's proxy URI.
+as the body. The media type for this request is "message/access-token-request".
+The Client includes the "Token-Origin" header in this request, whose value is
+ORIGIN_NAME. An example request is shown below.
 
-Upon receipt, the Mediator computes the ANON_CLIENT_ID, which is a fixed-length byte string, for
-the given Client. The mechanism for doing this is out of scope of the document. However,
-the ANON_CLIENT_ID MUST be generated in such a way that any Client identifying information cannot
-be recovered. It also MUST be unique for each ANON_ORIGIN_ID during a given ISSUER_POLICY_WINDOW.
+~~~
+:method = POST
+:scheme = https
+:authority = issuer.net
+:path = /access-token-request
+accept = message/access-token-request
+cache-control = no-cache, no-store
+content-type = message/access-token-request
+content-length = Nk
+Token-Origin = https://example.com
 
-The Mediator also computes ANON_ORIGIN_ID_PRIME, a fixed-length byte string, for each ANON_ORIGIN_ID
+<Bytes containing the AccessTokenRequest>
+~~~
+
+Then the Client encapsulates this request using Oblivious HTTP, yielding an encapsulated
+HTTP message. The Client includes the "Anonymous-Origin-ID" header in this request,
+whose value is ANON_ORIGIN_ID. Finally, the Client sends this encapsulated request to the
+Mediator's proxy URI. An example request is shown below.
+
+~~~
+:method = POST
+:scheme = https
+:authority = mediator.net
+:path = /relay-access-token-request
+accept = message/ohttp-req
+cache-control = no-cache, no-store
+content-type = message/ohttp-req
+content-length = ...
+Anonymous-Origin-ID = ANON_ORIGIN_ID
+
+<Bytes containing the encapsulated HTTP message for the Issuer>
+~~~
+
+Upon receipt, the Mediator computes ANON_CLIENT_ID, which is a fixed-length byte string
+for the given Client. See {{client-id}} for details of its computation. The Mediator 
+also computes ANON_ORIGIN_ID_PRIME, a fixed-length byte string, for each ANON_ORIGIN_ID 
 for a specific ANON_CLIENT_ID. ANON_ORIGIN_ID will not change across different ISSUER_POLICY_WINDOW
 periods, but each ANON_ORIGIN_ID_PRIME MUST change for each new ISSUER_POLICY_WINDOW due to mapping
 to the combination of ANON_CLIENT_ID and ANON_ORIGIN_ID.
@@ -215,33 +243,60 @@ Before forwarding the Client's encapsulated request to the Issuer, the Mediator 
 listing both the ANON_CLIENT_ID, "Anonymous-Client-ID", and the ANON_ORIGIN_ID_PRIME,
 "Anonymous-Origin-ID".
 
+~~~
+:method = POST
+:scheme = https
+:authority = issuer.net
+:path = /access-token-request
+accept = message/ohttp-req
+cache-control = no-cache, no-store
+content-type = message/ohttp-req
+content-length = ...
+"Anonymous-Origin-ID" = ANON_ORIGIN_ID_PRIME
+"Anonymous-Client-ID" = ANON_CLIENT_ID
+
+<Bytes containing the encapsulated HTTP message for the Issuer>
+~~~
+
+[OPEN ISSUE: Square this with OHTTP, which requires that proxies MUST NOT add information about the client to the forwarded request]
+
 Upon receipt of the Client's encapsulated request, the Issuer checks for the "Anonymous-Client-ID"
-and "Anonymous-Origin-ID" headers. If either is absent, the Issuer aborts and returns a 400 error
-to the Mediator. If present, the Issuer decapsulates the request. If this fails, the Issuer aborts
-and returns a 400 error to the Mediator. The Issuer verifies that the ORIGIN_ID in the request
-maps to a consistent ANON_ORIGIN_ID_PRIME value for a specific ANON_CLIENT_ID. If the Issuer detects
-a request that has the same ORIGIN_ID as a previous request with a different ANON_ORIGIN_ID_PRIME for
-the same ANON_CLIENT_ID, or a request that has the same ANON_ORIGIN_ID_PRIME as a previous request
-with a different ORIGIN_ID for the same ANON_CLIENT_ID, the Issuer abors and returns a 400 error
-to the Mediator.
+and "Anonymous-Origin-ID" headers. If either is absent, the Issuer aborts and returns a 400 error 
+to the Mediator. If present, the Issuer decapsulates the request. If this fails, the Issuer aborts 
+and returns a 400 error to the Mediator. If decapsulation succeeds, the Issuer checks for the 
+"Target-Origin" header. If absent, the Issuer aborts and returns a 400 error to the Mediator. 
+If present, the Issuer proceeds extracts ANON_CLIENT_ID from the "Anonymous-Client-ID" header, 
+ANON_ORIGIN_ID from the "Anonymous-Origin-ID" header, and ORIGIN_NAME from the "Target-Origin" 
+header, and then proceeds as follows.
 
-[OPEN ISSUE: ensure this is compatible with OHTTP semantics]
+First, check to see if there are any prior token requests for the given (ANON_CLIENT_ID, ORIGIN_NAME) pair.
+If so, and if the corresponding ANON_ORIGIN_ID does not match that of the current request, the
+Issuer aborts and returns a 400 error to the Mediator.
 
-If decapsulation succeeds, the Issuer uses the ANON_CLIENT_ID and PrivateAccessTokenRequest
-to determine if a token can be generated. If the policy does not admit issuance, the Issuer aborts and returns
-a 400 error to the Mediator. Otherwise, the Issuer completes the issuance flow by computing
-a blinded response as follows:
+If this is not the case, determine if the token request can be satisfied for the given
+(ANON_CLIENT_ID, ORIGIN_NAME) pair, according to the access token policy. If the policy does not admit
+issuance, the Issuer aborts and returns a 400 error to the Mediator.
+
+If the Issuer local state and policy admit a token, the Issuer completes the issuance flow by
+computing a blinded response as follows:
 
 ~~~
-blind_sig = rsabssa_blind_sign(skP, PrivateAccessTokenRequest.blinded_req)
+blind_sig = rsabssa_blind_sign(skP, AccessTokenRequest.blinded_req)
 ~~~
+
+`skP` is the private key corresponding to ORIGIN_KEY, known only to the Issuer.
 
 The Issuer generates an HTTP response with status code 200 whose body consists of
-blind_sig. The Issuer encapsulates this as the response to the Client's request
-and sends the result to the Mediator. The Issuer then updates any local state
-for the (ANON_CLIENT_ID, policy) tuple as needed. For example, if the policy is meant to
-bound the number of tokens given to a given ANON_CLIENT_ID, then the Issuer should increment
-the number of tokens issued for the given ANON_CLIENT_ID.
+blind_sig. The Issuer encapsulates this as the response to the Client's request,
+sets the media type to "message/access-token-response", and sends the result to
+the Mediator.
+
+The Issuer then updates any local state for the (ANON_CLIENT_ID, ORIGIN_KEY) tuple as
+needed. For example, if the policy is meant to bound the number of tokens given to
+a given ANON_CLIENT_ID, then the Issuer should increment the number of tokens issued
+for the given ANON_CLIENT_ID.
+
+[OPEN ISSUE: describe Issuer state requirements somewhere up top, including (1) the client<>origin stable mapping and (2) client<>policy token mapping]
 
 The Mediator forwards the encapsulated response to the Client without modification.
 
@@ -249,11 +304,29 @@ Upon receipt, the Client decapsulates the response and, if successful, processes
 body as follows:
 
 ~~~
-sig = rsabssa_finalize(pkP, nonce, blind_sig, blind_inv)
+sig = rsabssa_finalize(ORIGIN_KEY, nonce, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a Private Access Token as described in
 {{PRIVATETOKEN}} using the token nonce and output sig.
+
+## Anonymous Client ID {#client-id}
+
+ANON_CLIENT_ID MUST be generated in such a way that any Client identifying information cannot
+be recovered. It also MUST be unique for each ANON_ORIGIN_ID during a given ISSUER_POLICY_WINDOW.
+
+[OPEN ISSUE: Does the mediator modify ANON_ORIGIN_ID into ANON_ORIGIN_ID_PRIME before passing to the issuer? Or does the client learn about the window changes and switch the ANON_ORIGIN_ID accordingly?]
+
+## Anonymous Origin ID {#origin-id}
+
+ANON_ORIGIN_ID MUST be a stable and unpredictable 32-byte value computed by the Client.
+Clients MUST NOT change this value across origins. Doing so will result in token issuance
+failuer by the mediator.
+
+One possible mechanism for implementing this identifier is for the Client to store a mapping
+between the ORIGIN_NAME and a randomly generated ANON_ORIGIN_ID for future requests. Alternatively,
+the Client can compute a pseudorandom function (PRF) keyed by a per-client secret (CLIENT_SECRET)
+over the ORIGIN_NAME, e.g., ANON_ORIGIN_ID = HKDF(secret=CLIENT_SECRET, salt="", info=ORIGIN_NAME).
 
 # Redemption
 
@@ -280,15 +353,21 @@ policy.
 
 # Policies and Uses Cases {#policies}
 
-TODO: example policies and deployments of this (diagram)
+TODO: example policies and deployments of this (diagram) -- include:
+- single origin, single policy
+- single origin, multiple policies
+- issuer and redeemer as same entity
 
-# Security Considerations {#security}
+# Security Considerations {#sec-considerations}
 
-TODO
+The HTTPS connection between Client and Mediator is minimally Mediator-authenticated. Mediators
+can also require Client authentication if they wish to restrict Private Access Token proxying
+to trusted or otherwise authenticated Clients. Absent some form of Client authentication, Mediators
+can use other per-Client information for the client identifier mapping, such as IP addressess.
 
 # IANA Considerations {#iana}
 
-TODO: "application/policy-token-request" MIME type
-TODO: "application/policy-key-request" MIME type
+TODO: "message/access-token-request" MIME type
+TODO: "message/access-token-response" MIME type
 
 --- back
