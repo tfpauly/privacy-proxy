@@ -364,21 +364,78 @@ Authorization: PrivacyToken t=abc
 ~~~
 
 Where the token is a serialized Private Access Token corresponding to the given Redeemer
-policy.
+policy. Redeemers verify the token using the corresponding policy verification key from the
+Issuer. Redeemers are also expected to keep state of Private Access Tokens already spent;
+see {{access-token-replay}} for discussion.
 
 # Policies and Uses Cases {#policies}
 
-TODO: example policies and deployments of this (diagram) -- include:
-- single origin, single policy
-- single origin, multiple policies
-- issuer and redeemer as same entity
+This section describes various instantiations of this protocol to address common use cases.
+
+## Client Re-Identification
+
+In this example, a single site wishes to learn if a given user is unique. The site's only
+requirement is to know if two otherwise distinct connections originate from the same
+end-user, and nothing more. In particular, it is not important for the server to know if
+two connections correspond to a specific user. The time window over which the server
+needs to link such connections together can vary. Larger windows allow for larger
+per-user linkability.
+
+To instantiate this case, the site acts as a Redeemer and registers an "unlimited token"
+policy with the Issuer. In this policy, the Issuer does not enforce any limit on the number
+of tokens a given user will obtain.
+
+Redeemers request tokens from clients and, upon successful redemption, the Redeemer knows
+the client was able to request a token for the given (CLIENT_ID, ORIGIN_ID) tuple. As a
+result, the Redeemer knows this is a unique client.
+
+## Metered Paywalls
+
+In this example, a site wishes to implement a metered paywall, wherein the meter is enforced
+by a weak client identifier such as their IP address. The policy for such a paywall is to
+limit the number of visits to unique users to some fixed value. The policy typically rotates
+on a regular basis. For example, users may get N visits within the span of a week before the
+paywall is enacted.
+
+To instantiate this case, the site acts as a Redeemer and registers a "bounded token" policy
+with the Issuer. In this policy, the Issuer does enforces a fixed number of tokens for a given
+(ANON_CLIENT_ID, ORIGIN_ID) tuple.
+
+Redeemers request tokens from clients and, upon successful redemption, the Redeemer knows
+the client was able to request a token for the given (CLIENT_ID, ORIGIN_ID) tuple within
+its budget. Failure to present a token can be interpreted as a signal that the client's token
+budget was exceeded.
 
 # Security Considerations {#sec-considerations}
+
+This section discusses security considerations for the protocol.
+
+[OPEN ISSUE: discuss trust model]
+
+## Client Identity
 
 The HTTPS connection between Client and Mediator is minimally Mediator-authenticated. Mediators
 can also require Client authentication if they wish to restrict Private Access Token proxying
 to trusted or otherwise authenticated Clients. Absent some form of Client authentication, Mediators
 can use other per-Client information for the client identifier mapping, such as IP addressess.
+
+## Denial of Service
+
+Requesting and verifying a Private Access Token is more expensive than checking an implicit
+signal, such as an IP address, especially since malicious clients can generate garbage
+Private Access Tokens and for Redeemers to work. However, similar DoS vectors already exist
+for Redeemers, e.g., at the underlying TLS layer.
+
+## Access Token Replay
+
+Redeemers are required to track when Private Access Tokens are spent. Failure to do so may
+allow malicious clients to replay tokens more than once. However, given that existing solutions
+to this problem already require Redeemers to carry per-client state, this additional cost is not
+a new requirement.
+
+[OPEN ISSUE: replay state is a tradeoff agaist mediator and issuer availability -- if the latter
+services were highly available, then redeemers could include a fresh challenge to be folded into
+the Private Access Token, removing the need for any redeemer state.]
 
 ## Access Token Verification Keys {#access-token-keys}
 
