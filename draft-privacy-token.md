@@ -32,13 +32,6 @@ author:
     org: Cloudflare
     email: caw@heapingbits.net
 
-
-normative:
-    RSASIG:
-      target: https://tools.ietf.org/html/draft-wood-cfrg-rsa-blind-signatures-00
-      title: RSA Blind Signatures
-      date: March 2020
-
 --- abstract
 
 This documents defines an authentication scheme for HTTP called Privacy Token.
@@ -54,7 +47,7 @@ This scheme is built to be used to authenticate to proxies, using the
 Proxy-Authorization header field, with a blind signature that allows a proxy
 to verify that a client has a token signed by a particular key, but without
 identifying the client. The initial version of this scheme is intended to be
-used with RSA Blind Signatures {{RSASIG}}.
+used with RSA Blind Signatures {{!RSASIG=I-D.irtf-cfrg-rsa-blind-signatures}}.
 
 ## Requirements
 
