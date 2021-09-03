@@ -264,8 +264,8 @@ accept = message/ohttp-req
 cache-control = no-cache, no-store
 content-type = message/ohttp-req
 content-length = ...
-"Anonymous-Origin-ID" = ANON_ORIGIN_ID_PRIME
-"Anonymous-Client-ID" = ANON_CLIENT_ID
+Anonymous-Origin-ID = ANON_ORIGIN_ID_PRIME
+Anonymous-Client-ID = ANON_CLIENT_ID
 
 <Bytes containing the encapsulated HTTP message for the Issuer>
 ~~~
