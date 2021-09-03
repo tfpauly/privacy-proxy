@@ -372,22 +372,19 @@ see {{access-token-replay}} for discussion.
 
 This section describes various instantiations of this protocol to address common use cases.
 
-## Client Re-Identification
+## Private Client Authentication
 
-In this example, a single site wishes to learn if a given user is unique. The site's only
-requirement is to know if two otherwise distinct connections originate from the same
-end-user, and nothing more. In particular, it is not important for the server to know if
-two connections correspond to a specific user. The time window over which the server
-needs to link such connections together can vary. Larger windows allow for larger
-per-user linkability.
+In this example, a single site wishes to learn if a given user is authentic as defined by a mediator.
+It is not important for the server to know if two connections correspond to a specific user.
+The time window over which the server needs to link such connections together can vary. 
 
 To instantiate this case, the site acts as a Redeemer and registers an "unlimited token"
 policy with the Issuer. In this policy, the Issuer does not enforce any limit on the number
 of tokens a given user will obtain.
 
 Redeemers request tokens from clients and, upon successful redemption, the Redeemer knows
-the client was able to request a token for the given (CLIENT_ID, ORIGIN_ID) tuple. As a
-result, the Redeemer knows this is a unique client.
+the client was able to request a token for the given (ANON_CLIENT_ID, ORIGIN_ID) tuple. As a
+result, the Redeemer knows this is an authentic client.
 
 ## Metered Paywalls
 
@@ -405,6 +402,21 @@ Redeemers request tokens from clients and, upon successful redemption, the Redee
 the client was able to request a token for the given (CLIENT_ID, ORIGIN_ID) tuple within
 its budget. Failure to present a token can be interpreted as a signal that the client's token
 budget was exceeded.
+
+## Client Linking
+
+In this example, a site wishes to determine if multiple connections from a user are from
+one user, or multiple. It is not important to map a connection to a non-anonymous user identifier.
+
+To instantiate this case, the site acts as a Redeemer and registers a "single token" policy with
+the issuer. In this policy, the Issuer ensures exactly one token can be issued for a given 
+(ANON_CLIENT_ID, ORIGIN_ID) tuple.
+
+The redeemer requests tokens from clients, and verifies but does not enforce a one-time-use. With
+this approach, the redeemer can verify that multiple requests map to a single user across the
+ISSUER_POLICY_WINDOW. Larger windows allow for larger per-user linkability. It is assumed other
+approaches are applied to ensure clients can't be reidentified in by other identifiers carried on
+the request.
 
 # Security Considerations {#sec-considerations}
 
