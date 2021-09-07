@@ -332,7 +332,7 @@ ISSUER_POLICY_WINDOW, e.g., ANON_CLIENT_ID = HKDF(secret=CLIENT_ID, salt="", inf
 
 ANON_ORIGIN_ID MUST be a stable and unpredictable 32-byte value computed by the Client.
 Clients MUST NOT change this value across token requests. Doing so will result in token issuance
-failure by the mediator.
+failure by either mediator or issuer.
 
 One possible mechanism for implementing this identifier is for the Client to store a mapping
 between the ORIGIN_NAME and a randomly generated ANON_ORIGIN_ID for future requests. Alternatively,
