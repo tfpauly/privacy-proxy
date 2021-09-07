@@ -42,13 +42,13 @@ or access from an IP address may be rate-limited to prevent fraud and abuse.
 When the IP address signal is unavailable, perhaps due to the use of a proxy network,
 servers are left without a suitable functional replacement.
 
-This document proposes using Private Acess Tokens, using RSA Blind Signatures as defined
+This document proposes using Private Access Tokens, using RSA Blind Signatures as defined
 in {{!PRIVATETOKEN=I-D.privacy-token}}, as a replacement for these signals. These tokens
 are privately issued to clients and then redeemed by servers in such a way that the
 issuance and redemption events for a given token are unlinkable. Fundamentally, using
-tokens in lieu of per-client signals for policy enforcement seemingly requires some entity
+tokens in lieu of passive signals for policy enforcement seemingly requires some entity
 to know both the client and policy. However, with appropriate mediation and
-sesparation between parties involved in the issuance and redemption protocols,
+separation between parties involved in the issuance and redemption protocols,
 it is possible to limit this information leakage without functional regressions.
 
 This document describes a protocol for mediating the issuance and redemption
@@ -67,7 +67,7 @@ of Private Access Tokens with the following properties:
 
 # Overview
 
-The protocol involves four entites:
+The protocol involves four entities:
 
 1. Client: the entity responsible for requesting Private Access Tokens and redeeming them.
 1. Mediator: the entity responsible for authenticating Clients, using information such as
@@ -252,7 +252,7 @@ also computes ANON_ORIGIN_ID_PRIME, a fixed-length byte string, for each ANON_OR
 for a specific ANON_CLIENT_ID. See {{origin-id}} for details its computation.
 
 Before forwarding the Client's encapsulated request to the Issuer, the Mediator includes headers
-listing both the ANON_CLIENT_ID, "Anonymous-Client-ID", and the ANON_ORIGIN_ID_PRIME,
+listing both the ANON_CLIENT_ID as "Anonymous-Client-ID", and the ANON_ORIGIN_ID_PRIME as
 "Anonymous-Origin-ID".
 
 ~~~
@@ -331,8 +331,8 @@ ISSUER_POLICY_WINDOW, e.g., ANON_CLIENT_ID = HKDF(secret=CLIENT_ID, salt="", inf
 ## Anonymous Origin ID {#origin-id}
 
 ANON_ORIGIN_ID MUST be a stable and unpredictable 32-byte value computed by the Client.
-Clients MUST NOT change this value across origins. Doing so will result in token issuance
-failuer by the mediator.
+Clients MUST NOT change this value across token requests. Doing so will result in token issuance
+failure by either mediator or issuer.
 
 One possible mechanism for implementing this identifier is for the Client to store a mapping
 between the ORIGIN_NAME and a randomly generated ANON_ORIGIN_ID for future requests. Alternatively,
