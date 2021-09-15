@@ -243,7 +243,7 @@ The output of that protocol is a PrivacyToken bound to the redemption context.
 Clients then present this token to Redeemers using the Authorization header as follows:
 
 ~~~
-Authorization: PrivacyToken t=abc
+Authorization: PrivacyToken token=abc
 ~~~
 
 Where the token is a serialized Private Access Token corresponding to the given Redeemer
