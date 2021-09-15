@@ -205,20 +205,15 @@ can be obtained.
 
 Token redemption is an interactive protocol. Redeemers challenge Clients to
 present a unique, single-use token. Redeemers present this challenge to Clients
-with the following context:
+with the following challenge:
 
 ~~~
 struct {
-   uint8 policy_window;
    opaque redeemer_name<1..2^16-1>;
    opaque issuer_name<1..2^16-1>;
    opaque redemption_nonce[32];
-   uint64 timestamp;
-} RedemptionContext;
+} RedemptionChallenge;
 ~~~
-
-policy_window:
-: The policy window value for the redemption token (ISSUER_POLICY_WINDOW).
 
 redeemer_name:
 : Name of the Redeemer (ORIGIN_NAME).
@@ -229,39 +224,39 @@ issuer_name:
 redemption_nonce:
 : A fresh 32-byte nonce generated for each redemption request.
 
-timestamp:
-: The current UNIX epoch time.
+This challenge is sent to Clients in an "WWW-Authenticate" header with the
+"PrivateAccessToken" scheme. This scheme has only one required attribute
+named "challenge", and one optional attribute named "max-age". The "challenge"
+attribute string is made up of the base64url-encoded RedemptionChallenge
+value. This MUST be unique for every 401 HTTP response to prevent replay
+attacks. The "max-age" attribute consists of the number of seconds that the
+challenge will be accepted by the Redeemer. Redeemers MAY include the "realm"
+attribute, if desired.
 
-This context is sent to Clients in an "WWW-Authenticate" header as follows:
-
-~~~
-WWW-Authenticate: PrivacyToken realm="<context>"
-~~~
-
-Upon receipt, Clients use the context in the Issuance protocol, described in {{issuance}}.
-The output of that protocol is a PrivacyToken bound to the redemption context.
-Clients then present this token to Redeemers using the Authorization header as follows:
+Upon receipt of this challenge, Clients use it in the Issuance protocol as
+described in {{issuance}}. The output of that protocol is a PrivacyToken bound
+to the redemption challenge. Clients then present this token to Redeemers using
+the Authorization header as follows:
 
 ~~~
 Authorization: PrivacyToken token=abc
 ~~~
 
 Where the token is a serialized Private Access Token corresponding to the given Redeemer
-policy, and the PrivacyToken message is SHA256(context). Redeemers verify the token using
+policy, and the PrivacyToken message is SHA256(challenge). Redeemers verify the token using
 the corresponding policy verification key from the Issuer.
 
 ## Issuance
 
-Issuance assumes the Client has the following information, derived from a given RedemptionContext:
+Issuance assumes the Client has the following information, derived from a given RedemptionChallenge:
 
 - Origin name (ORIGIN_NAME), a URI referring to the Redeemer (origin) {{!RFC6454}}. This is
-  the value of RedemptionContext.redeemer_name.
+  the value of RedemptionChallenge.redeemer_name.
 - Origin identifier (ORIGIN_ID), a 32-byte collision-resistant hash that identifies
   the origin token public key. See {{origin-id}} for details about its construction.
 - Issuer token public key (ISSUER_KEY), a blind signature public key. This is the public key
-  corresponding to the issuer identified by RedemptionContext.issuer_name for the given
-  policy window identified by RedemptionContext.policy_window. See {{access-token-keys}}
-  for details on how this can be obtained.
+  corresponding to the issuer identified by RedemptionChallenge.issuer_name.
+  See {{access-token-keys}} for details on how this can be obtained.
 
 Issuance also assumes that Issuers maintain local state for each distinct (redeemer, policy)
 tuple. In particular, for each tuple, Issuers maintain a stable mapping from ANON_CLIENT_ID
@@ -273,8 +268,8 @@ Finally, Issuance assumes that the Client and Mediator have a secure and
 Mediator-authenticated HTTPS connection. See {{sec-considerations}} for additional
 about this channel.
 
-Issuance begins by Clients hashing the RedemptionContext to produce a token input
-as message = SHA256(context), and then blinding message as follows:
+Issuance begins by Clients hashing the RedemptionChallenge to produce a token input
+as message = SHA256(challenge), and then blinding message as follows:
 
 ~~~
 blinded_req, blind_inv = rsabssa_blind(ISSUER_KEY, message)
