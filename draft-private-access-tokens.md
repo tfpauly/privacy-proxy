@@ -90,12 +90,15 @@ The Issuer is able to see the identity of the Redeemer (ORIGIN_ID), but only see
 anonymous identifier for a client (ANON_CLIENT_ID). Issuers maintain the details of
 policy enforcement on behalf of the Redeemer. For example, a given policy might be,
 "issue at most N tokens to each client." Example policies and their use cases are
-discussed in {{policies}}.
+discussed in {{examples}}.
 
 The Redeemer, which represents the service being accessed by the client, only receives
 a Private Access Token from the client.
 
-## Terminology {#terms}
+## Notation and Terminology {#terms}
+
+Unless said otherwise, this document encodes protocol messages in TLS notation
+from {{!TLS13=RFC8446}}, Section 3.
 
 The following terms are defined to refer to the different pieces of information
 passed through the system:
@@ -110,6 +113,12 @@ ISSUER_POLICY_WINDOW:
 policy, defined in terms of seconds and represented as a uint64. The ANON_CLIENT_ID
 that the Mediator derives is specific to a Policy Window, meaning that a CLIENT_ID
 will not map to the same ANON_CLIENT_ID after the Policy Window has elapsed.
+
+ISSUER_KEY:
+: The public key used when generating and verifying Private Access Tokens.
+
+ORIGIN_NAME:
+: The Origin name identifies the Redeemer that requests Private Access Tokens.
 
 ORIGIN_ID:
 : The Origin Identifier represents the service for which the Client is requesting a
@@ -139,22 +148,25 @@ and corresponds to a unique ANON_ORIGIN_ID and a unique ANON_CLIENT_ID.
 It is assumed that Issuers make Oblivious HTTP configurations and policy verification
 keys available via the following API endpoints:
 
-- OHTTP configuration: /.well-known/ohttp-config
+- OHTTP configuration: /.well-known/ohttp-configs
 - Access token policy verification key: /.well-known/access-token-key/policy=?
 - Access token policy window: /.well-known/access-token-window/policy=?
 
 The OHTTP configuration is defined in {{!OHTTP=I-D.thomson-http-oblivious-http}}.
+The response is a serialied collection of configurations, and uses media
+type "application/ohttp-keys".
+
 The access token policy verification key is a struct of the following format:
 
 ~~~
 struct {
-  opaque public_key[Nk]; // Defined in [BLINDSIG]
+   opaque public_key[Nk]; // Defined in [BLINDSIG]
 } AccessTokenKey;
 ~~~
 
 The contents of AccessTokenKey are an RSA public key for use with the RSA Blind
 Signature protocol {{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}}. The response
-use media type "application/access-token-key".
+uses media type "application/access-token-key".
 
 The access token policy window is a resource of media type "application/json", with the
 following structure:
@@ -173,14 +185,83 @@ Mediators advertise an Oblivious HTTP URI template {{!RFC6570}} for proxying
 protocol messages to Issuers. For example, one template
 for the Mediator might be https://mediator.net/relay-access-token-request.
 
-# Issuance
+# Protocol
 
-Issuance assumes the Client has the following information:
+Private Access Tokens are single-use tokens cryptographically bound to
+policies. Redeemers request tokens from Clients, who then engage with
+Mediators and Issuers to private compute policy-compliant tokens and
+reveal them to the Redeemer. Example policies and use cases that system
+addresses are described in {{examples}}.
 
-- Origin name (ORIGIN_NAME), a URI referring to the Redeemer (origin) {{!RFC6454}};
-- Origin token public key (ORIGIN_KEY), a blind signature public key; and
+The rest of this section describes this interactive protocol in terms of
+the redemption request ({{redemption-request}}) and corresponding token
+issuance flow ({{issuance}}).
+
+## Redemption Request
+
+The Client is assumed to have the policy verification key before redeeming
+a Private Access Token. See {{access-token-keys}} for details on how this
+can be obtained.
+
+Token redemption is an interactive protocol. Redeemers challenge Clients to
+present a unique, single-use token. Redeemers present this challenge to Clients
+with the following context:
+
+~~~
+struct {
+   uint8 policy_window;
+   opaque redeemer_name<1..2^16-1>;
+   opaque issuer_name<1..2^16-1>;
+   opaque redemption_nonce[32];
+   uint64 timestamp;
+} RedemptionContext;
+~~~
+
+policy_window:
+: The policy window value for the redemption token (ISSUER_POLICY_WINDOW).
+
+redeemer_name:
+: Name of the Redeemer (ORIGIN_NAME).
+
+issuer_name:
+: Name of the Issuer (ISSUER_NAME).
+
+redemption_nonce:
+: A fresh 32-byte nonce generated for each redemption request.
+
+timestamp:
+: The current UNIX epoch in seconds.
+
+This context is sent to Clients in an "WWW-Authenticate" header as follows:
+
+~~~
+WWW-Authenticate: PrivacyToken realm="<context>"
+~~~
+
+Upon receipt, Clients use the context in the Issuance protocol, described in {{issuance}}.
+The output of that protocol is a PrivacyToken bound to the redemption context.
+Clients then present this token to Redeemers using the Authorization header as follows:
+
+~~~
+Authorization: PrivacyToken t=abc
+~~~
+
+Where the token is a serialized Private Access Token corresponding to the given Redeemer
+policy, and the PrivacyToken message is SHA256(context). Redeemers verify the token using
+the corresponding policy verification key from the Issuer.
+
+## Issuance
+
+Issuance assumes the Client has the following information, derived from a given RedemptionContext:
+
+- Origin name (ORIGIN_NAME), a URI referring to the Redeemer (origin) {{!RFC6454}}. This is
+  the value of RedemptionContext.redeemer_name.
 - Origin identifier (ORIGIN_ID), a 32-byte collision-resistant hash that identifies
   the origin token public key. See {{origin-id}} for details about its construction.
+- Issuer token public key (ISSUER_KEY), a blind signature public key. This is the public key
+  corresponding to the issuer identified by RedemptionContext.issuer_name for the given
+  policy window identified by RedemptionContext.policy_window. See {{access-token-keys}}
+  for details on how this can be obtained.
 
 Issuance also assumes that Issuers maintain local state for each distinct (redeemer, policy)
 tuple. In particular, for each tuple, Issuers maintain a stable mapping from ANON_CLIENT_ID
@@ -192,19 +273,20 @@ Finally, Issuance assumes that the Client and Mediator have a secure and
 Mediator-authenticated HTTPS connection. See {{sec-considerations}} for additional
 about this channel.
 
-Issuance begins by Clients generating a Private Access Token request, starting as follows:
+Issuance begins by Clients hashing the RedemptionContext to produce a token input
+as message = SHA256(context), and then blinding message as follows:
 
 ~~~
-nonce = random(32)
-blinded_req, blind_inv = rsabssa_blind(ORIGIN_KEY, nonce)
+blinded_req, blind_inv = rsabssa_blind(ISSUER_KEY, message)
 ~~~
 
-The Client then constructs a Private Access Token request using blinded_req, encoded
-using TLS notation from {{!TLS13=RFC8446}}, Section 3:
+The Client MUST use a randomized variant of RSABSSA in producing this signature with
+a salt length of at least 32 bytes. The Client then constructs a Private Access Token
+request using blinded_req:
 
 ~~~
 struct {
-  opaque blinded_req[Nk];
+   opaque blinded_req[Nk];
 } AccessTokenRequest;
 ~~~
 
@@ -297,14 +379,14 @@ computing a blinded response as follows:
 blind_sig = rsabssa_blind_sign(skP, AccessTokenRequest.blinded_req)
 ~~~
 
-`skP` is the private key corresponding to ORIGIN_KEY, known only to the Issuer.
+`skP` is the private key corresponding to ISSUER_KEY, known only to the Issuer.
 
 The Issuer generates an HTTP response with status code 200 whose body consists of
 blind_sig. The Issuer encapsulates this as the response to the Client's request,
 sets the media type to "message/access-token-response", and sends the result to
 the Mediator.
 
-The Issuer then updates any local state for the (ANON_CLIENT_ID, ORIGIN_KEY) tuple as
+The Issuer then updates any local state for the (ANON_CLIENT_ID, ORIGIN_ID) tuple as
 needed. For example, if the policy is meant to bound the number of tokens given to
 a given ANON_CLIENT_ID, then the Issuer should increment the number of tokens issued
 for the given ANON_CLIENT_ID.
@@ -315,20 +397,20 @@ Upon receipt, the Client decapsulates the response and, if successful, processes
 body as follows:
 
 ~~~
-sig = rsabssa_finalize(ORIGIN_KEY, nonce, blind_sig, blind_inv)
+sig = rsabssa_finalize(ISSUER_KEY, nonce, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a Private Access Token as described in
-{{PRIVATETOKEN}} using the token nonce and output sig.
+{{PRIVATETOKEN}} using the token input message and output sig.
 
-## Anonymous Client ID {#client-id}
+### Anonymous Client ID {#client-id}
 
 ANON_CLIENT_ID MUST be generated in such a way that any Client identifying information cannot
 be recovered. It also MUST be unique for each ANON_ORIGIN_ID during a given ISSUER_POLICY_WINDOW.
 One possible derivation is to compute a pseudorandom function (PRF) keyed by CLIENT_ID over
 ISSUER_POLICY_WINDOW, e.g., ANON_CLIENT_ID = HKDF(secret=CLIENT_ID, salt="", info=ISSUER_POLICY_WINDOW).
 
-## Anonymous Origin ID {#origin-id}
+### Anonymous Origin ID {#origin-id}
 
 ANON_ORIGIN_ID MUST be a stable and unpredictable 32-byte value computed by the Client.
 Clients MUST NOT change this value across token requests. Doing so will result in token issuance
@@ -345,30 +427,7 @@ Issuers MUST NOT be able to recover ANON_ORIGIN_ID from ANON_ORIGIN_ID_PRIME. On
 derivation is to compute a PRF keyed by ANON_ORIGIN_ID over ISSUER_POLICY_WINDOW, e.g.,
 ANON_ORIGIN_ID_PRIME = HKDF(secret=ANON_ORIGIN_ID, salt="", info=ISSUER_POLICY_WINDOW).
 
-# Redemption
-
-The Client is assumed to have the policy verification key before redeeming
-a Private Access Token.
-
-Redeemers can request that tokens be spent by Clients for given resources
-using the WWW-Authenticate header, as follows:
-
-~~~
-WWW-Authenticate: PrivacyToken realm="<policy>"
-~~~
-
-Upon receipt, Clients can spend a Private Access Token with the Authorize header, as follows:
-
-~~~
-Authorization: PrivacyToken t=abc
-~~~
-
-Where the token is a serialized Private Access Token corresponding to the given Redeemer
-policy. Redeemers verify the token using the corresponding policy verification key from the
-Issuer. Redeemers are also expected to keep state of Private Access Tokens already spent;
-see {{access-token-replay}} for discussion.
-
-# Policies and Uses Cases {#policies}
+# Policies and Uses Cases {#examples}
 
 This section describes various instantiations of this protocol to address common use cases.
 
@@ -376,7 +435,7 @@ This section describes various instantiations of this protocol to address common
 
 In this example, a single site wishes to learn if a given user is authentic as defined by a mediator.
 It is not important for the server to know if two connections correspond to a specific user.
-The time window over which the server needs to link such connections together can vary. 
+The time window over which the server needs to link such connections together can vary.
 
 To instantiate this case, the site acts as a Redeemer and registers an "unlimited token"
 policy with the Issuer. In this policy, the Issuer does not enforce any limit on the number
@@ -409,7 +468,7 @@ In this example, a site wishes to determine if multiple connections from a user 
 one user, or multiple. It is not important to map a connection to a non-anonymous user identifier.
 
 To instantiate this case, the site acts as a Redeemer and registers a "single token" policy with
-the issuer. In this policy, the Issuer ensures exactly one token can be issued for a given 
+the issuer. In this policy, the Issuer ensures exactly one token can be issued for a given
 (ANON_CLIENT_ID, ORIGIN_ID) tuple.
 
 The redeemer requests tokens from clients, and verifies but does not enforce a one-time-use. With
@@ -437,17 +496,6 @@ Requesting and verifying a Private Access Token is more expensive than checking 
 signal, such as an IP address, especially since malicious clients can generate garbage
 Private Access Tokens and for Redeemers to work. However, similar DoS vectors already exist
 for Redeemers, e.g., at the underlying TLS layer.
-
-## Access Token Replay
-
-Redeemers are required to track when Private Access Tokens are spent. Failure to do so may
-allow malicious clients to replay tokens more than once. However, given that existing solutions
-to this problem already require Redeemers to carry per-client state, this additional cost is not
-a new requirement.
-
-[OPEN ISSUE: replay state is a tradeoff agaist mediator and issuer availability -- if the latter
-services were highly available, then redeemers could include a fresh challenge to be folded into
-the Private Access Token, removing the need for any redeemer state.]
 
 ## Access Token Verification Keys {#access-token-keys}
 
