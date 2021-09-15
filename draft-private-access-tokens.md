@@ -230,7 +230,7 @@ redemption_nonce:
 : A fresh 32-byte nonce generated for each redemption request.
 
 timestamp:
-: The current UNIX epoch in seconds.
+: The current UNIX epoch time.
 
 This context is sent to Clients in an "WWW-Authenticate" header as follows:
 
