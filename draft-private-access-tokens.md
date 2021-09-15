@@ -12,6 +12,11 @@ pi: [toc, sortrefs, symrefs]
 
 author:
  -
+    ins: S. Hendrickson
+    name: Scott Hendrickson
+    org: Google LLC
+    email: scott@shendrickson.com
+ -
     ins: T. Pauly
     name: Tommy Pauly
     org: Apple Inc.
@@ -19,6 +24,11 @@ author:
     city: Cupertino, California 95014
     country: United States of America
     email: tpauly@apple.com
+ -
+    ins: S. Valdez
+    name: Steven Valdez
+    org: Google LLC
+    email: svaldez@chromium.org
  -  ins: C. A. Wood
     name: Christopher A. Wood
     org: Cloudflare
