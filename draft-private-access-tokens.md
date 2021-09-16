@@ -294,14 +294,14 @@ TokenChallenge for this session, SHA256(TokenChallenge).
 
 ## Issuance
 
-Issuance assumes the Client has the following information, derived from a given RedemptionChallenge:
+Issuance assumes the Client has the following information, derived from a given TokenChallenge:
 
 - Origin name (ORIGIN_NAME), a URI referring to the Redeemer (origin) {{!RFC6454}}. This is
-  the value of RedemptionChallenge.redeemer_name.
+  the value of TokenChallenge.redeemer_name.
 - Origin identifier (ORIGIN_ID), a 32-byte collision-resistant hash that identifies
   the origin token public key. See {{origin-id}} for details about its construction.
 - Issuer token public key (ISSUER_KEY), a blind signature public key. This is the public key
-  corresponding to the issuer identified by RedemptionChallenge.issuer_name.
+  corresponding to the issuer identified by TokenChallenge.issuer_name.
   See {{access-token-keys}} for details on how this can be obtained.
 
 Issuance also assumes that Issuers maintain local state for each distinct (redeemer, policy)
@@ -314,7 +314,7 @@ Finally, Issuance assumes that the Client and Mediator have a secure and
 Mediator-authenticated HTTPS connection. See {{sec-considerations}} for additional
 about this channel.
 
-Issuance begins by Clients hashing the RedemptionChallenge to produce a token input
+Issuance begins by Clients hashing the TokenChallenge to produce a token input
 as message = SHA256(challenge), and then blinding message as follows:
 
 ~~~
