@@ -162,7 +162,7 @@ keys available via the following API endpoints:
 - Access token policy verification key: /.well-known/access-token-key/policy=?
 - Access token policy window: /.well-known/access-token-window/policy=?
 
-The OHTTP configuration is defined in {{!OHTTP=I-D.thomson-http-oblivious-http}}.
+The OHTTP configuration is defined in {{!OHTTP=I-D.thomson-http-oblivious}}.
 The response is a serialied collection of configurations, and uses media
 type "application/ohttp-keys".
 
