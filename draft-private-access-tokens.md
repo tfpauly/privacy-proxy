@@ -244,7 +244,7 @@ Redeemer. Redeemers MAY include the "realm" attribute, if desired.
 
 Upon receipt of this challenge, Clients use it in the Issuance protocol as
 described in {{issuance}}. The output of that protocol is a Token bound
-to the redemption challenge. The Token is a structure that begins with a
+to the token challenge. The Token is a structure that begins with a
 single byte that indicates a version. This document defines version 1,
 which indicates use of private tokens based on RSA Blind Signatures {{BLINDSIG}},
 and determines the rest of the structure contents.
