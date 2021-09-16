@@ -53,8 +53,8 @@ When the IP address signal is unavailable, perhaps due to the use of a proxy net
 servers are left without a suitable functional replacement.
 
 This document proposes using Private Access Tokens, using RSA Blind Signatures as defined
-in {{!PRIVATETOKEN=I-D.privacy-token}}, as a replacement for these signals. These tokens
-are privately issued to clients and then redeemed by servers in such a way that the
+in {{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}} as a replacement for these signals. These
+tokens are privately issued to clients and then redeemed by servers in such a way that the
 issuance and redemption events for a given token are unlinkable. Fundamentally, using
 tokens in lieu of passive signals for policy enforcement seemingly requires some entity
 to know both the client and policy. However, with appropriate mediation and
@@ -175,8 +175,7 @@ struct {
 ~~~
 
 The contents of AccessTokenKey are an RSA public key for use with the RSA Blind
-Signature protocol {{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}}. The response
-uses media type "application/access-token-key".
+Signature protocol {{BLINDSIG}}. The response uses media type "application/access-token-key".
 
 The access token policy window is a resource of media type "application/json", with the
 following structure:
@@ -204,10 +203,10 @@ reveal them to the Redeemer. Example policies and use cases that system
 addresses are described in {{examples}}.
 
 The rest of this section describes this interactive protocol in terms of
-the redemption request ({{redemption-request}}) and corresponding token
+the token challenge and redemption flow ({{scheme}}) and corresponding token
 issuance flow ({{issuance}}).
 
-## Redemption Request
+## Token Challenge and Redemption {#scheme}
 
 The Client is assumed to have the policy verification key before redeeming
 a Private Access Token. See {{access-token-keys}} for details on how this
@@ -222,7 +221,7 @@ struct {
    opaque redeemer_name<1..2^16-1>;
    opaque issuer_name<1..2^16-1>;
    opaque redemption_nonce[32];
-} RedemptionChallenge;
+} TokenChallenge;
 ~~~
 
 redeemer_name:
@@ -235,26 +234,63 @@ redemption_nonce:
 : A fresh 32-byte nonce generated for each redemption request.
 
 This challenge is sent to Clients in an "WWW-Authenticate" header with the
-"PrivateAccessToken" scheme. This scheme has only one required attribute
-named "challenge", and one optional attribute named "max-age". The "challenge"
-attribute string is made up of the base64url-encoded RedemptionChallenge
-value. This MUST be unique for every 401 HTTP response to prevent replay
-attacks. The "max-age" attribute consists of the number of seconds that the
-challenge will be accepted by the Redeemer. Redeemers MAY include the "realm"
-attribute, if desired.
+"PrivateAccessToken" scheme. When used in authentication challenges, this
+scheme has only one required attribute named "challenge", and one optional
+attribute named "max-age". The "challenge" attribute string is made up of
+the base64url-encoded {{!RFC4648}} TokenChallenge value. This MUST be unique
+for every 401 HTTP response to prevent replay attacks. The "max-age" attribute
+consists of the number of seconds that the challenge will be accepted by the
+Redeemer. Redeemers MAY include the "realm" attribute, if desired.
 
 Upon receipt of this challenge, Clients use it in the Issuance protocol as
-described in {{issuance}}. The output of that protocol is a PrivacyToken bound
-to the redemption challenge. Clients then present this token to Redeemers using
+described in {{issuance}}. The output of that protocol is a Token bound
+to the token challenge. The Token is a structure that begins with a
+single byte that indicates a version. This document defines version 1,
+which indicates use of private tokens based on RSA Blind Signatures {{BLINDSIG}},
+and determines the rest of the structure contents.
+
+~~~
+struct {
+    uint8_t version;
+    uint8_t key_id[32];
+    uint8_t message[32];
+    uint8_t signature[Nk];
+} Token;
+~~~
+
+The structure fields are defined as follows:
+
+- "version" is a 1-octet integer. This document defines version 1.
+
+- "key_id" is a collision-resistant hash that identifies the key used to produce
+the signature. This is generated as SHA256(public_key), where public_key
+is a DER-encoded SubjectPublicKeyInfo object carrying the public key.
+
+- "message" is a 32-octet message containing the hash of the original
+TokenChallenge, SHA256(TokenChallenge). This message is signed by the signature,
+
+- "signature" is a Nk-octet RSA Blind Signature that covers the
+message.  For version 1, Nk is indicated by size of the Token
+structure and may be 256, 384, or 512.
+These correspond to RSA 2048, 3072, and 4096 bit keys.
+Clients implementing version 1 MUST support signature
+sizes with Nk of 512 and 256.
+
+When used for client authorization, the "PrivateAccessToken" authentication
+scheme defines one parameter, "token", which contains the base64url-encoded
+Token struct. All unknown or unsupported parameters to "PrivateAccessToken"
+authentication credentials MUST be ignored.
+
+Clients present this Token structure to Redeemers in a new HTTP request using
 the Authorization header as follows:
 
 ~~~
-Authorization: PrivacyToken token=abc
+Authorization: PrivateAccessToken token=abc...
 ~~~
 
-Where the token is a serialized Private Access Token corresponding to the given Redeemer
-policy, and the PrivacyToken message is SHA256(challenge). Redeemers verify the token using
-the corresponding policy verification key from the Issuer.
+Redeemers verify the token signature using the corresponding policy verification
+key from the Issuer, and validate that the message matches the hash of the original
+TokenChallenge for this session, SHA256(TokenChallenge).
 
 ## Issuance
 
@@ -406,7 +442,7 @@ sig = rsabssa_finalize(ISSUER_KEY, nonce, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a Private Access Token as described in
-{{PRIVATETOKEN}} using the token input message and output sig.
+{{scheme}} using the token input message and output sig.
 
 ### Anonymous Client ID {#client-id}
 
@@ -514,6 +550,17 @@ anonymizing request proxy such as OHTTP {{OHTTP}}.
 
 # IANA Considerations {#iana}
 
+## Authentication Scheme
+
+This document registers the "PrivateAccessToken" authentication scheme in the "Hypertext
+Transfer Protocol (HTTP) Authentication Scheme Registry" established by {{!RFC7235}}.
+
+Authentication Scheme Name: PrivateAccessToken
+
+Pointer to specification text: {{scheme}} of this document
+
+## Media Types
+
 This specification defines the following protocol messages, along with their
 corresponding media types types:
 
@@ -523,7 +570,7 @@ corresponding media types types:
 
 The definition for each media type is in the following subsections.
 
-## "application/access-token-key" media type
+### "application/access-token-key" media type
 
 Type name:
 
@@ -594,7 +641,7 @@ Change controller:
 
 : IESG
 
-## "message/access-token-request" media type
+### "message/access-token-request" media type
 
 Type name:
 
@@ -665,7 +712,7 @@ Change controller:
 
 : IESG
 
-## "message/access-token-response" media type
+### "message/access-token-response" media type
 
 Type name:
 
