@@ -203,10 +203,10 @@ reveal them to the Redeemer. Example policies and use cases that system
 addresses are described in {{examples}}.
 
 The rest of this section describes this interactive protocol in terms of
-the redemption request ({{redemption-request}}) and corresponding token
+the token challenge and redemption flow ({{scheme}}) and corresponding token
 issuance flow ({{issuance}}).
 
-## Token Challenge and Redemption
+## Token Challenge and Redemption {#scheme}
 
 The Client is assumed to have the policy verification key before redeeming
 a Private Access Token. See {{access-token-keys}} for details on how this
@@ -442,7 +442,7 @@ sig = rsabssa_finalize(ISSUER_KEY, nonce, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a Private Access Token as described in
-{{PRIVATETOKEN}} using the token input message and output sig.
+{{scheme}} using the token input message and output sig.
 
 ### Anonymous Client ID {#client-id}
 
