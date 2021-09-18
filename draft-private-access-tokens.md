@@ -617,7 +617,7 @@ Encoding considerations:
 
 Security considerations:
 
-: see {{access-token-keys}}
+: see {{sec-considerations}}
 
 Interoperability considerations:
 
