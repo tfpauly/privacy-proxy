@@ -232,11 +232,11 @@ scheme uses the following attributes:
 - "challenge", which contains a base64url-encoded {{!RFC4648}} TokenChallenge
 value. This MUST be unique for every 401 HTTP response to prevent replay attacks.
 
-- "token-key", which contains a base64url encoding of the SPKI-encoded
-RSA public key for use with the RSA Blind Signature protocol (ISSUER_TOKEN_KEY).
+- "token-key", which contains a base64url encoding of the SubjectPublicKeyInfo object
+for use with the RSA Blind Signature protocol (ISSUER_TOKEN_KEY).
 
-- "name-key", which contains a base64url encoding of the SPKI-encoded
-public key to use when encrypting the ORIGIN_NAME in issuance requests (ISSUER_NAME_KEY).
+- "name-key", which contains a base64url encoding of the SubjectPublicKeyInfo object
+to use when encrypting the ORIGIN_NAME in issuance requests (ISSUER_NAME_KEY).
 
 - "max-age", an optional attribute that consists of the number of seconds for which
 the challenge will be accepted by the Origin.
