@@ -552,7 +552,7 @@ anonymizing request proxy such as OHTTP {{OHTTP}}.
 
 ## Issuer and Mediator Ownership
 
-Issuers and Mediators should be run by mutually distinct organizaitons to limit
+Issuers and Mediators should be run by mutually distinct organizations to limit
 information sharing. A single entity running an issuer and mediator for a single redemption
 can view the origins being accessed by a given client. Running the issuer and mediator in 
 this 'single issuer/mediator' fashion reduces the privacy promises to those of Privacy Pass.
