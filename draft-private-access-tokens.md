@@ -548,6 +548,17 @@ Clients require the access token verification key before requesting a token. Cli
 NOT connect directly to the issuer to fetch any such keys. Instead, clients SHOULD use an
 anonymizing request proxy such as OHTTP {{OHTTP}}.
 
+# Privacy Considerations {#privacy-considerations}
+
+## Issuer and Mediator Ownership
+
+Issuers and Mediators should be run by mutually distinct organizaitons to limit
+information sharing. A single entity running an issuer and mediator for a single redemption
+can view the origins being accessed by a given client. Running the issuer and mediator in 
+this 'single issuer/mediator' fashion reduces the privacy promises to those of Privacy Pass.
+This may be desirable for a redemption flow that is limited to specific issuers and mediators,
+but should be avoided where hiding origins from the mediator is desirable.
+
 # IANA Considerations {#iana}
 
 ## Authentication Scheme
