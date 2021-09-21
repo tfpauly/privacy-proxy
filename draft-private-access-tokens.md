@@ -253,11 +253,14 @@ WWW-Authenticate: PrivateAccessToken challenge=abc... token-key=123... name-key=
 ~~~
 
 Upon receipt of this challenge, Clients use it in the Issuance protocol as
-described in {{issuance}}. The output of that protocol is a Token bound
-to the token challenge. The Token is a structure that begins with a
-single byte that indicates a version. This document defines version 1,
-which indicates use of private tokens based on RSA Blind Signatures {{BLINDSIG}},
-and determines the rest of the structure contents.
+described in {{issuance}}. If the TokenChallenge has a version field the Client
+does not recognize or support, it MUST NOT parse or respond to the challenge.
+This document defines version 1, which indicates use of private tokens based on
+RSA Blind Signatures {{BLINDSIG}}, and determines the rest of the structure contents.
+
+The output of the issuance protocol is a Token bound to the token challenge.
+The Token is a structure that begins with a single byte that indicates a version, which
+MUST match the version in the TokenChallenge structure.
 
 ~~~
 struct {
@@ -315,7 +318,7 @@ Issuance assumes the Client has the following information, derived from a given 
   corresponding to the Issuer identified by TokenChallenge.issuer_name.
 
 Issuance also assumes that Issuers maintain local state for each distinct pair of Client
-and Origin. In particular, for pair, Issuers maintain a stable mapping from ANON_CLIENT_ID
+and Origin. In particular, for each pair, Issuers maintain a stable mapping from ANON_CLIENT_ID
 to ORIGIN_NAME and ANON_ORIGIN_ID_PRIME values, as well as policy state about tokens
 that have already been issued to a Client. Policy state is custom to each implementation:
 it could include a simple counter to track the number of tokens issued to a
@@ -346,7 +349,8 @@ struct {
 
 The structure fields are defined as follows:
 
-- "version" is a 1-octet integer. This document defines version 1.
+- "version" is a 1-octet integer, which matches the version in the TokenChallenge.
+This document defines version 1.
 
 - "key_id" is a collision-resistant hash that identifies the ISSUER_TOKEN_KEY public
 key, generated as SHA256(public_key), where public_key is a DER-encoded
@@ -391,6 +395,9 @@ an Origin could collude with an Issuer to try to rotate the key for each new Cli
 order to link the client activity. The policy Mediators apply for key validation ought
 to take such attacks into consideration.
 
+If the Mediator detects a version in the AccessTokenRequest that it does not recognize
+or support, it MUST reject the request with an HTTP 400 error.
+
 Before forwarding the Client's request to the Issuer, the Mediator adds headers
 listing both the ANON_CLIENT_ID as "Anonymous-Client-ID", and the ANON_ORIGIN_ID_PRIME as
 "Anonymous-Origin-ID".
@@ -422,6 +429,8 @@ conditions:
 - The "Token-Origin" header is present, and can be decrypted using the Issuer's private key
 (the private key associated with ISSUER_NAME_KEY).
 - The decrypted ORIGIN_NAME matches an Origin the Issuer serves
+- The AccessTokenRequest contains a supported version, has a key_id that matches a key held
+by the Issuer, and has a blinded_req of the correct size.
 
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Mediator,
 which will forward the error to the client.
