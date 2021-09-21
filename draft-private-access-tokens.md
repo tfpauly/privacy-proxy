@@ -210,20 +210,22 @@ with the following challenge:
 
 ~~~
 struct {
-   opaque origin_name<1..2^16-1>;
-   opaque issuer_name<1..2^16-1>;
-   opaque redemption_nonce[32];
+    uint8_t version;
+    opaque origin_name<1..2^16-1>;
+    opaque issuer_name<1..2^16-1>;
+    opaque redemption_nonce[32];
 } TokenChallenge;
 ~~~
 
-origin_name:
-: Name of the Origin (ORIGIN_NAME).
+The structure fields are defined as follows:
 
-issuer_name:
-: Name of the Issuer (ISSUER_NAME).
+- "version" is a 1-octet integer. This document defines version 1.
 
-redemption_nonce:
-: A fresh 32-byte nonce generated for each redemption request.
+- "origin_name" is a string containing the name of the Origin (ORIGIN_NAME).
+
+- "issuer_name" is a string containing the name of the Issuer (ISSUER_NAME).
+
+- "redemption_nonce" is a fresh 32-byte nonce generated for each redemption request.
 
 This challenge is sent to Clients in an "WWW-Authenticate" header with the
 "PrivateAccessToken" scheme. When used in authentication challenges, this
@@ -235,13 +237,12 @@ value. This MUST be unique for every 401 HTTP response to prevent replay attacks
 - "token-key", which contains a base64url encoding of the SubjectPublicKeyInfo object
 for use with the RSA Blind Signature protocol (ISSUER_TOKEN_KEY).
 
-- "name-key", which contains a base64url encoding of the SubjectPublicKeyInfo object
-to use when encrypting the ORIGIN_NAME in issuance requests (ISSUER_NAME_KEY).
+- "name-key", which contains a base64url encoding of a `KeyConfig` as defined
+in {{!OHTTP=I-D.thomson-http-oblivious}} to use when encrypting the ORIGIN_NAME 
+in issuance requests (ISSUER_NAME_KEY).
 
 - "max-age", an optional attribute that consists of the number of seconds for which
 the challenge will be accepted by the Origin.
-
-TODO: Define "name-key" more correctly.
 
 Origins MAY also include the standard "realm" attribute, if desired.
 
@@ -299,7 +300,8 @@ Authorization: PrivateAccessToken token=abc...
 
 Origins verify the token signature using the corresponding policy verification
 key from the Issuer, and validate that the message matches the hash of the original
-TokenChallenge for this session, SHA256(TokenChallenge).
+TokenChallenge for this session, SHA256(TokenChallenge), and that the version of the
+Token matches the version in the TokenChallenge.
 
 ## Issuance
 
@@ -312,8 +314,8 @@ Issuance assumes the Client has the following information, derived from a given 
 - Issuer name public key (ISSUER_NAME_KEY), a public key used to encrypt requests
   corresponding to the Issuer identified by TokenChallenge.issuer_name.
 
-Issuance also assumes that Issuers maintain local state for each distinct Origin
-tuple. In particular, for each tuple, Issuers maintain a stable mapping from ANON_CLIENT_ID
+Issuance also assumes that Issuers maintain local state for each distinct pair of Client
+and Origin. In particular, for pair, Issuers maintain a stable mapping from ANON_CLIENT_ID
 to ORIGIN_NAME and ANON_ORIGIN_ID_PRIME values, as well as policy state about tokens
 that have already been issued to a Client. Policy state is custom to each implementation:
 it could include a simple counter to track the number of tokens issued to a
@@ -355,11 +357,9 @@ SubjectPublicKeyInfo object.
 The Client then generates an HTTP POST request to send through the Mediator to
 the Issuer, with the AccessTokenRequest as the body. The media type for this request
 is "message/access-token-request". The Client includes the "Token-Origin" header in
-this request, whose value is ENCRYPTED_ORIGIN_NAME; and the "Anonymous-Origin-ID" header,
-whose value is ANON_ORIGIN_ID. The Client sends this request to the
-Mediator's proxy URI. An example request is shown below, where Nk = 512.
-
-TODO: Describe how the origin name is encrypted
+this request, whose value is ENCRYPTED_ORIGIN_NAME as described in {{encrypt-origin}};
+and the "Anonymous-Origin-ID" header, whose value is ANON_ORIGIN_ID. The Client sends 
+this request to the Mediator's proxy URI. An example request is shown below, where Nk = 512.
 
 ~~~
 :method = POST
@@ -386,7 +386,10 @@ matches a known public key for the Issuer. For example, the Mediator can fetch t
 key using the API defined in {{setup}}. This check is done to help ensure that the Client
 has not been given a unique key that could allow the Issuer to fingerprint or target
 the Client. If the key does not match, the Mediator rejects the request with an HTTP
-400 error.
+400 error. Note that Mediators need to be careful in cases of key rotation; particularly,
+an Origin could collude with an Issuer to try to rotate the key for each new Client in
+order to link the client activity. The policy Mediators apply for key validation ought
+to take such attacks into consideration.
 
 Before forwarding the Client's request to the Issuer, the Mediator adds headers
 listing both the ANON_CLIENT_ID as "Anonymous-Client-ID", and the ANON_ORIGIN_ID_PRIME as
@@ -475,6 +478,43 @@ sig = rsabssa_finalize(ISSUER_TOKEN_KEY, nonce, blind_sig, blind_inv)
 
 If this succeeds, the Client then constructs a Private Access Token as described in
 {{scheme}} using the token input message and output sig.
+
+### Encrypting Origin Names {#encrypt-origin}
+
+Given a `KeyConfig` (ISSUER_NAME_KEY), Clients produce ENCRYPTED_ORIGIN_NAME
+using the following values:
+
+- the key identifier from the configuration, keyID, with the corresponding KEM identified by kemID,
+the public key from the configuration, pkR, and;
+- a selected combination of KDF, identified by kdfID, and AEAD, identified by aeadID.
+
+Beyond the key configuration inputs, Clients also require the AccessTokenRequest
+(`token_request`) and ANON_ORIGIN_ID (`anon_origin_id`). Together, these
+are used to encapsulate ORIGIN_NAME (`origin_name`) and produce
+ENCRYPTED_ORIGIN_NAME (`encrypted_origin`) as follows:
+
+1. Compute an HPKE context using pkR, yielding context and encapsulation key enc.
+1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID, aeadID, `token_request`, and `anon_origin_id`, as one 8-bit integer, three 16-bit integers, the AccessTokenRequest struct, and the value of ANONYMOUS_ORIGIN_ID, respectively, each in network byte order.
+1. Encrypt (seal) request with aad as associated data using context, yielding ciphertext ct.
+1. Concatenate the values of aad, enc, and ct, yielding an Encapsulated Request enc_request.
+
+Note that enc is of fixed-length, so there is no ambiguity in parsing this structure.
+
+In pseudocode, this procedure is as follows:
+
+~~~
+enc, context = SetupBaseS(pkR, "OriginTokenRequest")
+aad = concat(encode(1, keyID),
+             encode(2, kemID),
+             encode(2, kdfID),
+             encode(2, aeadID),
+             encode(len(token_request), token_request),
+             encode(32, anon_origin_id))
+ct = context.Seal(aad, origin_name)
+encrypted_origin = concat(aad, enc, ct)
+~~~
+
+ENCRYPTED_ORIGIN_NAME is then set to encrypted_origin.
 
 ### Anonymous Client ID {#client-id}
 
