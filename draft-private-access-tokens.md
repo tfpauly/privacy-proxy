@@ -44,32 +44,41 @@ service to limit access according to the policy without tracking client identity
 
 # Introduction {#introduction}
 
-In many systems, passive, persistent signals such as IP addresses are used for
-enforcing policies. Typically, servers use these signals as weak client identifiers.
-Clients coming from a single IP address may be limited in how much content
-they can access over a given time period (often referred to as a "metered paywall"),
-or access from an IP address may be rate-limited to prevent fraud and abuse.
-When the IP address signal is unavailable, perhaps due to the use of a proxy network,
-servers are left without a suitable functional replacement.
+Servers commonly use passive and persistent identifiers associated with clients,
+such as IP addresses or device identifiers, for enforcing client and usage
+policies. For example, a server might limit access to the amount of content from
+an IP address over a given time period (referred to as a "metered paywall"), or
+a server might rate-limit access from an IP address to prevent fraud and
+abuse. Servers also commonly use the client's IP address as a strong indicator
+of the client's geographic location to limit access to services or content to a
+specific geographic area (referred to as "geofencing").
 
-This document proposes using Private Access Tokens, using RSA Blind Signatures as defined
-in {{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}} as a replacement for these signals. These
-tokens are privately issued to clients and then redeemed by servers in such a way that the
-issuance and redemption events for a given token are unlinkable. Fundamentally, using
-tokens in lieu of passive signals for policy enforcement seemingly requires some entity
-to know both the client and policy. However, with appropriate mediation and
-separation between parties involved in the issuance and redemption protocols,
-it is possible to limit this information leakage without functional regressions.
+However, passive and persistent client identifiers can be used by any entity
+that has access to it without the client's express consent. A server can use a
+client's IP address or its device identifier to track client activity. A
+client's IP address, and therefore its location, is visible to all entities on
+the path between the client and the server. These entities can trivially track a
+client, its location, and servers that the client visits.
 
-This document describes a protocol for mediating the issuance and redemption
-of Private Access Tokens with the following properties:
+A client that wishes to keep its IP address private can hide its IP address
+using a proxy service or a VPN. However, doing so severely limits the client's
+ability to access services and content, since without a stable and unique
+identifier, servers might not be able to enforce their policies.
 
-1. The Mediator enforces and maintains a mapping between Client identifiers
-   and anonymous Origin identifiers;
-1. The Issuer enforces policies keyed by anonymous Client identifier and Origin
-   identifier, without learning the real Client identity; and
-1. The Origin learns whether a given Client has a valid Private Access Token for
-   its policy.
+This document describes an architecture that uses Private Access Tokens, using
+RSA Blind Signatures as defined in
+{{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}}, as an explicit replacement for
+these passive client identifiers. These tokens are privately issued to clients
+upon request and then redeemed by servers in such a way that the issuance and
+redemption events for a given token are unlinkable.
+
+At first glance, using Private Access Tokens in lieu of passive identifiers for
+policy enforcement suggests that some entity needs to know both the client's
+identity and the server's policy, and such an entity would be trivially able to
+track a client and its activities. However, with appropriate mediation and
+separation between the parties involved in the issuance and the redemption
+protocols, it is possible to eliminate this information concentration without
+any functional regressions. This document describes such a protocol.
 
 ## Requirements
 
@@ -77,33 +86,56 @@ of Private Access Tokens with the following properties:
 
 # Overview
 
-The protocol involves four entities:
+The architecture and protocol involves the following four entities:
 
-1. Client: the entity responsible for requesting Private Access Tokens and redeeming them.
-1. Mediator: the entity responsible for authenticating Clients, using information such as
-   account names or device identities.
-1. Issuer: the entity responsible for issuing Private Access Tokens on behalf of a given Origin,
-   according to the Origin's policy.
-1. Origin: the entity responsible for verifying Private Access Tokens and providing a service
-   to the Client.
+1. Client: requests a Private Access Token from an Issuer and presents it to a
+   Origin for access to the Origin's service.
 
-In this architecture, the Mediator, Issuer, and Origin each have limited knowledge
-regarding the Client's actions, and only know enough to provide their necessary
-functionality. The pieces of information are identified in {{terms}}.
+1. Mediator: authenticates a Client, using information such as its IP address,
+   an account name, or a device identifier. Anonymizes the Client and relays
+   information between the anonymized Client and an Issuer.
 
-The Mediator is able to see the Client's actual identity information (CLIENT_ID), the Issuer
-being targeted (ISSUER_NAME), and the period of time for which the Issuer's policy is valid
-(ISSUER_POLICY_WINDOW). The Mediator does not know the identity of the Origin that the Client
-is trying to access (ORIGIN_NAME), but instead sees an anonymous version (ANON_ORIGIN_ID).
+1. Issuer: issues Private Access Tokens to an anonymized Client on behalf of a
+   Origin. Enforces the Origin's policy.
 
-The Issuer is able to see the identity of the Origin (ORIGIN_NAME), but only sees an
-anonymous identifier for a client (ANON_CLIENT_ID). Issuers maintain the details of
-policy enforcement on behalf of the Origin. For example, a given policy might be,
-"issue at most N tokens to each client." Example policies and their use cases are
-discussed in {{examples}}.
+1. Origin: verifies any Private Access Token sent by a Client and enables
+   access to content or services to the Client upon verification.
 
-The Origin, which represents the service being accessed by the client, only receives
-a Private Access Token from the client.
+
+The entities have the following properties:
+
+1. A Mediator enforces and maintains a mapping between Client identifiers and
+   Client-anonymized Origin identifiers;
+
+1. An Issuer enforces the Origin's policies based on the received
+   Mediator-anonymized Client identifier and Origin identifier, without
+   learning the Client's true identity; and
+
+1. An Origin provides access to content or services to a Client upon verifying
+   the Client's Private Access Token, since the verification demonstrates that
+   the Client access meets the Origin's policies.
+
+
+The Mediator, Issuer, and Origin each have partial knowledge of the Client's
+identity and actions, and each entity only knows enough to serve its
+function. The pieces of information are identified in {{terms}}.
+
+The Mediator knows the Client's identity (CLIENT_ID), the Issuer being targeted
+(ISSUER_NAME), and the period of time for which the Issuer's policy is valid
+(ISSUER_POLICY_WINDOW). The Mediator does not know the identity of the Origin
+the Client is trying to access (ORIGIN_ID), but knows a Client-anonymized
+identifier for it (ANON_ORIGIN_ID).
+
+The Issuer knows the Origin's identity (ORIGIN_ID), and the Origin's policy
+about client access, but only sees a Mediator-anonymized Client identifier
+(ANON_CLIENT_ID). Issuers know the Origin's policies and enforce them on
+behalf of the Origin. An example policy is: "Limit 10 accesses per Client".
+More examples and their use cases are discussed in {{examples}}.
+
+The Origin receives a Private Access Token from the client. Verification of
+this token demonstrates to the Origin that the Client meets its policies
+(since they were enforced by the Issuer before issuing this token), and then
+provides the services or content gated behind these policies.
 
 ## Notation and Terminology {#terms}
 
