@@ -61,9 +61,9 @@ the path between the client and the server. These entities can trivially track a
 client, its location, and servers that the client visits.
 
 A client that wishes to keep its IP address private can hide its IP address
-using a proxy service or a VPN. However, doing so severely limits the client's ability to
-access services and content, since without a stable and unique identifier, servers might
-not be able to enforce their policies.
+using a proxy service or a VPN. However, doing so severely limits the client's
+ability to access services and content, since without a stable and unique
+identifier, servers might not be able to enforce their policies.
 
 This document describes an architecture that uses Private Access Tokens, using
 RSA Blind Signatures as defined in
