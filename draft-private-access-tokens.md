@@ -101,11 +101,15 @@ period of time. The origin does not need to know the client's identity, but
 needs to know that a requesting client has not exceeded the maximum rate set by
 the origin.
 
-A specific example of this use case is a metered paywall, where an origin limits
+One example of this use case is a metered paywall, where an origin limits
 the number of page requests to each unique user over a period of time before the
 user is required to pay for access. The origin typically resets this state
 periodically, say, once per month. For example, an origin may serve ten (major
 content) requests in a month before a paywall is enacted.
+Another example of rate-limited access is in fraud-prevention mechanisms. Operations that 
+are sensitive to fraudulent abuse, like using a website to create an account, often want to
+rate-limit access, and start displaying captchas or require extra verification if a rate-limit
+is exceeded.
 
 Origins routinely use client IP addresses for this purpose.
 
