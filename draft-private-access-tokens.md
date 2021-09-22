@@ -116,9 +116,8 @@ An origin provides access to or customizes content based on the geo-location of
 the client. The origin does not need to know the client's identity, but needs to
 know the geo-location, with some level of accuracy, for providing service.
 
-A specific example of this use case is access to streaming content, where an
-origin restricts the available content it can serve based on the client's
-geographical region.
+A specific example of this use case is "geo-fencing", where an origin restricts
+the available content it can serve based on the client's geographical region.
 
 Origins almost exclusively use client IP addresses for this purpose.
 
