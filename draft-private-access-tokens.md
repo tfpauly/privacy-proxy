@@ -89,10 +89,11 @@ any functional regressions. This document describes such a protocol.
 # Motivation
 
 This section describes classes of use cases where an origin would traditionally
-use a stable and unique client identifier for enforcing attribute-based policy. Hiding these
-identifiers from origins would therefore require an alternative for origins to
-continue enforcing their policies. Using the Privacy Address Token architecture
-for addressing these use cases is described in {{examples}}.
+use a stable and unique client identifier for enforcing attribute-based
+policy. Hiding these identifiers from origins would therefore require an
+alternative for origins to continue enforcing their policies. Using the Privacy
+Address Token architecture for addressing these use cases is described in
+{{examples}}.
 
 ## Rate-limited Access
 
@@ -101,15 +102,17 @@ period of time. The origin does not need to know the client's identity, but
 needs to know that a requesting client has not exceeded the maximum rate set by
 the origin.
 
-One example of this use case is a metered paywall, where an origin limits
-the number of page requests to each unique user over a period of time before the
+One example of this use case is a metered paywall, where an origin limits the
+number of page requests to each unique user over a period of time before the
 user is required to pay for access. The origin typically resets this state
 periodically, say, once per month. For example, an origin may serve ten (major
 content) requests in a month before a paywall is enacted.
-Another example of rate-limited access is in fraud-prevention mechanisms. Operations that 
-are sensitive to fraudulent abuse, like using a website to create an account, often want to
-rate-limit access, and start displaying captchas or require extra verification if a rate-limit
-is exceeded.
+
+Another example of this use case is rate-limiting page accesses to a client to
+help prevent fraud. Operations that are sensitive to fraud, such as account
+creation on a website, often employ rate limiting as a defense in depth
+strategy. Captchas or additional verification can be required by these pages
+when a client exceeds a set rate limit.
 
 Origins routinely use client IP addresses for this purpose.
 
