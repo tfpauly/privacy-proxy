@@ -89,7 +89,7 @@ any functional regressions. This document describes such a protocol.
 # Motivation
 
 This section describes classes of use cases where an origin would traditionally
-use a stable unique client identifier for enforcing policy. Hiding these
+use a stable and unique client identifier for enforcing attribute-based policy. Hiding these
 identifiers from origins would therefore require an alternative for origins to
 continue enforcing their policies. Using the Privacy Address Token architecture
 for addressing these use cases is described in {{examples}}.
