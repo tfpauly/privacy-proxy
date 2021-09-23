@@ -414,7 +414,7 @@ key from the Issuer, and validate that the message matches the hash of the origi
 TokenChallenge for this session, SHA256(TokenChallenge), and that the version of the
 Token matches the version in the TokenChallenge.
 
-## Issuance
+## Issuance {#issuance}
 
 Issuance assumes the Client has the following information, derived from a given TokenChallenge:
 
@@ -727,8 +727,40 @@ signal, such as an IP address, especially since malicious clients can generate g
 Private Access Tokens and for Origins to work. However, similar DoS vectors already exist
 for Origins, e.g., at the underlying TLS layer.
 
+## Man-in-the-Middle Attacks
+
+An attacker that can act as a man-in-the-middle for Mediator/Issuer communication can
+influence or disrupt the ability for the Issuer to correctly rate-limit token issuance.
+Communication between Mediators and Issuers MUST use a secure HTTPS connection, and SHOULD
+prevent man-in-the-middle attacks by employing an approach like TLS certificate pinning.
+
+An attacker than can act as a man-in-the-middle for Client/Origin communication can
+observe a TokenChallenge, and can view a Token being presented for authentication
+to an Origin. Origins can avoid this Token being used for some future connection
+by the attacker impersonating the Client by ensuring that the redemption_nonce
+presented in the TokenChallenge is bound to the specific TLS session with the
+Client.
 
 # Privacy Considerations {#privacy-considerations}
+
+## Origin Verification
+
+Private Access Tokens are defined in terms of a Client authenticating to an Origin, where
+the "origin" is used as defined in {{?RFC6454}}. In order to limit cross-origin correlation,
+Clients MUST verify that the origin_name presented in the TokenChallenge structure ({{scheme}})
+matches the origin that is providing the HTTP authentication challenge, where the matching logic
+is defined for same-origin policies in {{?RFC6454}}. Clients MAY further limit which
+authentication challenges they are willing to respond to, for example by only accepting
+challenges when the origin is a web site to which the user navigated.
+
+## Client Identification with Unique Keys
+
+Client activity could be linked if an Origin and Issuer collude to have unique keys targeted
+at specific Clients or sets of Clients. In order to mitigate this risk, the Mediator is able
+to see and validate the key_id presented by the Client to the Issuer. As described in
+{{issuance}}, Mediators MUST validate that the key_id in the client's AccessTokenRequest
+matches a known public key for the Issuer. This validation should allow for key rotation across
+all Clients, but not allow for per-Client targetted keys.
 
 ## Issuer and Mediator Ownership
 
