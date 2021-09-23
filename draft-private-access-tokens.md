@@ -62,8 +62,8 @@ client, its location, and servers that the client visits.
 
 A client that wishes to keep its IP address private can hide its IP address
 using a proxy service or a VPN. However, doing so severely limits the client's
-ability to access services and content, since without a stable and unique
-identifier, servers might not be able to enforce their policies.
+ability to access services and content, since servers might not be able to
+enforce their policies without a stable and unique client identifier.
 
 This document describes an architecture that uses Private Access Tokens, using
 RSA Blind Signatures as defined in
@@ -80,9 +80,85 @@ separation between the parties involved in the issuance and the redemption
 protocols, it is possible to eliminate this information concentration without
 any functional regressions. This document describes such a protocol.
 
+
 ## Requirements
 
 {::boilerplate bcp14}
+
+
+# Motivation
+
+This section describes classes of use cases where an origin would traditionally
+use a stable and unique client identifier for enforcing attribute-based
+policy. Hiding these identifiers from origins would therefore require an
+alternative for origins to continue enforcing their policies. Using the Privacy
+Address Token architecture for addressing these use cases is described in
+{{examples}}.
+
+## Rate-limited Access
+
+An origin provides rate-limited access to content to a client over a fixed
+period of time. The origin does not need to know the client's identity, but
+needs to know that a requesting client has not exceeded the maximum rate set by
+the origin.
+
+One example of this use case is a metered paywall, where an origin limits the
+number of page requests to each unique user over a period of time before the
+user is required to pay for access. The origin typically resets this state
+periodically, say, once per month. For example, an origin may serve ten (major
+content) requests in a month before a paywall is enacted.
+
+Another example of this use case is rate-limiting page accesses to a client to
+help prevent fraud. Operations that are sensitive to fraud, such as account
+creation on a website, often employ rate limiting as a defense in depth
+strategy. Captchas or additional verification can be required by these pages
+when a client exceeds a set rate limit.
+
+Origins routinely use client IP addresses for this purpose.
+
+
+## Client Geo-Location
+
+An origin provides access to or customizes content based on the geo-location of
+the client. The origin does not need to know the client's identity, but needs to
+know the geo-location, with some level of accuracy, for providing service.
+
+A specific example of this use case is "geo-fencing", where an origin restricts
+the available content it can serve based on the client's geographical region.
+
+Origins almost exclusively use client IP addresses for this purpose.
+
+
+## Client Linking
+
+An origin wishes to link multiple accesses from a client. The server does not
+need to know the client's identity, but wishes to track an abstract user's
+activity over a period of time. Note that this use case shares some requirements
+with the "Rate-Limited Access" use case, since both require some client-specific
+state in the system.
+
+A specific example of this use case would be an origin that wishes to track a
+user's workflow through its site, so that it can optimize its site better.
+
+Origins routinely use client IP addresses for this purpose.
+
+
+## Private Client Authentication
+
+An origin provides access to content for clients that have been authorized by a
+delegated or known mediator. The origin does not need to know the client's
+identity.
+
+A specific example of this use case is a federated service that authorizes users
+for access to specific sites, such as a federated news service or a federated
+video streaming service. The origin trusts the federator to authorize users and
+needs proof that the federator authorized a particular user, but it does not
+need the user's identity to provide access to content.
+
+Origins could currently redirect clients to a federator for authentication, but
+origins could then track the client's federator user ID or the client's IP
+address across accesses.
+
 
 # Overview
 
