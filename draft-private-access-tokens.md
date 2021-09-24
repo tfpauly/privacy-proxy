@@ -414,7 +414,7 @@ key from the Issuer, and validate that the message matches the hash of the origi
 TokenChallenge for this session, SHA256(TokenChallenge), and that the version of the
 Token matches the version in the TokenChallenge.
 
-## Issuance
+## Issuance {#issuance}
 
 Issuance assumes the Client has the following information, derived from a given TokenChallenge:
 
@@ -498,10 +498,8 @@ matches a known public key for the Issuer. For example, the Mediator can fetch t
 key using the API defined in {{setup}}. This check is done to help ensure that the Client
 has not been given a unique key that could allow the Issuer to fingerprint or target
 the Client. If the key does not match, the Mediator rejects the request with an HTTP
-400 error. Note that Mediators need to be careful in cases of key rotation; particularly,
-an Origin could collude with an Issuer to try to rotate the key for each new Client in
-order to link the client activity. The policy Mediators apply for key validation ought
-to take such attacks into consideration.
+400 error. Note that Mediators need to be careful in cases of key rotation; see
+{{privacy-considerations}}.
 
 If the Mediator detects a version in the AccessTokenRequest that it does not recognize
 or support, it MUST reject the request with an HTTP 400 error.
@@ -727,8 +725,44 @@ signal, such as an IP address, especially since malicious clients can generate g
 Private Access Tokens and for Origins to work. However, similar DoS vectors already exist
 for Origins, e.g., at the underlying TLS layer.
 
+## Channel Security
+
+An attacker that can act as an intermediate between Mediator and Issuer communication can
+influence or disrupt the ability for the Issuer to correctly rate-limit token issuance.
+All communication channels MUST use server-authenticated HTTPS. Where appropriate, e.g., between
+Clients and Mediators, connections MAY mutually authenticate both client and server, or use mechanisms
+such as TLS certificate pinning, to mitigate the risk of channel compromise.
+
+An attacker that can intermediate the channel between Client and Origin can
+observe a TokenChallenge, and can view a Token being presented for authentication
+to an Origin. Scoping the TokenChallenge nonce to the Client HTTP session prevents
+Tokens being collected in one session and then presented to the Origin in another. 
+Note that an Origin cannot distinguish between a connection to a single Client and 
+a connection to an attacker intermediating multiple Clients. Thus, it is possible for
+an attacker to collect and later present Tokens from multiple clients over the same 
+Origin session.
 
 # Privacy Considerations {#privacy-considerations}
+
+## Origin Verification
+
+Private Access Tokens are defined in terms of a Client authenticating to an Origin, where
+the "origin" is used as defined in {{?RFC6454}}. In order to limit cross-origin correlation,
+Clients MUST verify that the origin_name presented in the TokenChallenge structure ({{scheme}})
+matches the origin that is providing the HTTP authentication challenge, where the matching logic
+is defined for same-origin policies in {{?RFC6454}}. Clients MAY further limit which
+authentication challenges they are willing to respond to, for example by only accepting
+challenges when the origin is a web site to which the user navigated.
+
+## Client Identification with Unique Keys
+
+Client activity could be linked if an Origin and Issuer collude to have unique keys targeted
+at specific Clients or sets of Clients. In order to mitigate this risk, the Mediator can 
+observe and validate the key_id presented by the Client to the Issuer. As described in
+{{issuance}}, Mediators MUST validate that the key_id in the Client's AccessTokenRequest
+matches a known public key for the Issuer. The Mediator needs to support key rotation,
+but ought to disallow very rapid key changes, which could indicate that an Origin is colluding
+with an Issuer to try to rotate the key for each new Client in order to link the client activity.
 
 ## Issuer and Mediator Ownership
 
