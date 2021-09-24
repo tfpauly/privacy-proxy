@@ -727,14 +727,15 @@ signal, such as an IP address, especially since malicious clients can generate g
 Private Access Tokens and for Origins to work. However, similar DoS vectors already exist
 for Origins, e.g., at the underlying TLS layer.
 
-## Man-in-the-Middle Attacks
+## Channel Security
 
-An attacker that can act as a man-in-the-middle for Mediator/Issuer communication can
+An attacker that can act as an intermediate between Mediator and Issuer communication can
 influence or disrupt the ability for the Issuer to correctly rate-limit token issuance.
-Communication between Mediators and Issuers MUST use a secure HTTPS connection, and SHOULD
-prevent man-in-the-middle attacks by employing an approach like TLS certificate pinning.
+All communication channels MUST use server-authenticated HTTPS. Where appropriate, e.g., between
+Clients and Mediators, connections MAY mutually authenticate both client and server, or use mechanisms
+such as TLS certificate pinning, to mitigate the risk of channel compromise.
 
-An attacker than can act as a man-in-the-middle for Client/Origin communication can
+An attacker than can intermediate the channel between Client and Origin can
 observe a TokenChallenge, and can view a Token being presented for authentication
 to an Origin. Origins can avoid this Token being used for some future connection
 by the attacker impersonating the Client by ensuring that the redemption_nonce
@@ -756,10 +757,10 @@ challenges when the origin is a web site to which the user navigated.
 ## Client Identification with Unique Keys
 
 Client activity could be linked if an Origin and Issuer collude to have unique keys targeted
-at specific Clients or sets of Clients. In order to mitigate this risk, the Mediator is able
-to see and validate the key_id presented by the Client to the Issuer. As described in
-{{issuance}}, Mediators MUST validate that the key_id in the client's AccessTokenRequest
-matches a known public key for the Issuer. This validation should allow for key rotation across
+at specific Clients or sets of Clients. In order to mitigate this risk, the Mediator can 
+observe and validate the key_id presented by the Client to the Issuer. As described in
+{{issuance}}, Mediators MUST validate that the key_id in the Client's AccessTokenRequest
+matches a known public key for the Issuer. This validation allows for key rotation across
 all Clients, but not allow for per-Client targetted keys.
 
 ## Issuer and Mediator Ownership
