@@ -663,11 +663,11 @@ budget was exceeded.
 ## Client Geo-Location {#implement-geolocation}
 
 To instantiate this use case, the Issuer has an issuing key pair per geographic region, i.e.,
-each region has a unique policy key. The Mediator forwards information about the Client's
-geographic location in a "Sec-CH-Geohash" header to the Issuer during issuance. The Issuer
-uses this location information to select the correct policy key. The number of key pairs
-is then the cross product of the number of Origins that require per-region keys and the number
-of regions.
+each region has a unique policy key. When verifying the key for the Client request, the Mediator
+obtains the per-region key from the Issuer based on the Client's perceived location. During
+issuance, the Mediator checks that this key matches that of the Client's request. If it matches,
+the Mediator forwards the request to complete issuance. The number of key pairs is then the cross
+product of the number of Origins that require per-region keys and the number of regions.
 
 During redemption, Clients present their geographic location to Origins in a "Sec-CH-Geohash"
 header. Origins use this to obtain the appropriate policy verification key. Origins request
