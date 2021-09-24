@@ -498,10 +498,8 @@ matches a known public key for the Issuer. For example, the Mediator can fetch t
 key using the API defined in {{setup}}. This check is done to help ensure that the Client
 has not been given a unique key that could allow the Issuer to fingerprint or target
 the Client. If the key does not match, the Mediator rejects the request with an HTTP
-400 error. Note that Mediators need to be careful in cases of key rotation; particularly,
-an Origin could collude with an Issuer to try to rotate the key for each new Client in
-order to link the client activity. The policy Mediators apply for key validation ought
-to take such attacks into consideration.
+400 error. Note that Mediators need to be careful in cases of key rotation; see
+{{privacy-considerations}}.
 
 If the Mediator detects a version in the AccessTokenRequest that it does not recognize
 or support, it MUST reject the request with an HTTP 400 error.
@@ -762,8 +760,9 @@ Client activity could be linked if an Origin and Issuer collude to have unique k
 at specific Clients or sets of Clients. In order to mitigate this risk, the Mediator can 
 observe and validate the key_id presented by the Client to the Issuer. As described in
 {{issuance}}, Mediators MUST validate that the key_id in the Client's AccessTokenRequest
-matches a known public key for the Issuer. This validation allows for key rotation across
-all Clients, but not allow for per-Client keys.
+matches a known public key for the Issuer. The Mediator needs to support key rotation,
+but ought to disallow very rapid key changes, which could indicate that an Origin is colluding
+with an Issuer to try to rotate the key for each new Client in order to link the client activity.
 
 ## Issuer and Mediator Ownership
 
