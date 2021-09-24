@@ -735,12 +735,14 @@ All communication channels MUST use server-authenticated HTTPS. Where appropriat
 Clients and Mediators, connections MAY mutually authenticate both client and server, or use mechanisms
 such as TLS certificate pinning, to mitigate the risk of channel compromise.
 
-An attacker than can intermediate the channel between Client and Origin can
+An attacker that can intermediate the channel between Client and Origin can
 observe a TokenChallenge, and can view a Token being presented for authentication
-to an Origin. Origins can avoid this Token being used for some future connection
-by the attacker impersonating the Client by ensuring that the redemption_nonce
-presented in the TokenChallenge is bound to the specific TLS session with the
-Client.
+to an Origin. Scoping the TokenChallenge nonce to the Client HTTP session prevents
+Tokens being collected in one session and then presented to the Origin in another. 
+Note that an Origin cannot distinguish between a connection to a single Client and 
+a connection to an attacker intermediating multiple Clients. Thus, it is possible for
+an attacker to collect and later present Tokens from multiple clients over the same 
+Origin session.
 
 # Privacy Considerations {#privacy-considerations}
 
@@ -761,7 +763,7 @@ at specific Clients or sets of Clients. In order to mitigate this risk, the Medi
 observe and validate the key_id presented by the Client to the Issuer. As described in
 {{issuance}}, Mediators MUST validate that the key_id in the Client's AccessTokenRequest
 matches a known public key for the Issuer. This validation allows for key rotation across
-all Clients, but not allow for per-Client targetted keys.
+all Clients, but not allow for per-Client keys.
 
 ## Issuer and Mediator Ownership
 
