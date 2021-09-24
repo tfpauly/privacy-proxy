@@ -494,8 +494,8 @@ or support, it MUST reject the request with an HTTP 400 error.
 
 Before forwarding the Client's request to the Issuer, the Mediator adds headers
 listing both the ANON_CLIENT_ID as "Anonymous-Client-ID", and the ANON_ORIGIN_ID_PRIME as
-"Anonymous-Origin-ID". The Mediator MAY add additional context information about Clients,
-such as their geographic region encapsulated in a "Sec-CH-Geohash" header {{!I-D.ietf-geohash-hint}}.
+"Anonymous-Origin-ID". The mediator MAY also add additional context information, but MUST
+NOT add information that will uniquely identify a client.
 
 ~~~
 :method = POST
