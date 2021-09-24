@@ -218,6 +218,13 @@ provides the services or content gated behind these policies.
 Unless said otherwise, this document encodes protocol messages in TLS notation
 from {{!TLS13=RFC8446}}, Section 3.
 
+This draft includes pseudocode that uses the functions and conventions defined
+in {{!HPKE=I-D.irtf-cfrg-hpke}}.
+
+Encoding an integer to a sequence of bytes in network byte order is described
+using the function "encode(n, v)", where "n" is the number of bytes and "v" is
+the integer value. The function "len()" returns the length of a sequence of bytes.
+
 The following terms are defined to refer to the different pieces of information
 passed through the system:
 
@@ -610,7 +617,7 @@ Beyond the key configuration inputs, Clients also require the AccessTokenRequest
 are used to encapsulate ORIGIN_NAME (`origin_name`) and produce
 ENCRYPTED_ORIGIN_NAME (`encrypted_origin`) as follows:
 
-1. Compute an HPKE context using pkI, yielding context and encapsulation key enc.
+1. Compute an {{HPKE}} context using pkI, yielding context and encapsulation key enc.
 1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID,
    aeadID, `token_request`, and `anon_origin_id`, as one 8-bit integer, three 16-bit integers,
    the AccessTokenRequest struct, and the value of ANONYMOUS_ORIGIN_ID, respectively, each in
