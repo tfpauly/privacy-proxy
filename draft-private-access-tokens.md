@@ -218,6 +218,13 @@ provides the services or content gated behind these policies.
 Unless said otherwise, this document encodes protocol messages in TLS notation
 from {{!TLS13=RFC8446}}, Section 3.
 
+This draft includes pseudocode that uses the functions and conventions defined
+in {{!HPKE=I-D.irtf-cfrg-hpke}}.
+
+Encoding an integer to a sequence of bytes in network byte order is described
+using the function "encode(n, v)", where "n" is the number of bytes and "v" is
+the integer value. The function "len()" returns the length of a sequence of bytes.
+
 The following terms are defined to refer to the different pieces of information
 passed through the system:
 
@@ -346,7 +353,7 @@ value. This MUST be unique for every 401 HTTP response to prevent replay attacks
 for use with the RSA Blind Signature protocol (ISSUER_TOKEN_KEY).
 
 - "name-key", which contains a base64url encoding of a `KeyConfig` as defined
-in {{!OHTTP=I-D.thomson-http-oblivious}} to use when encrypting the ORIGIN_NAME 
+in {{!OHTTP=I-D.thomson-http-oblivious}} to use when encrypting the ORIGIN_NAME
 in issuance requests (ISSUER_NAME_KEY).
 
 - "max-age", an optional attribute that consists of the number of seconds for which
@@ -470,7 +477,7 @@ The Client then generates an HTTP POST request to send through the Mediator to
 the Issuer, with the AccessTokenRequest as the body. The media type for this request
 is "message/access-token-request". The Client includes the "Token-Origin" header in
 this request, whose value is ENCRYPTED_ORIGIN_NAME as described in {{encrypt-origin}};
-and the "Anonymous-Origin-ID" header, whose value is ANON_ORIGIN_ID. The Client sends 
+and the "Anonymous-Origin-ID" header, whose value is ANON_ORIGIN_ID. The Client sends
 this request to the Mediator's proxy URI. An example request is shown below, where Nk = 512.
 
 ~~~
@@ -600,7 +607,7 @@ Given a `KeyConfig` (ISSUER_NAME_KEY), Clients produce ENCRYPTED_ORIGIN_NAME
 using the following values:
 
 - the key identifier from the configuration, keyID, with the corresponding KEM identified by kemID,
-the public key from the configuration, pkR, and;
+the public key from the configuration, pkI, and;
 - a selected combination of KDF, identified by kdfID, and AEAD, identified by aeadID.
 
 Beyond the key configuration inputs, Clients also require the AccessTokenRequest
@@ -608,8 +615,11 @@ Beyond the key configuration inputs, Clients also require the AccessTokenRequest
 are used to encapsulate ORIGIN_NAME (`origin_name`) and produce
 ENCRYPTED_ORIGIN_NAME (`encrypted_origin`) as follows:
 
-1. Compute an HPKE context using pkR, yielding context and encapsulation key enc.
-1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID, aeadID, `token_request`, and `anon_origin_id`, as one 8-bit integer, three 16-bit integers, the AccessTokenRequest struct, and the value of ANONYMOUS_ORIGIN_ID, respectively, each in network byte order.
+1. Compute an {{HPKE}} context using pkI, yielding context and encapsulation key enc.
+1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID,
+   aeadID, `token_request`, and `anon_origin_id`, as one 8-bit integer, three 16-bit integers,
+   the AccessTokenRequest struct, and the value of ANONYMOUS_ORIGIN_ID, respectively, each in
+   network byte order.
 1. Encrypt (seal) request with aad as associated data using context, yielding ciphertext ct.
 1. Concatenate the values of aad, enc, and ct, yielding an Encapsulated Request enc_request.
 
@@ -618,7 +628,7 @@ Note that enc is of fixed-length, so there is no ambiguity in parsing this struc
 In pseudocode, this procedure is as follows:
 
 ~~~
-enc, context = SetupBaseS(pkR, "OriginTokenRequest")
+enc, context = SetupBaseS(pkI, "OriginTokenRequest")
 aad = concat(encode(1, keyID),
              encode(2, kemID),
              encode(2, kdfID),
@@ -630,6 +640,22 @@ encrypted_origin = concat(aad, enc, ct)
 ~~~
 
 ENCRYPTED_ORIGIN_NAME is then set to encrypted_origin.
+
+Issuers reverse this procedure to recover origin_name by computing the AAD as described
+above and decrypting encrypted_origin with their private key skI, the private key corresponding
+to pkI. In pseudocode, this procedure is as follows:
+
+~~~
+keyID, kemID, kdfID, aeadID, token_request, anon_origin_id, enc, ct = parse(encrypted_origin)
+aad = concat(encode(1, keyID),
+             encode(2, kemID),
+             encode(2, kdfID),
+             encode(2, aeadID),
+             encode(len(token_request), token_request),
+             encode(32, anon_origin_id))
+enc, context = SetupBaseR(enc, skI, "OriginTokenRequest")
+origin_name, error = context.Open(aad, ct)
+~~~
 
 ### Anonymous Client ID {#client-id}
 
@@ -768,7 +794,7 @@ with an Issuer to try to rotate the key for each new Client in order to link the
 
 Issuers and Mediators should be run by mutually distinct organizations to limit
 information sharing. A single entity running an issuer and mediator for a single redemption
-can view the origins being accessed by a given client. Running the issuer and mediator in 
+can view the origins being accessed by a given client. Running the issuer and mediator in
 this 'single issuer/mediator' fashion reduces the privacy promises to those of Privacy Pass.
 This may be desirable for a redemption flow that is limited to specific issuers and mediators,
 but should be avoided where hiding origins from the mediator is desirable.
