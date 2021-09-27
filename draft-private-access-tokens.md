@@ -95,7 +95,7 @@ alternative for origins to continue enforcing their policies. Using the Privacy
 Address Token architecture for addressing these use cases is described in
 {{examples}}.
 
-## Rate-limited Access
+## Rate-limited Access {#use-case-rate-limit}
 
 An origin provides rate-limited access to content to a client over a fixed
 period of time. The origin does not need to know the client's identity, but
@@ -117,7 +117,7 @@ when a client exceeds a set rate limit.
 Origins routinely use client IP addresses for this purpose.
 
 
-## Client Geo-Location
+## Client Geo-Location {#use-case-geolocation}
 
 An origin provides access to or customizes content based on the geo-location of
 the client. The origin does not need to know the client's identity, but needs to
@@ -129,21 +129,7 @@ the available content it can serve based on the client's geographical region.
 Origins almost exclusively use client IP addresses for this purpose.
 
 
-## Client Linking
-
-An origin wishes to link multiple accesses from a client. The server does not
-need to know the client's identity, but wishes to track an abstract user's
-activity over a period of time. Note that this use case shares some requirements
-with the "Rate-Limited Access" use case, since both require some client-specific
-state in the system.
-
-A specific example of this use case would be an origin that wishes to track a
-user's workflow through its site, so that it can optimize its site better.
-
-Origins routinely use client IP addresses for this purpose.
-
-
-## Private Client Authentication
+## Private Client Authentication {#use-case-authentication}
 
 An origin provides access to content for clients that have been authorized by a
 delegated or known mediator. The origin does not need to know the client's
@@ -513,7 +499,8 @@ or support, it MUST reject the request with an HTTP 400 error.
 
 Before forwarding the Client's request to the Issuer, the Mediator adds headers
 listing both the ANON_CLIENT_ID as "Anonymous-Client-ID", and the ANON_ORIGIN_ID_PRIME as
-"Anonymous-Origin-ID".
+"Anonymous-Origin-ID". The mediator MAY also add additional context information, but MUST
+NOT add information that will uniquely identify a client.
 
 ~~~
 :method = POST
@@ -681,31 +668,12 @@ Issuers MUST NOT be able to recover ANON_ORIGIN_ID from ANON_ORIGIN_ID_PRIME. On
 derivation is to compute a PRF keyed by ANON_ORIGIN_ID over ISSUER_POLICY_WINDOW, e.g.,
 ANON_ORIGIN_ID_PRIME = HKDF(secret=ANON_ORIGIN_ID, salt="", info=ISSUER_POLICY_WINDOW).
 
-# Policies and Uses Cases {#examples}
+# Instantiating Uses Cases {#examples}
 
-This section describes various instantiations of this protocol to address common use cases.
+This section describes various instantiations of this protocol to address use cases
+described in {{motivation}}.
 
-## Private Client Authentication
-
-In this example, a single site wishes to learn if a given user is authentic as defined by a Mediator.
-It is not important for the server to know if two connections correspond to a specific user.
-The time window over which the server needs to link such connections together can vary.
-
-To instantiate this case, the site acts as an Origin and registers an "unlimited token"
-policy with the Issuer. In this policy, the Issuer does not enforce any limit on the number
-of tokens a given user will obtain.
-
-Origins request tokens from Clients and, upon successful redemption, the Origin knows
-the Client was able to request a token for the given (ANON_CLIENT_ID, ORIGIN_NAME) tuple. As a
-result, the Origin knows this is an authentic client.
-
-## Metered Paywalls
-
-In this example, a site wishes to implement a metered paywall, wherein the meter is enforced
-by a weak client identifier such as their IP address. The policy for such a paywall is to
-limit the number of visits to unique users to some fixed value. The policy typically rotates
-on a regular basis. For example, users may get N visits within the span of a week before the
-paywall is enacted.
+## Rate-limited Access {#implement-rate-limit}
 
 To instantiate this case, the site acts as an Origin and registers a "bounded token" policy
 with the Issuer. In this policy, the Issuer does enforces a fixed number of tokens for a given
@@ -716,20 +684,30 @@ the Client was able to request a token for the given (CLIENT_ID, ORIGIN_NAME) tu
 its budget. Failure to present a token can be interpreted as a signal that the client's token
 budget was exceeded.
 
-## Client Linking
+## Client Geo-Location {#implement-geolocation}
 
-In this example, a site wishes to determine if multiple connections from a user are from
-one user, or multiple. It is not important to map a connection to a non-anonymous user identifier.
+To instantiate this use case, the Issuer has an issuing key pair per geographic region, i.e.,
+each region has a unique policy key. When verifying the key for the Client request, the Mediator
+obtains the per-region key from the Issuer based on the Client's perceived location. During
+issuance, the Mediator checks that this key matches that of the Client's request. If it matches,
+the Mediator forwards the request to complete issuance. The number of key pairs is then the cross
+product of the number of Origins that require per-region keys and the number of regions.
 
-To instantiate this case, the Origin site registers a "single token" policy with
-the Issuer. In this policy, the Issuer ensures exactly one token can be issued for a given
-(ANON_CLIENT_ID, ORIGIN_NAME) tuple.
+During redemption, Clients present their geographic location to Origins in a "Sec-CH-Geohash"
+header. Origins use this to obtain the appropriate policy verification key. Origins request
+tokens from Clients and, upon successful redemption, the Origin knows the Client obtained a
+token for the given (CLIENT_ID, ORIGIN_NAME) tuple in the specified region.
 
-The Origin requests tokens from Clients, and verifies but does not enforce a one-time-use. With
-this approach, the Origin can verify that multiple requests map to a single user across the
-ISSUER_POLICY_WINDOW. Larger windows allow for larger per-user linkability. It is assumed other
-approaches are applied to ensure clients can't be reidentified in by other identifiers carried on
-the request.
+## Private Client Authentication {#implement-authentication}
+
+To instantiate this case, the site acts as an Origin and registers an "unlimited token"
+policy with the Issuer. In this policy, the Issuer does not enforce any limit on the number
+of tokens a given user will obtain.
+
+Origins request tokens from Clients and, upon successful redemption, the Origin knows
+the Client was able to request a token for the given (ANON_CLIENT_ID, ORIGIN_NAME) tuple. As a
+result, the Origin knows this is an authentic client.
+
 
 # Security Considerations {#sec-considerations}
 
