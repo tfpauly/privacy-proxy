@@ -263,17 +263,9 @@ keys available via the following API endpoints:
 - Issuer name public key (ISSUER_NAME_KEY): /.well-known/issuer-key
 - Access token policy window (ISSUER_POLICY_WINDOW): /.well-known/access-token-window
 
-The access token policy verification key is a struct of the following format:
-
-~~~
-struct {
-   opaque public_key[Nk]; // Defined in [OHTTP]
-} IssuerNameKey;
-~~~
-
-The content of IssuerNameKey is a `KeyConfig` as defined in {{!OHTTP=I-D.thomson-http-oblivious}}
+The content of issuer name public key is a `KeyConfig` as defined in {{!OHTTP=I-D.thomson-http-oblivious}}
 to use when encrypting the ORIGIN_NAME in issuance requests. The response uses media type
-"application/issuer-name-key".
+"application/ohttp-keys".
 
 The access token policy window is a resource of media type "application/json", with the
 following structure:
@@ -809,82 +801,10 @@ Pointer to specification text: {{scheme}} of this document
 This specification defines the following protocol messages, along with their
 corresponding media types types:
 
-- PolicyVerificationKey {{setup}}: "application/issuer-name-key"
 - AccessTokenRequest {{issuance}}: "message/access-token-request"
 - AccessTokenResponse {{issuance}}: "message/access-token-response"
 
 The definition for each media type is in the following subsections.
-
-### "application/issuer-name-key" media type
-
-Type name:
-
-: application
-
-Subtype name:
-
-: issuer-name-key
-
-Required parameters:
-
-: N/A
-
-Optional parameters:
-
-: None
-
-Encoding considerations:
-
-: only "8bit" or "binary" is permitted
-
-Security considerations:
-
-: see {{sec-considerations}}
-
-Interoperability considerations:
-
-: N/A
-
-Published specification:
-
-: this specification
-
-Applications that use this media type:
-
-: N/A
-
-Fragment identifier considerations:
-
-: N/A
-
-Additional information:
-
-: <dl>
-  <dt>Magic number(s):</dt><dd>N/A</dd>
-  <dt>Deprecated alias names for this type:</dt><dd>N/A</dd>
-  <dt>File extension(s):</dt><dd>N/A</dd>
-  <dt>Macintosh file type code(s):</dt><dd>N/A</dd>
-  </dl>
-
-Person and email address to contact for further information:
-
-: see Authors' Addresses section
-
-Intended usage:
-
-: COMMON
-
-Restrictions on usage:
-
-: N/A
-
-Author:
-
-: see Authors' Addresses section
-
-Change controller:
-
-: IESG
 
 ### "message/access-token-request" media type
 
