@@ -445,7 +445,7 @@ request using blinded_req:
 struct {
     uint8_t version;
     uint8_t name_key_id[32];
-    uint8_t encrypted_origin_name[Nk];
+    uint8_t encrypted_origin_name<1..2^16-1>;
     uint8_t blinded_req[Nk];
 } AccessTokenRequest;
 ~~~
@@ -456,7 +456,7 @@ The structure fields are defined as follows:
 This document defines version 1.
 
 - "name_key_id" is a collision-resistant hash that identifies the ISSUER_NAME_KEY public
-key, generated as SHA256(public_key), where public_key is a DER-encoded
+key, generated as SHA256(KeyConfig).
 SubjectPublicKeyInfo object.
 
 - "encrypted_origin_name" is an encrypted origin_name, calculated as described
@@ -531,7 +531,7 @@ conditions:
 - The "Token-Origin" header is present, and can be decrypted using the Issuer's private key
 (the private key associated with ISSUER_NAME_KEY).
 - The AccessTokenRequest contains a supported version
-- For version 1, the AccessTokenRequest.name_key_id matches the ISSUER_NAME_KEY held by the Issuer
+- For version 1, the AccessTokenRequest.name_key_id corresponds to the ID of the ISSUER_NAME_KEY held by the Issuer
 - For version 1, the AccessTokenRequest.encrypted_origin_name can be decrypted using the
 Issuer's private key (the private key associated with ISSUER_NAME_KEY), and matches
 an Origin that is served by the Issuer
@@ -559,7 +559,7 @@ error to the Mediator, which will forward the error to the client.
 
 The Issuer determines the correct ORIGIN_TOKEN_KEY by using the decrypted ORIGIN_NAME value. Issuers
 are expected to be able to deterministically select the correct key based on information sent in
-the request. Clients do not send a specific key_id, to prevent Origins from choosing per-client keys.
+the request. Clients do not indicate the ORIGIN_TOKEN_KEY to use, to prevent Origins from choosing per-client keys.
 
 If the Issuer is willing to give a token to the Client, the Issuer completes the issuance flow by
 computing a blinded response as follows:
