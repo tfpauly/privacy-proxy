@@ -1,7 +1,7 @@
 ---
 title: The Geohash HTTP Client Hint
 abbrev: Geohash CH
-docname: draft-geohash-hint-latest
+docname: draft-pauly-httpbis-geohash-hint-latest
 category: exp
 
 ipr: trust200902
@@ -19,6 +19,11 @@ author:
     city: Cupertino, California 95014
     country: United States of America
     email: tpauly@apple.com
+ -
+    ins: D. Schinazi
+    name: David Schinazi
+    organization: Google LLC
+    email: dschinazi.ietf@gmail.com
 
 
 informative:
