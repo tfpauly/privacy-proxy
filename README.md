@@ -24,7 +24,7 @@ This repository collects various specifications and Internet drafts that will be
 
 ## The Geohash HTTP Client Hint
 
-* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-geohash-hint.html)
+* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geohash-hint.html)
 
 ## HTTP Header Fields for Proxied SVCB Metadata
 
