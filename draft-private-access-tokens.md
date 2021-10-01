@@ -225,14 +225,14 @@ policy, defined in terms of seconds and represented as a uint64. The ANON_CLIENT
 that the Mediator derives is specific to a Policy Window, meaning that a CLIENT_ID
 will not map to the same ANON_CLIENT_ID after the Policy Window has elapsed.
 
-ISSUER_TOKEN_KEY:
+ORIGIN_TOKEN_KEY:
 : The public key used when generating and verifying Private Access Tokens. Each
-Issuer Key can be used across requests for different Origins, and is not unique
-per-Client to avoid opening up a fingerprinting risk.
+Origin Token Key is unique to a single Origin.
 
 ISSUER_NAME_KEY:
 : The public key used to encrypt the ORIGIN_NAME in request from Clients
-to the Issuer, so that Mediators cannot learn the ORIGIN_NAME value.
+to the Issuer, so that Mediators cannot learn the ORIGIN_NAME value. Each
+Issuer Name Key is used across all requests on the Issuer, for different Origins.
 
 ORIGIN_NAME:
 : The Origin name identifies the Origin that requests and verifies Private Access Tokens.
@@ -260,19 +260,12 @@ and corresponds to a unique ANON_ORIGIN_ID and a unique ANON_CLIENT_ID.
 It is assumed that Issuers make Oblivious HTTP configurations and policy verification
 keys available via the following API endpoints:
 
-- Access token policy verification key: /.well-known/access-token-key/policy=?
-- Access token policy window: /.well-known/access-token-window/policy=?
+- Issuer name public key (ISSUER_NAME_KEY): /.well-known/issuer-key
+- Access token policy window (ISSUER_POLICY_WINDOW): /.well-known/access-token-window
 
-The access token policy verification key is a struct of the following format:
-
-~~~
-struct {
-   opaque public_key[Nk]; // Defined in [BLINDSIG]
-} AccessTokenKey;
-~~~
-
-The contents of AccessTokenKey are an RSA public key for use with the RSA Blind
-Signature protocol {{BLINDSIG}}. The response uses media type "application/access-token-key".
+The content of issuer name public key is a `KeyConfig` as defined in {{!OHTTP=I-D.thomson-http-oblivious}}
+to use when encrypting the ORIGIN_NAME in issuance requests. The response uses media type
+"application/ohttp-keys".
 
 The access token policy window is a resource of media type "application/json", with the
 following structure:
@@ -336,11 +329,11 @@ scheme uses the following attributes:
 value. This MUST be unique for every 401 HTTP response to prevent replay attacks.
 
 - "token-key", which contains a base64url encoding of the SubjectPublicKeyInfo object
-for use with the RSA Blind Signature protocol (ISSUER_TOKEN_KEY).
+for use with the RSA Blind Signature protocol (ORIGIN_TOKEN_KEY).
 
 - "name-key", which contains a base64url encoding of a `KeyConfig` as defined
-in {{!OHTTP=I-D.thomson-http-oblivious}} to use when encrypting the ORIGIN_NAME
-in issuance requests (ISSUER_NAME_KEY).
+in {{OHTTP}} to use when encrypting the ORIGIN_NAME in issuance requests
+(ISSUER_NAME_KEY).
 
 - "max-age", an optional attribute that consists of the number of seconds for which
 the challenge will be accepted by the Origin.
@@ -413,8 +406,8 @@ Issuance assumes the Client has the following information, derived from a given 
 
 - Origin name (ORIGIN_NAME), a URI referring to the Origin {{!RFC6454}}. This is
   the value of TokenChallenge.origin_name.
-- Issuer token public key (ISSUER_TOKEN_KEY), a blind signature public key
-  corresponding to the Issuer identified by TokenChallenge.issuer_name.
+- Origin token public key (ORIGIN_TOKEN_KEY), a blind signature public key
+  corresponding to the Origin identified by TokenChallenge.origin_name.
 - Issuer name public key (ISSUER_NAME_KEY), a public key used to encrypt requests
   corresponding to the Issuer identified by TokenChallenge.issuer_name.
 
@@ -433,7 +426,7 @@ Issuance begins by Clients hashing the TokenChallenge to produce a token input
 as message = SHA256(challenge), and then blinding message as follows:
 
 ~~~
-blinded_req, blind_inv = rsabssa_blind(ISSUER_TOKEN_KEY, message)
+blinded_req, blind_inv = rsabssa_blind(ORIGIN_TOKEN_KEY, message)
 ~~~
 
 The Client MUST use a randomized variant of RSABSSA in producing this signature with
@@ -443,7 +436,8 @@ request using blinded_req:
 ~~~
 struct {
     uint8_t version;
-    uint8_t key_id[32];
+    uint8_t name_key_id[32];
+    uint8_t encrypted_origin_name<1..2^16-1>;
     uint8_t blinded_req[Nk];
 } AccessTokenRequest;
 ~~~
@@ -453,18 +447,20 @@ The structure fields are defined as follows:
 - "version" is a 1-octet integer, which matches the version in the TokenChallenge.
 This document defines version 1.
 
-- "key_id" is a collision-resistant hash that identifies the ISSUER_TOKEN_KEY public
-key, generated as SHA256(public_key), where public_key is a DER-encoded
+- "name_key_id" is a collision-resistant hash that identifies the ISSUER_NAME_KEY public
+key, generated as SHA256(KeyConfig).
 SubjectPublicKeyInfo object.
+
+- "encrypted_origin_name" is an encrypted origin_name, calculated as described
+in {{encrypt-origin}}.
 
 - "blinded_req" is the Nk-octet request defined above.
 
 The Client then generates an HTTP POST request to send through the Mediator to
 the Issuer, with the AccessTokenRequest as the body. The media type for this request
-is "message/access-token-request". The Client includes the "Token-Origin" header in
-this request, whose value is ENCRYPTED_ORIGIN_NAME as described in {{encrypt-origin}};
-and the "Anonymous-Origin-ID" header, whose value is ANON_ORIGIN_ID. The Client sends
-this request to the Mediator's proxy URI. An example request is shown below, where Nk = 512.
+is "message/access-token-request". The Client includes the "Anonymous-Origin-ID" header,
+whose value is ANON_ORIGIN_ID. The Client sends this request to the Mediator's proxy URI.
+An example request is shown below, where Nk = 512.
 
 ~~~
 :method = POST
@@ -475,7 +471,6 @@ accept = message/access-token-request
 cache-control = no-cache, no-store
 content-type = message/access-token-request
 content-length = 512
-Token-Origin = ENCRYPTED_ORIGIN_NAME
 Anonymous-Origin-ID = ANON_ORIGIN_ID
 
 <Bytes containing the AccessTokenRequest>
@@ -487,9 +482,9 @@ also computes ANON_ORIGIN_ID_PRIME, a fixed-length byte string, for each ANON_OR
 for a specific ANON_CLIENT_ID. See {{origin-id}} for details its computation.
 
 The Mediator also checks to validate that the key_id in the client's AccessTokenRequest
-matches a known public key for the Issuer. For example, the Mediator can fetch this
-key using the API defined in {{setup}}. This check is done to help ensure that the Client
-has not been given a unique key that could allow the Issuer to fingerprint or target
+matches a known ISSUER_NAME_KEY public key for the Issuer. For example, the Mediator can
+fetch this key using the API defined in {{setup}}. This check is done to help ensure that
+the Client has not been given a unique key that could allow the Issuer to fingerprint or target
 the Client. If the key does not match, the Mediator rejects the request with an HTTP
 400 error. Note that Mediators need to be careful in cases of key rotation; see
 {{privacy-considerations}}.
@@ -511,7 +506,6 @@ accept = message/ohttp-req
 cache-control = no-cache, no-store
 content-type = message/access-token-request
 content-length = 512
-Token-Origin = ENCRYPTED_ORIGIN_NAME
 Anonymous-Origin-ID = ANON_ORIGIN_ID_PRIME
 Anonymous-Client-ID = ANON_CLIENT_ID
 
@@ -528,9 +522,12 @@ conditions:
 - The "Anonymous-Origin-ID" header is present
 - The "Token-Origin" header is present, and can be decrypted using the Issuer's private key
 (the private key associated with ISSUER_NAME_KEY).
-- The decrypted ORIGIN_NAME matches an Origin the Issuer serves
-- The AccessTokenRequest contains a supported version, has a key_id that matches a key held
-by the Issuer, and has a blinded_req of the correct size.
+- The AccessTokenRequest contains a supported version
+- For version 1, the AccessTokenRequest.name_key_id corresponds to the ID of the ISSUER_NAME_KEY held by the Issuer
+- For version 1, the AccessTokenRequest.encrypted_origin_name can be decrypted using the
+Issuer's private key (the private key associated with ISSUER_NAME_KEY), and matches
+an Origin that is served by the Issuer
+- For version 1, the AccessTokenRequest.blinded_req is of the correct size
 
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Mediator,
 which will forward the error to the client.
@@ -552,6 +549,10 @@ to determine if the Client is allowed to receive a token for this Origin during 
 window. If the Issuer refuses to issue more tokens, it responds with an HTTP 429 (Too Many Requests)
 error to the Mediator, which will forward the error to the client.
 
+The Issuer determines the correct ORIGIN_TOKEN_KEY by using the decrypted ORIGIN_NAME value. Issuers
+are expected to be able to deterministically select the correct key based on information sent in
+the request. Clients do not indicate the ORIGIN_TOKEN_KEY to use, to prevent Origins from choosing per-client keys.
+
 If the Issuer is willing to give a token to the Client, the Issuer completes the issuance flow by
 computing a blinded response as follows:
 
@@ -559,7 +560,7 @@ computing a blinded response as follows:
 blind_sig = rsabssa_blind_sign(skP, AccessTokenRequest.blinded_req)
 ~~~
 
-`skP` is the private key corresponding to ISSUER_TOKEN_KEY, known only to the Issuer.
+`skP` is the private key corresponding to ORIGIN_TOKEN_KEY, known only to the Issuer.
 
 The Issuer generates an HTTP response with status code 200 whose body consists of
 blind_sig. The Issuer sends this as the response to the forwarded request,
@@ -582,7 +583,7 @@ Upon receipt, the Client handles the response and, if successful, processes the
 body as follows:
 
 ~~~
-sig = rsabssa_finalize(ISSUER_TOKEN_KEY, nonce, blind_sig, blind_inv)
+sig = rsabssa_finalize(ORIGIN_TOKEN_KEY, nonce, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a Private Access Token as described in
@@ -761,12 +762,19 @@ challenges when the origin is a web site to which the user navigated.
 ## Client Identification with Unique Keys
 
 Client activity could be linked if an Origin and Issuer collude to have unique keys targeted
-at specific Clients or sets of Clients. In order to mitigate this risk, the Mediator can 
-observe and validate the key_id presented by the Client to the Issuer. As described in
-{{issuance}}, Mediators MUST validate that the key_id in the Client's AccessTokenRequest
-matches a known public key for the Issuer. The Mediator needs to support key rotation,
-but ought to disallow very rapid key changes, which could indicate that an Origin is colluding
-with an Issuer to try to rotate the key for each new Client in order to link the client activity.
+at specific Clients or sets of Clients.
+
+To mitigate the risk of a targetted ISSUER_NAME_KEY, the Mediator can  observe and validate
+the name_key_id presented by the Client to the Issuer. As described in {{issuance}}, Mediators
+MUST validate that the name_key_id in the Client's AccessTokenRequest matches a known public key
+for the Issuer. The Mediator needs to support key rotation, but ought to disallow very rapid key
+changes, which could indicate that an Origin is colluding with an Issuer to try to rotate the key
+for each new Client in order to link the client activity.
+
+To mitigate the risk of a targetted ORIGIN_TOKEN_KEY, the protocol expects that an Issuer has only
+a single valid public key for signing tokens at a time. The Client does not present the key_id
+of the token public key to the Issuer, but instead expects the Issuer to infer the correct key based
+on the information the Issuer knows, specifically the origin_name itself.
 
 ## Issuer and Mediator Ownership
 
@@ -793,82 +801,10 @@ Pointer to specification text: {{scheme}} of this document
 This specification defines the following protocol messages, along with their
 corresponding media types types:
 
-- PolicyVerificationKey {{setup}}: "application/access-token-key"
 - AccessTokenRequest {{issuance}}: "message/access-token-request"
 - AccessTokenResponse {{issuance}}: "message/access-token-response"
 
 The definition for each media type is in the following subsections.
-
-### "application/access-token-key" media type
-
-Type name:
-
-: application
-
-Subtype name:
-
-: access-token-key
-
-Required parameters:
-
-: N/A
-
-Optional parameters:
-
-: None
-
-Encoding considerations:
-
-: only "8bit" or "binary" is permitted
-
-Security considerations:
-
-: see {{sec-considerations}}
-
-Interoperability considerations:
-
-: N/A
-
-Published specification:
-
-: this specification
-
-Applications that use this media type:
-
-: N/A
-
-Fragment identifier considerations:
-
-: N/A
-
-Additional information:
-
-: <dl>
-  <dt>Magic number(s):</dt><dd>N/A</dd>
-  <dt>Deprecated alias names for this type:</dt><dd>N/A</dd>
-  <dt>File extension(s):</dt><dd>N/A</dd>
-  <dt>Macintosh file type code(s):</dt><dd>N/A</dd>
-  </dl>
-
-Person and email address to contact for further information:
-
-: see Authors' Addresses section
-
-Intended usage:
-
-: COMMON
-
-Restrictions on usage:
-
-: N/A
-
-Author:
-
-: see Authors' Addresses section
-
-Change controller:
-
-: IESG
 
 ### "message/access-token-request" media type
 
