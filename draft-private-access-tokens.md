@@ -16,6 +16,11 @@ author:
     name: Scott Hendrickson
     org: Google LLC
     email: scott@shendrickson.com
+ - 
+    ins: J. Iyengar
+    name: Jana Iyengar
+    org: Fastly
+    email: jri@fastly.com
  -
     ins: T. Pauly
     name: Tommy Pauly
@@ -29,7 +34,8 @@ author:
     name: Steven Valdez
     org: Google LLC
     email: svaldez@chromium.org
- -  ins: C. A. Wood
+ -  
+    ins: C. A. Wood
     name: Christopher A. Wood
     org: Cloudflare
     email: caw@heapingbits.net
