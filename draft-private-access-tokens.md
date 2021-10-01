@@ -467,7 +467,7 @@ An example request is shown below, where Nk = 512.
 :scheme = https
 :authority = issuer.net
 :path = /access-token-request
-accept = message/access-token-request
+accept = message/access-token-response
 cache-control = no-cache, no-store
 content-type = message/access-token-request
 content-length = 512
@@ -502,7 +502,7 @@ NOT add information that will uniquely identify a client.
 :scheme = https
 :authority = issuer.net
 :path = /access-token-request
-accept = message/ohttp-req
+accept = message/access-token-response
 cache-control = no-cache, no-store
 content-type = message/access-token-request
 content-length = 512
