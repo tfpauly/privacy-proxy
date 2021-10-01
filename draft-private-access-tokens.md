@@ -257,10 +257,10 @@ and corresponds to a unique ANON_ORIGIN_ID and a unique ANON_CLIENT_ID.
 
 # API Endpoints {#setup}
 
-It is assumed that Issuers make Oblivious HTTP configurations and policy verification
-keys available via the following API endpoints:
+Issuers MUST provide the following information available via the corresponding
+API endpoints:
 
-- Issuer name public key (ISSUER_NAME_KEY): /.well-known/issuer-key
+- Issuer name public key (ISSUER_NAME_KEY): /.well-known/issuer-name-key
 - Access token policy window (ISSUER_POLICY_WINDOW): /.well-known/access-token-window
 
 The content of issuer name public key is a `KeyConfig` as defined in {{!OHTTP=I-D.thomson-http-oblivious}}
@@ -621,8 +621,7 @@ aad = concat(encode(1, keyID),
              encode(2, kemID),
              encode(2, kdfID),
              encode(2, aeadID),
-             encode(len(token_request), token_request),
-             encode(32, anon_origin_id))
+             encode(len(token_request), token_request))
 ct = context.Seal(aad, origin_name)
 encrypted_origin = concat(aad, enc, ct)
 ~~~
@@ -639,8 +638,7 @@ aad = concat(encode(1, keyID),
              encode(2, kemID),
              encode(2, kdfID),
              encode(2, aeadID),
-             encode(len(token_request), token_request),
-             encode(32, anon_origin_id))
+             encode(len(token_request), token_request))
 enc, context = SetupBaseR(enc, skI, "OriginTokenRequest")
 origin_name, error = context.Open(aad, ct)
 ~~~
