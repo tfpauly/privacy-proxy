@@ -606,7 +606,7 @@ ENCRYPTED_ORIGIN_NAME (`encrypted_origin`) as follows:
 1. Compute an {{HPKE}} context using pkI, yielding context and encapsulation key enc.
 1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID,
    aeadID, `token_request`, and `anon_origin_id`, as one 8-bit integer, three 16-bit integers,
-   the AccessTokenRequest struct, and the value of ANONYMOUS_ORIGIN_ID, respectively, each in
+   the AccessTokenRequest struct, and the value of ANON_ORIGIN_ID, respectively, each in
    network byte order.
 1. Encrypt (seal) request with aad as associated data using context, yielding ciphertext ct.
 1. Concatenate the values of aad, enc, and ct, yielding an Encapsulated Request enc_request.
