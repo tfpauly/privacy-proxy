@@ -512,6 +512,16 @@ One possible mechanism for generating GROUP_ORIGIN_ID is for the Issuer to compu
 keyed by a per-Issuer secret (issuer_secret) over the ORIGIN_NAME and CLIENT_GROUP_ID,
 e.g., GROUP_ORIGIN_ID = HKDF(secret=issuer_secret, salt=CLIENT_GROUP_ID, info=ORIGIN_NAME).
 
+Issuers also can keep state about previous CLIENT_GROUP_ID values they have seen from
+a specific Mediator. Issuers SHOULD validate that a give CLIENT_GROUP_ID value is only
+used for at most twice the length of the ISSUER_POLICY_WINDOW. If a CLIENT_GROUP_ID
+is used beyond that, Issuers SHOULD reject token requests. This prevents Mediators
+from being able to correlate per-origin activity over time. Similarly, Issuers SHOULD
+validate that a Mediator is sending multiple CLIENT_GROUP_ID values, and has a roughly
+equal split between requests that use various CLIENT_GROUP_ID values. If one
+CLIENT_GROUP_ID represents a significant majority of requests, Issuers SHOULD reject
+token requests or stop allowing requests from the Mediator.
+
 ### Client-to-Mediator Request
 
 Issuance assumes that the Client and Mediator have a secure and
