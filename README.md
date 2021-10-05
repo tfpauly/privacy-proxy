@@ -10,10 +10,6 @@ This repository collects various specifications and Internet drafts that will be
 * [Individual Draft](https://tools.ietf.org/html/draft-pauly-masque-quic-proxy)
 * [Compare Editor's Copy to Individual Draft](https://tfpauly.github.io/quic-proxy/#go.draft-pauly-masque-quic-proxy.diff)
 
-## RSA Blind Signatures
-
-* [Editor's Copy](https://chris-wood.github.io/draft-wood-cfrg-blind-signatures/draft-wood-cfrg-rsa-blind-signatures.html)
-
 ## The Privacy Token HTTP Authentication Scheme
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-privacy-token.html)
