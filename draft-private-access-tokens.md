@@ -188,7 +188,7 @@ The Mediator, Issuer, and Origin each have partial knowledge of the Client's
 identity and actions, and each entity only knows enough to serve its
 function. The pieces of information are identified in {{terms}}.
 
-The Mediator knows the Client's identity , the Issuer being targeted
+The Mediator knows the Client's identity, the Issuer being targeted
 (ISSUER_NAME), and the period of time for which the Issuer's policy is valid
 (ISSUER_POLICY_WINDOW). The Mediator does not know the identity of the Origin
 the Client is trying to access (ORIGIN_NAME), but knows a Client-anonymized
