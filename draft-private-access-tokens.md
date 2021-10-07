@@ -230,7 +230,7 @@ ISSUER_POLICY_WINDOW:
 : The period over which an Issuer will track access policy, defined in terms of
 seconds and represented as a uint64. The state that the Mediator keeps for a Client
 is specific to a policy window. The effective policy window for a specific Client
-starts when the Clients first sends a request associated with an Issuer.
+starts when the Client first sends a request associated with an Issuer.
 
 ORIGIN_TOKEN_KEY:
 : The public key used when generating and verifying Private Access Tokens. Each
@@ -274,7 +274,7 @@ The content of issuer name public key is a `KeyConfig` as defined in {{!OHTTP=I-
 to use when encrypting the ORIGIN_NAME in issuance requests. The response uses media type
 "application/ohttp-keys".
 
-The policy window (ISSUER_POLICY_WINDOW) is store as a resource of media type "application/json",
+The policy window (ISSUER_POLICY_WINDOW) is a resource of media type "application/json",
 with the following structure:
 
 ~~~
@@ -307,10 +307,10 @@ issuance flow ({{issuance}}).
 
 Token redemption is performed using HTTP Authentication ({{!RFC7235}}), with
 the scheme "PrivateAccessToken". Origins challenge Clients to present a unique,
-single-use token from a specific Issuer. Once Clients have received a token
-from that Issuer, they present the token to the Origin.
+single-use token from a specific Issuer. Once a Client has received a token
+from that Issuer, it presents the token to the Origin.
 
-### Token Challenge
+### Token Challenge {#challenge}
 
 Origins send a token challenge to Clients in an "WWW-Authenticate" header with
 the "PrivateAccessToken" scheme. This challenge includes a TokenChallenge message,
@@ -338,7 +338,7 @@ The structure fields are defined as follows:
 
 - "redemption_nonce" is a fresh 32-byte nonce generated for each redemption request.
 
-When used in authentication challenges, the "PrivateAccessToken" scheme uses the
+When used in an authentication challenge, the "PrivateAccessToken" scheme uses the
 following attributes:
 
 - "challenge", which contains a base64url-encoded {{!RFC4648}} TokenChallenge
@@ -362,16 +362,16 @@ As an example, the WWW-Authenticate header could look like this:
 WWW-Authenticate: PrivateAccessToken challenge=abc... token-key=123... name-key=456...
 ~~~
 
-Upon receipt of this challenge, Clients use the message and keys in the Issuance protocol
-as described in {{issuance}}. If the TokenChallenge has a version field the Client
+Upon receipt of this challenge, a Client uses the message and keys in the Issuance protocol
+(see {{issuance}}). If the TokenChallenge has a version field the Client
 does not recognize or support, it MUST NOT parse or respond to the challenge.
 This document defines version 1, which indicates use of private tokens based on
 RSA Blind Signatures {{BLINDSIG}}, and determines the rest of the structure contents.
 
 ### Token Redemption
 
-The output of the issuance protocol is a token that corresponds to the challenge.
-The Token is a structure that begins with a single byte that indicates a version, which
+The output of the issuance protocol is a token that corresponds to the Origin's challenge (see {{challenge}}).
+A token is a structure that begins with a single byte that indicates a version, which
 MUST match the version in the TokenChallenge structure.
 
 ~~~
@@ -422,13 +422,13 @@ Token matches the version in the TokenChallenge.
 
 Token issuance involves a Client, Mediator, and Issuer, with the following steps:
 
-1. The Client sends a token request to the Mediator, using keys for a specific Issuer
+1. The Client sends a token request to the Mediator, encrypted using an Issuer-specific key
 
-1. The Mediator validates the request and sends the request to the Issuer
+1. The Mediator validates the request and proxies the request to the Issuer
 
-1. The Issuer decrypts the request and sends a response back via the Mediator
+1. The Issuer decrypts the request and sends a response back to the Mediator
 
-1. The Mediator checks the response and sends the response to the Client
+1. The Mediator verifies the response and proxies the response to the Client
 
 ### Client State
 
@@ -455,7 +455,7 @@ e.g., ANON_ORIGIN_ID = HKDF(secret=CLIENT_SECRET, salt="", info=ORIGIN_NAME).
 
 ### Mediator State {#mediator-state}
 
-Issuance assumes that Mediators maintain local state for each Client. The mechanism
+Issuance requires Mediators to maintain state for each Client. The mechanism
 of identifying a Client is specific to each Mediator, and is not defined in this document.
 As examples, the Mediator could use device-specific certificates or account authentication
 to identify a Client.
@@ -463,10 +463,10 @@ to identify a Client.
 Mediators are expected to know the ISSUER_POLICY_WINDOW for any ISSUER_NAME to which
 they allow access. This information can be retrieved using the URIs defined in {{setup}}.
 
-For each pair of Client and Issuer, the Mediator maintains a specific policy window
-start and end time for each Issuer requested by the Client. Associated with this window,
+For each Client-Issuer pair, a Mediator maintains a policy window
+start and end time for each Issuer from which a Client requests a token.  Associated with this window,
 the Mediator determines a CLIENT_GROUP_ID value for the Client-Issuer pair, which
-changes every time the policy window elapses. The Mediator additionally maintains
+changes every time the policy window elapses. For each Client, the Mediator maintains
 a counter of successful tokens issued within the policy window for each ANON_ORIGIN_ID
 requested by the Client, as well as a GROUP_ORIGIN_ID that it received for each
 ANON_ORIGIN_ID.
@@ -506,7 +506,7 @@ in responses that is derived from a pair of ORIGIN_NAME and CLIENT_GROUP_ID valu
 
 GROUP_ORIGIN_ID MUST be a stable and unpredictable 32-byte value computed by the Issuer.
 Issuers MUST NOT change this value across token requests for the same ORIGIN_NAME and
-CLIENT_GROUP_ID.
+CLIENT_GROUP_ID within a policy window period.
 
 One possible mechanism for generating GROUP_ORIGIN_ID is for the Issuer to compute a PRF
 keyed by a per-Issuer secret (issuer_secret) over the ORIGIN_NAME and CLIENT_GROUP_ID,
