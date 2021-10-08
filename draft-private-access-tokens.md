@@ -283,13 +283,11 @@ with the following structure:
 }
 ~~~
 
-Issuers also advertise a Private Access Token request URI template {{!RFC6570}}
-for generating access tokens. For example, one template for the Issuer might
-be https://issuer.net/access-token-request.
+Issuers also advertise a Private Access Token request URL for generating access tokens.
+For example, an Issuer URL might be https://issuer.net/access-token-request.
 
-Mediators advertise a URI template {{!RFC6570}} for proxying protocol messages
-to Issuers. For example, one template for the Mediator might
-be https://mediator.net/relay-access-token-request.
+Mediators advertise a URL for proxying protocol messages to Issuers. For example,
+a Mediator URL might be https://mediator.net/relay-access-token-request.
 
 # Protocol
 
@@ -446,7 +444,8 @@ to the ORIGIN_NAME, to send in requests to the Mediator.
 
 ANON_ORIGIN_ID MUST be a stable and unpredictable 32-byte value computed by the Client.
 Clients MUST NOT change this value across token requests for the same ORIGIN_NAME. Doing
-so will result in token issuance failure.
+so will result in token issuance failure (specifically, when a Mediator rejects a request
+upon detecting a reused GROUP_ORIGIN_ID from the Issuer).
 
 One possible mechanism for implementing this identifier is for the Client to store a mapping
 between the ORIGIN_NAME and a randomly generated ANON_ORIGIN_ID for future requests. Alternatively,
@@ -464,19 +463,28 @@ Mediators are expected to know the ISSUER_POLICY_WINDOW for any ISSUER_NAME to w
 they allow access. This information can be retrieved using the URIs defined in {{setup}}.
 
 For each Client-Issuer pair, a Mediator maintains a policy window
-start and end time for each Issuer from which a Client requests a token.  Associated with this window,
-the Mediator determines a CLIENT_GROUP_ID value for the Client-Issuer pair, which
-changes every time the policy window elapses. For each Client, the Mediator maintains
-a counter of successful tokens issued within the policy window for each ANON_ORIGIN_ID
-requested by the Client, as well as a GROUP_ORIGIN_ID that it received for each
-ANON_ORIGIN_ID.
+start and end time for each Issuer from which a Client requests a token.  Associated
+with this window, the Mediator determines a CLIENT_GROUP_ID value for the Client-Issuer
+pair, which changes every time the policy window elapses. 
 
-The Mediator assigns CLIENT_GROUP_ID values to Clients in way that segments them into
-groups of roughly equal size. For example, at any time, Clients could be spread
-across 10 different CLIENT_GROUP_ID values. The specific values for the CLIENT_GROUP_ID
-are integers determined by the Mediator, and is not reused across different
-policy windows in a short period of time. One simple mechanism would be to have a counter
-for groups, up to the maximum value of uint64, before wrapping around.
+For each tuple of (Client, ANON_ORIGIN_ID, policy window), the Mediator maintains the
+following state:
+
+- A counter of successful tokens issued
+- The GROUP_ORIGIN_ID that was received from the Issuer
+- Whether or not a previous request was rejected by the Issuer  
+
+The Mediator assigns CLIENT_GROUP_ID values to Clients in a way that segments them into
+groups of roughly equal size. A larger group prevents a single Client's identity from
+being visible to the Issuer. However, a large group also allows the Mediator to more
+easily recognize patterns of usage across Origins that could allow it to determine
+which Origins are accessed by Clients. With a large enough number of Clients, a Mediator
+SHOULD use at least ten group at any given time, with each group having at least one
+hundred Clients.
+
+The specific values for the CLIENT_GROUP_ID are integers determined by the Mediator,
+which are not reused across different policy windows. One simple mechanism would be
+to have a counter for groups, up to the maximum value of uint64.
 
 A specific CLIENT_GROUP_ID can be in one of three states:
 
@@ -492,6 +500,10 @@ have it assigned.
 Any particular CLIENT_GROUP_ID MUST only be used for a maximum of twice the
 ISSUER_POLICY_WINDOW, in seconds. This is the combination of the open and draining
 states.
+
+A CLIENT_GROUP_ID SHOULD NOT be reused after it is closed. If Mediators need to keep
+state to ensure that this reuse does not occur, they SHOULD keep such state for
+at least ten times the ISSUER_POLICY_WINDOW.
 
 ### Issuer State {#issuer-state}
 
@@ -521,6 +533,9 @@ validate that a Mediator is sending multiple CLIENT_GROUP_ID values, and has a r
 equal split between requests that use various CLIENT_GROUP_ID values. If one
 CLIENT_GROUP_ID represents a significant majority of requests, Issuers SHOULD reject
 token requests or stop allowing requests from the Mediator.
+
+Issuer state about CLIENT_GROUP_ID SHOULD be kept for at least ten times the
+ISSUER_POLICY_WINDOW.
 
 ### Client-to-Mediator Request
 
@@ -598,6 +613,10 @@ If this is the first request within a policy window for a specific Issuer, it wi
 select a CLIENT_GROUP_ID to associate with the pair of Client and Issuer. It will
 also look up the cound of previously generate tokens for this Client using the same
 ANON_ORIGIN_ID. See {{mediator-state}} for more details.
+
+If the Mediator has stored state that a previous request for this ANON_ORIGIN_ID was
+rejected by the Issuer in the current policy window, it SHOULD reject the request without
+forwarding it to the Issuer.
 
 ### Mediator-to-Issuer Request
 
