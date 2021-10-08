@@ -154,14 +154,57 @@ address across accesses.
 
 # Overview
 
-The architecture and protocol involves the following four entities:
+## Architecture
+
+At a high level, an Origin that sees no stable identifier for an
+incoming Client needs verification of the Client's identity and
+enforcement of its policy for the incoming Client. To accomplish this,
+the Origin first delegates a trusted Issuer to issue tokens for it. It
+then redirects any incoming Clients to the Issuer for policy
+enforcement, expecting the Client to return with a proof from the
+Issuer that the Origin's policy has been enforced.
+
+However, since the Issuer and the Origin could collude, the Client
+needs to anonymize itself to the Issuer before approaching the
+Issuer. To do this, it employs a trusted Mediator, whose primary
+function is to anonymize the Client and mediate communication between
+the Client and the Issuer.
+
+Since an Issuer enforces Origin policies, a Client might be required
+to reveal the Origin's identity to the delegated Issuer. However, the
+Mediator is required to not learn the Origin's identity so that,
+despite knowing the Client's identity, it cannot track and concentrate
+information about Client activity.
+
+In a particular communication, the Issuer and the Mediator are
+required to be non-colluding entities. A Mediator can effectively
+anonymize a Client only if there are many such clients using the
+Mediator. Similarly, an Issuer can anonymize an Origin to the Mediator
+only if there are many such Origins delegating to the Issuer.
+
+An Issuer expects a Mediator to verify its Clients' identities
+correctly, but an Issuer cannot confirm a Mediator's efficacy or the
+Mediator-Client relationship directly without learning the Client's
+identity. Similarly, an Origin does not know the Mediator's identity,
+but ultimately relies on the Mediator correctly authenticating a
+Client for its policies to be correctly enforced. It is also important
+to Origins that the Mediator authenticate a stable Client identity
+that is a reasonable proxy for a user and imposes some creation and
+maintenance cost on a user.
+
+An Issuer can therefore choose to issue tokens to only known and
+reputable Mediators; the Issuer can employ its own methods to
+determine the reputation of a Mediator.
+
+
+The PAT architecture thus has the following four entities:
 
 1. Client: requests a Private Access Token from an Issuer and presents it to a
    Origin for access to the Origin's service.
 
 1. Mediator: authenticates a Client, using information such as its IP address,
-   an account name, or a device identifier. Anonymizes the Client and relays
-   information between the anonymized Client and an Issuer.
+   an account name, or a device identifier. Anonymizes a Client to an Issuer
+   and relays information between an anonymized Client and an Issuer.
 
 1. Issuer: issues Private Access Tokens to an anonymized Client on behalf of a
    Origin. Enforces the Origin's policy.
@@ -170,7 +213,7 @@ The architecture and protocol involves the following four entities:
    access to content or services to the Client upon verification.
 
 
-The entities have the following properties:
+These four entities have the following properties:
 
 1. A Mediator enforces and maintains a mapping between Client identifiers and
    Client-anonymized Origin identifiers;
@@ -182,7 +225,6 @@ The entities have the following properties:
 1. An Origin provides access to content or services to a Client upon verifying
    the Client's Private Access Token, since the verification demonstrates that
    the Client access meets the Origin's policies.
-
 
 The Mediator, Issuer, and Origin each have partial knowledge of the Client's
 identity and actions, and each entity only knows enough to serve its
