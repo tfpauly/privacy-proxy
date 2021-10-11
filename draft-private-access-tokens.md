@@ -16,7 +16,7 @@ author:
     name: Scott Hendrickson
     org: Google LLC
     email: scott@shendrickson.com
- - 
+ -
     ins: J. Iyengar
     name: Jana Iyengar
     org: Fastly
@@ -34,7 +34,7 @@ author:
     name: Steven Valdez
     org: Google LLC
     email: svaldez@chromium.org
- -  
+ -
     ins: C. A. Wood
     name: Christopher A. Wood
     org: Cloudflare
@@ -745,13 +745,27 @@ such as TLS certificate pinning, to mitigate the risk of channel compromise.
 An attacker that can intermediate the channel between Client and Origin can
 observe a TokenChallenge, and can view a Token being presented for authentication
 to an Origin. Scoping the TokenChallenge nonce to the Client HTTP session prevents
-Tokens being collected in one session and then presented to the Origin in another. 
-Note that an Origin cannot distinguish between a connection to a single Client and 
+Tokens being collected in one session and then presented to the Origin in another.
+Note that an Origin cannot distinguish between a connection to a single Client and
 a connection to an attacker intermediating multiple Clients. Thus, it is possible for
-an attacker to collect and later present Tokens from multiple clients over the same 
+an attacker to collect and later present Tokens from multiple clients over the same
 Origin session.
 
 # Privacy Considerations {#privacy-considerations}
+
+## Client Token State and Origin Tracking
+
+Origins SHOULD NOT challenge clients for access tokens more than once in a given context,
+such as a website load event. Clients SHOULD ignore requests for multiple tokens in the
+same context. Failure to do so can allow the origin to track clients across contexts.
+Specifically, an origin can abuse per-user token limits for tracking by assigning each
+new client a random token count and observing whether or not the client can successfully
+redeem that many tokens in a given context. If any token redemption fails, then the origin
+learns information about how many tokens that client had previously been issued.
+
+By rejecting repeated or duplicative challenges within a single context, the origin only
+learns a single bit of information: whether or not the client had any token quota left
+in the given policy window.
 
 ## Origin Verification
 
