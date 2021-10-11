@@ -555,7 +555,7 @@ calculated as described in {{encrypt-origin}}.
 - "blinded_req" is the Nk-octet request defined above.
 
 The Client then generates an HTTP POST request to send through the Mediator to
-the Issuer, with the MediatedAccessTokenRequest as the body. The media type for this request
+the Issuer, with the AccessTokenRequest as the body. The media type for this request
 is "message/access-token-request". The Client includes the "Anonymous-Origin-ID" header,
 whose value is ANON_ORIGIN_ID; the "Client-ID" header, whose value is CLIENT_ID; and
 the "Request-Nonce" header, whose value is request_nonce. The Client sends this request
