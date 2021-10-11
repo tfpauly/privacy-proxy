@@ -379,7 +379,7 @@ MUST match the version in the TokenChallenge structure.
 ~~~
 struct {
     uint8_t version;
-    uint8_t key_id[32];
+    uint8_t token_key_id[32];
     uint8_t message[32];
     uint8_t signature[Nk];
 } Token;
@@ -389,9 +389,9 @@ The structure fields are defined as follows:
 
 - "version" is a 1-octet integer. This document defines version 1.
 
-- "key_id" is a collision-resistant hash that identifies the key used to produce
-the signature. This is generated as SHA256(public_key), where public_key
-is a DER-encoded SubjectPublicKeyInfo object carrying the public key.
+- "token_key_id" is a collision-resistant hash that identifies the ORIGIN_TOKEN_KEY
+used to produce the signature. This is generated as SHA256(public_key), where
+public_key is a DER-encoded SubjectPublicKeyInfo object carrying the public key.
 
 - "message" is a 32-octet message containing the hash of the original
 TokenChallenge, SHA256(TokenChallenge). This message is signed by the signature,
@@ -533,7 +533,7 @@ struct {
    uint8_t mapping_generator[Ne];
    uint8_t mapping_key[Ne];
    uint8_t mapping_proof[Np];
-   uint8_t name_key_id[32];
+   uint8_t key_id[32];
    uint8_t encrypted_origin_name<1..2^16-1>;
    uint8_t blinded_req[Nk];
 } AccessTokenRequest;
@@ -546,7 +546,7 @@ This document defines version 1.
 
 - "mapping_generator", "mapping_key", and "mapping_proof" are computed as described above.
 
-- "name_key_id" is a collision-resistant hash that identifies the ISSUER_KEY public
+- "key_id" is a collision-resistant hash that identifies the ISSUER_KEY public
 key, generated as SHA256(KeyConfig).
 
 - "encrypted_origin_name" is an encrypted structure that contains ORIGIN_NAME,
@@ -921,9 +921,9 @@ challenges when the origin is a web site to which the user navigated.
 Client activity could be linked if an Origin and Issuer collude to have unique keys targeted
 at specific Clients or sets of Clients.
 
-To mitigate the risk of a targetted ISSUER_KEY, the Mediator can  observe and validate
-the name_key_id presented by the Client to the Issuer. As described in {{issuance}}, Mediators
-MUST validate that the name_key_id in the Client's AccessTokenRequest matches a known public key
+To mitigate the risk of a targetted ISSUER_KEY, the Mediator can observe and validate
+the key_id presented by the Client to the Issuer. As described in {{issuance}}, Mediators
+MUST validate that the key_id in the Client's AccessTokenRequest matches a known public key
 for the Issuer. The Mediator needs to support key rotation, but ought to disallow very rapid key
 changes, which could indicate that an Origin is colluding with an Issuer to try to rotate the key
 for each new Client in order to link the client activity.
