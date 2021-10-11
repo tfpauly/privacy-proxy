@@ -644,7 +644,7 @@ forwarding it to the Issuer.
 ### Mediator-to-Issuer Request {#request-two}
 
 Before copying and forwarding the Client's AccessTokenRequest request to the Issuer,
-the Mediator adds a header that includes the count of previous tokens as "Token-Count".
+the Mediator adds a header that includes the count of previous tokens as "Sec-Token-Count".
 The Mediator MAY also add additional context information, but MUST NOT add information
 that will uniquely identify a Client.
 
@@ -657,7 +657,7 @@ accept = message/access-token-response
 cache-control = no-cache, no-store
 content-type = message/access-token-request
 content-length = 512
-token-count = 3
+sec-token-count = 3
 
 <Bytes containing the AccessTokenRequest>
 ~~~
@@ -665,7 +665,7 @@ token-count = 3
 Upon receipt of the forwarded request, the Issuer validates the following
 conditions:
 
-- The "Token-Count" header is present
+- The "Sec-Token-Count" header is present
 - The AccessTokenRequest contains a supported version
 - For version 1, the AccessTokenRequest.key_id corresponds to the ID of the ISSUER_KEY held by the Issuer
 - For version 1, the AccessTokenRequest.encrypted_origin_name can be decrypted using the
@@ -676,7 +676,7 @@ an ORIGIN_NAME that is served by the Issuer
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Mediator,
 which will forward the error to the client.
 
-If the request is valid, the Issuer then can use the value from "Token-Count" to determine if
+If the request is valid, the Issuer then can use the value from "Sec-Token-Count" to determine if
 the Client is allowed to receive a token for this Origin during the current policy window. If the
 Issuer refuses to issue more tokens, it responds with an HTTP 429 (Too Many Requests) error to the
 Mediator, which will forward the error to the client.
