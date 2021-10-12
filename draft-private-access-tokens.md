@@ -219,7 +219,8 @@ redemption is limited to the fact that this is a client that passed a
 Mediator's checks and has not exceeded the per-origin limit defined by an
 Issuer. Generally, if a user is willing to use Private Access Tokens with
 a particular origin (or all origins), there is no need for per-challenge
-user interaction.
+user interaction (this assumes that Clients can either silently authenticate
+to Mediators, or have already authenticated previously).
 
 Since tokens are issued using a separate connection through a Mediator
 to an Issuer, the process of issuance can add user-perceivable latency.
