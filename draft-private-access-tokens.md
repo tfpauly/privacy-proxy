@@ -2,7 +2,7 @@
 title: Private Access Tokens
 abbrev: Private Access Tokens
 docname: draft-private-access-tokens-latest
-category: exp
+category: std
 
 ipr: trust200902
 keyword: Internet-Draft
@@ -494,6 +494,47 @@ which allows them to decrypt the ORIGIN_NAME values in requests.
 Issuers also need to know the current ORIGIN_TOKEN_KEY public key and corresponding
 private key, for each ORIGIN_NAME that is served by the Issuer.
 
+### Issuance HTTP Headers
+
+The issuance protocol defines four new HTTP headers that are used in requests
+and responses between Clients, Mediators, and Issuers (see {{iana-headers}}).
+
+The "Sec-Token-Origin" is an Item Structured Header {{!RFC8941}}. Its
+value MUST be a Byte Sequence. This header is sent both on Client-to-Mediator
+requests ({{request-one}}) and on Issuer-to-Mediator responses ({{response-one}}).
+Its ABNF is:
+
+~~~
+    Sec-Token-Origin = sf-binary
+~~~
+
+The "Sec-Token-Client" is an Item Structured Header {{!RFC8941}}. Its
+value MUST be a Byte Sequence. This header is sent on Client-to-Mediator
+requests ({{request-one}}), and contains the bytes of CLIENT_ID.
+Its ABNF is:
+
+~~~
+    Sec-Token-Client = sf-binary
+~~~
+
+The "Sec-Token-Nonce" is an Item Structured Header {{!RFC8941}}. Its
+value MUST be a Byte Sequence. This header is sent on Client-to-Mediator
+requests ({{request-one}}), and contains a per-request nonce value.
+Its ABNF is:
+
+~~~
+    Sec-Token-Nonce = sf-binary
+~~~
+
+The "Sec-Token-Count" is an Item Structured Header {{!RFC8941}}. Its
+value MUST be an Integer. This header is sent on Mediator-to-Issuer
+requests ({{request-one}}), and contains the number of times a
+Client has previously received a token for an Origin. Its ABNF is:
+
+~~~
+    Sec-Token-Count = sf-integer
+~~~
+
 ### Client-to-Mediator Request {#request-one}
 
 Issuance assumes that the Client and Mediator have a secure and
@@ -556,9 +597,9 @@ calculated as described in {{encrypt-origin}}.
 
 The Client then generates an HTTP POST request to send through the Mediator to
 the Issuer, with the AccessTokenRequest as the body. The media type for this request
-is "message/access-token-request". The Client includes the "Anonymous-Origin-ID" header,
-whose value is ANON_ORIGIN_ID; the "Client-ID" header, whose value is CLIENT_ID; and
-the "Request-Nonce" header, whose value is request_nonce. The Client sends this request
+is "message/access-token-request". The Client includes the "Sec-Token-Origin" header,
+whose value is ANON_ORIGIN_ID; the "Sec-Token-Client" header, whose value is CLIENT_ID; and
+the "Sec-Token-Nonce" header, whose value is mapping_nonce. The Client sends this request
 to the Mediator's proxy URI. An example request is shown below, where Nk = 512.
 
 ~~~
@@ -570,9 +611,9 @@ accept = message/access-token-response
 cache-control = no-cache, no-store
 content-type = message/access-token-request
 content-length = 512
-anonymous-origin-id = ANON_ORIGIN_ID
-client-id = CLIENT_ID
-mapping-nonce = mapping_nonce
+sec-token-origin = ANON_ORIGIN_ID
+sec-token-client = CLIENT_ID
+sec-token-nonce = mapping_nonce
 
 <Bytes containing the AccessTokenRequest>
 ~~~
@@ -603,7 +644,7 @@ forwarding it to the Issuer.
 ### Mediator-to-Issuer Request {#request-two}
 
 Before copying and forwarding the Client's AccessTokenRequest request to the Issuer,
-the Mediator adds a header that includes the count of previous tokens as "Client-Token-Count".
+the Mediator adds a header that includes the count of previous tokens as "Sec-Token-Count".
 The Mediator MAY also add additional context information, but MUST NOT add information
 that will uniquely identify a Client.
 
@@ -616,7 +657,7 @@ accept = message/access-token-response
 cache-control = no-cache, no-store
 content-type = message/access-token-request
 content-length = 512
-client-token-count = 3
+sec-token-count = 3
 
 <Bytes containing the AccessTokenRequest>
 ~~~
@@ -624,7 +665,7 @@ client-token-count = 3
 Upon receipt of the forwarded request, the Issuer validates the following
 conditions:
 
-- The "Client-Token-Count" header is present
+- The "Sec-Token-Count" header is present
 - The AccessTokenRequest contains a supported version
 - For version 1, the AccessTokenRequest.key_id corresponds to the ID of the ISSUER_KEY held by the Issuer
 - For version 1, the AccessTokenRequest.encrypted_origin_name can be decrypted using the
@@ -635,7 +676,7 @@ an ORIGIN_NAME that is served by the Issuer
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Mediator,
 which will forward the error to the client.
 
-If the request is valid, the Issuer then can use the value from "Client-Token-Count" to determine if
+If the request is valid, the Issuer then can use the value from "Sec-Token-Count" to determine if
 the Client is allowed to receive a token for this Origin during the current policy window. If the
 Issuer refuses to issue more tokens, it responds with an HTTP 429 (Too Many Requests) error to the
 Mediator, which will forward the error to the client.
@@ -678,13 +719,13 @@ blind_sig = rsabssa_blind_sign(skP, AccessTokenRequest.blinded_req)
 
 The Issuer generates an HTTP response with status code 200 whose body consists of
 blind_sig, with the content type set as "message/access-token-response" and the
-mapping_tag set in the "Mapping-Index" header.
+mapping_tag set in the "Sec-Token-Origin" header.
 
 ~~~
 :status = 200
 content-type = message/access-token-response
 content-length = 512
-mapping-origin = mapping_index
+sec-token-origin = mapping_index
 
 <Bytes containing the blind_sig>
 ~~~
@@ -692,7 +733,7 @@ mapping-origin = mapping_index
 ### Mediator-to-Client Response {#response-two}
 
 Upon receipt of a successful response from the Issuer, the Mediator extracts the
-"Mapping-Origin" header, and uses the value to determine ANON_ISSUER_ORIGIN_ID.
+"Sec-Token-Origin" header, and uses the value to determine ANON_ISSUER_ORIGIN_ID.
 
 ~~~
 index = DeserializeElement(mapping_index)
@@ -700,7 +741,7 @@ nonce = DeserializeScalar(mapping_nonce)
 ANON_ISSUER_ORIGIN_ID = (nonce^(-1)) * index
 ~~~
 
-If the "Mapping-Origin" is missing, or if the same ANON_ISSUER_ORIGIN_ID was previously
+If the "Sec-Token-Origin" is missing, or if the same ANON_ISSUER_ORIGIN_ID was previously
 received in a response for a different ANON_ORIGIN_ID within the same policy window,
 the Mediator MUST drop the token and respond to the client with an HTTP 400 status.
 If there is not an error, the ANON_ISSUER_ORIGIN_ID is stored alongside the state
@@ -943,6 +984,27 @@ Transfer Protocol (HTTP) Authentication Scheme Registry" established by {{!RFC72
 Authentication Scheme Name: PrivateAccessToken
 
 Pointer to specification text: {{scheme}} of this document
+
+
+## HTTP Headers {#iana-headers}
+
+This document registers four new headers for use on the token issuance path 
+in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignments/message-headers)>.
+
+~~~
+    +-------------------+----------+--------+---------------+
+    | Header Field Name | Protocol | Status |   Reference   |
+    +-------------------+----------+--------+---------------+
+    | Sec-Token-Origin  |   http   |  std   | This document |
+    +-------------------+----------+--------+---------------+
+    | Sec-Token-Client  |   http   |  std   | This document |
+    +-------------------+----------+--------+---------------+
+    | Sec-Token-Nonce   |   http   |  std   | This document |
+    +-------------------+----------+--------+---------------+
+    | Sec-Token-Count   |   http   |  std   | This document |
+    +-------------------+----------+--------+---------------+
+~~~
+{: #iana-header-type-table title="Registered HTTP Header"}
 
 ## Media Types
 
