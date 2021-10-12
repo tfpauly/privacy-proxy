@@ -235,7 +235,7 @@ If an origin is requesting an unexpected number of tokens, such as requesting
 token authentication more than once for a single website load, it can indicate
 that the server is not functioning correctly, or is trying to attack or overload
 the client or issuance servers. In such cases, the client SHOULD ignore
-redundant token challengers, or else alert the user. 
+redundant token challengers, or else alert the user.
 
 ## Notation and Terminology {#terms}
 
@@ -969,6 +969,21 @@ Origin session.
 
 # Privacy Considerations {#privacy-considerations}
 
+## Client Token State and Origin Tracking
+
+Origins SHOULD only generate token challenges based on client action, such as when a user
+loads a website. Clients SHOULD ignore token challenges if an Origin tries to force the
+client to present tokens multiple times without any new client-initiated action. Failure
+to do so can allow malicious origins to track clients across contexts. Specifically, an
+origin can abuse per-user token limits for tracking by assigning each new client a random
+token count and observing whether or not the client can successfully redeem that many
+tokens in a given context. If any token redemption fails, then the origin learns information
+about how many tokens that client had previously been issued.
+
+By rejecting repeated or duplicative challenges within a single context, the origin only
+learns a single bit of information: whether or not the client had any token quota left
+in the given policy window.
+
 ## Origin Verification
 
 Private Access Tokens are defined in terms of a Client authenticating to an Origin, where
@@ -1019,7 +1034,7 @@ Pointer to specification text: {{scheme}} of this document
 
 ## HTTP Headers {#iana-headers}
 
-This document registers four new headers for use on the token issuance path 
+This document registers four new headers for use on the token issuance path
 in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignments/message-headers)>.
 
 ~~~
