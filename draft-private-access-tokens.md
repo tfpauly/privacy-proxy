@@ -755,13 +755,14 @@ Origin session.
 
 ## Client Token State and Origin Tracking
 
-Origins SHOULD NOT challenge clients for access tokens more than once in a given context,
-such as a website load event. Clients SHOULD ignore requests for multiple tokens in the
-same context. Failure to do so can allow the origin to track clients across contexts.
-Specifically, an origin can abuse per-user token limits for tracking by assigning each
-new client a random token count and observing whether or not the client can successfully
-redeem that many tokens in a given context. If any token redemption fails, then the origin
-learns information about how many tokens that client had previously been issued.
+Origins SHOULD only generate token challenges based on client action, such as when a user
+loads a website. Clients SHOULD ignore token challenges if an Origin tries to force the
+client to present tokens multiple times without any new client-initiated action. Failure
+to do so can allow malicious origins to track clients across contexts. Specifically, an
+origin can abuse per-user token limits for tracking by assigning each new client a random
+token count and observing whether or not the client can successfully redeem that many
+tokens in a given context. If any token redemption fails, then the origin learns information
+about how many tokens that client had previously been issued.
 
 By rejecting repeated or duplicative challenges within a single context, the origin only
 learns a single bit of information: whether or not the client had any token quota left
