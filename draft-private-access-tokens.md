@@ -745,7 +745,7 @@ such as TLS certificate pinning, to mitigate the risk of channel compromise.
 An attacker that can intermediate the channel between Client and Origin can
 observe a TokenChallenge, and can view a Token being presented for authentication
 to an Origin. Scoping the TokenChallenge nonce to the Client HTTP session prevents
-Tokens being collected in one session and then presented to the Origin in another.
+Tokens from being collected in one session and then presented to the Origin in another.
 Note that an Origin cannot distinguish between a connection to a single Client and
 a connection to an attacker intermediating multiple Clients. Thus, it is possible for
 an attacker to collect and later present Tokens from multiple clients over the same
