@@ -224,8 +224,8 @@ to Mediators, or have already authenticated previously).
 
 Since tokens are issued using a separate connection through a Mediator
 to an Issuer, the process of issuance can add user-perceivable latency.
-Origins SHOULD NOT block all rendering of a website on token authentication.
-Instead, token authentication can be used in similar ways to captcha
+Origins SHOULD NOT block useful work on token authentication.
+Instead, token authentication can be used in similar ways to CAPTCHA
 validation today, but without the need for user interaction. If issuance
 is taking a long time, a website could show an indicator that it is waiting,
 or fall back to another method of user validation.
