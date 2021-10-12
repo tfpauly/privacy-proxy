@@ -427,12 +427,10 @@ public_key is a DER-encoded SubjectPublicKeyInfo object carrying the public key.
 - "message" is a 32-octet message containing the hash of the original
 TokenChallenge, SHA256(TokenChallenge). This message is signed by the signature,
 
-- "signature" is a Nk-octet RSA Blind Signature that covers the
-message.  For version 1, Nk is indicated by size of the Token
-structure and may be 256, 384, or 512.
-These correspond to RSA 2048, 3072, and 4096 bit keys.
-Clients implementing version 1 MUST support signature
-sizes with Nk of 512 and 256.
+- "signature" is a Nk-octet RSA Blind Signature that covers the message. For
+version 1, Nk is indicated by size of the Token structure and may be 256, 384,
+or 512. These correspond to RSA 2048, 3072, and 4096 bit keys. Clients implementing
+version 1 MUST support signature sizes with Nk of 512 and 256.
 
 When used for client authorization, the "PrivateAccessToken" authentication
 scheme defines one parameter, "token", which contains the base64url-encoded
@@ -450,6 +448,12 @@ Origins verify the token signature using the corresponding policy verification
 key from the Issuer, and validate that the message matches the hash of the original
 TokenChallenge for this session, SHA256(TokenChallenge), and that the version of the
 Token matches the version in the TokenChallenge.
+
+If a Client's issuance request fails with a 401 error, as described in {{request-two}},
+the Client MUST react to the challenge as if it could not produce a valid Authorization
+response.
+
+[[OPEN ISSUE: use generic advice here]]
 
 ## Issuance {#issuance}
 
@@ -522,8 +526,10 @@ policy window.
 Issuers are expected to have the private key that corresponds to ISSUER_KEY,
 which allows them to decrypt the ORIGIN_NAME values in requests.
 
-Issuers also need to know the current ORIGIN_TOKEN_KEY public key and corresponding
-private key, for each ORIGIN_NAME that is served by the Issuer.
+Issuers also need to know the set of valid ORIGIN_TOKEN_KEY public keys and corresponding
+private key, for each ORIGIN_NAME that is served by the Issuer. Origins SHOULD update
+their view of the ORIGIN_TOKEN_KEY regularly to ensure that Client requests do not fail
+after ORIGIN_TOKEN_KEY rotation.
 
 ### Issuance HTTP Headers
 
@@ -720,7 +726,9 @@ Mediator, which will forward the error to the client.
 
 The Issuer determines the correct ORIGIN_TOKEN_KEY by using the decrypted ORIGIN_NAME value and
 AccessTokenRequest.token_key_id. If there is no ORIGIN_TOKEN_KEY whose truncated key ID matches
-AccessTokenRequest.token_key_id, the Issuer MUST return an HTTP 400 error to Mediator.
+AccessTokenRequest.token_key_id, the Issuer MUST return an HTTP 401 error to Mediator, which will
+forward the error to the client. The Mediator learns that the client's view of the Origin key
+was invalid in the process.
 
 ### Issuer-to-Mediator Response {#response-one}
 
