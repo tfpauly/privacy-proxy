@@ -698,8 +698,7 @@ sec-token-count = 3
 <Bytes containing the AccessTokenRequest>
 ~~~
 
-Upon receipt of the forwarded request, the Issuer validates the following
-conditions:
+Upon receipt of the forwarded request, the Issuer validates the following conditions:
 
 - The "Sec-Token-Count" header is present
 - The AccessTokenRequest contains a supported version
@@ -708,6 +707,8 @@ conditions:
 Issuer's private key (the private key associated with ISSUER_KEY), and matches
 an ORIGIN_NAME that is served by the Issuer
 - For version 1, the AccessTokenRequest.blinded_req is of the correct size
+- For version 1, the AccessTokenRequest.token_key_id corresponds to an ID of an ORIGIN_TOKEN_KEY
+for the corresponding ORIGIN_NAME
 
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Mediator,
 which will forward the error to the client.
@@ -717,10 +718,9 @@ the Client is allowed to receive a token for this Origin during the current poli
 Issuer refuses to issue more tokens, it responds with an HTTP 429 (Too Many Requests) error to the
 Mediator, which will forward the error to the client.
 
-The Issuer determines the correct ORIGIN_TOKEN_KEY by using the decrypted ORIGIN_NAME value. Issuers
-are expected to be able to deterministically select the correct key based on information sent in
-the request. Clients do not indicate the ORIGIN_TOKEN_KEY to use, to prevent Origins from choosing
-per-client keys.
+The Issuer determines the correct ORIGIN_TOKEN_KEY by using the decrypted ORIGIN_NAME value and
+AccessTokenRequest.token_key_id. If there is no ORIGIN_TOKEN_KEY whose truncated key ID matches
+AccessTokenRequest.token_key_id, the Issuer MUST return an HTTP 400 error to Mediator.
 
 ### Issuer-to-Mediator Response {#response-one}
 
