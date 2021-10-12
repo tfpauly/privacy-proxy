@@ -1034,6 +1034,12 @@ this 'single issuer/mediator' fashion reduces the privacy promises to those of P
 This may be desirable for a redemption flow that is limited to specific issuers and mediators,
 but should be avoided where hiding origins from the mediator is desirable.
 
+# Deployment Considerations {$deploy}
+
+# Issuer Key Rollout
+
+TODO(smhendrickson): Issuers need to advertise new keys, and communicate the 'safe' rollout period before using them to sign. Verifiers need to check with both keys.
+
 # IANA Considerations {#iana}
 
 ## Authentication Scheme
@@ -1044,7 +1050,6 @@ Transfer Protocol (HTTP) Authentication Scheme Registry" established by {{!RFC72
 Authentication Scheme Name: PrivateAccessToken
 
 Pointer to specification text: {{scheme}} of this document
-
 
 ## HTTP Headers {#iana-headers}
 
