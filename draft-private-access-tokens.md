@@ -206,6 +206,37 @@ this token demonstrates to the Origin that the Client meets its policies
 (since they were enforced by the Issuer before issuing this token), and then
 provides the services or content gated behind these policies.
 
+## User Interaction
+
+When used in contexts like websites, origin servers that challenge clients for
+Private Access Tokens need to consider how to optimize their interaction model
+to ensure a good user experience.
+
+Private Access Tokens are designed to be used without explicit user involvement.
+Since tokens are only valid for a single origin and in response to a specific
+challenge, there is no need for a user to manage a limited pool of tokens
+across origins. The information that is available to an origin upon token
+redemption is limited to the fact that this is a client that passed a
+Mediator's checks and has not exceeded the per-origin limit defined by an
+Issuer. Generally, if a user is willing to use Private Access Tokens with
+a particular origin (or all origins), there is no need for per-challenge
+user interaction. Note that the Issuance flow may separately involve user interaction if
+the Mediator needs to authenticate the Client.
+
+Since tokens are issued using a separate connection through a Mediator
+to an Issuer, the process of issuance can add user-perceivable latency.
+Origins SHOULD NOT block useful work on token authentication.
+Instead, token authentication can be used in similar ways to CAPTCHA
+validation today, but without the need for user interaction. If issuance
+is taking a long time, a website could show an indicator that it is waiting,
+or fall back to another method of user validation.
+
+If an origin is requesting an unexpected number of tokens, such as requesting
+token authentication more than once for a single website load, it can indicate
+that the server is not functioning correctly, or is trying to attack or overload
+the client or issuance servers. In such cases, the client SHOULD ignore
+redundant token challengers, or else alert the user. 
+
 ## Notation and Terminology {#terms}
 
 Unless said otherwise, this document encodes protocol messages in TLS notation
