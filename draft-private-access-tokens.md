@@ -603,7 +603,7 @@ mapping_proof = SerializeProof(key_proof)
 ~~~
 
 The Client then constructs a Private Access Token request using mapping_key,
-mapping_generator, mapping_proof, blinded_req, and the origin.
+mapping_generator, mapping_proof, blinded_req, and origin information.
 
 ~~~
 struct {
