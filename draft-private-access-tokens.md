@@ -1040,7 +1040,6 @@ but should be avoided where hiding origins from the mediator is desirable.
 
 Issuers SHOULD generate a new (ORIGIN_TOKEN_KEY, ORIGIN_SECRET) regularly, and SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED rotation interval is two times the length of the policy window for that information. During generation, issuers must ensure the `token_key_id` (the 8-bit prefix of SHA256(ORIGIN_TOKEN_KEY) is different from all other `token_key_id` values for that origin current in rotation. One way to ensure this uniqueness is via rejection sampling.
 
-Issuers should ensure they generate this key at the begining of the new policy window, and advertise it to origins for the entire length of the current policy window. Origins must attempt to verify with both this next ORIGIN_TOKEN_KEY and the current ORIGIN_TOKEN_KEY.
 
 # IANA Considerations {#iana}
 
