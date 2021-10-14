@@ -203,24 +203,24 @@ any services or content gated behind these policies to the Client.
 document. Protocol details follow in {{protocol}}.
 
 ~~~
- Client             Mediator               Issuer            Origin
+ Client        Mediator          Issuer          Origin
 
-    <-------------------------------------------------- Challenge \
-                                                                  |
-+------------------------------------------------------\          |
-| AccessTokenRequest --->                              |          |
-|                  (validate)                          |          |
-|                  (attach state)                      |          |
-|                        AccessTokenRequest --->       |          |
-|                                         (validate)   |          |    Access Token
-|                                         (evaluate)   | Issuance | Challenge-Response
-|                          <--- AccessTokenResponse    |   Flow   |       Flow
-|                    (evaluate)                        |          |
-|                    (update state)                    |          |
-|   <--- AccessTokenResponse                           |          |
--------------------------------------------------------/          |
-                                                                  |
-     Response ------------------------------------------------ >  /
+    <---------------------------------------- Challenge \
+                                                        |
++--------------------------------------------\          |
+| TokenRequest --->                          |          |
+|             (validate)                     |          |
+|             (attach state)                 |          |
+|                    TokenRequest --->       |          |    PAT
+|                                 (validate) |   PAT    | Challenge/
+|                                 (evaluate) | Issuance |  Response
+|                    <--- TokenResponse      |   Flow   |   Flow
+|             (evaluate)                     |          |
+|             (update state)                 |          |
+|   <--- TokenResponse                       |          |
+---------------------------------------------/          |
+                                                        |
+     Response -------------------------------------- >  /
 ~~~
 {: #fig-overview title=" PAT Architectural Components"}
 
