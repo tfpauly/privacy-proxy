@@ -160,8 +160,8 @@ components:
    an account name, or a device identifier. Anonymizes a Client to an Issuer and
    relays information between an anonymized Client and an Issuer.
 
-1. Issuer: issues PATs to an anonymized Client on behalf of a Origin. Enforces
-   the Origin's policy.
+1. Issuer: issues PATs to an anonymized Client on behalf of an Origin. Anonymizes Origin
+   to the Mediator and Enforces the Origin's policy.
 
 1. Origin: directs a Client to an Issuer with a challenge and enables access to
    content or services to the Client upon verification of any PAT sent in
