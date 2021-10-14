@@ -160,8 +160,8 @@ components:
    an account name, or a device identifier. Anonymizes a Client to an Issuer and
    relays information between an anonymized Client and an Issuer.
 
-1. Issuer: issues PATs to an anonymized Client on behalf of an Origin. Anonymizes Origin
-   to the Mediator and Enforces the Origin's policy.
+1. Issuer: issues PATs to an anonymized Client on behalf of an
+   Origin. Anonymizes an Origin to a Mediator and enforces the Origin's policy.
 
 1. Origin: directs a Client to an Issuer with a challenge and enables access to
    content or services to the Client upon verification of any PAT sent in
@@ -185,7 +185,7 @@ Issuer for this proof. The Mediator performs three important functions:
   Issuer.
 
 When a Mediator-anonymized Client requests a token from an Issuer, the Issuer
-enforces the Origin's policies based on the received Client issuance state and 
+enforces the Origin's policies based on the received Client issuance state and
 Origin policy. Issuers know the Origin's policies and enforce them on behalf of the
 Origin. An example policy is: "Limit 10 accesses per Client".  More examples and
 their use cases are discussed in {{examples}}. The Issuer does not learn of the
@@ -231,21 +231,21 @@ enough to serve its function (see {{terms}} for more about the pieces of
 information):
 
 - The Mediator knows the Client's identity (CLIENT_ID), the Issuer being
-  targeted (ISSUER_NAME), the period of time for which the Issuer's policy
-  is valid (ISSUER_POLICY_WINDOW), and the number of tokens issued to a
-  given Client for the claimed Origin in the given policy window. 
-  The Mediator does not know the identity of
-  the Origin the Client is trying to access (ORIGIN_ID), but knows a
-  Client-anonymized identifier for it (ANON_ORIGIN_ID).
+  targeted (ISSUER_NAME), the period of time for which the Issuer's policy is
+  valid (ISSUER_POLICY_WINDOW), and the number of tokens issued to a given
+  Client for the claimed Origin in the given policy window.  The Mediator does
+  not know the identity of the Origin the Client is trying to access
+  (ORIGIN_ID), but knows a Client-anonymized identifier for it (ANON_ORIGIN_ID).
 
-- The Issuer knows the Origin's secret (ORIGIN_SECRET) and policy about client access, and 
-  learns sees the Origin's dentity (ORIGIN_NAME) and the number of previous tokens issued 
-  to the Client (as communicated by the Mediator) during issuance. The Issuer does not learn
-  the Client's identity.
+- The Issuer knows the Origin's secret (ORIGIN_SECRET) and policy about client
+  access, and learns the Origin's identity (ORIGIN_NAME) and the number of
+  previous tokens issued to the Client (as communicated by the Mediator) during
+  issuance. The Issuer does not learn the Client's identity.
 
 - The Origin knows the Issuer to delegate an incoming Client to (ISSUER_NAME),
   and can verify that any tokens presented by the Client were signed by the
-  Issuer. The Origin does not learn which Mediator was used by a Client for issuance.
+  Issuer. The Origin does not learn which Mediator was used by a Client for
+  issuance.
 
 Since an Issuer enforces policies on behalf of Origins, a Client is required to
 reveal the Origin's identity to the delegated Issuer. It is a requirement of
@@ -387,7 +387,7 @@ For example, an Issuer URL might be https://issuer.net/access-token-request.
 Mediators advertise a URL for proxying protocol messages to Issuers. For example,
 a Mediator URL might be https://mediator.net/relay-access-token-request.
 
-# Protocol {#protocol}
+# Protocol
 
 Private Access Tokens are single-use tokens cryptographically bound to
 policies. Origins request tokens from Clients, who then engage with
