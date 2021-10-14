@@ -1036,9 +1036,16 @@ but should be avoided where hiding origins from the mediator is desirable.
 
 # Deployment Considerations {#deploy}
 
-# Issuer Key Rollout
+# Origin Key Rollout
 
-TODO(smhendrickson): Issuers need to advertise new keys, and communicate the 'safe' rollout period before using them to sign. Verifiers need to check with both keys.
+Issuers SHOULD generate a new (ORIGIN_TOKEN_KEY, ORIGIN_SECRET) regularly, and
+SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED
+rotation interval is two times the length of the policy window for that
+information. During generation, issuers must ensure the `token_key_id` (the 8-bit
+prefix of SHA256(ORIGIN_TOKEN_KEY) is different from all other `token_key_id`
+values for that origin currently in rotation. One way to ensure this uniqueness
+is via rejection sampling.
+
 
 # IANA Considerations {#iana}
 
