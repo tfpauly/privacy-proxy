@@ -177,8 +177,7 @@ been enforced for this Client.
 The Client employs a trusted Mediator through which it communicates with the
 Issuer for this proof. The Mediator performs three important functions:
 
-- associate the Client with a stable identifier, authenticating the Client if
-  necessary;
+- authenticate and associate the Client with a stable identifier;
 
 - maintain issuance state for the Client and relay it to the Issuer; and
 
@@ -186,9 +185,8 @@ Issuer for this proof. The Mediator performs three important functions:
   Issuer.
 
 When a Mediator-anonymized Client requests a token from an Issuer, the Issuer
-enforces the Origin's policies based on the received Mediator-anonymized Client
-identifier, issuance state at the Mediator for the Client, and the
-Origin. Issuers know the Origin's policies and enforce them on behalf of the
+enforces the Origin's policies based on the received Client issuance state and 
+Origin policy. Issuers know the Origin's policies and enforce them on behalf of the
 Origin. An example policy is: "Limit 10 accesses per Client".  More examples and
 their use cases are discussed in {{examples}}. The Issuer does not learn of the
 Client's true identity.
@@ -233,19 +231,21 @@ enough to serve its function (see {{terms}} for more about the pieces of
 information):
 
 - The Mediator knows the Client's identity (CLIENT_ID), the Issuer being
-  targeted (ISSUER_NAME), and the period of time for which the Issuer's policy
-  is valid (ISSUER_POLICY_WINDOW). The Mediator does not know the identity of
+  targeted (ISSUER_NAME), the period of time for which the Issuer's policy
+  is valid (ISSUER_POLICY_WINDOW), and the number of tokens issued to a
+  given Client for the claimed Origin in the given policy window. 
+  The Mediator does not know the identity of
   the Origin the Client is trying to access (ORIGIN_ID), but knows a
   Client-anonymized identifier for it (ANON_ORIGIN_ID).
 
-- The Issuer knows the Origin's policy about client access and sees the Origin's
-  identity (ORIGIN_NAME) and the number of previous tokens issued to the Client
-  (as communicated by the Mediator), but the Client's identity is not visible to
-  the Origin.
+- The Issuer knows the Origin's secret (ORIGIN_SECRET) and policy about client access, and 
+  learns sees the Origin's dentity (ORIGIN_NAME) and the number of previous tokens issued 
+  to the Client (as communicated by the Mediator) during issuance. The Issuer does not learn
+  the Client's identity.
 
 - The Origin knows the Issuer to delegate an incoming Client to (ISSUER_NAME),
   and can verify that any tokens presented by the Client were signed by the
-  Issuer.
+  Issuer. The Origin does not learn which Mediator was used by a Client for issuance.
 
 Since an Issuer enforces policies on behalf of Origins, a Client is required to
 reveal the Origin's identity to the delegated Issuer. It is a requirement of
