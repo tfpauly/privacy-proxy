@@ -1146,7 +1146,7 @@ information. During generation, issuers must ensure the `token_key_id` (the 8-bi
 prefix of SHA256(ORIGIN_TOKEN_KEY) is different from all other `token_key_id`
 values for that origin currently in rotation. One way to ensure this uniqueness
 is via rejection sampling, where a new key is generated until its `token_key_id` is
-unique among all currently in rotation for the origin. 
+unique among all currently in rotation for the origin.
 
 
 # IANA Considerations {#iana}
