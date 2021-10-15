@@ -230,12 +230,13 @@ knowledge of the Client's identity and actions, and each entity only knows
 enough to serve its function (see {{terms}} for more about the pieces of
 information):
 
-- The Mediator knows the Client's identity (CLIENT_ID), the Issuer being
-  targeted (ISSUER_NAME), the period of time for which the Issuer's policy is
-  valid (ISSUER_POLICY_WINDOW), and the number of tokens issued to a given
-  Client for the claimed Origin in the given policy window.  The Mediator does
-  not know the identity of the Origin the Client is trying to access
-  (ORIGIN_ID), but knows a Client-anonymized identifier for it (ANON_ORIGIN_ID).
+- The Mediator knows the Client's identity and learns the Client's public key
+  (CLIENT_KEY), the Issuer being targeted (ISSUER_NAME), the period of time
+  for which the Issuer's policy is valid (ISSUER_POLICY_WINDOW), and the number
+  of tokens issued to a given Client for the claimed Origin in the given policy
+  window.  The Mediator does not know the identity of the Origin the Client is
+  trying to access (ORIGIN_ID), but knows a Client-anonymized identifier for
+  it (ANON_ORIGIN_ID).
 
 - The Issuer knows the Origin's secret (ORIGIN_SECRET) and policy about client
   access, and learns the Origin's identity (ORIGIN_NAME) and the number of
@@ -397,12 +398,12 @@ Mediator, which represents a specific Origin anonymously. The Client generates
 a stable ANON_ORIGIN_ID for each ORIGIN_NAME, to allow the Mediator to count
 token access without learning the ORIGIN_NAME.
 
-CLIENT_ID:
+CLIENT_KEY:
 : A public key identifier chosen by the Client and shared only with the Mediator.
 
 CLIENT_SECRET:
-: The secret key used by the Client during token issuance, whose public key is
-shared with the Mediator.
+: The secret key used by the Client during token issuance, whose public key
+(CLIENT_KEY) is shared with the Mediator.
 
 ORIGIN_SECRET:
 : The secret key used by the Issuer during token issuance, whose public key is
@@ -616,9 +617,9 @@ A Client is required to have the following information, derived from a given Tok
 - Issuer public key (ISSUER_KEY), a public key used to encrypt requests
   corresponding to the Issuer identified by TokenChallenge.issuer_name.
 
-Clients maintain a stable CLIENT_ID that they use for all communication with
-a specific Mediator. If this value changes, it will lead to token issuance
-failures until policy window passes. CLIENT_ID is a public key, where the
+Clients maintain a stable CLIENT_KEY that they use for all communication with
+a specific Mediator. If this value changes, it can lead to token issuance
+failures until policy window passes. CLIENT_KEY is a public key, where the
 corresponding private key CLIENT_SECRET is known only to the client.
 
 Clients also need to be able to generate an ANON_ORIGIN_ID value that corresponds
@@ -685,7 +686,7 @@ Its ABNF is:
 
 The "Sec-Token-Client" is an Item Structured Header {{!RFC8941}}. Its
 value MUST be a Byte Sequence. This header is sent on Client-to-Mediator
-requests ({{request-one}}), and contains the bytes of CLIENT_ID.
+requests ({{request-one}}), and contains the bytes of CLIENT_KEY.
 Its ABNF is:
 
 ~~~
@@ -784,7 +785,7 @@ calculated as described in {{encrypt-origin}}.
 The Client then generates an HTTP POST request to send through the Mediator to
 the Issuer, with the AccessTokenRequest as the body. The media type for this request
 is "message/access-token-request". The Client includes the "Sec-Token-Origin" header,
-whose value is ANON_ORIGIN_ID; the "Sec-Token-Client" header, whose value is CLIENT_ID; and
+whose value is ANON_ORIGIN_ID; the "Sec-Token-Client" header, whose value is CLIENT_KEY; and
 the "Sec-Token-Nonce" header, whose value is mapping_nonce. The Client sends this request
 to the Mediator's proxy URI. An example request is shown below, where Nk = 512.
 
@@ -798,7 +799,7 @@ cache-control = no-cache, no-store
 content-type = message/access-token-request
 content-length = 512
 sec-token-origin = ANON_ORIGIN_ID
-sec-token-client = CLIENT_ID
+sec-token-client = CLIENT_KEY
 sec-token-nonce = mapping_nonce
 
 <Bytes containing the AccessTokenRequest>
@@ -816,7 +817,7 @@ the Client. If the key does not match, the Mediator rejects the request with an 
 {{privacy-considerations}}.
 
 The Mediator finally checks to ensure that the AccessTokenRequest.mapping_proof is valid
-for the given CLIENT_ID; see {{nizk-dl}} for verification details. If the index is invalid,
+for the given CLIENT_KEY; see {{nizk-dl}} for verification details. If the index is invalid,
 the Mediator rejects the request with an HTTP 400 error.
 
 If the Mediator accepts the request, it will look up the state stored for this Client.
