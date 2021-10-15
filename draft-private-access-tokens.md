@@ -223,7 +223,7 @@ document. Protocol details follow in {{protocol}}.
 {: #fig-overview title=" PAT Architectural Components"}
 
 
-## Requirements
+## Properties and Requirements
 
 In this architecture, the Mediator, Issuer, and Origin each have partial
 knowledge of the Client's identity and actions, and each entity only knows
@@ -262,8 +262,14 @@ enforced. An Issuer therefore chooses to issue tokens to only known and
 reputable Mediators; the Issuer can employ its own methods to determine the
 reputation of a Mediator.
 
-A Mediator is expected to employ a stable Client identifier that can serve as a
+A Mediator is expected to employ a stable Client identifier, such as an IP
+address, a device identifier, or an account at the Mediator, that can serve as a
 reasonable proxy for a user with some creation and maintenance cost on the user.
+
+A Client is expected to create and maintain stable and explicit secrets for use
+in the Issuance protocol. Changing these secrets arbitrarily can result in token
+issuance failure for an extended period of time; see {{client-state}} for more
+details.
 
 ## User Interaction
 
@@ -530,7 +536,7 @@ Token issuance involves a Client, Mediator, and Issuer, with the following steps
 
 1. The Mediator verifies the response and proxies the response to the Client
 
-### Client State
+### Client State {#client-state}
 
 Issuance assumes the Client has the following information, derived from a given TokenChallenge:
 
