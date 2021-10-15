@@ -412,6 +412,12 @@ the scheme "PrivateAccessToken". Origins challenge Clients to present a unique,
 single-use token from a specific Issuer. Once a Client has received a token
 from that Issuer, it presents the token to the Origin.
 
+Token redemption only requires Origins to verify token signatures computed
+using the Blind Signature protocol from {{!BLINDSIG}}. Origins are not required
+to implement the complete Blind Signature protocol. (In contrast, token issuance
+requires Clients and Issuers to implement the Blind Signature protocol, as
+described in {{issuance}}.)
+
 ### Token Challenge {#challenge}
 
 Origins send a token challenge to Clients in an "WWW-Authenticate" header with
@@ -470,7 +476,7 @@ does not recognize or support, it MUST NOT parse or respond to the challenge.
 This document defines version 1, which indicates use of private tokens based on
 RSA Blind Signatures {{BLINDSIG}}, and determines the rest of the structure contents.
 
-### Token Redemption
+### Token Redemption {#redemption}
 
 The output of the issuance protocol is a token that corresponds to the Origin's challenge (see {{challenge}}).
 A token is a structure that begins with a single byte that indicates a version, which
@@ -536,7 +542,22 @@ Token issuance involves a Client, Mediator, and Issuer, with the following steps
 
 1. The Mediator verifies the response and proxies the response to the Client
 
-### Client State {#client-state}
+Issuance has a number of underlying cryptographic dependencies for operation:
+
+- {{HPKE}}, for encrypting information in transit between Client and Issuer across the Mediator.
+
+- RSA Blind Signatures {{BLINDSIG}}, for issuing and constructing Tokens as described in {{redemption}}.
+
+- Prime Order Groups (POGs), for computing stable mappings between (Client, Origin) pairs. This
+  document uses notation described in {{!VOPRF=I-D.irtf-cfrg-voprf, Section 2.1}}, and, in particular,
+  the functions RandomScalar(), Generator(), SerializeScalar(), SerializeElement(), and HashToScalar().
+
+- Non-Interactive proof-of-knowledge (POK), as described in {{nizk-dl}}, for verifying correctness of Client requests.
+
+Clients and Issuers are required to implement all of these dependencies, whereas Mediators are required
+to implement POG and POK support.
+
+### Client State
 
 Issuance assumes the Client has the following information, derived from a given TokenChallenge:
 
@@ -657,14 +678,19 @@ blinded_req, blind_inv = rsabssa_blind(ORIGIN_TOKEN_KEY, message)
 The Client MUST use a randomized variant of RSABSSA in producing this signature with
 a salt length of at least 32 bytes.
 
-The Client uses CLIENT_SECRET to generate "mapping_nonce", "mapping_key",
-"mapping_generator", and "mapping_proof".
+The Client uses CLIENT_SECRET to generate proof of its request.
 
 ~~~
 blind = RandomScalar()
 blind_key = blind * CLIENT_SECRET
 blind_generator = blind * Generator()
 key_proof = SchnorrProof(CLIENT_SECRET, blind_key, blind_generator)
+~~~
+
+The Client then transforms this proof into "mapping_nonce", "mapping_key", "mapping_generator",
+and "mapping_proof".
+
+~~~
 mapping_nonce = SerializeScalar(blind)
 mapping_key = SerializeElement(blind_key)
 mapping_generator = SerializeElement(blind_generator)
@@ -939,8 +965,6 @@ origin_name, error = context.Open(aad, ct)
 
 ### Non-Interactive Schnorr Proof of Knowledge {#nizk-dl}
 
-[[OPEN ISSUE: describe POG dependency and notation somewhere]]
-
 Each Issuance request requires evaluation and verification of a Schnorr proof-of-knowledge.
 Given input secret "secret" and two elements, "base" and "target", generation of this
 proof (u, c, z), denoted SchnorrProof(secret, base, target), works as follows:
@@ -948,7 +972,10 @@ proof (u, c, z), denoted SchnorrProof(secret, base, target), works as follows:
 ~~~
 r = RandomScalar()
 u = r * base
-c = HashToScalar(SerializeElement(base) || SerializeElement(target) || SerializeElement(mask))
+c = HashToScalar(SerializeElement(base) ||
+                 SerializeElement(target) ||
+                 SerializeElement(mask),
+                 dst = "PrivateAccessTokensProof")
 z = r + (c * secret)
 ~~~
 
@@ -962,11 +989,16 @@ struct {
 } Proof;
 ~~~
 
+The size of this structure is Np = Ne + 2*Ns bytes.
+
 Verification of a proof (u, c, z), denoted SchnorrVerify(base, target, proof),
 works as follows:
 
 ~~~
-c = HashToScalar(SerializeElement(base) || SerializeElement(target) || SerializeElement(mask))
+c = HashToScalar(SerializeElement(base) ||
+                 SerializeElement(target) ||
+                 SerializeElement(mask),
+                 dst = "PrivateAccessTokensProof")
 expected_left = base * z
 expected_right = u + (target * c)
 ~~~
@@ -1113,7 +1145,8 @@ rotation interval is two times the length of the policy window for that
 information. During generation, issuers must ensure the `token_key_id` (the 8-bit
 prefix of SHA256(ORIGIN_TOKEN_KEY) is different from all other `token_key_id`
 values for that origin currently in rotation. One way to ensure this uniqueness
-is via rejection sampling.
+is via rejection sampling, where a new key is generated until its `token_key_id` is
+unique among all currently in rotation for the origin. 
 
 
 # IANA Considerations {#iana}
