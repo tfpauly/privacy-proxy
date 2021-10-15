@@ -277,10 +277,10 @@ architecture that the Mediator not be able to learn these secrets.
 ## Client Identity
 
 The PAT architecture does not enforce strong constraints around the definition
-of a Client identity, and allows a Client identity to be defined entirely by a
-Mediator. If a user can create an arbitrary number of Client identities that are
-accepted by a Mediator, a malicious user can easily game this architecture and
-defeat the Issuer's ability to enforce per-client policies.
+of a Client identity and allows it to be defined entirely by a Mediator. If a
+user can create an arbitrary number of Client identities that are accepted by
+one or more Mediators, a malicious user can easily game this architecture and
+defeat the Issuer's ability to enforce per-Client policies.
 
 These multiple identities could be Sybil or true identities.
 
