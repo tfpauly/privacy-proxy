@@ -274,6 +274,49 @@ for more details. A Client can use a service offered by its Mediator or a
 third-party to store these secrets, but it is a requirement of the PAT
 architecture that the Mediator not be able to learn these secrets.
 
+## Client Identity
+
+The PAT architecture does not enforce strong constraints around the definition
+of a Client identity, and allows a Client identity to be defined entirely by a
+Mediator. If a user can create an arbitrary number of Client identities that are
+accepted by a Mediator, a malicious user can easily game this architecture and
+defeat the Issuer's ability to enforce per-client policies.
+
+These multiple identities could be Sybil or true identities.
+
+A Mediator alone is responsible for detecting and weeding out Sybil Client
+identities in the PAT architecture. An Issuer relies on a Mediator's reputation;
+as explained in {{properties}}, the correctness of the architecture hinges on
+Issuers issuing tokens to only known and reputable Mediators.
+
+Users have multiple true identities on the Internet however, and as a result, it
+seems possible for a user to game this architecture without having to create
+fake identities. For instance, a user could use multiple Mediators,
+authenticating with each one using a different true identity.
+
+The PAT architecture offers no panacea against this potential abuse.  We note
+however that the usages of PATs will cause the ecosystem to evolve and offer
+practical mitigations, such as:
+
+- An Issuer can learn the properties of a Mediator - specifically, which stable
+  Client identifier is authenticated by the Mediator - to determine whether the
+  Mediator is acceptable for an Origin.
+
+- An Origin can choose an Issuer based on the types of Mediators accepted by the
+  Issuer, or the Origin can communicate its constraints to the designated
+  Issuer.
+
+- An Origin can direct a user to a specific Issuer based on client properties
+  that are visible. For instance,
+
+- The number of true Mediator-authenticated identities for a user is expected to
+  be small, and therefore likely to be small enough to not matter for certain
+  use cases. For instance, when PATs are used to prevent fraud by rate limiting
+  Clients (as described in {{use-case-rate-limit}}), an Origin might be tolerant
+  of the potential amplification caused by an attacking user's access to
+  multiple true identities with Issuer-trusted Mediators.
+
+
 ## User Interaction
 
 When used in contexts like websites, origin servers that challenge clients for
