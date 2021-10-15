@@ -71,7 +71,7 @@ using a proxy service or a VPN. However, doing so severely limits the client's
 ability to access services and content, since servers might not be able to
 enforce their policies without a stable and unique client identifier.
 
-This document describes an architecture that uses Private Access Tokens (PATs),
+This document describes an architecture for Private Access Tokens (PATs),
 using RSA Blind Signatures as defined in
 {{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}}, as an explicit replacement for
 these passive client identifiers. These tokens are privately issued to clients
@@ -148,8 +148,8 @@ address across accesses.
 ## Architecture
 
 At a high level, the PAT architecture seeks to solve the following problem: in
-the absence of a stable Client identifier, an Origin needs verification of a
-connecting Client's identity and enforcement of its policy for the incoming
+the absence of a stable Client identifier, an Origin needs to verify a
+connecting Client's identity and enforce access policies for the incoming
 Client. To accomplish this, the PAT architecture employs four functional
 components:
 
@@ -169,7 +169,7 @@ components:
 
 In the PAT architecture, these four components interact as follows.
 
-An Origin delegates a trusted Issuer to issue tokens for it. The Origin then
+An Origin designates a trusted Issuer to issue tokens for it. The Origin then
 redirects any incoming Clients to the Issuer for policy enforcement, expecting
 the Client to return with a proof from the Issuer that the Origin's policy has
 been enforced for this Client.
@@ -188,11 +188,11 @@ When a Mediator-anonymized Client requests a token from an Issuer, the Issuer
 enforces the Origin's policies based on the received Client issuance state and
 Origin policy. Issuers know the Origin's policies and enforce them on behalf of the
 Origin. An example policy is: "Limit 10 accesses per Client".  More examples and
-their use cases are discussed in {{examples}}. The Issuer does not learn of the
+their use cases are discussed in {{examples}}. The Issuer does not learn the
 Client's true identity.
 
 Finally, the Origin provides access to content or services to a Client upon
-verifying a Private Access Token presented by the Client. Verification of this
+verifying a PAT presented by the Client. Verification of this
 token serves as proof that the Client meets the Origin's policies as enforced by
 the delegated Issuer with the help of a Mediator. The Origin can then provide
 any services or content gated behind these policies to the Client.
@@ -242,7 +242,7 @@ information):
   previous tokens issued to the Client (as communicated by the Mediator) during
   issuance. The Issuer does not learn the Client's identity.
 
-- The Origin knows the Issuer to delegate an incoming Client to (ISSUER_NAME),
+- The Origin knows the Issuer to which it will delegate an incoming Client (ISSUER_NAME),
   and can verify that any tokens presented by the Client were signed by the
   Issuer. The Origin does not learn which Mediator was used by a Client for
   issuance.
