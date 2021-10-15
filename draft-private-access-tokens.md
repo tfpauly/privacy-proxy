@@ -71,28 +71,23 @@ using a proxy service or a VPN. However, doing so severely limits the client's
 ability to access services and content, since servers might not be able to
 enforce their policies without a stable and unique client identifier.
 
-This document describes an architecture that uses Private Access Tokens, using
-RSA Blind Signatures as defined in
+This document describes an architecture for Private Access Tokens (PATs),
+using RSA Blind Signatures as defined in
 {{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}}, as an explicit replacement for
 these passive client identifiers. These tokens are privately issued to clients
 upon request and then redeemed by servers in such a way that the issuance and
 redemption events for a given token are unlinkable.
 
-At first glance, using Private Access Tokens in lieu of passive identifiers for
-policy enforcement suggests that some entity needs to know both the client's
-identity and the server's policy, and such an entity would be trivially able to
-track a client and its activities. However, with appropriate mediation and
-separation between the parties involved in the issuance and the redemption
-protocols, it is possible to eliminate this information concentration without
-any functional regressions. This document describes such a protocol.
+At first glance, using PATs in lieu of passive identifiers for policy
+enforcement suggests that some entity needs to know both the client's identity
+and the server's policy, and such an entity would be trivially able to track a
+client and its activities. However, with appropriate mediation and separation
+between the parties involved in the issuance and the redemption protocols, it is
+possible to eliminate this information concentration without any functional
+regressions. This document describes such a protocol.
 
 
-## Requirements
-
-{::boilerplate bcp14}
-
-
-# Motivation
+## Motivation
 
 This section describes classes of use cases where an origin would traditionally
 use a stable and unique client identifier for enforcing attribute-based
@@ -101,7 +96,7 @@ alternative for origins to continue enforcing their policies. Using the Privacy
 Address Token architecture for addressing these use cases is described in
 {{examples}}.
 
-## Rate-limited Access {#use-case-rate-limit}
+### Rate-limited Access {#use-case-rate-limit}
 
 An origin provides rate-limited access to content to a client over a fixed
 period of time. The origin does not need to know the client's identity, but
@@ -122,8 +117,7 @@ when a client exceeds a set rate limit.
 
 Origins routinely use client IP addresses for this purpose.
 
-
-## Client Geo-Location {#use-case-geolocation}
+### Client Geo-Location {#use-case-geolocation}
 
 An origin provides access to or customizes content based on the geo-location of
 the client. The origin does not need to know the client's identity, but needs to
@@ -134,8 +128,7 @@ the available content it can serve based on the client's geographical region.
 
 Origins almost exclusively use client IP addresses for this purpose.
 
-
-## Private Client Authentication {#use-case-authentication}
+### Private Client Authentication {#use-case-authentication}
 
 An origin provides access to content for clients that have been authorized by a
 delegated or known mediator. The origin does not need to know the client's
@@ -152,59 +145,134 @@ origins could then track the client's federator user ID or the client's IP
 address across accesses.
 
 
-# Overview
+## Architecture
 
-The architecture and protocol involves the following four entities:
+At a high level, the PAT architecture seeks to solve the following problem: in
+the absence of a stable Client identifier, an Origin needs to verify a
+connecting Client's identity and enforce access policies for the incoming
+Client. To accomplish this, the PAT architecture employs four functional
+components:
 
-1. Client: requests a Private Access Token from an Issuer and presents it to a
-   Origin for access to the Origin's service.
+1. Client: requests a PAT from an Issuer and presents it to a Origin for access
+   to the Origin's service.
 
 1. Mediator: authenticates a Client, using information such as its IP address,
-   an account name, or a device identifier. Anonymizes the Client and relays
-   information between the anonymized Client and an Issuer.
+   an account name, or a device identifier. Anonymizes a Client to an Issuer and
+   relays information between an anonymized Client and an Issuer.
 
-1. Issuer: issues Private Access Tokens to an anonymized Client on behalf of a
-   Origin. Enforces the Origin's policy.
+1. Issuer: issues PATs to an anonymized Client on behalf of an
+   Origin. Anonymizes an Origin to a Mediator and enforces the Origin's policy.
 
-1. Origin: verifies any Private Access Token sent by a Client and enables
-   access to content or services to the Client upon verification.
+1. Origin: directs a Client to an Issuer with a challenge and enables access to
+   content or services to the Client upon verification of any PAT sent in
+   response by the Client.
+
+In the PAT architecture, these four components interact as follows.
+
+An Origin designates a trusted Issuer to issue tokens for it. The Origin then
+redirects any incoming Clients to the Issuer for policy enforcement, expecting
+the Client to return with a proof from the Issuer that the Origin's policy has
+been enforced for this Client.
+
+The Client employs a trusted Mediator through which it communicates with the
+Issuer for this proof. The Mediator performs three important functions:
+
+- authenticate and associate the Client with a stable identifier;
+
+- maintain issuance state for the Client and relay it to the Issuer; and
+
+- anonymize the Client and mediate communication between the Client and the
+  Issuer.
+
+When a Mediator-anonymized Client requests a token from an Issuer, the Issuer
+enforces the Origin's policies based on the received Client issuance state and
+Origin policy. Issuers know the Origin's policies and enforce them on behalf of the
+Origin. An example policy is: "Limit 10 accesses per Client".  More examples and
+their use cases are discussed in {{examples}}. The Issuer does not learn the
+Client's true identity.
+
+Finally, the Origin provides access to content or services to a Client upon
+verifying a PAT presented by the Client. Verification of this
+token serves as proof that the Client meets the Origin's policies as enforced by
+the delegated Issuer with the help of a Mediator. The Origin can then provide
+any services or content gated behind these policies to the Client.
+
+{{fig-overview}} shows the components of the PAT architecture described in this
+document. Protocol details follow in {{protocol}}.
+
+~~~
+ Client        Mediator          Issuer          Origin
+
+    <---------------------------------------- Challenge \
+                                                        |
++--------------------------------------------\          |
+| TokenRequest --->                          |          |
+|             (validate)                     |          |
+|             (attach state)                 |          |
+|                    TokenRequest --->       |          |    PAT
+|                                 (validate) |   PAT    | Challenge/
+|                                 (evaluate) | Issuance |  Response
+|                    <--- TokenResponse      |   Flow   |   Flow
+|             (evaluate)                     |          |
+|             (update state)                 |          |
+|   <--- TokenResponse                       |          |
+---------------------------------------------/          |
+                                                        |
+     Response -------------------------------------- >  /
+~~~
+{: #fig-overview title=" PAT Architectural Components"}
 
 
-The entities have the following properties:
+## Properties and Requirements
 
-1. A Mediator enforces and maintains a mapping between Client identifiers and
-   Client-anonymized Origin identifiers;
+In this architecture, the Mediator, Issuer, and Origin each have partial
+knowledge of the Client's identity and actions, and each entity only knows
+enough to serve its function (see {{terms}} for more about the pieces of
+information):
 
-1. An Issuer enforces the Origin's policies based on the received
-   Mediator-anonymized Client identifier and Origin identifier, without
-   learning the Client's true identity; and
+- The Mediator knows the Client's identity (CLIENT_ID), the Issuer being
+  targeted (ISSUER_NAME), the period of time for which the Issuer's policy is
+  valid (ISSUER_POLICY_WINDOW), and the number of tokens issued to a given
+  Client for the claimed Origin in the given policy window.  The Mediator does
+  not know the identity of the Origin the Client is trying to access
+  (ORIGIN_ID), but knows a Client-anonymized identifier for it (ANON_ORIGIN_ID).
 
-1. An Origin provides access to content or services to a Client upon verifying
-   the Client's Private Access Token, since the verification demonstrates that
-   the Client access meets the Origin's policies.
+- The Issuer knows the Origin's secret (ORIGIN_SECRET) and policy about client
+  access, and learns the Origin's identity (ORIGIN_NAME) and the number of
+  previous tokens issued to the Client (as communicated by the Mediator) during
+  issuance. The Issuer does not learn the Client's identity.
 
+- The Origin knows the Issuer to which it will delegate an incoming Client
+  (ISSUER_NAME), and can verify that any tokens presented by the Client were
+  signed by the Issuer. The Origin does not learn which Mediator was used by a
+  Client for issuance.
 
-The Mediator, Issuer, and Origin each have partial knowledge of the Client's
-identity and actions, and each entity only knows enough to serve its
-function. The pieces of information are identified in {{terms}}.
+Since an Issuer enforces policies on behalf of Origins, a Client is required to
+reveal the Origin's identity to the delegated Issuer. It is a requirement of
+this architecture that the Mediator not learn the Origin's identity so that,
+despite knowing the Client's identity, a Mediator cannot track and concentrate
+information about Client activity.
 
-The Mediator knows the Client's identity, the Issuer being targeted
-(ISSUER_NAME), and the period of time for which the Issuer's policy is valid
-(ISSUER_POLICY_WINDOW). The Mediator does not know the identity of the Origin
-the Client is trying to access (ORIGIN_NAME), but knows a Client-anonymized
-identifier for it (ANON_ORIGIN_ID).
+An Issuer expects a Mediator to verify its Clients' identities correctly, but an
+Issuer cannot confirm a Mediator's efficacy or the Mediator-Client relationship
+directly without learning the Client's identity. Similarly, an Origin does not
+know the Mediator's identity, but ultimately relies on the Mediator to correctly
+verify or authenticate a Client for the Origin's policies to be correctly
+enforced. An Issuer therefore chooses to issue tokens to only known and
+reputable Mediators; the Issuer can employ its own methods to determine the
+reputation of a Mediator.
 
-The Issuer knows the Origin's identity (ORIGIN_NAME), and the Origin's policy
-about client access, but only sees the number of previous tokens issued to a
-Client (as communicated by the Mediator), not the Client idenitity. Issuers
-know the Origin's policies and enforce them on behalf of the Origin. An
-example policy is: "Limit 10 accesses per Client". More examples and their use
-cases are discussed in {{examples}}.
+A Mediator is expected to employ a stable Client identifier, such as an IP
+address, a device identifier, or an account at the Mediator, that can serve as a
+reasonable proxy for a user with some creation and maintenance cost on the user.
 
-The Origin receives a Private Access Token from the client. Verification of
-this token demonstrates to the Origin that the Client meets its policies
-(since they were enforced by the Issuer before issuing this token), and then
-provides the services or content gated behind these policies.
+For the Issuance protocol, a Client is expected to create and maintain stable
+and explicit secrets for time periods that are on the scale of Issuer policy
+windows. Changing these secrets arbitrarily during a policy window can result in
+token issuance failure for the rest of the policy window; see {{client-state}}
+for more details. A Client can use a service offered by its Mediator or a
+third-party to store these secrets, but it is a requirement of the PAT
+architecture that the Mediator not be able to learn these secrets.
 
 ## User Interaction
 
@@ -237,7 +305,10 @@ that the server is not functioning correctly, or is trying to attack or overload
 the client or issuance servers. In such cases, the client SHOULD ignore
 redundant token challengers, or else alert the user.
 
-## Notation and Terminology {#terms}
+
+# Notation and Terminology {#terms}
+
+{::boilerplate bcp14}
 
 Unless said otherwise, this document encodes protocol messages in TLS notation
 from {{!TLS13=RFC8446}}, Section 3.
@@ -296,6 +367,7 @@ not shared with anyone.
 ANON_ISSUER_ORIGIN_ID:
 : An identifier that is generated by Issuer based on an ORIGIN_SECRET that is
 per-Client and per-Origin. See {{response-two}} for details of derivation.
+
 
 # API Endpoints {#setup}
 
@@ -1077,7 +1149,7 @@ information. During generation, issuers must ensure the `token_key_id` (the 8-bi
 prefix of SHA256(ORIGIN_TOKEN_KEY) is different from all other `token_key_id`
 values for that origin currently in rotation. One way to ensure this uniqueness
 is via rejection sampling, where a new key is generated until its `token_key_id` is
-unique among all currently in rotation for the origin. 
+unique among all currently in rotation for the origin.
 
 
 # IANA Considerations {#iana}
