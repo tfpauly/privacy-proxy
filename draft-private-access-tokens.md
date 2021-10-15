@@ -667,9 +667,10 @@ Client has previously received a token for an Origin. Its ABNF is:
 
 ### Client-to-Mediator Request {#request-one}
 
-Issuance assumes that the Client and Mediator have a secure and
-Mediator-authenticated HTTPS connection. See {{sec-considerations}} for additional
-about this channel.
+The Client and Mediator MUST use a secure and Mediator-authenticated HTTPS
+connection. They MAY use mutual authentication or mechanisms such as TLS
+certificate pinning, to mitigate the risk of channel compromise; see
+{{sec-considerations}} for additional about this channel.
 
 Issuance begins by Clients hashing the TokenChallenge to produce a token input
 as message = SHA256(challenge), and then blinding message as follows:
@@ -782,6 +783,12 @@ rejected by the Issuer in the current policy window, it SHOULD reject the reques
 forwarding it to the Issuer.
 
 ### Mediator-to-Issuer Request {#request-two}
+
+The Mediator and the Issuer MUST use a secure and Issuer-authenticated HTTPS
+connection. Since an Issuer issues tokens to only known Mediators, connections
+between them MUST use mutual authentication. They MAY additionally use
+mechanisms such as TLS certificate pinning, to mitigate the risk of channel
+compromise; see {{sec-considerations}} for additional about this channel.
 
 Before copying and forwarding the Client's AccessTokenRequest request to the Issuer,
 the Mediator adds a header that includes the count of previous tokens as "Sec-Token-Count".
@@ -1070,11 +1077,13 @@ for Origins, e.g., at the underlying TLS layer.
 
 ## Channel Security
 
-An attacker that can act as an intermediate between Mediator and Issuer communication can
-influence or disrupt the ability for the Issuer to correctly rate-limit token issuance.
-All communication channels MUST use server-authenticated HTTPS. Where appropriate, e.g., between
-Clients and Mediators, connections MAY mutually authenticate both client and server, or use mechanisms
-such as TLS certificate pinning, to mitigate the risk of channel compromise.
+An attacker that can act as an intermediate between Mediator and Issuer
+communication can influence or disrupt the ability for the Issuer to correctly
+rate-limit token issuance.  All communication channels use server-authenticated
+HTTPS. Where appropriate, e.g., between a Mediator and an Issuer, connections
+might require or choose mutual authentication between both endpoints or use
+mechanisms such as TLS certificate pinning, to mitigate the risk of channel
+compromise.
 
 An attacker that can intermediate the channel between Client and Origin can
 observe a TokenChallenge, and can view a Token being presented for authentication
