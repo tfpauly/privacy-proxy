@@ -266,10 +266,13 @@ A Mediator is expected to employ a stable Client identifier, such as an IP
 address, a device identifier, or an account at the Mediator, that can serve as a
 reasonable proxy for a user with some creation and maintenance cost on the user.
 
-A Client is expected to create and maintain stable and explicit secrets for use
-in the Issuance protocol. Changing these secrets arbitrarily can result in token
-issuance failure for an extended period of time; see {{client-state}} for more
-details.
+For the Issuance protocol, a Client is expected to create and maintain stable
+and explicit secrets for time periods that are on the scale of Issuer policy
+windows. Changing these secrets arbitrarily during a policy window can result in
+token issuance failure for the rest of the policy window; see {{client-state}}
+for more details. A Client can use a service offered by its Mediator or a
+third-party to store these secrets, but it is a requirement of the PAT
+architecture that the Mediator not be able to learn these secrets.
 
 ## User Interaction
 
