@@ -198,7 +198,7 @@ the delegated Issuer with the help of a Mediator. The Origin can then provide
 any services or content gated behind these policies to the Client.
 
 {{fig-overview}} shows the components of the PAT architecture described in this
-document. Protocol details follow in {{protocol}}.
+document. Protocol details follow in {{challenge-redemption}} and {{issuance}}.
 
 ~~~
  Client        Mediator          Issuer          Origin
@@ -440,19 +440,10 @@ For example, an Issuer URL might be https://issuer.net/access-token-request.
 Mediators advertise a URL for proxying protocol messages to Issuers. For example,
 a Mediator URL might be https://mediator.net/relay-access-token-request.
 
-# Protocol
+# Token Challenge and Redemption Protocol {#challenge-redemption}
 
-Private Access Tokens are single-use tokens cryptographically bound to
-policies. Origins request tokens from Clients, who then engage with
-Mediators and Issuers to private compute policy-compliant tokens and
-reveal them to the Origin. Example policies and use cases that system
-addresses are described in {{examples}}.
-
-The rest of this section describes this interactive protocol in terms of
-the token challenge and redemption flow ({{scheme}}) and corresponding token
-issuance flow ({{issuance}}).
-
-## Token Challenge and Redemption {#scheme}
+This section describes the interactive protocol for the token challenge
+and redemption flow between a Client and an Origin.
 
 Token redemption is performed using HTTP Authentication ({{!RFC7235}}), with
 the scheme "PrivateAccessToken". Origins challenge Clients to present a unique,
@@ -465,7 +456,7 @@ to implement the complete Blind Signature protocol. (In contrast, token issuance
 requires Clients and Issuers to implement the Blind Signature protocol, as
 described in {{issuance}}.)
 
-### Token Challenge {#challenge}
+## Token Challenge {#challenge}
 
 Origins send a token challenge to Clients in an "WWW-Authenticate" header with
 the "PrivateAccessToken" scheme. This challenge includes a TokenChallenge message,
@@ -524,7 +515,7 @@ does not recognize or support, it MUST NOT parse or respond to the challenge.
 This document defines version 1, which indicates use of private tokens based on
 RSA Blind Signatures {{BLINDSIG}}, and determines the rest of the structure contents.
 
-### Token Redemption {#redemption}
+## Token Redemption {#redemption}
 
 The output of the issuance protocol is a token that corresponds to the Origin's challenge (see {{challenge}}).
 A token is a structure that begins with a single byte that indicates a version, which
@@ -578,9 +569,12 @@ response.
 
 [[OPEN ISSUE: use generic advice here]]
 
-## Issuance {#issuance}
 
-Token issuance involves a Client, Mediator, and Issuer, with the following steps:
+# Issuance Protocol {#issuance}
+
+This section describes the Issuance protocol for a Client to request and receive
+a token from an Issuer. Token issuance involves a Client, Mediator, and Issuer,
+with the following steps:
 
 1. The Client sends a token request to the Mediator, encrypted using an Issuer-specific key
 
@@ -590,7 +584,8 @@ Token issuance involves a Client, Mediator, and Issuer, with the following steps
 
 1. The Mediator verifies the response and proxies the response to the Client
 
-Issuance has a number of underlying cryptographic dependencies for operation:
+The Issuance protocol has a number of underlying cryptographic dependencies for
+operation:
 
 - {{HPKE}}, for encrypting information in transit between Client and Issuer across the Mediator.
 
@@ -605,9 +600,14 @@ Issuance has a number of underlying cryptographic dependencies for operation:
 Clients and Issuers are required to implement all of these dependencies, whereas Mediators are required
 to implement POG and POK support.
 
+## State Requirements
+
+The Issuance protocol requires each participating endpoint to maintain some
+necessary state, as described in this section.
+
 ### Client State
 
-Issuance assumes the Client has the following information, derived from a given TokenChallenge:
+A Client is required to have the following information, derived from a given TokenChallenge:
 
 - Origin name (ORIGIN_NAME), a URI referring to the Origin {{!RFC6454}}. This is
   the value of TokenChallenge.origin_name.
@@ -636,7 +636,7 @@ e.g., ANON_ORIGIN_ID = HKDF(secret=CLIENT_SECRET, salt="", info=ORIGIN_NAME).
 
 ### Mediator State {#mediator-state}
 
-Issuance requires Mediators to maintain state for each Client. The mechanism
+A Mediator is required to maintain state for every authenticated Client. The mechanism
 of identifying a Client is specific to each Mediator, and is not defined in this document.
 As examples, the Mediator could use device-specific certificates or account authentication
 to identify a Client.
@@ -669,9 +669,9 @@ private key, for each ORIGIN_NAME that is served by the Issuer. Origins SHOULD u
 their view of the ORIGIN_TOKEN_KEY regularly to ensure that Client requests do not fail
 after ORIGIN_TOKEN_KEY rotation.
 
-### Issuance HTTP Headers
+## Issuance HTTP Headers
 
-The issuance protocol defines four new HTTP headers that are used in requests
+The Issuance protocol defines four new HTTP headers that are used in requests
 and responses between Clients, Mediators, and Issuers (see {{iana-headers}}).
 
 The "Sec-Token-Origin" is an Item Structured Header {{!RFC8941}}. Its
@@ -710,7 +710,7 @@ Client has previously received a token for an Origin. Its ABNF is:
     Sec-Token-Count = sf-integer
 ~~~
 
-### Client-to-Mediator Request {#request-one}
+## Client-to-Mediator Request {#request-one}
 
 The Client and Mediator MUST use a secure and Mediator-authenticated HTTPS
 connection. They MAY use mutual authentication or mechanisms such as TLS
@@ -827,7 +827,7 @@ If the Mediator has stored state that a previous request for this ANON_ORIGIN_ID
 rejected by the Issuer in the current policy window, it SHOULD reject the request without
 forwarding it to the Issuer.
 
-### Mediator-to-Issuer Request {#request-two}
+## Mediator-to-Issuer Request {#request-two}
 
 The Mediator and the Issuer MUST use a secure and Issuer-authenticated HTTPS
 connection. Also, Issuers MUST authenticate Mediators, either via mutual
@@ -880,7 +880,7 @@ AccessTokenRequest.token_key_id, the Issuer MUST return an HTTP 401 error to Med
 forward the error to the client. The Mediator learns that the client's view of the Origin key
 was invalid in the process.
 
-### Issuer-to-Mediator Response {#response-one}
+## Issuer-to-Mediator Response {#response-one}
 
 If the Issuer is willing to give a token to the Client, the Issuer verifies the token request
 using "mapping_generator", "mapping_key", and "mapping_proof":
@@ -924,7 +924,7 @@ sec-token-origin = mapping_index
 <Bytes containing the blind_sig>
 ~~~
 
-### Mediator-to-Client Response {#response-two}
+## Mediator-to-Client Response {#response-two}
 
 Upon receipt of a successful response from the Issuer, the Mediator extracts the
 "Sec-Token-Origin" header, and uses the value to determine ANON_ISSUER_ORIGIN_ID.
@@ -955,9 +955,9 @@ sig = rsabssa_finalize(ORIGIN_TOKEN_KEY, nonce, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a Private Access Token as described in
-{{scheme}} using the token input message and output sig.
+{{challenge}} using the token input message and output sig.
 
-### Encrypting Origin Names {#encrypt-origin}
+## Encrypting Origin Names {#encrypt-origin}
 
 Given a `KeyConfig` (ISSUER_KEY), Clients produce encrypted_origin_name and authenticate
 all other contents of the AccessTokenRequest using the following values:
@@ -1018,7 +1018,7 @@ enc, context = SetupBaseR(enc, skI, "AccessTokenRequest")
 origin_name, error = context.Open(aad, ct)
 ~~~
 
-### Non-Interactive Schnorr Proof of Knowledge {#nizk-dl}
+## Non-Interactive Schnorr Proof of Knowledge {#nizk-dl}
 
 Each Issuance request requires evaluation and verification of a Schnorr proof-of-knowledge.
 Given input secret "secret" and two elements, "base" and "target", generation of this
@@ -1058,7 +1058,8 @@ expected_left = base * z
 expected_right = u + (target * c)
 ~~~
 
-The proof is considered valid if expected_left == expected_right.
+The proof is considered valid if expected_left is the same as expected_right.
+
 
 # Instantiating Uses Cases {#examples}
 
@@ -1126,8 +1127,8 @@ An attacker that can act as an intermediate between Mediator and Issuer
 communication can influence or disrupt the ability for the Issuer to correctly
 rate-limit token issuance.  All communication channels use server-authenticated
 HTTPS. Some connections, e.g., between a Mediator and an Issuer, require
-mutual authentication between both endpoints. Where appropriate, endpoints 
-MAY use further enhancements such as TLS certificate pinning to mitigate 
+mutual authentication between both endpoints. Where appropriate, endpoints
+MAY use further enhancements such as TLS certificate pinning to mitigate
 the risk of channel compromise.
 
 An attacker that can intermediate the channel between Client and Origin can
@@ -1160,7 +1161,7 @@ in the given policy window.
 
 Private Access Tokens are defined in terms of a Client authenticating to an Origin, where
 the "origin" is used as defined in {{?RFC6454}}. In order to limit cross-origin correlation,
-Clients MUST verify that the origin_name presented in the TokenChallenge structure ({{scheme}})
+Clients MUST verify that the origin_name presented in the TokenChallenge structure ({{challenge}})
 matches the origin that is providing the HTTP authentication challenge, where the matching logic
 is defined for same-origin policies in {{?RFC6454}}. Clients MAY further limit which
 authentication challenges they are willing to respond to, for example by only accepting
@@ -1215,7 +1216,7 @@ Transfer Protocol (HTTP) Authentication Scheme Registry" established by {{!RFC72
 
 Authentication Scheme Name: PrivateAccessToken
 
-Pointer to specification text: {{scheme}} of this document
+Pointer to specification text: {{challenge}} of this document
 
 ## HTTP Headers {#iana-headers}
 
