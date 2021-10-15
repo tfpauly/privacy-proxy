@@ -279,7 +279,7 @@ architecture that the Mediator not be able to learn these secrets.
 The PAT architecture does not enforce strong constraints around the definition
 of a Client identity and allows it to be defined entirely by a Mediator. If a
 user can create an arbitrary number of Client identities that are accepted by
-one or more Mediators, a malicious user can easily game this architecture and
+one or more Mediators, a malicious user can easily abuse the system to
 defeat the Issuer's ability to enforce per-Client policies.
 
 These multiple identities could be Sybil or true identities.
@@ -290,7 +290,7 @@ as explained in {{properties}}, the correctness of the architecture hinges on
 Issuers issuing tokens to only known and reputable Mediators.
 
 Users have multiple true identities on the Internet however, and as a result, it
-seems possible for a user to game this architecture without having to create
+seems possible for a user to abuse the system without having to create
 fake identities. For instance, a user could use multiple Mediators,
 authenticating with each one using a different true identity.
 
@@ -307,7 +307,7 @@ practical mitigations, such as:
   Issuer.
 
 - An Origin can direct a user to a specific Issuer based on client properties
-  that are visible. For instance,
+  that are visible. For instance, properties that are observable in the HTTP User Agent string.
 
 - The number of true Mediator-authenticated identities for a user is expected to
   be small, and therefore likely to be small enough to not matter for certain
