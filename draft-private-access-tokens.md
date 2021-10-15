@@ -590,7 +590,7 @@ between the ORIGIN_NAME and a randomly generated ANON_ORIGIN_ID for future reque
 the Client can compute a PRF keyed by a per-client secret (CLIENT_SECRET) over the ORIGIN_NAME,
 e.g., ANON_ORIGIN_ID = HKDF(secret=CLIENT_SECRET, salt="", info=ORIGIN_NAME).
 
-## Mediator State {#mediator-state}
+### Mediator State {#mediator-state}
 
 A Mediator is required to maintain state for every authenticated Client. The mechanism
 of identifying a Client is specific to each Mediator, and is not defined in this document.
