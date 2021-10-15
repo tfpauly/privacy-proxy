@@ -242,10 +242,10 @@ information):
   previous tokens issued to the Client (as communicated by the Mediator) during
   issuance. The Issuer does not learn the Client's identity.
 
-- The Origin knows the Issuer to which it will delegate an incoming Client (ISSUER_NAME),
-  and can verify that any tokens presented by the Client were signed by the
-  Issuer. The Origin does not learn which Mediator was used by a Client for
-  issuance.
+- The Origin knows the Issuer to which it will delegate an incoming Client
+  (ISSUER_NAME), and can verify that any tokens presented by the Client were
+  signed by the Issuer. The Origin does not learn which Mediator was used by a
+  Client for issuance.
 
 Since an Issuer enforces policies on behalf of Origins, a Client is required to
 reveal the Origin's identity to the delegated Issuer. It is a requirement of
