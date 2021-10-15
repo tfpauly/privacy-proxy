@@ -399,7 +399,7 @@ a stable ANON_ORIGIN_ID for each ORIGIN_NAME, to allow the Mediator to count
 token access without learning the ORIGIN_NAME.
 
 CLIENT_KEY:
-: A public key identifier chosen by the Client and shared only with the Mediator.
+: A public key chosen by the Client and shared only with the Mediator.
 
 CLIENT_SECRET:
 : The secret key used by the Client during token issuance, whose public key
