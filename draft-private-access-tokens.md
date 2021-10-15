@@ -223,7 +223,7 @@ document. Protocol details follow in {{protocol}}.
 {: #fig-overview title=" PAT Architectural Components"}
 
 
-## Properties and Requirements
+## Properties and Requirements {#properties}
 
 In this architecture, the Mediator, Issuer, and Origin each have partial
 knowledge of the Client's identity and actions, and each entity only knows
