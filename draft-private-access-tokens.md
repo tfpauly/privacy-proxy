@@ -785,8 +785,8 @@ forwarding it to the Issuer.
 ### Mediator-to-Issuer Request {#request-two}
 
 The Mediator and the Issuer MUST use a secure and Issuer-authenticated HTTPS
-connection. Since an Issuer issues tokens to only known Mediators, connections
-between them MUST use mutual authentication. They MAY additionally use
+connection. Also, Issuers MUST authenticate Mediators, either via mutual
+TLS or another form of application-layer authentication. They MAY additionally use
 mechanisms such as TLS certificate pinning, to mitigate the risk of channel
 compromise; see {{sec-considerations}} for additional about this channel.
 
@@ -1080,10 +1080,10 @@ for Origins, e.g., at the underlying TLS layer.
 An attacker that can act as an intermediate between Mediator and Issuer
 communication can influence or disrupt the ability for the Issuer to correctly
 rate-limit token issuance.  All communication channels use server-authenticated
-HTTPS. Where appropriate, e.g., between a Mediator and an Issuer, connections
-might require or choose mutual authentication between both endpoints or use
-mechanisms such as TLS certificate pinning, to mitigate the risk of channel
-compromise.
+HTTPS. Some connections, e.g., between a Mediator and an Issuer, require
+mutual authentication between both endpoints. Where appropriate, endpoints 
+MAY use further enhancements such as TLS certificate pinning to mitigate 
+the risk of channel compromise.
 
 An attacker that can intermediate the channel between Client and Origin can
 observe a TokenChallenge, and can view a Token being presented for authentication
