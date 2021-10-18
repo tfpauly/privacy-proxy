@@ -1113,7 +1113,7 @@ This section discusses security considerations for the protocol.
 The HTTPS connection between Client and Mediator is minimally Mediator-authenticated. Mediators
 can also require Client authentication if they wish to restrict Private Access Token proxying
 to trusted or otherwise authenticated Clients. Absent some form of Client authentication, Mediators
-can use other per-Client information for the client identifier mapping, such as IP addressess.
+can use other per-Client information for the client identifier mapping, such as IP addresses.
 
 ## Denial of Service
 
@@ -1173,14 +1173,14 @@ challenges when the origin is a web site to which the user navigated.
 Client activity could be linked if an Origin and Issuer collude to have unique keys targeted
 at specific Clients or sets of Clients.
 
-To mitigate the risk of a targetted ISSUER_KEY, the Mediator can observe and validate
+To mitigate the risk of a targeted ISSUER_KEY, the Mediator can observe and validate
 the name_key_id presented by the Client to the Issuer. As described in {{issuance}}, Mediators
 MUST validate that the name_key_id in the Client's AccessTokenRequest matches a known public key
 for the Issuer. The Mediator needs to support key rotation, but ought to disallow very rapid key
 changes, which could indicate that an Origin is colluding with an Issuer to try to rotate the key
 for each new Client in order to link the client activity.
 
-To mitigate the risk of a targetted ORIGIN_TOKEN_KEY, the protocol expects that an Issuer has only
+To mitigate the risk of a targeted ORIGIN_TOKEN_KEY, the protocol expects that an Issuer has only
 a single valid public key for signing tokens at a time. The Client does not present the name_key_id
 of the token public key to the Issuer, but instead expects the Issuer to infer the correct key based
 on the information the Issuer knows, specifically the origin_name itself.
@@ -1202,7 +1202,7 @@ Issuers SHOULD generate a new (ORIGIN_TOKEN_KEY, ORIGIN_SECRET) regularly, and
 SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED
 rotation interval is two times the length of the policy window for that
 information. During generation, issuers must ensure the `token_key_id` (the 8-bit
-prefix of SHA256(ORIGIN_TOKEN_KEY) is different from all other `token_key_id`
+prefix of SHA256(ORIGIN_TOKEN_KEY)) is different from all other `token_key_id`
 values for that origin currently in rotation. One way to ensure this uniqueness
 is via rejection sampling, where a new key is generated until its `token_key_id` is
 unique among all currently in rotation for the origin.
@@ -1242,7 +1242,7 @@ in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignmen
 ## Media Types
 
 This specification defines the following protocol messages, along with their
-corresponding media types types:
+corresponding media types:
 
 - AccessTokenRequest {{issuance}}: "message/access-token-request"
 - AccessTokenResponse {{issuance}}: "message/access-token-response"
