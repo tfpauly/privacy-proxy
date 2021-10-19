@@ -585,7 +585,6 @@ with the following steps:
 
 1. The Mediator verifies the response and proxies the response to the Client
 
-
 The Issuance protocol has a number of underlying cryptographic dependencies for
 operation:
 
