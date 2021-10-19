@@ -509,8 +509,8 @@ to identify a Client.
 Mediators must enforce that clients don't change their CLIENT_ID frequently, to ensure clients can't
 regularily evade the per-client policy as seen by the issuer. Mediators MUST not allow clients to
 change their CLIENT_ID more than once within a policy window, or in the subsequent policy window
-after a previous CLIENT_ID change. Alternatively, schemes where the mediator stores the encrypted
-(CLIENT_ID, CLIENT_SECRET) tuple on behalf of the client are possble, but not outlined here.
+after a previous CLIENT_ID change. Alternative schemes where the mediator stores the encrypted
+(CLIENT_ID, CLIENT_SECRET) tuple on behalf of the client are possble but not described here.
 
 Mediators are expected to know the ISSUER_POLICY_WINDOW for any ISSUER_NAME to which
 they allow access. This information can be retrieved using the URIs defined in {{setup}}.
