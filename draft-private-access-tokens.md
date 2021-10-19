@@ -467,7 +467,7 @@ Token issuance involves a Client, Mediator, and Issuer, with the following steps
 
 1. The Mediator verifies the response and proxies the response to the Client
 
-### Client State
+### Client State {#client-state}
 
 Issuance assumes the Client has the following information, derived from a given TokenChallenge:
 
@@ -479,9 +479,12 @@ Issuance assumes the Client has the following information, derived from a given 
   corresponding to the Issuer identified by TokenChallenge.issuer_name.
 
 Clients maintain a stable CLIENT_ID that they use for all communication with
-a specific Mediator. If this value changes, it will lead to token issuance
-failures until policy window passes. CLIENT_ID is a public key, where the
-corresponding private key CLIENT_SECRET is known only to the client.
+a specific Mediator. CLIENT_ID is a public key, where the corresponding private key
+CLIENT_SECRET is known only to the client.
+
+If the client loses this (CLIENT_ID, CLIENT_SECRET), they may generate a new tuple. The
+mediator will enforce if a client is allowed to use this new CLIENT_ID. See {{{#mediator-state}}}
+for details on this enforcement.
 
 Clients also need to be able to generate an ANON_ORIGIN_ID value that corresponds
 to the ORIGIN_NAME, to send in requests to the Mediator.
@@ -503,13 +506,19 @@ of identifying a Client is specific to each Mediator, and is not defined in this
 As examples, the Mediator could use device-specific certificates or account authentication
 to identify a Client.
 
+Mediators must enforce that clients don't change their CLIENT_ID frequently, to ensure clients can't
+regularily evade the per-client policy as seen by the issuer. Mediators MUST not allow clients to
+change their CLIENT_ID more than once within a policy window, or in the subsequent policy window
+after a previous CLIENT_ID change. Alternatively, schemes where the mediator stores the encrypted
+(CLIENT_ID, CLIENT_SECRET) tuple on behalf of the client are possble, but not outlined here.
+
 Mediators are expected to know the ISSUER_POLICY_WINDOW for any ISSUER_NAME to which
 they allow access. This information can be retrieved using the URIs defined in {{setup}}.
 
 For each Client-Issuer pair, a Mediator maintains a policy window
 start and end time for each Issuer from which a Client requests a token.
 
-For each tuple of (Client, ANON_ORIGIN_ID, policy window), the Mediator maintains the
+For each tuple of (CLIENT_ID, ANON_ORIGIN_ID, policy window), the Mediator maintains the
 following state:
 
 - A counter of successful tokens issued
@@ -682,6 +691,10 @@ ANON_ORIGIN_ID. See {{mediator-state}} for more details.
 If the Mediator has stored state that a previous request for this ANON_ORIGIN_ID was
 rejected by the Issuer in the current policy window, it SHOULD reject the request without
 forwarding it to the Issuer.
+
+If the Mediator detects this client has changed their CLIENT_ID more frequently than allowed
+as described in {{{#mediator-state}}}, it SHOULD reject the request without forwarding it to
+the Issuer.
 
 ### Mediator-to-Issuer Request {#request-two}
 
