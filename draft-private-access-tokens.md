@@ -1030,13 +1030,14 @@ on the information the Issuer knows, specifically the origin_name itself.
 Issuers and Mediators should be run by mutually distinct organizations to limit
 information sharing. A single entity running an issuer and mediator for a single redemption
 can view the origins being accessed by a given client. Running the issuer and mediator in
-this 'single issuer/mediator' fashion reduces the privacy promises to those of Privacy Pass.
-This may be desirable for a redemption flow that is limited to specific issuers and mediators,
-but should be avoided where hiding origins from the mediator is desirable.
+this 'single issuer/mediator' fashion reduces the privacy promises to those of the
+{{?I-D.ietf-privacypass-protocol}}. This may be desirable for a redemption flow that is
+limited to specific issuers and mediators, but should be avoided where hiding origins from
+the mediator is desirable.
 
 # Deployment Considerations {#deploy}
 
-# Origin Key Rollout
+## Origin Key Rollout
 
 Issuers SHOULD generate a new (ORIGIN_TOKEN_KEY, ORIGIN_SECRET) regularly, and
 SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED
@@ -1046,6 +1047,25 @@ prefix of SHA256(ORIGIN_TOKEN_KEY) is different from all other `token_key_id`
 values for that origin currently in rotation. One way to ensure this uniqueness
 is via rejection sampling.
 
+# Related Work
+
+## Privacy Pass
+
+Private Access Tokens have significant overlap to the existing {{?I-D.ietf-privacypass-protocol}}.
+They both allow clients to redeem signed tokens while hiding the client identity from the signer.
+
+Private Access Tokens introduces policies per origin. This makes it possible for policies to differ
+across origins. For example a metered paywall might allow a few visits per day for one origin, and a
+few per month for another. This is made possible with ANON_CLIENT_ID provided to the issuer during
+token issuance, which acts as an anonymous but stable client identifier for a policy window.
+
+Private Access Tokens use the publically verifiable {{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}} 
+scheme to ensure origins accessed by clients are hidden from the mediator and to speed up token 
+verification at the origin avoiding a round trip to the issuer/mediator.
+
+Private Access Tokens employ an online challenge ( {{challenge}} ) during token redemption.
+This ensures tokens cannot be harvested and stored for use later. This also removes the need for
+employing token expiry techniques, such as frequent signer rotation or expiry-encoded public metadata.
 
 # IANA Considerations {#iana}
 
