@@ -86,6 +86,8 @@ between the parties involved in the issuance and the redemption protocols, it is
 possible to eliminate this information concentration without any functional
 regressions. This document describes such a protocol.
 
+The relationship of this work to Privacy Pass ({{?I-D.ietf-privacypass-protocol}})
+is discussed in {{privacy-pass}}.
 
 ## Motivation
 
@@ -1205,9 +1207,9 @@ Issuers and Mediators should be run by mutually distinct organizations to limit
 information sharing. A single entity running an issuer and mediator for a single redemption
 can view the origins being accessed by a given client. Running the issuer and mediator in
 this 'single issuer/mediator' fashion reduces the privacy promises to those of the
-{{?I-D.ietf-privacypass-protocol}}. This may be desirable for a redemption flow that is
-limited to specific issuers and mediators, but should be avoided where hiding origins from
-the mediator is desirable.
+{{?I-D.ietf-privacypass-protocol}}; see {{privacy-pass}} for more discussion. This may be
+desirable for a redemption flow that is limited to specific issuers and mediators,
+but should be avoided where hiding origins from the mediator is desirable.
 
 # Deployment Considerations {#deploy}
 
@@ -1221,26 +1223,6 @@ prefix of SHA256(ORIGIN_TOKEN_KEY)) is different from all other `token_key_id`
 values for that origin currently in rotation. One way to ensure this uniqueness
 is via rejection sampling, where a new key is generated until its `token_key_id` is
 unique among all currently in rotation for the origin.
-
-# Related Work
-
-## Privacy Pass
-
-Private Access Tokens have significant overlap to the existing {{?I-D.ietf-privacypass-protocol}}.
-They both allow clients to redeem signed tokens while hiding the client identity from the signer.
-
-Private Access Tokens introduces policies per origin. This makes it possible for policies to differ
-across origins. For example a metered paywall might allow a few visits per day for one origin, and a
-few per month for another. This is made possible with ANON_CLIENT_ID provided to the issuer during
-token issuance, which acts as an anonymous but stable client identifier for a policy window.
-
-Private Access Tokens use the publically verifiable {{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}} 
-scheme to ensure origins accessed by clients are hidden from the mediator and to speed up token 
-verification at the origin avoiding a round trip to the issuer/mediator.
-
-Private Access Tokens employ an online challenge ( {{challenge}} ) during token redemption.
-This ensures tokens cannot be harvested and stored for use later. This also removes the need for
-employing token expiry techniques, such as frequent signer rotation or expiry-encoded public metadata.
 
 # IANA Considerations {#iana}
 
@@ -1426,3 +1408,27 @@ Change controller:
 : IESG
 
 --- back
+
+# Related Work: Privacy Pass {#privacy-pass}
+
+Private Access Tokens has many similarities to the existing Privacy Pass protocol
+({{?I-D.ietf-privacypass-protocol}}). Both protocols allow clients to redeem signed
+tokens while not allowing linking between token issuance and token redemption.
+
+There are several important differences between the protocols, however:
+
+- Private Access Tokens uses per-origins tokens that support rate-limiting policies. Each
+token can only be used with a specific origin in accordance with a policy defined for that
+origin. This allows origins to implement metered paywalls or fraud-prevention mechanisms
+that that limit the actions a single client can perform. Per-origin tokens also ensure
+that one origin cannot consume all of a client's tokens, so there is less need for
+clients to manage when they are willing to present tokens to origins.
+
+- Private Access Tokens employ an online challenge ({{challenge}}) during token redemption.
+This ensures that tokens cannot be harvested and stored for use later. This also removes
+the need for preventing double spending or employing token expiry techniques, such as
+frequent signer rotation or expiry-encoded public metadata.
+
+- Private Access Tokens use a publically verifiable signature
+{{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}} to optimize token 
+verification at the origin by avoiding a round trip to the issuer/mediator.
