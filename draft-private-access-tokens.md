@@ -86,6 +86,8 @@ between the parties involved in the issuance and the redemption protocols, it is
 possible to eliminate this information concentration without any functional
 regressions. This document describes such a protocol.
 
+The relationship of this work to Privacy Pass ({{?I-D.ietf-privacypass-protocol}})
+is discussed in {{privacy-pass}}.
 
 ## Motivation
 
@@ -1204,13 +1206,14 @@ on the information the Issuer knows, specifically the origin_name itself.
 Issuers and Mediators should be run by mutually distinct organizations to limit
 information sharing. A single entity running an issuer and mediator for a single redemption
 can view the origins being accessed by a given client. Running the issuer and mediator in
-this 'single issuer/mediator' fashion reduces the privacy promises to those of Privacy Pass.
-This may be desirable for a redemption flow that is limited to specific issuers and mediators,
+this 'single issuer/mediator' fashion reduces the privacy promises to those of the
+{{?I-D.ietf-privacypass-protocol}}; see {{privacy-pass}} for more discussion. This may be
+desirable for a redemption flow that is limited to specific issuers and mediators,
 but should be avoided where hiding origins from the mediator is desirable.
 
 # Deployment Considerations {#deploy}
 
-# Origin Key Rollout
+## Origin Key Rollout
 
 Issuers SHOULD generate a new (ORIGIN_TOKEN_KEY, ORIGIN_SECRET) regularly, and
 SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED
@@ -1220,7 +1223,6 @@ prefix of SHA256(ORIGIN_TOKEN_KEY)) is different from all other `token_key_id`
 values for that origin currently in rotation. One way to ensure this uniqueness
 is via rejection sampling, where a new key is generated until its `token_key_id` is
 unique among all currently in rotation for the origin.
-
 
 # IANA Considerations {#iana}
 
@@ -1406,3 +1408,27 @@ Change controller:
 : IESG
 
 --- back
+
+# Related Work: Privacy Pass {#privacy-pass}
+
+Private Access Tokens has many similarities to the existing Privacy Pass protocol
+({{?I-D.ietf-privacypass-protocol}}). Both protocols allow clients to redeem signed
+tokens while not allowing linking between token issuance and token redemption.
+
+There are several important differences between the protocols, however:
+
+- Private Access Tokens uses per-origin tokens that support rate-limiting policies. Each
+token can only be used with a specific origin in accordance with a policy defined for that
+origin. This allows origins to implement metered paywalls or mechanisms that that limit the
+actions a single client can perform. Per-origin tokens also ensure that one origin cannot
+consume all of a client's tokens, so there is less need for clients to manage when they are
+willing to present tokens to origins.
+
+- Private Access Tokens employ an online challenge ({{challenge}}) during token redemption.
+This ensures that tokens cannot be harvested and stored for use later. This also removes
+the need for preventing double spending or employing token expiry techniques, such as
+frequent signer rotation or expiry-encoded public metadata.
+
+- Private Access Tokens use a publically verifiable signature
+{{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}} to optimize token
+verification at the origin by avoiding a round trip to the issuer/mediator.
