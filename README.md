@@ -2,18 +2,6 @@
 
 This repository collects various specifications and Internet drafts that will be supported by privacy proxies.
 
-## QUIC-Aware Proxying Using CONNECT-UDP
-
-[Repository](https://github.com/tfpauly/quic-proxy/)
-
-* [Editor's Copy](https://tfpauly.github.io/quic-proxy/#go.draft-pauly-masque-quic-proxy.html)
-* [Individual Draft](https://tools.ietf.org/html/draft-pauly-masque-quic-proxy)
-* [Compare Editor's Copy to Individual Draft](https://tfpauly.github.io/quic-proxy/#go.draft-pauly-masque-quic-proxy.diff)
-
-## The Privacy Token HTTP Authentication Scheme
-
-* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-privacy-token.html)
-
 ## Private Access Tokens
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-private-access-tokens.html)
@@ -22,17 +10,13 @@ This repository collects various specifications and Internet drafts that will be
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geohash-hint.html)
 
+## The Privacy Token HTTP Authentication Scheme
+
+* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-privacy-token.html)
+
 ## HTTP Header Fields for Proxied SVCB Metadata
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-proxied-svcb-headers.html)
-
-## Oblivious DNS Over HTTPS
-
-[Repository](https://github.com/tfpauly/draft-pauly-adaptive-dns-privacy)
-
-* [Editor's Copy](https://tfpauly.github.io/draft-pauly-adaptive-dns-privacy/#go.draft-pauly-dprive-oblivious-doh.html)
-* [Individual Draft](https://tools.ietf.org/html/draft-pauly-dprive-oblivious-doh)
-* [Compare Editor's Copy to Individual Draft](https://tfpauly.github.io/draft-pauly-adaptive-dns-privacy/#go.draft-pauly-dprive-oblivious-doh.diff)
 
 ## Building the Drafts
 
