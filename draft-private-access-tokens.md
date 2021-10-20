@@ -1419,8 +1419,8 @@ There are several important differences between the protocols, however:
 
 - Private Access Tokens uses per-origin tokens that support rate-limiting policies. Each
 token can only be used with a specific origin in accordance with a policy defined for that
-origin. This allows origins to implement metered paywalls or mechanisms that that limit the 
-actions a single client can perform. Per-origin tokens also ensure that one origin cannot 
+origin. This allows origins to implement metered paywalls or mechanisms that that limit the
+actions a single client can perform. Per-origin tokens also ensure that one origin cannot
 consume all of a client's tokens, so there is less need for clients to manage when they are
 willing to present tokens to origins.
 
@@ -1430,5 +1430,5 @@ the need for preventing double spending or employing token expiry techniques, su
 frequent signer rotation or expiry-encoded public metadata.
 
 - Private Access Tokens use a publically verifiable signature
-{{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}} to optimize token 
+{{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}} to optimize token
 verification at the origin by avoiding a round trip to the issuer/mediator.
