@@ -646,8 +646,8 @@ of identifying a Client is specific to each Mediator, and is not defined in this
 As examples, the Mediator could use device-specific certificates or account authentication
 to identify a Client.
 
-Mediators must enforce that clients don't change their CLIENT_ID frequently, to ensure clients can't
-regularily evade the per-client policy as seen by the issuer. Mediators MUST not allow clients to
+Mediators must enforce that Clients don't change their CLIENT_ID frequently, to ensure Clients can't
+regularily evade the per-client policy as seen by the issuer. Mediators MUST NOT allow Clients to
 change their CLIENT_ID more than once within a policy window, or in the subsequent policy window
 after a previous CLIENT_ID change. Alternative schemes where the mediator stores the encrypted
 (CLIENT_ID, CLIENT_SECRET) tuple on behalf of the client are possble but not described here.
@@ -838,7 +838,7 @@ If the Mediator has stored state that a previous request for this ANON_ORIGIN_ID
 rejected by the Issuer in the current policy window, it SHOULD reject the request without
 forwarding it to the Issuer.
 
-If the Mediator detects this client has changed their CLIENT_ID more frequently than allowed
+If the Mediator detects this Client has changed their CLIENT_ID more frequently than allowed
 as described in {{{#mediator-state}}}, it SHOULD reject the request without forwarding it to
 the Issuer.
 
