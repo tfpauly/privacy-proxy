@@ -71,28 +71,23 @@ using a proxy service or a VPN. However, doing so severely limits the client's
 ability to access services and content, since servers might not be able to
 enforce their policies without a stable and unique client identifier.
 
-This document describes an architecture that uses Private Access Tokens, using
-RSA Blind Signatures as defined in
+This document describes an architecture for Private Access Tokens (PATs),
+using RSA Blind Signatures as defined in
 {{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}}, as an explicit replacement for
 these passive client identifiers. These tokens are privately issued to clients
 upon request and then redeemed by servers in such a way that the issuance and
 redemption events for a given token are unlinkable.
 
-At first glance, using Private Access Tokens in lieu of passive identifiers for
-policy enforcement suggests that some entity needs to know both the client's
-identity and the server's policy, and such an entity would be trivially able to
-track a client and its activities. However, with appropriate mediation and
-separation between the parties involved in the issuance and the redemption
-protocols, it is possible to eliminate this information concentration without
-any functional regressions. This document describes such a protocol.
+At first glance, using PATs in lieu of passive identifiers for policy
+enforcement suggests that some entity needs to know both the client's identity
+and the server's policy, and such an entity would be trivially able to track a
+client and its activities. However, with appropriate mediation and separation
+between the parties involved in the issuance and the redemption protocols, it is
+possible to eliminate this information concentration without any functional
+regressions. This document describes such a protocol.
 
 
-## Requirements
-
-{::boilerplate bcp14}
-
-
-# Motivation
+## Motivation
 
 This section describes classes of use cases where an origin would traditionally
 use a stable and unique client identifier for enforcing attribute-based
@@ -101,7 +96,7 @@ alternative for origins to continue enforcing their policies. Using the Privacy
 Address Token architecture for addressing these use cases is described in
 {{examples}}.
 
-## Rate-limited Access {#use-case-rate-limit}
+### Rate-limited Access {#use-case-rate-limit}
 
 An origin provides rate-limited access to content to a client over a fixed
 period of time. The origin does not need to know the client's identity, but
@@ -122,8 +117,7 @@ when a client exceeds a set rate limit.
 
 Origins routinely use client IP addresses for this purpose.
 
-
-## Client Geo-Location {#use-case-geolocation}
+### Client Geo-Location {#use-case-geolocation}
 
 An origin provides access to or customizes content based on the geo-location of
 the client. The origin does not need to know the client's identity, but needs to
@@ -134,8 +128,7 @@ the available content it can serve based on the client's geographical region.
 
 Origins almost exclusively use client IP addresses for this purpose.
 
-
-## Private Client Authentication {#use-case-authentication}
+### Private Client Authentication {#use-case-authentication}
 
 An origin provides access to content for clients that have been authorized by a
 delegated or known mediator. The origin does not need to know the client's
@@ -152,59 +145,179 @@ origins could then track the client's federator user ID or the client's IP
 address across accesses.
 
 
-# Overview
+## Architecture
 
-The architecture and protocol involves the following four entities:
+At a high level, the PAT architecture seeks to solve the following problem: in
+the absence of a stable Client identifier, an Origin needs to verify a
+connecting Client's identity and enforce access policies for the incoming
+Client. To accomplish this, the PAT architecture employs four functional
+components:
 
-1. Client: requests a Private Access Token from an Issuer and presents it to a
-   Origin for access to the Origin's service.
+1. Client: requests a PAT from an Issuer and presents it to a Origin for access
+   to the Origin's service.
 
 1. Mediator: authenticates a Client, using information such as its IP address,
-   an account name, or a device identifier. Anonymizes the Client and relays
-   information between the anonymized Client and an Issuer.
+   an account name, or a device identifier. Anonymizes a Client to an Issuer and
+   relays information between an anonymized Client and an Issuer.
 
-1. Issuer: issues Private Access Tokens to an anonymized Client on behalf of a
-   Origin. Enforces the Origin's policy.
+1. Issuer: issues PATs to an anonymized Client on behalf of an
+   Origin. Anonymizes an Origin to a Mediator and enforces the Origin's policy.
 
-1. Origin: verifies any Private Access Token sent by a Client and enables
-   access to content or services to the Client upon verification.
+1. Origin: directs a Client to an Issuer with a challenge and enables access to
+   content or services to the Client upon verification of any PAT sent in
+   response by the Client.
+
+In the PAT architecture, these four components interact as follows.
+
+An Origin designates a trusted Issuer to issue tokens for it. The Origin then
+redirects any incoming Clients to the Issuer for policy enforcement, expecting
+the Client to return with a proof from the Issuer that the Origin's policy has
+been enforced for this Client.
+
+The Client employs a trusted Mediator through which it communicates with the
+Issuer for this proof. The Mediator performs three important functions:
+
+- authenticate and associate the Client with a stable identifier;
+
+- maintain issuance state for the Client and relay it to the Issuer; and
+
+- anonymize the Client and mediate communication between the Client and the
+  Issuer.
+
+When a Mediator-anonymized Client requests a token from an Issuer, the Issuer
+enforces the Origin's policies based on the received Client issuance state and
+Origin policy. Issuers know the Origin's policies and enforce them on behalf of the
+Origin. An example policy is: "Limit 10 accesses per Client".  More examples and
+their use cases are discussed in {{examples}}. The Issuer does not learn the
+Client's true identity.
+
+Finally, the Origin provides access to content or services to a Client upon
+verifying a PAT presented by the Client. Verification of this
+token serves as proof that the Client meets the Origin's policies as enforced by
+the delegated Issuer with the help of a Mediator. The Origin can then provide
+any services or content gated behind these policies to the Client.
+
+{{fig-overview}} shows the components of the PAT architecture described in this
+document. Protocol details follow in {{challenge-redemption}} and {{issuance}}.
+
+~~~
+ Client        Mediator          Issuer          Origin
+
+    <---------------------------------------- Challenge \
+                                                        |
++--------------------------------------------\          |
+| TokenRequest --->                          |          |
+|             (validate)                     |          |
+|             (attach state)                 |          |
+|                    TokenRequest --->       |          |    PAT
+|                                 (validate) |   PAT    | Challenge/
+|                                 (evaluate) | Issuance |  Response
+|                    <--- TokenResponse      |   Flow   |   Flow
+|             (evaluate)                     |          |
+|             (update state)                 |          |
+|   <--- TokenResponse                       |          |
+---------------------------------------------/          |
+                                                        |
+     Response -------------------------------------- >  /
+~~~
+{: #fig-overview title=" PAT Architectural Components"}
 
 
-The entities have the following properties:
+## Properties and Requirements {#properties}
 
-1. A Mediator enforces and maintains a mapping between Client identifiers and
-   Client-anonymized Origin identifiers;
+In this architecture, the Mediator, Issuer, and Origin each have partial
+knowledge of the Client's identity and actions, and each entity only knows
+enough to serve its function (see {{terms}} for more about the pieces of
+information):
 
-1. An Issuer enforces the Origin's policies based on the received
-   Mediator-anonymized Client identifier and Origin identifier, without
-   learning the Client's true identity; and
+- The Mediator knows the Client's identity and learns the Client's public key
+  (CLIENT_KEY), the Issuer being targeted (ISSUER_NAME), the period of time
+  for which the Issuer's policy is valid (ISSUER_POLICY_WINDOW), and the number
+  of tokens issued to a given Client for the claimed Origin in the given policy
+  window.  The Mediator does not know the identity of the Origin the Client is
+  trying to access (ORIGIN_ID), but knows a Client-anonymized identifier for
+  it (ANON_ORIGIN_ID).
 
-1. An Origin provides access to content or services to a Client upon verifying
-   the Client's Private Access Token, since the verification demonstrates that
-   the Client access meets the Origin's policies.
+- The Issuer knows the Origin's secret (ORIGIN_SECRET) and policy about client
+  access, and learns the Origin's identity (ORIGIN_NAME) and the number of
+  previous tokens issued to the Client (as communicated by the Mediator) during
+  issuance. The Issuer does not learn the Client's identity.
 
+- The Origin knows the Issuer to which it will delegate an incoming Client
+  (ISSUER_NAME), and can verify that any tokens presented by the Client were
+  signed by the Issuer. The Origin does not learn which Mediator was used by a
+  Client for issuance.
 
-The Mediator, Issuer, and Origin each have partial knowledge of the Client's
-identity and actions, and each entity only knows enough to serve its
-function. The pieces of information are identified in {{terms}}.
+Since an Issuer enforces policies on behalf of Origins, a Client is required to
+reveal the Origin's identity to the delegated Issuer. It is a requirement of
+this architecture that the Mediator not learn the Origin's identity so that,
+despite knowing the Client's identity, a Mediator cannot track and concentrate
+information about Client activity.
 
-The Mediator knows the Client's identity, the Issuer being targeted
-(ISSUER_NAME), and the period of time for which the Issuer's policy is valid
-(ISSUER_POLICY_WINDOW). The Mediator does not know the identity of the Origin
-the Client is trying to access (ORIGIN_NAME), but knows a Client-anonymized
-identifier for it (ANON_ORIGIN_ID).
+An Issuer expects a Mediator to verify its Clients' identities correctly, but an
+Issuer cannot confirm a Mediator's efficacy or the Mediator-Client relationship
+directly without learning the Client's identity. Similarly, an Origin does not
+know the Mediator's identity, but ultimately relies on the Mediator to correctly
+verify or authenticate a Client for the Origin's policies to be correctly
+enforced. An Issuer therefore chooses to issue tokens to only known and
+reputable Mediators; the Issuer can employ its own methods to determine the
+reputation of a Mediator.
 
-The Issuer knows the Origin's identity (ORIGIN_NAME), and the Origin's policy
-about client access, but only sees the number of previous tokens issued to a
-Client (as communicated by the Mediator), not the Client idenitity. Issuers
-know the Origin's policies and enforce them on behalf of the Origin. An
-example policy is: "Limit 10 accesses per Client". More examples and their use
-cases are discussed in {{examples}}.
+A Mediator is expected to employ a stable Client identifier, such as an IP
+address, a device identifier, or an account at the Mediator, that can serve as a
+reasonable proxy for a user with some creation and maintenance cost on the user.
 
-The Origin receives a Private Access Token from the client. Verification of
-this token demonstrates to the Origin that the Client meets its policies
-(since they were enforced by the Issuer before issuing this token), and then
-provides the services or content gated behind these policies.
+For the Issuance protocol, a Client is expected to create and maintain stable
+and explicit secrets for time periods that are on the scale of Issuer policy
+windows. Changing these secrets arbitrarily during a policy window can result in
+token issuance failure for the rest of the policy window; see {{client-state}}
+for more details. A Client can use a service offered by its Mediator or a
+third-party to store these secrets, but it is a requirement of the PAT
+architecture that the Mediator not be able to learn these secrets.
+
+## Client Identity
+
+The PAT architecture does not enforce strong constraints around the definition
+of a Client identity and allows it to be defined entirely by a Mediator. If a
+user can create an arbitrary number of Client identities that are accepted by
+one or more Mediators, a malicious user can easily abuse the system to
+defeat the Issuer's ability to enforce per-Client policies.
+
+These multiple identities could be fake or true identities.
+
+A Mediator alone is responsible for detecting and weeding out fake Client
+identities in the PAT architecture. An Issuer relies on a Mediator's reputation;
+as explained in {{properties}}, the correctness of the architecture hinges on
+Issuers issuing tokens to only known and reputable Mediators.
+
+Users have multiple true identities on the Internet however, and as a result, it
+seems possible for a user to abuse the system without having to create
+fake identities. For instance, a user could use multiple Mediators,
+authenticating with each one using a different true identity.
+
+The PAT architecture offers no panacea against this potential abuse.  We note
+however that the usages of PATs will cause the ecosystem to evolve and offer
+practical mitigations, such as:
+
+- An Issuer can learn the properties of a Mediator - specifically, which stable
+  Client identifier is authenticated by the Mediator - to determine whether the
+  Mediator is acceptable for an Origin.
+
+- An Origin can choose an Issuer based on the types of Mediators accepted by the
+  Issuer, or the Origin can communicate its constraints to the designated
+  Issuer.
+
+- An Origin can direct a user to a specific Issuer based on client properties
+  that are visible. For instance, properties that are observable in the HTTP
+  User Agent string.
+
+- The number of true Mediator-authenticated identities for a user is expected to
+  be small, and therefore likely to be small enough to not matter for certain
+  use cases. For instance, when PATs are used to prevent fraud by rate limiting
+  Clients (as described in {{use-case-rate-limit}}), an Origin might be tolerant
+  of the potential amplification caused by an attacking user's access to
+  multiple true identities with Issuer-trusted Mediators.
+
 
 ## User Interaction
 
@@ -237,7 +350,10 @@ that the server is not functioning correctly, or is trying to attack or overload
 the client or issuance servers. In such cases, the client SHOULD ignore
 redundant token challengers, or else alert the user.
 
-## Notation and Terminology {#terms}
+
+# Notation and Terminology {#terms}
+
+{::boilerplate bcp14}
 
 Unless said otherwise, this document encodes protocol messages in TLS notation
 from {{!TLS13=RFC8446}}, Section 3.
@@ -282,12 +398,12 @@ Mediator, which represents a specific Origin anonymously. The Client generates
 a stable ANON_ORIGIN_ID for each ORIGIN_NAME, to allow the Mediator to count
 token access without learning the ORIGIN_NAME.
 
-CLIENT_ID:
-: A public key identifier chosen by the Client and shared only with the Mediator.
+CLIENT_KEY:
+: A public key chosen by the Client and shared only with the Mediator.
 
 CLIENT_SECRET:
-: The secret key used by the Client during token issuance, whose public key is
-shared with the Mediator.
+: The secret key used by the Client during token issuance, whose public key
+(CLIENT_KEY) is shared with the Mediator.
 
 ORIGIN_SECRET:
 : The secret key used by the Issuer during token issuance, whose public key is
@@ -296,6 +412,7 @@ not shared with anyone.
 ANON_ISSUER_ORIGIN_ID:
 : An identifier that is generated by Issuer based on an ORIGIN_SECRET that is
 per-Client and per-Origin. See {{response-two}} for details of derivation.
+
 
 # API Endpoints {#setup}
 
@@ -324,26 +441,23 @@ For example, an Issuer URL might be https://issuer.net/access-token-request.
 Mediators advertise a URL for proxying protocol messages to Issuers. For example,
 a Mediator URL might be https://mediator.net/relay-access-token-request.
 
-# Protocol
+# Token Challenge and Redemption Protocol {#challenge-redemption}
 
-Private Access Tokens are single-use tokens cryptographically bound to
-policies. Origins request tokens from Clients, who then engage with
-Mediators and Issuers to private compute policy-compliant tokens and
-reveal them to the Origin. Example policies and use cases that system
-addresses are described in {{examples}}.
-
-The rest of this section describes this interactive protocol in terms of
-the token challenge and redemption flow ({{scheme}}) and corresponding token
-issuance flow ({{issuance}}).
-
-## Token Challenge and Redemption {#scheme}
+This section describes the interactive protocol for the token challenge
+and redemption flow between a Client and an Origin.
 
 Token redemption is performed using HTTP Authentication ({{!RFC7235}}), with
 the scheme "PrivateAccessToken". Origins challenge Clients to present a unique,
 single-use token from a specific Issuer. Once a Client has received a token
 from that Issuer, it presents the token to the Origin.
 
-### Token Challenge {#challenge}
+Token redemption only requires Origins to verify token signatures computed
+using the Blind Signature protocol from {{!BLINDSIG}}. Origins are not required
+to implement the complete Blind Signature protocol. (In contrast, token issuance
+requires Clients and Issuers to implement the Blind Signature protocol, as
+described in {{issuance}}.)
+
+## Token Challenge {#challenge}
 
 Origins send a token challenge to Clients in an "WWW-Authenticate" header with
 the "PrivateAccessToken" scheme. This challenge includes a TokenChallenge message,
@@ -392,7 +506,8 @@ Origins MAY also include the standard "realm" attribute, if desired.
 As an example, the WWW-Authenticate header could look like this:
 
 ~~~
-WWW-Authenticate: PrivateAccessToken challenge=abc... token-key=123... issuer-key=456...
+WWW-Authenticate: PrivateAccessToken challenge=abc... token-key=123...
+issuer-key=456...
 ~~~
 
 Upon receipt of this challenge, a Client uses the message and keys in the Issuance protocol
@@ -401,7 +516,7 @@ does not recognize or support, it MUST NOT parse or respond to the challenge.
 This document defines version 1, which indicates use of private tokens based on
 RSA Blind Signatures {{BLINDSIG}}, and determines the rest of the structure contents.
 
-### Token Redemption
+## Token Redemption {#redemption}
 
 The output of the issuance protocol is a token that corresponds to the Origin's challenge (see {{challenge}}).
 A token is a structure that begins with a single byte that indicates a version, which
@@ -455,9 +570,12 @@ response.
 
 [[OPEN ISSUE: use generic advice here]]
 
-## Issuance {#issuance}
 
-Token issuance involves a Client, Mediator, and Issuer, with the following steps:
+# Issuance Protocol {#issuance}
+
+This section describes the Issuance protocol for a Client to request and receive
+a token from an Issuer. Token issuance involves a Client, Mediator, and Issuer,
+with the following steps:
 
 1. The Client sends a token request to the Mediator, encrypted using an Issuer-specific key
 
@@ -467,9 +585,30 @@ Token issuance involves a Client, Mediator, and Issuer, with the following steps
 
 1. The Mediator verifies the response and proxies the response to the Client
 
-### Client State
+The Issuance protocol has a number of underlying cryptographic dependencies for
+operation:
 
-Issuance assumes the Client has the following information, derived from a given TokenChallenge:
+- {{HPKE}}, for encrypting information in transit between Client and Issuer across the Mediator.
+
+- RSA Blind Signatures {{BLINDSIG}}, for issuing and constructing Tokens as described in {{redemption}}.
+
+- Prime Order Groups (POGs), for computing stable mappings between (Client, Origin) pairs. This
+  document uses notation described in {{!VOPRF=I-D.irtf-cfrg-voprf, Section 2.1}}, and, in particular,
+  the functions RandomScalar(), Generator(), SerializeScalar(), SerializeElement(), and HashToScalar().
+
+- Non-Interactive proof-of-knowledge (POK), as described in {{nizk-dl}}, for verifying correctness of Client requests.
+
+Clients and Issuers are required to implement all of these dependencies, whereas Mediators are required
+to implement POG and POK support.
+
+## State Requirements
+
+The Issuance protocol requires each participating endpoint to maintain some
+necessary state, as described in this section.
+
+### Client State {#client-state}
+
+A Client is required to have the following information, derived from a given TokenChallenge:
 
 - Origin name (ORIGIN_NAME), a URI referring to the Origin {{!RFC6454}}. This is
   the value of TokenChallenge.origin_name.
@@ -479,9 +618,13 @@ Issuance assumes the Client has the following information, derived from a given 
   corresponding to the Issuer identified by TokenChallenge.issuer_name.
 
 Clients maintain a stable CLIENT_ID that they use for all communication with
-a specific Mediator. If this value changes, it will lead to token issuance
-failures until policy window passes. CLIENT_ID is a public key, where the
-corresponding private key CLIENT_SECRET is known only to the client.
+a specific Mediator. CLIENT_ID is a public key, where the corresponding private key
+CLIENT_SECRET is known only to the client.
+
+If the client loses this (CLIENT_ID, CLIENT_SECRET), they may generate a new tuple. The
+mediator will enforce if a client is allowed to use this new CLIENT_ID. See {{{#mediator-state}}}
+for details on this enforcement.
+
 
 Clients also need to be able to generate an ANON_ORIGIN_ID value that corresponds
 to the ORIGIN_NAME, to send in requests to the Mediator.
@@ -498,10 +641,16 @@ e.g., ANON_ORIGIN_ID = HKDF(secret=CLIENT_SECRET, salt="", info=ORIGIN_NAME).
 
 ### Mediator State {#mediator-state}
 
-Issuance requires Mediators to maintain state for each Client. The mechanism
+A Mediator is required to maintain state for every authenticated Client. The mechanism
 of identifying a Client is specific to each Mediator, and is not defined in this document.
 As examples, the Mediator could use device-specific certificates or account authentication
 to identify a Client.
+
+Mediators must enforce that Clients don't change their CLIENT_ID frequently, to ensure Clients can't
+regularily evade the per-client policy as seen by the issuer. Mediators MUST NOT allow Clients to
+change their CLIENT_ID more than once within a policy window, or in the subsequent policy window
+after a previous CLIENT_ID change. Alternative schemes where the mediator stores the encrypted
+(CLIENT_ID, CLIENT_SECRET) tuple on behalf of the client are possble but not described here.
 
 Mediators are expected to know the ISSUER_POLICY_WINDOW for any ISSUER_NAME to which
 they allow access. This information can be retrieved using the URIs defined in {{setup}}.
@@ -509,7 +658,7 @@ they allow access. This information can be retrieved using the URIs defined in {
 For each Client-Issuer pair, a Mediator maintains a policy window
 start and end time for each Issuer from which a Client requests a token.
 
-For each tuple of (Client, ANON_ORIGIN_ID, policy window), the Mediator maintains the
+For each tuple of (CLIENT_ID, ANON_ORIGIN_ID, policy window), the Mediator maintains the
 following state:
 
 - A counter of successful tokens issued
@@ -531,9 +680,9 @@ private key, for each ORIGIN_NAME that is served by the Issuer. Origins SHOULD u
 their view of the ORIGIN_TOKEN_KEY regularly to ensure that Client requests do not fail
 after ORIGIN_TOKEN_KEY rotation.
 
-### Issuance HTTP Headers
+## Issuance HTTP Headers
 
-The issuance protocol defines four new HTTP headers that are used in requests
+The Issuance protocol defines four new HTTP headers that are used in requests
 and responses between Clients, Mediators, and Issuers (see {{iana-headers}}).
 
 The "Sec-Token-Origin" is an Item Structured Header {{!RFC8941}}. Its
@@ -547,7 +696,7 @@ Its ABNF is:
 
 The "Sec-Token-Client" is an Item Structured Header {{!RFC8941}}. Its
 value MUST be a Byte Sequence. This header is sent on Client-to-Mediator
-requests ({{request-one}}), and contains the bytes of CLIENT_ID.
+requests ({{request-one}}), and contains the bytes of CLIENT_KEY.
 Its ABNF is:
 
 ~~~
@@ -572,11 +721,12 @@ Client has previously received a token for an Origin. Its ABNF is:
     Sec-Token-Count = sf-integer
 ~~~
 
-### Client-to-Mediator Request {#request-one}
+## Client-to-Mediator Request {#request-one}
 
-Issuance assumes that the Client and Mediator have a secure and
-Mediator-authenticated HTTPS connection. See {{sec-considerations}} for additional
-about this channel.
+The Client and Mediator MUST use a secure and Mediator-authenticated HTTPS
+connection. They MAY use mutual authentication or mechanisms such as TLS
+certificate pinning, to mitigate the risk of channel compromise; see
+{{sec-considerations}} for additional about this channel.
 
 Issuance begins by Clients hashing the TokenChallenge to produce a token input
 as message = SHA256(challenge), and then blinding message as follows:
@@ -588,14 +738,19 @@ blinded_req, blind_inv = rsabssa_blind(ORIGIN_TOKEN_KEY, message)
 The Client MUST use a randomized variant of RSABSSA in producing this signature with
 a salt length of at least 32 bytes.
 
-The Client uses CLIENT_SECRET to generate "mapping_nonce", "mapping_key",
-"mapping_generator", and "mapping_proof".
+The Client uses CLIENT_SECRET to generate proof of its request.
 
 ~~~
 blind = RandomScalar()
 blind_key = blind * CLIENT_SECRET
 blind_generator = blind * Generator()
 key_proof = SchnorrProof(CLIENT_SECRET, blind_key, blind_generator)
+~~~
+
+The Client then transforms this proof into "mapping_nonce", "mapping_key", "mapping_generator",
+and "mapping_proof".
+
+~~~
 mapping_nonce = SerializeScalar(blind)
 mapping_key = SerializeElement(blind_key)
 mapping_generator = SerializeElement(blind_generator)
@@ -640,7 +795,7 @@ calculated as described in {{encrypt-origin}}.
 The Client then generates an HTTP POST request to send through the Mediator to
 the Issuer, with the AccessTokenRequest as the body. The media type for this request
 is "message/access-token-request". The Client includes the "Sec-Token-Origin" header,
-whose value is ANON_ORIGIN_ID; the "Sec-Token-Client" header, whose value is CLIENT_ID; and
+whose value is ANON_ORIGIN_ID; the "Sec-Token-Client" header, whose value is CLIENT_KEY; and
 the "Sec-Token-Nonce" header, whose value is mapping_nonce. The Client sends this request
 to the Mediator's proxy URI. An example request is shown below, where Nk = 512.
 
@@ -654,7 +809,7 @@ cache-control = no-cache, no-store
 content-type = message/access-token-request
 content-length = 512
 sec-token-origin = ANON_ORIGIN_ID
-sec-token-client = CLIENT_ID
+sec-token-client = CLIENT_KEY
 sec-token-nonce = mapping_nonce
 
 <Bytes containing the AccessTokenRequest>
@@ -672,7 +827,7 @@ the Client. If the key does not match, the Mediator rejects the request with an 
 {{privacy-considerations}}.
 
 The Mediator finally checks to ensure that the AccessTokenRequest.mapping_proof is valid
-for the given CLIENT_ID; see {{nizk-dl}} for verification details. If the index is invalid,
+for the given CLIENT_KEY; see {{nizk-dl}} for verification details. If the index is invalid,
 the Mediator rejects the request with an HTTP 400 error.
 
 If the Mediator accepts the request, it will look up the state stored for this Client.
@@ -683,7 +838,17 @@ If the Mediator has stored state that a previous request for this ANON_ORIGIN_ID
 rejected by the Issuer in the current policy window, it SHOULD reject the request without
 forwarding it to the Issuer.
 
-### Mediator-to-Issuer Request {#request-two}
+If the Mediator detects this Client has changed their CLIENT_ID more frequently than allowed
+as described in {{{#mediator-state}}}, it SHOULD reject the request without forwarding it to
+the Issuer.
+
+## Mediator-to-Issuer Request {#request-two}
+
+The Mediator and the Issuer MUST use a secure and Issuer-authenticated HTTPS
+connection. Also, Issuers MUST authenticate Mediators, either via mutual
+TLS or another form of application-layer authentication. They MAY additionally use
+mechanisms such as TLS certificate pinning, to mitigate the risk of channel
+compromise; see {{sec-considerations}} for additional about this channel.
 
 Before copying and forwarding the Client's AccessTokenRequest request to the Issuer,
 the Mediator adds a header that includes the count of previous tokens as "Sec-Token-Count".
@@ -730,7 +895,7 @@ AccessTokenRequest.token_key_id, the Issuer MUST return an HTTP 401 error to Med
 forward the error to the client. The Mediator learns that the client's view of the Origin key
 was invalid in the process.
 
-### Issuer-to-Mediator Response {#response-one}
+## Issuer-to-Mediator Response {#response-one}
 
 If the Issuer is willing to give a token to the Client, the Issuer verifies the token request
 using "mapping_generator", "mapping_key", and "mapping_proof":
@@ -774,7 +939,7 @@ sec-token-origin = mapping_index
 <Bytes containing the blind_sig>
 ~~~
 
-### Mediator-to-Client Response {#response-two}
+## Mediator-to-Client Response {#response-two}
 
 Upon receipt of a successful response from the Issuer, the Mediator extracts the
 "Sec-Token-Origin" header, and uses the value to determine ANON_ISSUER_ORIGIN_ID.
@@ -805,9 +970,9 @@ sig = rsabssa_finalize(ORIGIN_TOKEN_KEY, nonce, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a Private Access Token as described in
-{{scheme}} using the token input message and output sig.
+{{challenge}} using the token input message and output sig.
 
-### Encrypting Origin Names {#encrypt-origin}
+## Encrypting Origin Names {#encrypt-origin}
 
 Given a `KeyConfig` (ISSUER_KEY), Clients produce encrypted_origin_name and authenticate
 all other contents of the AccessTokenRequest using the following values:
@@ -868,9 +1033,7 @@ enc, context = SetupBaseR(enc, skI, "AccessTokenRequest")
 origin_name, error = context.Open(aad, ct)
 ~~~
 
-### Non-Interactive Schnorr Proof of Knowledge {#nizk-dl}
-
-[[OPEN ISSUE: describe POG dependency and notation somewhere]]
+## Non-Interactive Schnorr Proof of Knowledge {#nizk-dl}
 
 Each Issuance request requires evaluation and verification of a Schnorr proof-of-knowledge.
 Given input secret "secret" and two elements, "base" and "target", generation of this
@@ -879,7 +1042,10 @@ proof (u, c, z), denoted SchnorrProof(secret, base, target), works as follows:
 ~~~
 r = RandomScalar()
 u = r * base
-c = HashToScalar(SerializeElement(base) || SerializeElement(target) || SerializeElement(mask))
+c = HashToScalar(SerializeElement(base) ||
+                 SerializeElement(target) ||
+                 SerializeElement(mask),
+                 dst = "PrivateAccessTokensProof")
 z = r + (c * secret)
 ~~~
 
@@ -893,16 +1059,22 @@ struct {
 } Proof;
 ~~~
 
+The size of this structure is Np = Ne + 2*Ns bytes.
+
 Verification of a proof (u, c, z), denoted SchnorrVerify(base, target, proof),
 works as follows:
 
 ~~~
-c = HashToScalar(SerializeElement(base) || SerializeElement(target) || SerializeElement(mask))
+c = HashToScalar(SerializeElement(base) ||
+                 SerializeElement(target) ||
+                 SerializeElement(mask),
+                 dst = "PrivateAccessTokensProof")
 expected_left = base * z
 expected_right = u + (target * c)
 ~~~
 
-The proof is considered valid if expected_left == expected_right.
+The proof is considered valid if expected_left is the same as expected_right.
+
 
 # Instantiating Uses Cases {#examples}
 
@@ -955,7 +1127,7 @@ This section discusses security considerations for the protocol.
 The HTTPS connection between Client and Mediator is minimally Mediator-authenticated. Mediators
 can also require Client authentication if they wish to restrict Private Access Token proxying
 to trusted or otherwise authenticated Clients. Absent some form of Client authentication, Mediators
-can use other per-Client information for the client identifier mapping, such as IP addressess.
+can use other per-Client information for the client identifier mapping, such as IP addresses.
 
 ## Denial of Service
 
@@ -966,11 +1138,13 @@ for Origins, e.g., at the underlying TLS layer.
 
 ## Channel Security
 
-An attacker that can act as an intermediate between Mediator and Issuer communication can
-influence or disrupt the ability for the Issuer to correctly rate-limit token issuance.
-All communication channels MUST use server-authenticated HTTPS. Where appropriate, e.g., between
-Clients and Mediators, connections MAY mutually authenticate both client and server, or use mechanisms
-such as TLS certificate pinning, to mitigate the risk of channel compromise.
+An attacker that can act as an intermediate between Mediator and Issuer
+communication can influence or disrupt the ability for the Issuer to correctly
+rate-limit token issuance.  All communication channels use server-authenticated
+HTTPS. Some connections, e.g., between a Mediator and an Issuer, require
+mutual authentication between both endpoints. Where appropriate, endpoints
+MAY use further enhancements such as TLS certificate pinning to mitigate
+the risk of channel compromise.
 
 An attacker that can intermediate the channel between Client and Origin can
 observe a TokenChallenge, and can view a Token being presented for authentication
@@ -1002,7 +1176,7 @@ in the given policy window.
 
 Private Access Tokens are defined in terms of a Client authenticating to an Origin, where
 the "origin" is used as defined in {{?RFC6454}}. In order to limit cross-origin correlation,
-Clients MUST verify that the origin_name presented in the TokenChallenge structure ({{scheme}})
+Clients MUST verify that the origin_name presented in the TokenChallenge structure ({{challenge}})
 matches the origin that is providing the HTTP authentication challenge, where the matching logic
 is defined for same-origin policies in {{?RFC6454}}. Clients MAY further limit which
 authentication challenges they are willing to respond to, for example by only accepting
@@ -1013,14 +1187,14 @@ challenges when the origin is a web site to which the user navigated.
 Client activity could be linked if an Origin and Issuer collude to have unique keys targeted
 at specific Clients or sets of Clients.
 
-To mitigate the risk of a targetted ISSUER_KEY, the Mediator can observe and validate
+To mitigate the risk of a targeted ISSUER_KEY, the Mediator can observe and validate
 the name_key_id presented by the Client to the Issuer. As described in {{issuance}}, Mediators
 MUST validate that the name_key_id in the Client's AccessTokenRequest matches a known public key
 for the Issuer. The Mediator needs to support key rotation, but ought to disallow very rapid key
 changes, which could indicate that an Origin is colluding with an Issuer to try to rotate the key
 for each new Client in order to link the client activity.
 
-To mitigate the risk of a targetted ORIGIN_TOKEN_KEY, the protocol expects that an Issuer has only
+To mitigate the risk of a targeted ORIGIN_TOKEN_KEY, the protocol expects that an Issuer has only
 a single valid public key for signing tokens at a time. The Client does not present the name_key_id
 of the token public key to the Issuer, but instead expects the Issuer to infer the correct key based
 on the information the Issuer knows, specifically the origin_name itself.
@@ -1043,9 +1217,10 @@ Issuers SHOULD generate a new (ORIGIN_TOKEN_KEY, ORIGIN_SECRET) regularly, and
 SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED
 rotation interval is two times the length of the policy window for that
 information. During generation, issuers must ensure the `token_key_id` (the 8-bit
-prefix of SHA256(ORIGIN_TOKEN_KEY) is different from all other `token_key_id`
+prefix of SHA256(ORIGIN_TOKEN_KEY)) is different from all other `token_key_id`
 values for that origin currently in rotation. One way to ensure this uniqueness
-is via rejection sampling.
+is via rejection sampling, where a new key is generated until its `token_key_id` is
+unique among all currently in rotation for the origin.
 
 # Related Work
 
@@ -1076,7 +1251,7 @@ Transfer Protocol (HTTP) Authentication Scheme Registry" established by {{!RFC72
 
 Authentication Scheme Name: PrivateAccessToken
 
-Pointer to specification text: {{scheme}} of this document
+Pointer to specification text: {{challenge}} of this document
 
 ## HTTP Headers {#iana-headers}
 
@@ -1101,7 +1276,7 @@ in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignmen
 ## Media Types
 
 This specification defines the following protocol messages, along with their
-corresponding media types types:
+corresponding media types:
 
 - AccessTokenRequest {{issuance}}: "message/access-token-request"
 - AccessTokenResponse {{issuance}}: "message/access-token-response"
