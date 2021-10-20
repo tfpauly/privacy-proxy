@@ -1430,5 +1430,5 @@ the need for preventing double spending or employing token expiry techniques, su
 frequent signer rotation or expiry-encoded public metadata.
 
 - Private Access Tokens use a publically verifiable signature
-{{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}} to optimize token 
+{{!BLINDSIG=I-D.irtf-cfrg-rsa-blind-signatures}} to optimize token
 verification at the origin by avoiding a round trip to the issuer/mediator.
