@@ -1201,7 +1201,7 @@ a single valid public key for signing tokens at a time. The Client does not pres
 of the token public key to the Issuer, but instead expects the Issuer to infer the correct key based
 on the information the Issuer knows, specifically the origin_name itself.
 
-## Issuer and Mediator Ownership
+## Issuer, Mediator and Origin Ownership
 
 Issuers and Mediators should be run by mutually distinct organizations to limit
 information sharing. A single entity running an issuer and mediator for a single redemption
@@ -1210,6 +1210,10 @@ this 'single issuer/mediator' fashion reduces the privacy promises to those of t
 {{?I-D.ietf-privacypass-protocol}}; see {{privacy-pass}} for more discussion. This may be
 desirable for a redemption flow that is limited to specific issuers and mediators,
 but should be avoided where hiding origins from the mediator is desirable.
+
+A mediator and origin can collude to reveal the client identity through timestamp correlation. The
+timing of a request to an origin and subsiquent token issuance to a mediator can reveal the client
+identity (as known to the mediator) to the origin, especially if repeated over multiple accesses.
 
 # Deployment Considerations {#deploy}
 
