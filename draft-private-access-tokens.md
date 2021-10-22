@@ -1215,7 +1215,7 @@ this 'single issuer/mediator' fashion reduces the privacy promises to those of t
 desirable for a redemption flow that is limited to specific issuers and mediators,
 but should be avoided where hiding origins from the mediator is desirable.
 
-If a Mediator and Origin collude, they could correlate a client's identity and origin access patterns through timestamp correlation. The
+If a Mediator and Origin are able to collude, they can correlate a client's identity and origin access patterns through timestamp correlation. The
 timing of a request to an Origin and subsequent token issuance to a Mediator can reveal the Client
 identity (as known to the Mediator) to the Origin, especially if repeated over multiple accesses.
 
