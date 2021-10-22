@@ -1201,7 +1201,11 @@ a single valid public key for signing tokens at a time. The Client does not pres
 of the token public key to the Issuer, but instead expects the Issuer to infer the correct key based
 on the information the Issuer knows, specifically the origin_name itself.
 
-## Issuer, Mediator and Origin Ownership
+## Collusion Among Different Entities
+
+Collusion among the different entities in the PAT architecture can result in
+violation of the Client's privacy.
+
 
 Issuers and Mediators should be run by mutually distinct organizations to limit
 information sharing. A single entity running an issuer and mediator for a single redemption
@@ -1211,7 +1215,7 @@ this 'single issuer/mediator' fashion reduces the privacy promises to those of t
 desirable for a redemption flow that is limited to specific issuers and mediators,
 but should be avoided where hiding origins from the mediator is desirable.
 
-A Mediator and Origin can collude to reveal a client's identity through timestamp correlation. The
+If a Mediator and Origin collude, they could correlate a client's identity and origin access patterns through timestamp correlation. The
 timing of a request to an Origin and subsequent token issuance to a Mediator can reveal the Client
 identity (as known to the Mediator) to the Origin, especially if repeated over multiple accesses.
 
