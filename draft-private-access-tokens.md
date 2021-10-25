@@ -475,7 +475,7 @@ As an example, the Mediator's JSON dictionary could look like:
  {
     "mediator-request-uri": "https://mediator.example.net/relay-access-token-request."
  }
- ~~~
+~~~
 
 Issuer and Mediator directory resources have the media type "application/json"
 and are located at the well-known location /.well-known/private-access-tokens-directory.
