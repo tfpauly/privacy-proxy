@@ -433,30 +433,49 @@ Issuers MUST provide three parameters for configuration:
 1. ISSUER_KEY: a `KeyConfig` as defined in {{!OHTTP=I-D.thomson-http-oblivious}} to use when
    encrypting the ORIGIN_NAME in issuance requests. This parameter uses resource media type
    "application/ohttp-keys".
-1. ISSUER_POLICY_WINDOW: a uint64 as defined in {{terms}}. This parameter uses resource media
-   type "text/plain".
+1. ISSUER_POLICY_WINDOW: a uint64 of seconds as defined in {{terms}}.
 1. ISSUER_REQUEST_URI: a Private Access Token request URL for generating access tokens.
-   For example, an Issuer URL might be https://issuer.net/access-token-request. This parameter
+   For example, an Issuer URL might be https://issuer.example.net/access-token-request. This parameter
    uses resource media type "text/plain".
 
 These parameters can be obtained from an Issuer via a directory object, which is a JSON
-object whose field names and values are the corresponding URLs for the parameters.
+object whose field names and values are raw values and URLs for the parameters.
 
-| Field Name           | Value                             |
-|:---------------------|:----------------------------------|
-| issuer-key           | ISSUER_KEY resource URL           |
-| issuer-policy-window | ISSUER_POLICY_WINDOW resource URL |
-| issuer-request-uri   | ISSUER_REQUEST_URI resource URL   |
+| Field Name           | Value                                            |
+|:---------------------|:-------------------------------------------------|
+| issuer-key           | ISSUER_KEY resource URL as a JSON string         |
+| issuer-policy-window | ISSUER_POLICY_WINDOW as a JSON number            |
+| issuer-request-uri   | ISSUER_REQUEST_URI resource URL as a JSON string |
+
+
+As an example, the Issuer's JSON dictionary could look like:
+
+~~~
+ {
+    "issuer-key": "https://issuer.example.net/key",
+    "issuer-token-window": 86400,
+    "issuer-request-uri": "https://issuer.example.net/access-token-request"
+ }
+ ~~~
 
 Mediators MUST provide a single parameter for configuration, MEDIATOR_REQUEST_URI,
 wich is Private Access Token request URL for proxying protocol messages to Issuers.
-For example, a Mediator URL might be https://mediator.net/relay-access-token-request.
+For example, a Mediator URL might be https://mediator.example.net/relay-access-token-request.
 Similar to Issuers, Mediators make this parameter available by a directory object
 with the following contents:
 
 | Field Name           | Value                             |
 |:---------------------|:----------------------------------|
 | mediator-request-uri | MEDIATOR_REQUEST_URI resource URL |
+
+
+As an example, the Mediator's JSON dictionary could look like:
+
+~~~
+ {
+    "mediator-request-uri": "https://mediator.example.net/relay-access-token-request."
+ }
+ ~~~
 
 Issuer and Mediator directory resources have the media type "application/json"
 and are located at the well-known location /.well-known/private-access-tokens-directory.
