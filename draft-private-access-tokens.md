@@ -1095,7 +1095,10 @@ the Client was able to request a token for the given ORIGIN_NAME within its budg
 Failure to present a token can be interpreted as a signal that the client's token
 budget was exceeded.
 
-Clients may reuse their token for subsequent requests to the same origin up to `max-age`.
+Clients can redeem a token from a specific challenge up to the `max-age` in the challenge.
+Servers can choose to issue many challenges in a single HTTP 401 response, providing the
+client with many challenge nonces which can be used to redeem tokens over a longer period
+of time.
 
 ## Client Geo-Location {#implement-geolocation}
 
