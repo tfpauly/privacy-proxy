@@ -150,8 +150,8 @@ address across accesses.
 ## Architecture
 
 At a high level, the PAT architecture seeks to solve the following problem: in
-the absence of a stable Client identifier, an Origin needs to verify a
-connecting Client's identity and enforce access policies for the incoming
+the absence of a stable Client identifier, an Origin needs to verify the
+identity of a connecting Client and enforce access policies for the incoming
 Client. To accomplish this, the PAT architecture employs four functional
 components:
 
