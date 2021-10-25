@@ -457,7 +457,7 @@ As an example, the Issuer's JSON directory could look like:
     "issuer-token-window": 86400,
     "issuer-request-uri": "https://issuer.example.net/access-token-request"
  }
- ~~~
+~~~
 
 Mediators MUST provide a single parameter for configuration, MEDIATOR_REQUEST_URI,
 wich is Private Access Token request URL for proxying protocol messages to Issuers.
