@@ -556,6 +556,18 @@ does not recognize or support, it MUST NOT parse or respond to the challenge.
 This document defines version 1, which indicates use of private tokens based on
 RSA Blind Signatures {{BLINDSIG}}, and determines the rest of the structure contents.
 
+Note that it is possible for the WWW-Authenticate header to include multiple
+challenges, in order to allow the Client to fetch a batch of multiple tokens
+for future use.
+
+For example, the WWW-Authenticate header could look like this:
+
+~~~
+WWW-Authenticate: PrivateAccessToken challenge=abc..., token-key=123...,
+issuer-key=456..., PrivateAccessToken challenge=def..., token-key=234...,
+issuer-key=567...
+~~~
+
 ## Token Redemption {#redemption}
 
 The output of the issuance protocol is a token that corresponds to the Origin's challenge (see {{challenge}}).
@@ -600,15 +612,15 @@ Authorization: PrivateAccessToken token=abc...
 ~~~
 
 Origins verify the token signature using the corresponding policy verification
-key from the Issuer, and validate that the message matches the hash of the original
-TokenChallenge for this session, SHA256(TokenChallenge), and that the version of the
-Token matches the version in the TokenChallenge.
+key from the Issuer, and validate that the message matches the hash of a
+TokenChallenge it previously issued and is still valid, SHA256(TokenChallenge),
+and that the version of the Token matches the version in the TokenChallenge.
+The TokenChallenge MAY be bound to a specific HTTP session with Client, but
+Origins can also accept tokens for valid challenges in new sessions.
 
 If a Client's issuance request fails with a 401 error, as described in {{request-two}},
 the Client MUST react to the challenge as if it could not produce a valid Authorization
 response.
-
-[[OPEN ISSUE: use generic advice here]]
 
 
 # Issuance Protocol {#issuance}
