@@ -277,6 +277,17 @@ for more details. A Client can use a service offered by its Mediator or a
 third-party to store these secrets, but it is a requirement of the PAT
 architecture that the Mediator not be able to learn these secrets.
 
+The privacy guarantees of the PAT architecture, specifically those around
+separating the identity of the Client from the names of the Origins that it
+accesses, are based on the expectation that there is not collusion between
+the entities that know about Client identity and those that know about Origin
+identity. Clients choose and share information with Mediators, and Origins
+choose and share policy with Issuers; however, the Mediator is generally
+expected to not be colluding with Issuers or Origins. If this occurs, it
+can become possible for a Mediator to learn or infer which Origins a
+Client is accessing, or for an Origin to learn or infer the Client
+identity. For further discussion, see {{collusion}}.
+
 ## Client Identity
 
 The PAT architecture does not enforce strong constraints around the definition
@@ -1201,11 +1212,10 @@ a single valid public key for signing tokens at a time. The Client does not pres
 of the token public key to the Issuer, but instead expects the Issuer to infer the correct key based
 on the information the Issuer knows, specifically the origin_name itself.
 
-## Collusion Among Different Entities
+## Collusion Among Different Entities {#collusion}
 
 Collusion among the different entities in the PAT architecture can result in
 violation of the Client's privacy.
-
 
 Issuers and Mediators should be run by mutually distinct organizations to limit
 information sharing. A single entity running an issuer and mediator for a single redemption
