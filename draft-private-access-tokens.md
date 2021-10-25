@@ -109,7 +109,8 @@ One example of this use case is a metered paywall, where an origin limits the
 number of page requests to each unique user over a period of time before the
 user is required to pay for access. The origin typically resets this state
 periodically, say, once per month. For example, an origin may serve ten (major
-content) requests in a month before a paywall is enacted.
+content) requests in a month before a paywall is enacted. Origins may want to
+differentiate quick refreshes from distinct accesses.
 
 Another example of this use case is rate-limiting page accesses to a client to
 help prevent fraud. Operations that are sensitive to fraud, such as account
@@ -1130,6 +1131,11 @@ Origins request tokens from Clients and, upon successful redemption, the Origin 
 the Client was able to request a token for the given ORIGIN_NAME within its budget.
 Failure to present a token can be interpreted as a signal that the client's token
 budget was exceeded.
+
+Clients can redeem a token from a specific challenge up to the `max-age` in the challenge.
+Servers can choose to issue many challenges in a single HTTP 401 response, providing the
+client with many challenge nonces which can be used to redeem tokens over a longer period
+of time.
 
 ## Client Geo-Location {#implement-geolocation}
 
