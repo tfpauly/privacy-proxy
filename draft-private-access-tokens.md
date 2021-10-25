@@ -459,7 +459,7 @@ with the following contents:
 | MEDIATOR_REQUEST_URI | MEDIATOR_REQUEST_URI resource URL |
 
 Issuer and Mediator directory resources have the media type "application/json"
-and are located at the well-known location /.well-known/private-access-tokens/directory.
+and are located at the well-known location /.well-known/private-access-tokens-directory.
 
 # Token Challenge and Redemption Protocol {#challenge-redemption}
 
