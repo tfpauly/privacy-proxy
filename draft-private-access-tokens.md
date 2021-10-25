@@ -545,7 +545,7 @@ Origins MAY also include the standard "realm" attribute, if desired.
 As an example, the WWW-Authenticate header could look like this:
 
 ~~~
-WWW-Authenticate: PrivateAccessToken challenge=abc... token-key=123...
+WWW-Authenticate: PrivateAccessToken challenge=abc..., token-key=123...,
 issuer-key=456...
 ~~~
 
