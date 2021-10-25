@@ -52,8 +52,8 @@ service to limit access according to the policy without tracking client identity
 
 Servers commonly use passive and persistent identifiers associated with clients,
 such as IP addresses or device identifiers, for enforcing access and usage
-policies. For example, a server might limit access to the amount of content from
-an IP address over a given time period (referred to as a "metered paywall"), or
+policies. For example, a server might limit the amount of content an IP address
+can access over a given time period (referred to as a "metered paywall"), or
 a server might rate-limit access from an IP address to prevent fraud and
 abuse. Servers also commonly use the client's IP address as a strong indicator
 of the client's geographic location to limit access to services or content to a
