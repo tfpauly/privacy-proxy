@@ -113,9 +113,9 @@ content) requests in a month before a paywall is enacted.
 
 Another example of this use case is rate-limiting page accesses to a client to
 help prevent fraud. Operations that are sensitive to fraud, such as account
-creation on a website, often employ rate limiting as a defense in depth
+creation on a website, often employ rate-limiting as a defense in depth
 strategy. Captchas or additional verification can be required by these pages
-when a client exceeds a set rate limit.
+when a client exceeds a set rate-limit.
 
 Origins routinely use client IP addresses for this purpose.
 
@@ -326,7 +326,7 @@ practical mitigations, such as:
 
 - The number of true Mediator-authenticated identities for a user is expected to
   be small, and therefore likely to be small enough to not matter for certain
-  use cases. For instance, when PATs are used to prevent fraud by rate limiting
+  use cases. For instance, when PATs are used to prevent fraud by rate-limiting
   Clients (as described in {{use-case-rate-limit}}), an Origin might be tolerant
   of the potential amplification caused by an attacking user's access to
   multiple true identities with Issuer-trusted Mediators.
