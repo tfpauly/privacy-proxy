@@ -444,9 +444,9 @@ object whose field names and values are the corresponding URLs for the parameter
 
 | Field Name           | Value                             |
 |:---------------------|:----------------------------------|
-| ISSUER_KEY           | ISSUER_KEY resource URL           |
-| ISSUER_POLICY_WINDOW | ISSUER_POLICY_WINDOW resource URL |
-| ISSUER_REQUEST_URI   | ISSUER_REQUEST_URI resource URL   |
+| issuer-key           | ISSUER_KEY resource URL           |
+| issuer-policy-window | ISSUER_POLICY_WINDOW resource URL |
+| issuer-request-uri   | ISSUER_REQUEST_URI resource URL   |
 
 Mediators MUST provide a single parameter for configuration, MEDIATOR_REQUEST_URI,
 wich is Private Access Token request URL for proxying protocol messages to Issuers.
