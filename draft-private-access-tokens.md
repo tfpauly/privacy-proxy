@@ -456,7 +456,7 @@ with the following contents:
 
 | Field Name           | Value                             |
 |:---------------------|:----------------------------------|
-| MEDIATOR_REQUEST_URI | MEDIATOR_REQUEST_URI resource URL |
+| mediator-request-uri | MEDIATOR_REQUEST_URI resource URL |
 
 Issuer and Mediator directory resources have the media type "application/json"
 and are located at the well-known location /.well-known/private-access-tokens-directory.
