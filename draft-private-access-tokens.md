@@ -448,7 +448,7 @@ object whose field names and values are raw values and URLs for the parameters.
 | issuer-request-uri   | ISSUER_REQUEST_URI resource URL as a JSON string |
 
 
-As an example, the Issuer's JSON dictionary could look like:
+As an example, the Issuer's JSON directory could look like:
 
 ~~~
  {
