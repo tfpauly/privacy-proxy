@@ -674,9 +674,8 @@ a specific Mediator. CLIENT_ID is a public key, where the corresponding private 
 CLIENT_SECRET is known only to the client.
 
 If the client loses this (CLIENT_ID, CLIENT_SECRET), they may generate a new tuple. The
-mediator will enforce if a client is allowed to use this new CLIENT_ID. See {{{#mediator-state}}}
+mediator will enforce if a client is allowed to use this new CLIENT_ID. See {{#mediator-state}}
 for details on this enforcement.
-
 
 Clients also need to be able to generate an ANON_ORIGIN_ID value that corresponds
 to the ORIGIN_NAME, to send in requests to the Mediator.
@@ -891,7 +890,7 @@ rejected by the Issuer in the current policy window, it SHOULD reject the reques
 forwarding it to the Issuer.
 
 If the Mediator detects this Client has changed their CLIENT_ID more frequently than allowed
-as described in {{{#mediator-state}}}, it SHOULD reject the request without forwarding it to
+as described in {{#mediator-state}}, it SHOULD reject the request without forwarding it to
 the Issuer.
 
 ## Mediator-to-Issuer Request {#request-two}
