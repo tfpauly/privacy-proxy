@@ -789,11 +789,11 @@ blinded_req, blind_inv = rsabssa_blind(ORIGIN_TOKEN_KEY, message)
 The Client MUST use a randomized variant of RSABSSA in producing this signature with
 a salt length of at least 32 bytes.
 
-The Client uses CLIENT_SECRET to generate proof of its request.
+The Client uses CLIENT_KEY and CLIENT_SECRET to generate proof of its request.
 
 ~~~
 blind = RandomScalar()
-blind_key = blind * CLIENT_SECRET
+blind_key = blind * CLIENT_KEY
 blind_generator = blind * Generator()
 key_proof = SchnorrProof(CLIENT_SECRET, blind_key, blind_generator)
 ~~~
