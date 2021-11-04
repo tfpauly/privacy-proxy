@@ -819,7 +819,7 @@ struct {
    uint8_t mapping_proof[Np];
    uint8_t token_key_id;
    uint8_t blinded_req[Nk];
-   uint8_t name_key_id[32];
+   uint8_t issuer_key_id[32];
    uint8_t encrypted_origin_name<1..2^16-1>;
 } AccessTokenRequest;
 ~~~
@@ -837,7 +837,7 @@ object carrying ORIGIN_TOKEN_KEY.
 
 - "blinded_req" is the Nk-octet request defined above.
 
-- "name_key_id" is a collision-resistant hash that identifies the ISSUER_KEY public
+- "issuer_key_id" is a collision-resistant hash that identifies the ISSUER_KEY public
 key, generated as SHA256(KeyConfig).
 
 - "encrypted_origin_name" is an encrypted structure that contains ORIGIN_NAME,
@@ -869,7 +869,7 @@ sec-token-nonce = mapping_nonce
 If the Mediator detects a version in the AccessTokenRequest that it does not recognize
 or support, it MUST reject the request with an HTTP 400 error.
 
-The Mediator also checks to validate that the name_key_id in the client's AccessTokenRequest
+The Mediator also checks to validate that the issuer_key_id in the client's AccessTokenRequest
 matches a known ISSUER_KEY public key for the Issuer. For example, the Mediator can
 fetch this key using the API defined in {{setup}}. This check is done to help ensure that
 the Client has not been given a unique key that could allow the Issuer to fingerprint or target
@@ -924,7 +924,7 @@ Upon receipt of the forwarded request, the Issuer validates the following condit
 
 - The "Sec-Token-Count" header is present
 - The AccessTokenRequest contains a supported version
-- For version 1, the AccessTokenRequest.name_key_id corresponds to the ID of the ISSUER_KEY held by the Issuer
+- For version 1, the AccessTokenRequest.issuer_key_id corresponds to the ID of the ISSUER_KEY held by the Issuer
 - For version 1, the AccessTokenRequest.encrypted_origin_name can be decrypted using the
 Issuer's private key (the private key associated with ISSUER_KEY), and matches
 an ORIGIN_NAME that is served by the Issuer
@@ -1058,7 +1058,7 @@ aad = concat(encode(1, keyID),
              encode(Np, mapping_proof),
              encode(1, token_key_id),
              encode(Nk, blinded_req),
-             encode(32, name_key_id))
+             encode(32, issuer_key_id))
 ct = context.Seal(aad, origin_name)
 encrypted_origin_name = concat(enc, ct)
 ~~~
@@ -1079,7 +1079,7 @@ aad = concat(encode(1, keyID),
              encode(Np, mapping_proof),
              encode(1, token_key_id),
              encode(Nk, blinded_req),
-             encode(32, name_key_id))
+             encode(32, issuer_key_id))
 enc, context = SetupBaseR(enc, skI, "AccessTokenRequest")
 origin_name, error = context.Open(aad, ct)
 ~~~
@@ -1244,14 +1244,14 @@ Client activity could be linked if an Origin and Issuer collude to have unique k
 at specific Clients or sets of Clients.
 
 To mitigate the risk of a targeted ISSUER_KEY, the Mediator can observe and validate
-the name_key_id presented by the Client to the Issuer. As described in {{issuance}}, Mediators
-MUST validate that the name_key_id in the Client's AccessTokenRequest matches a known public key
+the issuer_key_id presented by the Client to the Issuer. As described in {{issuance}}, Mediators
+MUST validate that the issuer_key_id in the Client's AccessTokenRequest matches a known public key
 for the Issuer. The Mediator needs to support key rotation, but ought to disallow very rapid key
 changes, which could indicate that an Origin is colluding with an Issuer to try to rotate the key
 for each new Client in order to link the client activity.
 
 To mitigate the risk of a targeted ORIGIN_TOKEN_KEY, the protocol expects that an Issuer has only
-a single valid public key for signing tokens at a time. The Client does not present the name_key_id
+a single valid public key for signing tokens at a time. The Client does not present the issuer_key_id
 of the token public key to the Issuer, but instead expects the Issuer to infer the correct key based
 on the information the Issuer knows, specifically the origin_name itself.
 
