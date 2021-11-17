@@ -935,7 +935,7 @@ was invalid in the process.
 If the Issuer is willing to give a token to the Client, the Issuer decrypts
 AccessTokenRequest.encrypted_origin_name to discover "origin". If this fails, the Issuer rejects
 the request with a 400 error. Otherwise, the Issuer validates and processes the token request
-with ORIGIN_SECRET correspoding to the designated Origin as described in {{issuer-stable-mapping}}.
+with ORIGIN_SECRET corresponding to the designated Origin as described in {{issuer-stable-mapping}}.
 If this fails, the Issuer rejects the request with a 400 error. Otherwise, the output is
 client_origin_index_result.
 
@@ -1057,8 +1057,9 @@ this functionality computes y = F(x, k), where x is a per-Client secret and
 k is a per-Origin secret, subject to the following constraints:
 
 - The Mediator only learns y if the Client in possession of x engages with the protocol;
-- The Client cannot engage in the protocol for private input x' that is not equal to x; and
-- The Issuer does not learn x, nor does it learn when two requests correspond to the same private value x.
+- The Mediator prevents a Client with private input x from running the protocol for input x' that is not equal to x;
+- The Issuer does not learn x, nor does it learn when two requests correspond to the same private value x; and
+- Neither the Client nor Mediator learn k.
 
 The interaction between Client, Mediator, and Issuer in computing this
 functionality is shown below.
@@ -1075,10 +1076,11 @@ Client               Mediator                Issuer
 
 The protocol for computing this functionality is divided into sections for
 each of the participants. {{client-stable-mapping}} describes Client behavior
-for initating the computation with its per-Client secret, {{issuer-stable-mapping}}
+for initiating the computation with its per-Client secret, {{mediator-stable-mapping}}
+describes Mediator behavior for verifying Client requests, {{issuer-stable-mapping}}
 describes Issuer behavior for computing the mapping with its per-Origin secret,
-and {{mediator-stable-mapping}} describes Mediator behavior for verifying Client
-requests and computing the mapping output.
+and {{mediator-output-stable-mapping}} describes the final Mediator step for
+computing the mapping output.
 
 ### Client Behavior {#client-stable-mapping}
 
@@ -1116,7 +1118,7 @@ client_origin_index_request = concat(client_origin_index_key,
 client_origin_index_blind = SerializeScalar(blind)
 ~~~
 
-### Mediator Behavior {#mediator-stable-mapping}
+### Mediator Behavior (Client Request Validation) {#mediator-stable-mapping}
 
 Given a client key (CLIENT_KEY), client_origin_index_blind, and client_origin_index_request,
 Mediators verify the proof for correctness as follows:
@@ -1155,29 +1157,6 @@ if not valid:
    raise InvalidProofError
 ~~~
 
-Given an Issuer response client_origin_index_result, Client blind, and Client public
-key (CLIENT_KEY), Mediators complete the mapping computation as follows:
-
-1. Deserialize client_origin_index_result, yielding the evaluated client key.
-   If this fails, abort.
-1. Multiply the evaluated client key by the multiplicative inverse of the
-   Client blind, yielding the mapping result.
-1. Run HKDF with the mapping result as the secret, CLIENT_KEY as the salt, and
-   ASCII string "PrivateAccessTokens" as the info string, yielding ANON_ISSUER_ORIGIN_ID.
-1. Output ANON_ISSUER_ORIGIN_ID.
-
-In pseudocode, this is as follows:
-
-~~~
-evaluated_key = DeserialiesElement(client_origin_index_result)
-mapping_result = blind^(-1) * evaluated_key
-encoded_mapping_result = SerializeElement(mapping_result)
-encoded_client_key = SerializeElement(CLIENT_KEY)
-ANON_ISSUER_ORIGIN_ID = HKDF(secret=encoded_mapping_result,
-                             salt=encoded_client_key,
-                             info="PrivateAccessTokens")
-~~~
-
 ### Issuer Behavior {#issuer-stable-mapping}
 
 Given a Client request client_origin_index_request and Origin secret (ORIGIN_SECRET), Issuers
@@ -1208,6 +1187,31 @@ if not valid:
 // Evaluate the request with the per-Origin secret
 evaluated_key = ORIGIN_SECRET * blind_key
 client_origin_index_result = SerializeElement(evaluated_key)
+~~~
+
+### Mediator Behavior (Mapping Output Computation) {#mediator-output-stable-mapping}
+
+Given an Issuer response client_origin_index_result, Client blind, and Client public
+key (CLIENT_KEY), Mediators complete the mapping computation as follows:
+
+1. Deserialize client_origin_index_result, yielding the evaluated client key.
+   If this fails, abort.
+1. Multiply the evaluated client key by the multiplicative inverse of the
+   Client blind, yielding the mapping result.
+1. Run HKDF with the mapping result as the secret, CLIENT_KEY as the salt, and
+   ASCII string "PrivateAccessTokens" as the info string, yielding ANON_ISSUER_ORIGIN_ID.
+1. Output ANON_ISSUER_ORIGIN_ID.
+
+In pseudocode, this is as follows:
+
+~~~
+evaluated_key = DeserialiesElement(client_origin_index_result)
+mapping_result = blind^(-1) * evaluated_key
+encoded_mapping_result = SerializeElement(mapping_result)
+encoded_client_key = SerializeElement(CLIENT_KEY)
+ANON_ISSUER_ORIGIN_ID = HKDF(secret=encoded_mapping_result,
+                             salt=encoded_client_key,
+                             info="PrivateAccessTokens")
 ~~~
 
 ## Non-Interactive Schnorr Proof of Knowledge {#nizk-dl}
