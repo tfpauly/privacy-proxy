@@ -789,34 +789,15 @@ blinded_req, blind_inv = rsabssa_blind(ORIGIN_TOKEN_KEY, message)
 The Client MUST use a randomized variant of RSABSSA in producing this signature with
 a salt length of at least 32 bytes.
 
-The Client uses CLIENT_KEY and CLIENT_SECRET to generate proof of its request.
-
-~~~
-blind = RandomScalar()
-blind_key = blind * CLIENT_KEY
-blind_generator = blind * Generator()
-key_proof = SchnorrProof(CLIENT_SECRET, blind_key, blind_generator)
-~~~
-
-The Client then transforms this proof into "mapping_nonce", "mapping_key", "mapping_generator",
-and "mapping_proof".
-
-~~~
-mapping_nonce = SerializeScalar(blind)
-mapping_key = SerializeElement(blind_key)
-mapping_generator = SerializeElement(blind_generator)
-mapping_proof = SerializeProof(key_proof)
-~~~
-
-The Client then constructs a Private Access Token request using mapping_key,
-mapping_generator, mapping_proof, blinded_req, and origin information.
+The Client uses CLIENT_KEY and CLIENT_SECRET to generate proof of its request as
+described in {{client-stable-mapping}}, yielding output client_origin_index_blind and
+client_origin_index_request. The Client then constructs a Private Access Token
+request using client_origin_index_request, blinded_req, and origin information.
 
 ~~~
 struct {
    uint8_t version;
-   uint8_t mapping_generator[Ne];
-   uint8_t mapping_key[Ne];
-   uint8_t mapping_proof[Np];
+   uint8_t client_origin_index_request[Ne+Ne+Np];
    uint8_t token_key_id;
    uint8_t blinded_req[Nk];
    uint8_t issuer_key_id[32];
@@ -829,7 +810,7 @@ The structure fields are defined as follows:
 - "version" is a 1-octet integer, which matches the version in the TokenChallenge.
 This document defines version 1.
 
-- "mapping_generator", "mapping_key", and "mapping_proof" are computed as described above.
+- "client_origin_index_request" is computed as described in {{client-stable-mapping}}.
 
 - "token_key_id" is the least significant byte of the ORIGIN_TOKEN_KEY key ID, which is
 generated as SHA256(public_key), where public_key is a DER-encoded SubjectPublicKeyInfo
@@ -847,8 +828,9 @@ The Client then generates an HTTP POST request to send through the Mediator to
 the Issuer, with the AccessTokenRequest as the body. The media type for this request
 is "message/access-token-request". The Client includes the "Sec-Token-Origin" header,
 whose value is ANON_ORIGIN_ID; the "Sec-Token-Client" header, whose value is CLIENT_KEY; and
-the "Sec-Token-Nonce" header, whose value is mapping_nonce. The Client sends this request
-to the Mediator's proxy URI. An example request is shown below, where Nk = 512.
+the "Sec-Token-Nonce" header, whose value is client_origin_index_blind. The Client
+sends this request to the Mediator's proxy URI. An example request is shown below,
+where Nk = 512.
 
 ~~~
 :method = POST
@@ -861,7 +843,7 @@ content-type = message/access-token-request
 content-length = 512
 sec-token-origin = ANON_ORIGIN_ID
 sec-token-client = CLIENT_KEY
-sec-token-nonce = mapping_nonce
+sec-token-nonce = client_origin_index_blind
 
 <Bytes containing the AccessTokenRequest>
 ~~~
@@ -902,7 +884,9 @@ mechanisms such as TLS certificate pinning, to mitigate the risk of channel
 compromise; see {{sec-considerations}} for additional about this channel.
 
 Before copying and forwarding the Client's AccessTokenRequest request to the Issuer,
-the Mediator adds a header that includes the count of previous tokens as "Sec-Token-Count".
+the Mediator validates the Client's stable mapping request as described in {{mediator-stable-mapping}}.
+If this fails, the Mediator MUST return an HTTP 400 error to the Client. Otherwise, the
+Mediator then adds a header that includes the count of previous tokens as "Sec-Token-Count".
 The Mediator MAY also add additional context information, but MUST NOT add information
 that will uniquely identify a Client.
 
@@ -948,26 +932,12 @@ was invalid in the process.
 
 ## Issuer-to-Mediator Response {#response-one}
 
-If the Issuer is willing to give a token to the Client, the Issuer verifies the token request
-using "mapping_generator", "mapping_key", and "mapping_proof":
-
-~~~
-valid = SchnorrVerify(mapping_generator, mapping_key, mapping_proof)
-~~~
-
-If this fails, the Issuer rejects the request with a 400 error. Otherwise, the Issuer decrypts
-AccessTokenRequest.encrypted_origin_name to discover "origin". If this fails, the Issuer
-rejects the request with a 400 error. The Issuer then evaluates the mapping over the ORIGIN_SECRET
-pertaining to the origin for this issuer:
-
-~~~
-mapping_input = DeserializeElement(AccessTokenRequest.mapping_key)
-index = ORIGIN_SECRET * mapping_input
-mapping_index = SerializeElement(index)
-~~~
-
-If DeserializeElement fails, or if AccessTokenRequest.mapping_key is the identity element, the Issuer
-rejects the request with a 400 error.
+If the Issuer is willing to give a token to the Client, the Issuer decrypts
+AccessTokenRequest.encrypted_origin_name to discover "origin". If this fails, the Issuer rejects
+the request with a 400 error. Otherwise, the Issuer validates and processes the token request
+with ORIGIN_SECRET corresponding to the designated Origin as described in {{issuer-stable-mapping}}.
+If this fails, the Issuer rejects the request with a 400 error. Otherwise, the output is
+client_origin_index_result.
 
 The Issuer completes the issuance flow by computing a blinded response as follows:
 
@@ -985,7 +955,7 @@ mapping_tag set in the "Sec-Token-Origin" header.
 :status = 200
 content-type = message/access-token-response
 content-length = 512
-sec-token-origin = mapping_index
+sec-token-origin = client_origin_index_result
 
 <Bytes containing the blind_sig>
 ~~~
@@ -993,13 +963,8 @@ sec-token-origin = mapping_index
 ## Mediator-to-Client Response {#response-two}
 
 Upon receipt of a successful response from the Issuer, the Mediator extracts the
-"Sec-Token-Origin" header, and uses the value to determine ANON_ISSUER_ORIGIN_ID.
-
-~~~
-index = DeserializeElement(mapping_index)
-nonce = DeserializeScalar(mapping_nonce)
-ANON_ISSUER_ORIGIN_ID = (nonce^(-1)) * index
-~~~
+"Sec-Token-Origin" header, and uses the value to determine ANON_ISSUER_ORIGIN_ID
+as described in {{mediator-stable-mapping}}.
 
 If the "Sec-Token-Origin" is missing, or if the same ANON_ISSUER_ORIGIN_ID was previously
 received in a response for a different ANON_ORIGIN_ID within the same policy window,
@@ -1084,11 +1049,177 @@ enc, context = SetupBaseR(enc, skI, "AccessTokenRequest")
 origin_name, error = context.Open(aad, ct)
 ~~~
 
+## Stable Mapping Computation {#stable-mapping}
+
+This section describes the Client, Mediator, and Issuer behavior in computing
+the stable mapping based on client identity and origin name. At a high level,
+this functionality computes y = F(x, k), where x is a per-Client secret and
+k is a per-Origin secret, subject to the following constraints:
+
+- The Mediator only learns y if the Client in possession of x engages with the protocol;
+- The Mediator prevents a Client with private input x from running the protocol for input x' that is not equal to x;
+- The Issuer does not learn x, nor does it learn when two requests correspond to the same private value x; and
+- Neither the Client nor Mediator learn k.
+
+The interaction between Client, Mediator, and Issuer in computing this
+functionality is shown below.
+
+~~~
+Client               Mediator                Issuer
+      (request, proof)
+  ---------------------->
+                             (request, proof)
+                         ---------------------->
+                                (response)
+                         <----------------------
+~~~
+
+The protocol for computing this functionality is divided into sections for
+each of the participants. {{client-stable-mapping}} describes Client behavior
+for initiating the computation with its per-Client secret, {{mediator-stable-mapping}}
+describes Mediator behavior for verifying Client requests, {{issuer-stable-mapping}}
+describes Issuer behavior for computing the mapping with its per-Origin secret,
+and {{mediator-output-stable-mapping}} describes the final Mediator step for
+computing the mapping output.
+
+### Client Behavior {#client-stable-mapping}
+
+Given a client secret (CLIENT_SECRET) and the corresponding key (CLIENT_KEY),
+Clients produce client_origin_index using a Prime Order Groups (POGs) as
+described in {{!VOPRF=I-D.irtf-cfrg-voprf, Section 2.1}}. In particular,
+the functions RandomScalar(), Generator(), SerializeScalar(), SerializeElement(),
+and HashToScalar() are used in the following way.
+
+1. Generate a random scalar blind and multiply CLIENT_KEY and the group
+   generator by this blind, yielding a blinded key and blinded generator.
+1. Compute a Schnorr proof-of-knowledge demonstrating knowledge of the
+   discrete log of the blinded key with respect to the blinded generator.
+1. Serialize the blinded key, blinded generator, and proof, yielding
+   client_origin_index_key, client_origin_index_base, and client_origin_index_proof,
+   and concatenate each, yielding client_origin_index_request.
+1. Serialize the blind, yielding client_origin_index_blind.
+1. Output client_origin_index_blind, client_origin_index_request.
+
+In pseudocode, this is as follows:
+
+~~~
+// Generate blind, blinded key, blinded generator, and the proof
+blind = RandomScalar()
+blind_key = blind * CLIENT_KEY
+blind_generator = blind * Generator()
+blind_proof = SchnorrProof(CLIENT_SECRET, blind_generator, blind_key)
+
+// Serialize and produce outputs
+client_origin_index_proof = SerializeProof(blind_proof)
+client_origin_index_key = SerializeElement(blind_key)
+client_origin_index_base = SerializeElement(blind_generator)
+client_origin_index_request = concat(client_origin_index_key,
+    client_origin_index_base, client_origin_index_proof)
+client_origin_index_blind = SerializeScalar(blind)
+~~~
+
+### Mediator Behavior (Client Request Validation) {#mediator-stable-mapping}
+
+Given a client key (CLIENT_KEY), client_origin_index_blind, and client_origin_index_request,
+Mediators verify the proof for correctness as follows:
+
+1. Deserialize client_origin_index_blind, yielding blind. If this fails, abort.
+1. Parse client_origin_index_request as client_origin_index_key, client_origin_index_base, and
+   client_origin_index_proof, and deserialize each to yield the blinded key, blinded generator,
+   and blind proof.
+1. Multiply CLIENT_KEY and the group generator by blind, yielding a blinded key and
+   blinded generator. If these do not match the deserialized blinded key and generator,
+   abort.
+1. Verify the blind proof against the blinded key and generator. If proof verification
+   fails, abort.
+
+In pseudocode, this is as follows:
+
+~~~
+blind = DeserializeScalar(client_origin_index_blind)
+
+// Verify the proof parameters against the client's public key
+client_origin_index_key, client_origin_index_base, client_origin_index_proof =
+    parse(client_origin_index_request)
+expected_blind_key = DeserializeElement(client_origin_index_key)
+expected_blind_generator = DeserializeElement(client_origin_index_base)
+blind_key = blind * CLIENT_KEY
+blind_generator = blind * Generator()
+if expected_blind_key != blind_key:
+    raise InvalidParameterError
+if expected_blind_generator != blind_generator:
+    raise InvalidParameterError
+
+// Verify the proof
+proof = DeserializeProof(client_origin_index_proof)
+valid = SchnorrVerify(blind_generator, blind_target, proof)
+if not valid:
+   raise InvalidProofError
+~~~
+
+### Issuer Behavior {#issuer-stable-mapping}
+
+Given a Client request client_origin_index_request and Origin secret (ORIGIN_SECRET), Issuers
+verify the request and compute a response as follows:
+
+1. Parse client_origin_index_request as client_origin_index_key, client_origin_index_base, and
+   client_origin_index_proof, and deserialize each to yield the blinded key, blinded generator,
+   and proof.
+1. Verify client_origin_index_proof against the blinded key and generator. If proof verification
+   fails, abort.
+1. Multiply the blinded key by ORIGIN_SECRET, yielding a blinded client key.
+1. Serialize the blinded client key, yielding client_origin_index_result.
+1. Output client_origin_index_result.
+
+In pseudocode, this is as follows:
+
+~~~
+// Verify the proof
+client_origin_index_key, client_origin_index_base, client_origin_index_proof =
+    parse(client_origin_index_request)
+blind_key = DeserializeElement(client_origin_index_key)
+blind_generator = DeserializeElement(client_origin_index_base)
+proof = DeserializeProof(client_origin_index_proof)
+valid = SchnorrVerify(blind_generator, blind_target, proof)
+if not valid:
+   raise InvalidProofError
+
+// Evaluate the request with the per-Origin secret
+evaluated_key = ORIGIN_SECRET * blind_key
+client_origin_index_result = SerializeElement(evaluated_key)
+~~~
+
+### Mediator Behavior (Mapping Output Computation) {#mediator-output-stable-mapping}
+
+Given an Issuer response client_origin_index_result, Client blind, and Client public
+key (CLIENT_KEY), Mediators complete the mapping computation as follows:
+
+1. Deserialize client_origin_index_result, yielding the evaluated client key.
+   If this fails, abort.
+1. Multiply the evaluated client key by the multiplicative inverse of the
+   Client blind, yielding the mapping result.
+1. Run HKDF with the mapping result as the secret, CLIENT_KEY as the salt, and
+   ASCII string "PrivateAccessTokens" as the info string, yielding ANON_ISSUER_ORIGIN_ID.
+1. Output ANON_ISSUER_ORIGIN_ID.
+
+In pseudocode, this is as follows:
+
+~~~
+evaluated_key = DeserialiesElement(client_origin_index_result)
+mapping_result = blind^(-1) * evaluated_key
+encoded_mapping_result = SerializeElement(mapping_result)
+encoded_client_key = SerializeElement(CLIENT_KEY)
+ANON_ISSUER_ORIGIN_ID = HKDF(secret=encoded_mapping_result,
+                             salt=encoded_client_key,
+                             info="PrivateAccessTokens")
+~~~
+
 ## Non-Interactive Schnorr Proof of Knowledge {#nizk-dl}
 
 Each Issuance request requires evaluation and verification of a Schnorr proof-of-knowledge.
-Given input secret "secret" and two elements, "base" and "target", generation of this
-proof (u, c, z), denoted SchnorrProof(secret, base, target), works as follows:
+Given input secret "secret" and two elements, "base" and "target", this proof demonstrates
+knowledge of the discrete log of "target" with respect to "base". Computation of this proof,
+denoted SchnorrProof(secret, base, target), works as follows:
 
 ~~~
 r = RandomScalar()
@@ -1125,7 +1256,6 @@ expected_right = u + (target * c)
 ~~~
 
 The proof is considered valid if expected_left is the same as expected_right.
-
 
 # Instantiating Uses Cases {#examples}
 
