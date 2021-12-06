@@ -525,8 +525,13 @@ The structure fields are defined as follows:
 
 - "redemption_nonce" is a fresh 32-byte nonce generated for each redemption request.
 
-When used in an authentication challenge, the "PrivateAccessToken" scheme uses the
+When used in an authentication challenge, the "AnonymousCredential" scheme uses the
 following attributes:
+
+- "type", which contains the type of anonymous credential being used. For Private
+Acces Tokens, this is the string "PrivateAccessToken".
+
+The "PrivateAccessToken" type additionally has the following attributes:
 
 - "challenge", which contains a base64url-encoded {{!RFC4648}} TokenChallenge
 value. This MUST be unique for every 401 HTTP response to prevent replay attacks.
@@ -546,8 +551,8 @@ Origins MAY also include the standard "realm" attribute, if desired.
 As an example, the WWW-Authenticate header could look like this:
 
 ~~~
-WWW-Authenticate: PrivateAccessToken challenge=abc..., token-key=123...,
-issuer-key=456...
+WWW-Authenticate: AnonymousCredential type=PrivateAccessToken, challenge=abc...,
+token-key=123..., issuer-key=456...
 ~~~
 
 Upon receipt of this challenge, a Client uses the message and keys in the Issuance protocol
@@ -563,9 +568,9 @@ for future use.
 For example, the WWW-Authenticate header could look like this:
 
 ~~~
-WWW-Authenticate: PrivateAccessToken challenge=abc..., token-key=123...,
-issuer-key=456..., PrivateAccessToken challenge=def..., token-key=234...,
-issuer-key=567...
+WWW-Authenticate: AnonymousCredential type=PrivateAccessToken, challenge=abc...,
+token-key=123..., issuer-key=456..., AnonymousCredential type=PrivateAccessToken,
+challenge=def..., token-key=234..., issuer-key=567...
 ~~~
 
 ## Token Redemption {#redemption}
