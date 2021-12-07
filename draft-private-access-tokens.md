@@ -1226,7 +1226,7 @@ r = RandomScalar()
 u = r * base
 c = HashToScalar(SerializeElement(base) ||
                  SerializeElement(target) ||
-                 SerializeElement(mask),
+                 SerializeElement(u),
                  dst = "PrivateAccessTokensProof")
 z = r + (c * secret)
 ~~~
@@ -1249,7 +1249,7 @@ works as follows:
 ~~~
 c = HashToScalar(SerializeElement(base) ||
                  SerializeElement(target) ||
-                 SerializeElement(mask),
+                 SerializeElement(u),
                  dst = "PrivateAccessTokensProof")
 expected_left = base * z
 expected_right = u + (target * c)
