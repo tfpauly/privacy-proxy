@@ -6,6 +6,8 @@ This repository collects various specifications and Internet drafts that will be
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-private-access-tokens.html)
 
+* [Authentication Scheme](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-privacypass-auth-scheme.html)
+
 ## The Geohash HTTP Client Hint
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geohash-hint.html)
