@@ -36,7 +36,7 @@ challenge clients to present an acceptable Privacy Pass token.
 # Introduction {#introduction}
 
 Privacy Pass tokens are unlinkable signatures that can be used to anonymously
-validate a client (see {{I-D.ietf-privacypass-architecture}}). A client
+validate a client (see {{?I-D.ietf-privacypass-architecture}}). A client
 possessing such a token is able to prove that it was able to get a token
 issued (based on some check from a token issuer, such as authentication or
 solving a captcha) without allowing the entity redeeming the token to determine
