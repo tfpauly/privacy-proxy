@@ -1152,7 +1152,7 @@ if expected_blind_generator != blind_generator:
 
 // Verify the proof
 proof = DeserializeProof(client_origin_index_proof)
-valid = SchnorrVerify(blind_generator, blind_target, proof)
+valid = SchnorrVerify(blind_generator, blind_key, proof)
 if not valid:
    raise InvalidProofError
 ~~~
@@ -1180,7 +1180,7 @@ client_origin_index_key, client_origin_index_base, client_origin_index_proof =
 blind_key = DeserializeElement(client_origin_index_key)
 blind_generator = DeserializeElement(client_origin_index_base)
 proof = DeserializeProof(client_origin_index_proof)
-valid = SchnorrVerify(blind_generator, blind_target, proof)
+valid = SchnorrVerify(blind_generator, blind_key, proof)
 if not valid:
    raise InvalidProofError
 
