@@ -859,7 +859,7 @@ the Client. If the key does not match, the Mediator rejects the request with an 
 400 error. Note that Mediators need to be careful in cases of key rotation; see
 {{privacy-considerations}}.
 
-The Mediator finally checks to ensure that the AccessTokenRequest.mapping_proof is valid
+The Mediator finally checks to ensure that the AccessTokenRequest.client_origin_index_request is valid
 for the given CLIENT_KEY; see {{nizk-dl}} for verification details. If the index is invalid,
 the Mediator rejects the request with an HTTP 400 error.
 
@@ -949,7 +949,7 @@ blind_sig = rsabssa_blind_sign(skP, AccessTokenRequest.blinded_req)
 
 The Issuer generates an HTTP response with status code 200 whose body consists of
 blind_sig, with the content type set as "message/access-token-response" and the
-mapping_tag set in the "Sec-Token-Origin" header.
+client_origin_index_result set in the "Sec-Token-Origin" header.
 
 ~~~
 :status = 200
