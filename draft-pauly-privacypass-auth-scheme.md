@@ -400,4 +400,4 @@ The initial contents for this registry are defined in the table below.
 | 0x0001 | Blind RSA, 2048        | Y      | 256 | TODO         |
 | 0x0002 | Blind RSA, 4096        | Y      | 512 | TODO         |
 | 0x0003 | VOPRF(P-384, SHA-384)  | N      | 256 | TODO         |
-{: #aeadid-values title="AEAD IDs"}
+{: #aeadid-values title="Token Types"}
