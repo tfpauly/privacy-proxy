@@ -389,15 +389,14 @@ Template:
 * Value: The two-byte identifier for the algorithm
 * Name: Name of the issuance protocol
 * Public: A Y/N value indicating if the output tokens are publicly verifiable
+* Public Metadata: A Y/N value indicating if the output tokens can contain public metadata.
+* Private Metadata: A Y/N value indicating if the output tokens can contain private metadata.
 * Nk: The length in bytes of an output authenticator
 * Reference: Where this algorithm is defined
 
 The initial contents for this registry are defined in the table below.
 
-| Value  | Name                   | Public | Nk  | Reference    |
-|:-------|:-----------------------|:-------|:----|:-------------|
-| 0x0000 | (reserved)             | N/A    | N/A | N/A          |
-| 0x0001 | Blind RSA, 2048        | Y      | 256 | TODO         |
-| 0x0002 | Blind RSA, 4096        | Y      | 512 | TODO         |
-| 0x0003 | VOPRF(P-384, SHA-384)  | N      | 256 | TODO         |
+| Value  | Name                   | Public | Public Metadata | Private Metadata | Nk  | Reference    |
+|:-------|:-----------------------|:-------|:----------------|:-----------------|:----|:-------------|
+| 0x0000 | (reserved)             | N/A    | N/A             | N/A              | N/A | N/A          |
 {: #aeadid-values title="Token Types"}
