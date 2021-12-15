@@ -842,6 +842,76 @@ mutual authentication between both endpoints. Where appropriate, endpoints
 MAY use further enhancements such as TLS certificate pinning to mitigate
 the risk of channel compromise.
 
+# Privacy Considerations {#privacy-considerations}
+
+## Client Token State and Origin Tracking
+
+Origins SHOULD only generate token challenges based on client action, such as when a user
+loads a website. Clients SHOULD ignore token challenges if an Origin tries to force the
+client to present tokens multiple times without any new client-initiated action. Failure
+to do so can allow malicious origins to track clients across contexts. Specifically, an
+origin can abuse per-user token limits for tracking by assigning each new client a random
+token count and observing whether or not the client can successfully redeem that many
+tokens in a given context. If any token redemption fails, then the origin learns information
+about how many tokens that client had previously been issued.
+
+By rejecting repeated or duplicative challenges within a single context, the origin only
+learns a single bit of information: whether or not the client had any token quota left
+in the given policy window.
+
+## Origin Verification
+
+Rate-limited tokens are defined in terms of a Client authenticating to an Origin, where
+the "origin" is used as defined in {{?RFC6454}}. In order to limit cross-origin correlation,
+Clients MUST verify that the origin_name presented in the TokenChallenge structure ({{challenge}})
+matches the origin that is providing the HTTP authentication challenge, where the matching logic
+is defined for same-origin policies in {{?RFC6454}}. Clients MAY further limit which
+authentication challenges they are willing to respond to, for example by only accepting
+challenges when the origin is a web site to which the user navigated.
+
+## Client Identification with Unique Keys
+
+Client activity could be linked if an Origin and Issuer collude to have unique keys targeted
+at specific Clients or sets of Clients.
+
+To mitigate the risk of a targeted Origin Name Key, the Attester can observe and validate
+the issuer_key_id presented by the Client to the Issuer. As described in {{issuance}}, Attesters
+MUST validate that the issuer_key_id in the Client's AccessTokenRequest matches a known public key
+for the Issuer. The Attester needs to support key rotation, but ought to disallow very rapid key
+changes, which could indicate that an Origin is colluding with an Issuer to try to rotate the key
+for each new Client in order to link the client activity.
+
+## Collusion Among Different Entities {#collusion}
+
+Collusion among the different entities in the Privacy Pass architecture can result in
+exposure of a client's per-origin access patterns.
+
+For this issuance protocol, Issuers and Attesters should be run by mutually distinct
+organizations to limit information sharing. A single entity running an Issuer and Attester
+for a single token issuance flow can view the origins being accessed by a given client.
+Running the Issuer and Attester in this 'single Issuer/Attester' fashion reduces the privacy
+promises of no one entity being able to learn Client browsing patterns. This may be desirable
+for a redemption flow that is limited to specific Issuers and Attesters, but should be avoided
+where hiding origin names from the Attester is desirable.
+
+If a Attester and Origin are able to collude, they can correlate a client's identity
+and origin access patterns through timestamp correlation. The timing of a request to an
+Origin and subsequent token issuance to a Attester can reveal the Client
+identity (as known to the Attester) to the Origin, especially if repeated over multiple accesses.
+
+# Deployment Considerations {#deploy}
+
+## Origin Key Rollout
+
+Issuers SHOULD generate a new (Issuer Key, Issuer Origin Secret) regularly, and
+SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED
+rotation interval is two times the length of the policy window for that
+information. During generation, issuers must ensure the `token_key_id` (the 8-bit
+prefix of SHA256(Issuer Key)) is different from all other `token_key_id`
+values for that origin currently in rotation. One way to ensure this uniqueness
+is via rejection sampling, where a new key is generated until its `token_key_id` is
+unique among all currently in rotation for the origin.
+
 # IANA considerations
 
 ## Token Type {#iana-token-type}
