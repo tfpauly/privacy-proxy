@@ -629,11 +629,14 @@ This section describes the Issuance protocol for a Client to request and receive
 a token from an Issuer. Token issuance involves a Client, Mediator, and Issuer,
 with the following steps:
 
-1. The Client sends a token request to the Mediator, encrypted using an Issuer-specific key
+1. The Client sends a token request containing a token request, encrypted origin
+   name, and one-time-use public key and signature to the Mediator
 
-1. The Mediator validates the request and proxies the request to the Issuer
+1. The Mediator validates the request contents, specifically checking the request
+   signature, and proxies the request to the Issuer
 
-1. The Issuer decrypts the request and sends a response back to the Mediator
+1. The Issuer validates the request against the signature, and processes its contents,
+   and produces a token response sent back to the Mediator
 
 1. The Mediator verifies the response and proxies the response to the Client
 
@@ -644,14 +647,10 @@ operation:
 
 - RSA Blind Signatures {{BLINDSIG}}, for issuing and constructing Tokens as described in {{redemption}}.
 
-- Prime Order Groups (POGs), for computing stable mappings between (Client, Origin) pairs. This
-  document uses notation described in {{!VOPRF=I-D.irtf-cfrg-voprf, Section 2.1}}, and, in particular,
-  the functions RandomScalar(), Generator(), SerializeScalar(), SerializeElement(), and HashToScalar().
-
-- Non-Interactive proof-of-knowledge (POK), as described in {{nizk-dl}}, for verifying correctness of Client requests.
+- Schnorr signatures, as described in {{!RFC8032}}, for verifying correctness of Client requests.
 
 Clients and Issuers are required to implement all of these dependencies, whereas Mediators are required
-to implement POG and POK support.
+to implement Schnorr signature support.
 
 ## State Requirements
 
@@ -789,13 +788,13 @@ blinded_req, blind_inv = rsabssa_blind(ORIGIN_TOKEN_KEY, message)
 The Client MUST use a randomized variant of RSABSSA in producing this signature
 with a salt length of at least 32 bytes.
 
-The Client then uses CLIENT_KEY to generate its index request `index_request`
-and blind `index_blind` as described in {{client-stable-mapping}}.
+The Client then uses CLIENT_KEY to generate its one-time-use request public
+key `request_key` and blind `request_key_blind` as described in {{client-stable-mapping}}.
 
 The Client then encrypts the origin name using ISSUER_KEY, producing
 `issuer_key_id` and `encrypted_origin_name` as described in {{encrypt-origin}}.
 
-Finally, the Client uses CLIENT_SECRET to produce `request_proof`
+Finally, the Client uses CLIENT_SECRET to produce `request_signature`
 as described in {{index-proof}}.
 
 The Client then constructs a Private Access Token request with the following
@@ -806,10 +805,10 @@ struct {
    uint8_t version = 0x01;
    uint8_t token_key_id;
    uint8_t blinded_req[Nk];
-   uint8_t index_request[Ne+Ne];
+   uint8_t request_key[Ne];
    uint8_t issuer_key_id[32];
    uint8_t encrypted_origin_name<1..2^16-1>;
-   uint8_t request_proof[Np];
+   uint8_t request_signature[Np];
 } AccessTokenRequest;
 ~~~
 
@@ -824,7 +823,7 @@ object carrying ORIGIN_TOKEN_KEY.
 
 - "blinded_req" is the Nk-octet request defined above.
 
-- "index_request" is computed as described in {{index-request}}.
+- "request_key" is computed as described in {{index-request}}.
 
 - "issuer_key_id" is a collision-resistant hash that identifies the ISSUER_KEY public
 key, generated as SHA256(KeyConfig).
@@ -832,13 +831,13 @@ key, generated as SHA256(KeyConfig).
 - "encrypted_origin_name" is an encrypted structure that contains ORIGIN_NAME,
 calculated as described in {{encrypt-origin}}.
 
-- "request_proof" is computed as described in {{index-proof}}.
+- "request_signature" is computed as described in {{index-proof}}.
 
 The Client then generates an HTTP POST request to send through the Mediator to
 the Issuer, with the AccessTokenRequest as the body. The media type for this request
 is "message/access-token-request". The Client includes the "Sec-Token-Origin" header,
 whose value is ANON_ORIGIN_ID; the "Sec-Token-Client" header, whose value is CLIENT_KEY; and
-the "Sec-Token-Nonce" header, whose value is index_blind. The Client
+the "Sec-Token-Nonce" header, whose value is request_key_blind. The Client
 sends this request to the Mediator's proxy URI. An example request is shown below,
 where Nk = 512.
 
@@ -853,7 +852,7 @@ content-type = message/access-token-request
 content-length = 512
 sec-token-origin = ANON_ORIGIN_ID
 sec-token-client = CLIENT_KEY
-sec-token-nonce = index_blind
+sec-token-nonce = request_key_blind
 
 <Bytes containing the AccessTokenRequest>
 ~~~
@@ -869,9 +868,9 @@ the Client. If the key does not match, the Mediator rejects the request with an 
 400 error. Note that Mediators need to be careful in cases of key rotation; see
 {{privacy-considerations}}.
 
-The Mediator finally checks to ensure that the AccessTokenRequest.index_request is valid
-for the given CLIENT_KEY; see {{nizk-dl}} for verification details. If the index is invalid,
-the Mediator rejects the request with an HTTP 400 error.
+The Mediator finally checks to ensure that the AccessTokenRequest.request_key is valid
+for the given CLIENT_KEY; see {{client-stable-mapping}} for verification details. If the
+index is invalid, the Mediator rejects the request with an HTTP 400 error.
 
 If the Mediator accepts the request, it will look up the state stored for this Client.
 It will look up the count of previously generate tokens for this Client using the same
@@ -1008,7 +1007,7 @@ the public key from the configuration, pkI, and;
 - a selected combination of KDF, identified by kdfID, and AEAD, identified by aeadID.
 
 Beyond the key configuration inputs, Clients also require the following inputs defined
-in {{request-one}}: `token_key_id`, `blinded_req`, and `index_request`.
+in {{request-one}}: `token_key_id`, `blinded_req`, and `request_key`.
 
 Together, these are used to encapsulate ORIGIN_NAME (`origin_name`) and produce
 ENCRYPTED_ORIGIN_NAME (`encrypted_origin`) as follows:
@@ -1030,7 +1029,7 @@ aad = concat(encode(1, keyID),
              encode(2, kdfID),
              encode(2, aeadID),
              encode(1, version),
-             encode(Ne+Ne, index_request),
+             encode(Ne, request_key),
              encode(1, token_key_id),
              encode(Nk, blinded_req),
              encode(32, issuer_key_id))
@@ -1049,7 +1048,7 @@ aad = concat(encode(1, keyID),
              encode(2, kdfID),
              encode(2, aeadID),
              encode(1, version),
-             encode(Ne+Ne, index_request),
+             encode(Ne, request_key),
              encode(1, token_key_id),
              encode(Nk, blinded_req),
              encode(32, issuer_key_id))
@@ -1074,9 +1073,9 @@ functionality is shown below.
 
 ~~~
 Client               Mediator                Issuer
-      (request, proof)
+    (request, signature)
   ---------------------->
-                             (request, proof)
+                           (request, signature)
                          ---------------------->
                                 (response)
                          <----------------------
@@ -1090,209 +1089,153 @@ describes Issuer behavior for computing the mapping with its per-Origin secret,
 and {{mediator-output-stable-mapping}} describes the final Mediator step for
 computing the mapping output.
 
+The index computation is based on Ed25519 {{!RFC8032}}. It uses the following
+functions based on this protocol:
+
+- RandomScalar(): Generate a random Ed25519 scalar as per {{RFC8032, Section 5.1.5}}.
+- ScalarMult(P, k): Multiply the Ed25519 public key P by scalar k, producing a new
+  public key as a result.
+- SerializeScalar(k): Serialize an Ed25519 scalar k, producing an opaque byte string
+  as a result. DeserializeScalar(x) deserializes input byte string x into an Ed25519
+  scalar, or fails with a "DeserializationError" otherwise.
+- Ed25519-Sign(sk, msg): Sign input message msg using the Ed25519 private key sk,
+  as defined in {{RFC8032, Section 5.1.6}}, producing an opaque byte string signature.
+- Ed25519-Verify(pk, msg, sig): Verify the signature sig over input message msg against
+  the Ed25519 public key pk, as defined in {{RFC8032, Section 5.1.7}}, producing a
+  boolean value indicating success.
+
+Multiplication of Ed25519 scalar values is denoted by '*'.
+
 ### Client Behavior {#client-stable-mapping}
 
-This section describes the Client behavior for generating an index request and proof.
+This section describes the Client behavior for generating an one-time-use
+request key and signature. Clients provide their secret CLIENT_KEY as input
+to the request key generation step, and the rest of the token request inputs
+to the signature generation step.
 
-#### Index Request {#index-request}
+#### Request Key {#index-request}
 
-Given a client key (CLIENT_KEY), Clients produce `index_request` using a Prime Order
-Group (POG) as described in {{!VOPRF=I-D.irtf-cfrg-voprf, Section 2.1}}.
-In particular, the functions RandomScalar(), SerializeScalar(), and SerializeElement(),
-are used as follows:
+Clients produce `request_key` by masking CLIENT_KEY and CLIENT_SECRET with a
+randomly chosen blind as follows:
 
-1. Generate a random scalar blind and multiply CLIENT_KEY and the group
-   generator by this blind, yielding a blinded key and blinded generator.
-1. Serialize the blinded key and blinded generator yielding
-   index_key and index_base, respectively, and concatenate each to produce index_request.
-1. Serialize the blind, yielding index_blind.
-1. Output index_blind, index_request.
+1. Generate a random Ed25519 scalar r.
+1. Blind CLIENT_KEY and CLIENT_SECRET by r to compute a blinded key pair.
+1. Serialize and output the blinded key and blind value, along with the
+   blinded secret key.
 
 In pseudocode, this is as follows:
 
 ~~~
-// Generate blind, blinded key and blinded generator
 blind = RandomScalar()
-blind_key = blind * CLIENT_KEY
-blind_generator = ScalarMultBase(blind)
-
-// Serialize and produce outputs
-index_key = SerializeElement(blind_key)
-index_base = SerializeElement(blind_generator)
-index_request = concat(index_key, index_base)
-index_blind = SerializeScalar(blind)
+blind_secret = blind * CLIENT_SECRET
+request_key = ScalarMult(CLIENT_KEY, blind)
+request_key_blind = SerializeScalar(blind)
 ~~~
 
-### Client Index Proof {#index-proof}
+### Request Signature {#index-proof}
 
-Given a client secret (CLIENT_SECRET), Clients produce proof of their request
-based on the following inputs defined in {{request-one}}: `token_key_id`,
-`blinded_req`, `index_request`, `issuer_key_id`, `encrypted_origin_name`.
-This process requires the `blind`, `blind_key`, and `blind_generator`
-values produced during the {{index-request}} process, and works as follows:
+Clients produce signature of their request based on the following inputs defined in {{request-one}}:
+`token_key_id`, `blinded_req`, `request_key`, `issuer_key_id`, `encrypted_origin_name`.
+This process requires the `blind` and `blind_secret` values produced during
+the {{index-request}} process, and works as follows:
 
-1. Compute a Schnorr proof-of-knowledge demonstrating knowledge of the
-   discrete log of the blinded key with respect to the blinded generator.
-1. Serialize the proof, yielding request_proof.
-1. Output request_proof.
+1. Concatenate all signature inputs to yield a message to sign.
+1. Compute an Ed25519 signature over the input message using the blinded secret key.
+1. Output the signature.
 
 In pseudocode, this is as follows:
 
 ~~~
-context = concat(token_key_id,
+context = concat(0x01, // version
+                 token_key_id,
                  blinded_req,
-                 index_request,
+                 request_key,
                  issuer_key_id,
                  encrypted_origin_name)
-blind_proof = SchnorrProof(CLIENT_SECRET, blind_generator, blind_key, context)
-request_proof = SerializeProof(blind_proof)
+request_signature = Ed25519-Sign(blind_secret, context)
 ~~~
 
 ### Mediator Behavior (Client Request Validation) {#mediator-stable-mapping}
 
-Given a client key (CLIENT_KEY), index_blind, and index_request,
+Given a client key (CLIENT_KEY), request_key_blind, and request_key,
 Mediators verify the proof for correctness as follows:
 
-1. Deserialize index_blind, yielding blind. If this fails, abort.
-1. Parse index_request as index_key and index_base, and parse the
-   final Np bytes of the request as request_proof, and deserialize each
-   to yield the blinded key, blinded generator, and blind proof.
-1. Multiply CLIENT_KEY and the group generator by blind, yielding a blinded key and
-   blinded generator. If these do not match the deserialized blinded key and generator,
-   abort.
-1. Verify the blind proof against the blinded key and generator. If proof verification
+1. Deserialize request_key_blind, yielding blind. If this fails, abort.
+1. Parse the final Np bytes of the request as request_signature. If this fails, abort.
+1. Parse request_key and check if it's a valid public key. If this fails, abort.
+1. Multiply CLIENT_KEY by blind, yielding a blinded key. If this does not match
+   the blinded key from the request, abort.
+1. Verify the request signature against request_key. If signature verification
    fails, abort.
 
 In pseudocode, this is as follows:
 
 ~~~
 // Parse and deserialize all client values
-blind = DeserializeScalar(index_blind)
-index_key, index_base = parse(index_request)
-request_proof = parse(index_request[len(index_request)-Np..])
-expected_blind_key = DeserializeElement(index_key)
-expected_blind_generator = DeserializeElement(index_base)
+blind = DeserializeScalar(request_key_blind)
+blind_key  = parse(request_key)
+request_signature = parse(request_key[len(request_key)-Np..])
 
 // Verify the proof parameters against the client's public key
-blind_key = blind * CLIENT_KEY
-blind_generator = blind * Generator()
+expected_blind_key = ScalarMult(CLIENT_KEY, blind)
 if expected_blind_key != blind_key:
     raise InvalidParameterError
-if expected_blind_generator != blind_generator:
-    raise InvalidParameterError
 
-// Verify the proof
-proof = DeserializeProof(request_proof)
-context = parse(index_request[..len(index_request)-Np])
-valid = SchnorrVerify(blind_generator, blind_key, proof, context)
+// Verify the siganture
+context = parse(request_key[..len(request_key)-Np])
+valid = Ed25519-Verify(blind_key, context, request_signature)
 if not valid:
-   raise InvalidProofError
+   raise InvalidSignatureError
 ~~~
 
 ### Issuer Behavior {#issuer-stable-mapping}
 
-Given a Client request index_request and Origin secret (ORIGIN_SECRET), Issuers
+Given a Client request request_key and Origin secret (ORIGIN_SECRET), Issuers
 verify the request and compute a response as follows:
 
-1. Parse index_request as index_key and index_base, and parse the
-   final Np bytes of the request as request_proof, and deserialize each
-   to yield the blinded key, blinded generator, and proof.
-1. Verify request_proof against the blinded key and generator. If proof verification
+1. Parse the final Np bytes of the request as request_signature. If this fails, abort.
+1. Parse request_key as the blinded key and check if it's a valid Ed25519 public key. If this fails, abort.
+1. Verify the request signature against the blinded key. If signature verification
    fails, abort.
-1. Multiply the blinded key by ORIGIN_SECRET, yielding a blinded client key.
-1. Serialize the blinded client key, yielding index_result.
-1. Output index_result.
+1. Multiply the blinded key by ORIGIN_SECRET, yielding an index key.
+1. Output the index key.
 
 In pseudocode, this is as follows:
 
 ~~~
 // Parse and deserialize all request values
-index_key, index_base = parse(index_request)
-request_proof = parse(index_request[len(index_request)-Np..])
-blind_key = DeserializeElement(index_key)
-blind_generator = DeserializeElement(index_base)
+blind_key  = parse(request_key)
+request_signature = parse(request_key[len(request_key)-Np..])
 
 // Verify the proof
-proof = DeserializeProof(request_proof)
-context = parse(index_request[..len(index_request)-Np])
-valid = SchnorrVerify(blind_generator, blind_key, proof, context)
+context = parse(request_key[..len(request_key)-Np])
+valid = Ed25519-Verify(blind_key, context, request_signature)
 if not valid:
-   raise InvalidProofError
+   raise InvalidSignatureError
 
 // Evaluate the request with the per-Origin secret
-evaluated_key = ORIGIN_SECRET * blind_key
-index_result = SerializeElement(evaluated_key)
+index_key = ScalarMult(blind_key, ORIGIN_SECRET)
 ~~~
 
 ### Mediator Behavior (Mapping Output Computation) {#mediator-output-stable-mapping}
 
-Given an Issuer response index_result, Client blind, and Client public
+Given an Issuer response index_key, Client blind, and Client public
 key (CLIENT_KEY), Mediators complete the mapping computation as follows:
 
-1. Deserialize index_result, yielding the evaluated client key.
-   If this fails, abort.
-1. Multiply the evaluated client key by the multiplicative inverse of the
-   Client blind, yielding the mapping result.
-1. Run HKDF with the mapping result as the secret, CLIENT_KEY as the salt, and
-   ASCII string "PrivateAccessTokens" as the info string, yielding ANON_ISSUER_ORIGIN_ID.
+1. Check that index_key is a valid Ed25519 public key. If this fails, abort.
+1. Multiply the index key by the multiplicative inverse of the Client blind, yielding the index result.
+1. Run HKDF {{!RFC5869}} with the index result as the secret, CLIENT_KEY as the salt, and
+   ASCII string "ANON_ISSUER_ORIGIN_ID" as the info string, yielding ANON_ISSUER_ORIGIN_ID.
 1. Output ANON_ISSUER_ORIGIN_ID.
 
 In pseudocode, this is as follows:
 
 ~~~
-evaluated_key = DeserialiesElement(index_result)
-mapping_result = blind^(-1) * evaluated_key
-encoded_mapping_result = SerializeElement(mapping_result)
-encoded_client_key = SerializeElement(CLIENT_KEY)
-ANON_ISSUER_ORIGIN_ID = HKDF(secret=encoded_mapping_result,
-                             salt=encoded_client_key,
-                             info="PrivateAccessTokens")
+index_result = ScalarMult(index_key, blind^(-1))
+ANON_ISSUER_ORIGIN_ID = HKDF(secret=index_result,
+                             salt=CLIENT_KEY,
+                             info="ANON_ISSUER_ORIGIN_ID")
 ~~~
-
-## Non-Interactive Schnorr Proof of Knowledge {#nizk-dl}
-
-Each Issuance request requires evaluation and verification of a Schnorr proof-of-knowledge.
-Given input secret "secret" and two elements, "base" and "target", this proof demonstrates
-knowledge of the discrete log of "target" with respect to "base". Computation of this proof,
-denoted SchnorrProof(secret, base, target, context), works as follows:
-
-~~~
-r = RandomScalar()
-u = r * base
-c = HashToScalar(len(context) || context ||
-                 SerializeElement(base) ||
-                 SerializeElement(target) ||
-                 SerializeElement(u),
-                 dst = "PrivateAccessTokensProof")
-z = r + (c * secret)
-~~~
-
-The proof is encoded by serializing (u, c, z) as follows:
-
-~~~
-struct {
-   uint8_t u[Ne];
-   uint8_t c[Ns];
-   uint8_t z[Ns];
-} Proof;
-~~~
-
-The size of this structure is Np = Ne + 2*Ns bytes.
-
-Verification of a proof (u, c, z), denoted SchnorrVerify(base, target, proof, context),
-works as follows:
-
-~~~
-c = HashToScalar(len(context) || context ||
-                 SerializeElement(base) ||
-                 SerializeElement(target) ||
-                 SerializeElement(u),
-                 dst = "PrivateAccessTokensProof")
-expected_left = base * z
-expected_right = u + (target * c)
-~~~
-
-The proof is considered valid if expected_left is the same as expected_right.
 
 # Instantiating Uses Cases {#examples}
 
