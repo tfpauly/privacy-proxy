@@ -1029,9 +1029,9 @@ aad = concat(encode(1, keyID),
              encode(2, kdfID),
              encode(2, aeadID),
              encode(1, version),
-             encode(32, request_key),
              encode(1, token_key_id),
              encode(Nk, blinded_req),
+             encode(32, request_key),
              encode(32, issuer_key_id))
 ct = context.Seal(aad, origin_name)
 encrypted_origin_name = concat(enc, ct)
@@ -1048,9 +1048,9 @@ aad = concat(encode(1, keyID),
              encode(2, kdfID),
              encode(2, aeadID),
              encode(1, version),
-             encode(32, request_key),
              encode(1, token_key_id),
              encode(Nk, blinded_req),
+             encode(32, request_key),
              encode(32, issuer_key_id))
 enc, context = SetupBaseR(enc, skI, "AccessTokenRequest")
 origin_name, error = context.Open(aad, ct)
