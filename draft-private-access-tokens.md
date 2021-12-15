@@ -805,10 +805,10 @@ struct {
    uint8_t version = 0x01;
    uint8_t token_key_id;
    uint8_t blinded_req[Nk];
-   uint8_t request_key[Ne];
+   uint8_t request_key[32];
    uint8_t issuer_key_id[32];
    uint8_t encrypted_origin_name<1..2^16-1>;
-   uint8_t request_signature[Np];
+   uint8_t request_signature[64];
 } AccessTokenRequest;
 ~~~
 
@@ -1029,7 +1029,7 @@ aad = concat(encode(1, keyID),
              encode(2, kdfID),
              encode(2, aeadID),
              encode(1, version),
-             encode(Ne, request_key),
+             encode(32, request_key),
              encode(1, token_key_id),
              encode(Nk, blinded_req),
              encode(32, issuer_key_id))
@@ -1048,7 +1048,7 @@ aad = concat(encode(1, keyID),
              encode(2, kdfID),
              encode(2, aeadID),
              encode(1, version),
-             encode(Ne, request_key),
+             encode(32, request_key),
              encode(1, token_key_id),
              encode(Nk, blinded_req),
              encode(32, issuer_key_id))
@@ -1161,7 +1161,7 @@ Given a client key (CLIENT_KEY), request_key_blind, and request_key,
 Mediators verify the proof for correctness as follows:
 
 1. Deserialize request_key_blind, yielding blind. If this fails, abort.
-1. Parse the final Np bytes of the request as request_signature. If this fails, abort.
+1. Parse the final 64 bytes of the request as request_signature. If this fails, abort.
 1. Parse request_key and check if it's a valid public key. If this fails, abort.
 1. Multiply CLIENT_KEY by blind, yielding a blinded key. If this does not match
    the blinded key from the request, abort.
@@ -1174,7 +1174,7 @@ In pseudocode, this is as follows:
 // Parse and deserialize all client values
 blind = DeserializeScalar(request_key_blind)
 blind_key  = parse(request_key)
-request_signature = parse(request_key[len(request_key)-Np..])
+request_signature = parse(request_key[len(request_key)-64..])
 
 // Verify the proof parameters against the client's public key
 expected_blind_key = ScalarMult(CLIENT_KEY, blind)
@@ -1182,7 +1182,7 @@ if expected_blind_key != blind_key:
     raise InvalidParameterError
 
 // Verify the siganture
-context = parse(request_key[..len(request_key)-Np])
+context = parse(request_key[..len(request_key)-64])
 valid = Ed25519-Verify(blind_key, context, request_signature)
 if not valid:
    raise InvalidSignatureError
@@ -1193,7 +1193,7 @@ if not valid:
 Given a Client request request_key and Origin secret (ORIGIN_SECRET), Issuers
 verify the request and compute a response as follows:
 
-1. Parse the final Np bytes of the request as request_signature. If this fails, abort.
+1. Parse the final 64 bytes of the request as request_signature. If this fails, abort.
 1. Parse request_key as the blinded key and check if it's a valid Ed25519 public key. If this fails, abort.
 1. Verify the request signature against the blinded key. If signature verification
    fails, abort.
@@ -1205,10 +1205,10 @@ In pseudocode, this is as follows:
 ~~~
 // Parse and deserialize all request values
 blind_key  = parse(request_key)
-request_signature = parse(request_key[len(request_key)-Np..])
+request_signature = parse(request_key[len(request_key)-64..])
 
 // Verify the proof
-context = parse(request_key[..len(request_key)-Np])
+context = parse(request_key[..len(request_key)-64])
 valid = Ed25519-Verify(blind_key, context, request_signature)
 if not valid:
    raise InvalidSignatureError
