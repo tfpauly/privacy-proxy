@@ -647,10 +647,10 @@ operation:
 
 - RSA Blind Signatures {{BLINDSIG}}, for issuing and constructing Tokens as described in {{redemption}}.
 
-- Schnorr signatures, as described in {{!RFC8032}}, for verifying correctness of Client requests.
+- Ed25519 signatures, as described in {{!RFC8032}}, for verifying correctness of Client requests.
 
 Clients and Issuers are required to implement all of these dependencies, whereas Mediators are required
-to implement Schnorr signature support.
+to implement Ed25519 signature support.
 
 ## State Requirements
 
