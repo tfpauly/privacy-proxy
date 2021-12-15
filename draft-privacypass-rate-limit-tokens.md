@@ -863,7 +863,7 @@ in the given policy window.
 
 Rate-limited tokens are defined in terms of a Client authenticating to an Origin, where
 the "origin" is used as defined in {{?RFC6454}}. In order to limit cross-origin correlation,
-Clients MUST verify that the origin_name presented in the TokenChallenge structure ({{challenge}})
+Clients MUST verify that the origin_name presented in the TokenChallenge structure ([http-auth-doc])
 matches the origin that is providing the HTTP authentication challenge, where the matching logic
 is defined for same-origin policies in {{?RFC6454}}. Clients MAY further limit which
 authentication challenges they are willing to respond to, for example by only accepting
