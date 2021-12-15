@@ -1,7 +1,7 @@
 ---
 title: "Rate-Limited Token Issuance Protocol"
-abbrev: PP Issuance
-docname: draft-ietf-privacypass-rate-limit-tokens-latest
+abbrev: Rate-Limited Tokens
+docname: draft-privacypass-rate-limit-tokens-latest
 category: info
 
 ipr: trust200902

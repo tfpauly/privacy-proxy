@@ -8,7 +8,7 @@ This repository collects various specifications and Internet drafts that will be
 
 * [Authentication Scheme](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-privacypass-auth-scheme.html)
 
-* [Rate-Limited Token Issuance](https://tfpauly.github.io/privacy-proxy/#go.draft-ietf-privacypass-rate-limit-tokens.html)
+* [Rate-Limited Token Issuance](https://tfpauly.github.io/privacy-proxy/#go.draft-privacypass-rate-limit-tokens.html)
 
 ## The Geohash HTTP Client Hint
 
