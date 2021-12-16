@@ -408,13 +408,13 @@ Its ABNF is:
     Sec-Token-Client = sf-binary
 ~~~
 
-The "Sec-Token-Nonce" is an Item Structured Header {{!RFC8941}}. Its
+The "Sec-Token-Request-Blind" is an Item Structured Header {{!RFC8941}}. Its
 value MUST be a Byte Sequence. This header is sent on Client-to-Attester
 requests ({{request-one}}), and contains a per-request nonce value.
 Its ABNF is:
 
 ~~~
-    Sec-Token-Nonce = sf-binary
+    Sec-Token-Request-Blind = sf-binary
 ~~~
 
 The "Sec-Token-Count" is an Item Structured Header {{!RFC8941}}. Its
@@ -492,7 +492,7 @@ The Client then generates an HTTP POST request to send through the Attester to
 the Issuer, with the TokenRequest as the body. The media type for this request
 is "message/token-request". The Client includes the "Sec-Token-Origin" header,
 whose value is Anonymous Origin ID; the "Sec-Token-Client" header, whose value is Client Key; and
-the "Sec-Token-Nonce" header, whose value is request_key_blind. The Client
+the "Sec-Token-Request-Blind" header, whose value is request_key_blind. The Client
 sends this request to the Attester's proxy URI. An example request is shown below,
 where Nk = 512.
 
@@ -507,7 +507,7 @@ content-type = message/token-request
 content-length = 512
 sec-token-origin = Anonymous Origin ID
 sec-token-client = Client Key
-sec-token-nonce = request_key_blind
+sec-token-request-blind = request_key_blind
 
 <Bytes containing the TokenRequest>
 ~~~
@@ -797,7 +797,6 @@ blind = RandomBytes(32)
 r, mask = Ed25519-KeyGen(blind)
 pk_r = ScalarMult(pk, r)
 request_key = SerializeKey(pk_r)
-request_key_blind = SerializeScalar(r)
 ~~~
 
 ### Request Signature {#index-proof}
@@ -830,7 +829,6 @@ Given a Client Key (denoted pk) and an AccessTokenRequest request, from which
 request_key_blind, request_key, and request_signature are parsed,
 Attesters verify the signature as follows:
 
-1. Deserialize request_key_blind, yielding r. If this fails, abort.
 1. Check that request_key is a valid Ed25519 public key. If this fails, abort.
 1. Blind Client Key by r, yielding a blinded key. If this does not match
    request_key, abort.
@@ -840,7 +838,7 @@ Attesters verify the signature as follows:
 In pseudocode, this is as follows:
 
 ~~~
-r = DeserializeScalar(request_key_blind)
+r, _ = Ed25519-KeyGen(request_key_blind)
 expected_request_ke = SerializeKey(ScalarMult(pk, r))
 if expected_request_ke != request_key:
    raise InvalidParameterError
@@ -993,16 +991,16 @@ This document registers four new headers for use on the token issuance path
 in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignments/message-headers)>.
 
 ~~~
-    +-------------------+----------+--------+---------------+
-    | Header Field Name | Protocol | Status |   Reference   |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Origin  |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Client  |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Nonce   |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Count   |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
+    +-------------------------+----------+--------+---------------+
+    | Header Field Name       | Protocol | Status |   Reference   |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Origin        |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Client        |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Request-Blind |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Count         |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
 ~~~
 {: #iana-header-type-table title="Registered HTTP Header"}
