@@ -396,7 +396,7 @@ Template:
 
 The initial contents for this registry are defined in the table below.
 
-| Value  | Name                   | Public | Public Metadata | Private Metadata | Nk  | Reference    |
-|:-------|:-----------------------|:-------|:----------------|:-----------------|:----|:-------------|
-| 0x0000 | (reserved)             | N/A    | N/A             | N/A              | N/A | N/A          |
+| Value  | Name                   | Publicly Verifiable | Public Metadata | Private Metadata | Nk  | Reference    |
+|:-------|:-----------------------|:--------------------|:----------------|:-----------------|:----|:-------------|
+| 0x0000 | (reserved)             | N/A                 | N/A             | N/A              | N/A | N/A          |
 {: #aeadid-values title="Token Types"}
