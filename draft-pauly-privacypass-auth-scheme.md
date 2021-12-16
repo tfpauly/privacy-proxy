@@ -201,7 +201,7 @@ following attributes:
 
 - "challenge", which contains a base64url-encoded {{!RFC4648}} TokenChallenge
 value. This MUST be unique for every 401 HTTP response to prevent replay attacks.
-This attribut is required for all challenges.
+This attribute is required for all challenges.
 
 - "issuer-key", which contains a base64url encoding of the SubjectPublicKeyInfo object
 for use with the issuance protocol indicated by the challenge. This attribute MAY
