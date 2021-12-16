@@ -977,9 +977,9 @@ unique among all currently in rotation for the origin.
 
 This document updates the "Token Type" Registry ({{AUTHSCHEME}}) with the following value:
 
-| Value  | Name                   | Public | Public Metadata | Private Metadata | Nk  | Reference        |
-|:-------|:-----------------------|:-------|:----------------|:-----------------|:----|:-----------------|
-| 0x0003 | Rate-Limited Blind RSA | Y      | N               | N                | 512 | This document    |
+| Value  | Name                   | Publicly Verifiable | Public Metadata | Private Metadata | Nk  | Reference        |
+|:-------|:-----------------------|:--------------------|:----------------|:-----------------|:----|:-----------------|
+| 0x0003 | Rate-Limited Blind RSA | Y                   | N               | N                | 512 | This document    |
 {: #aeadid-values title="Token Types"}
 
 ## HTTP Headers {#iana-headers}
