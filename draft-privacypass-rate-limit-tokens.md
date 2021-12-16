@@ -207,11 +207,14 @@ This section describes the Issuance protocol for a Client to request and receive
 a token from an Issuer. Token issuance involves a Client, Attester, and Issuer,
 with the following steps:
 
-1. The Client sends a token request to the Attester, encrypted using an Issuer-specific key
+1. The Client sends a token request containing a token request, encrypted origin
+name, and one-time-use public key and signature to the Attester
 
-1. The Attester validates the request and proxies the request to the Issuer
+1. The Attester validates the request contents, specifically checking the request
+signature, and proxies the request to the Issuer
 
-1. The Issuer decrypts the request and sends a response back to the Attester
+1. The Issuer validates the request against the signature, and processes its contents,
+and produces a token response sent back to the Attester
 
 1. The Attester verifies the response and proxies the response to the Client
 
@@ -223,14 +226,10 @@ is the same as used in the base publicly verifiable token issuance protocol {{IS
 
 - {{HPKE}}, for encrypting the origin server name in transit between Client and Issuer across the Attester.
 
-- Prime Order Groups (POGs), for computing stable mappings between (Client, Origin) pairs. This
-  document uses notation described in {{!VOPRF=I-D.irtf-cfrg-voprf, Section 2.1}}, and, in particular,
-  the functions RandomScalar(), Generator(), SerializeScalar(), SerializeElement(), and HashToScalar().
-
-- Non-Interactive proof-of-knowledge (POK), as described in {{nizk-dl}}, for verifying correctness of Client requests.
+- Ed25519 signatures, as described in {{!RFC8032}}, for verifying correctness of Client requests.
 
 Clients and Issuers are required to implement all of these dependencies, whereas Attesters are required
-to implement POG and POK support.
+to implement Ed25519 signature support.
 
 ## State Requirements
 
@@ -359,55 +358,65 @@ certificate pinning, to mitigate the risk of channel compromise; see
 {{sec-considerations}} for additional about this channel.
 
 Issuance begins by Clients hashing the TokenChallenge to produce a token input
-as message = SHA256(challenge), and then blinding message as follows:
+as `message = SHA256(challenge)`, and then blinding `message` as follows:
 
 ~~~
-blinded_req, blind_inv = rsabssa_blind(Issuer Key, message)
+blinded_msg, blind_inv = rsabssa_blind(Issuer Key, message)
 ~~~
 
 The Client MUST use a randomized variant of RSABSSA in producing this signature with
 a salt length of at least 32 bytes.
 
-The Client uses Client Key and Client Secret to generate proof of its request as
-described in {{client-stable-mapping}}, yielding output client_origin_index_blind and
-client_origin_index_request. The Client then constructs a TokenRequest
-using client_origin_index_request, blinded_req, and origin information.
+The Client then uses Client Key to generate its one-time-use request public
+key `request_key` and blind `request_key_blind` as described in {{client-stable-mapping}}.
+ 
+The Client then encrypts the origin name using Origin Name Key, producing
+`issuer_key_id` and `encrypted_origin_name` as described in {{encrypt-origin}}.
+
+Finally, the Client uses Client Secret to produce `request_signature`
+as described in {{index-proof}}.
+
+The Client then constructs a TokenRequest structure. This TokenRequest
+structure is based on the publicly verifiable token issuance path in
+{{ISSUANCE}}, adding fields for the encrypted origin name and request signature.
 
 ~~~
 struct {
-   uint8_t version;
-   uint8_t client_origin_index_request[Ne+Ne+Np];
-   uint8_t token_key_id;
-   uint8_t blinded_req[Nk];
-   uint8_t issuer_key_id[32];
+   uint16_t token_type = 0x0003;
+   uint8_t issuer_key_id;
+   uint8_t blinded_msg[Nk];
+   uint8_t request_key[32];
+   uint8_t origin_name_key_id[32];
    uint8_t encrypted_origin_name<1..2^16-1>;
+   uint8_t request_signature[64];
 } TokenRequest;
 ~~~
 
 The structure fields are defined as follows:
 
-- "version" is a 1-octet integer, which matches the version in the TokenChallenge.
-This document defines version 1.
+- "token_type" is a 2-octet integer, which matches the type in the challenge.
 
-- "client_origin_index_request" is computed as described in {{client-stable-mapping}}.
-
-- "token_key_id" is the least significant byte of the Issuer Key key ID, which is
+- "issuer_key_id" is the least significant byte of the Issuer Key key ID, which is
 generated as SHA256(public_key), where public_key is a DER-encoded SubjectPublicKeyInfo
 object carrying Issuer Key.
 
-- "blinded_req" is the Nk-octet request defined above.
+- "blinded_msg" is the Nk-octet request defined above.
 
-- "issuer_key_id" is a collision-resistant hash that identifies the Origin Name Key public
+- "request_key" is computed as described in {{index-request}}.
+
+- "origin_name_key_id" is a collision-resistant hash that identifies the Origin Name Key public
 key, generated as SHA256(KeyConfig).
 
 - "encrypted_origin_name" is an encrypted structure that contains Origin Name,
 calculated as described in {{encrypt-origin}}.
 
+- "request_signature" is computed as described in {{index-proof}}.
+
 The Client then generates an HTTP POST request to send through the Attester to
-the Issuer, with the AccessTokenRequest as the body. The media type for this request
+the Issuer, with the TokenRequest as the body. The media type for this request
 is "message/token-request". The Client includes the "Sec-Token-Origin" header,
 whose value is Anonymous Origin ID; the "Sec-Token-Client" header, whose value is Client Key; and
-the "Sec-Token-Nonce" header, whose value is client_origin_index_blind. The Client
+the "Sec-Token-Nonce" header, whose value is request_key_blind. The Client
 sends this request to the Attester's proxy URI. An example request is shown below,
 where Nk = 512.
 
@@ -422,15 +431,15 @@ content-type = message/token-request
 content-length = 512
 sec-token-origin = Anonymous Origin ID
 sec-token-client = Client Key
-sec-token-nonce = client_origin_index_blind
+sec-token-nonce = request_key_blind
 
-<Bytes containing the AccessTokenRequest>
+<Bytes containing the TokenRequest>
 ~~~
 
-If the Attester detects a version in the AccessTokenRequest that it does not recognize
+If the Attester detects a token_type in the TokenRequest that it does not recognize
 or support, it MUST reject the request with an HTTP 400 error.
 
-The Attester also checks to validate that the issuer_key_id in the client's AccessTokenRequest
+The Attester also checks to validate that the issuer_key_id in the client's TokenRequest
 matches a known Origin Name Key public key for the Issuer. For example, the Attester can
 fetch this key using the API defined in {{setup}}. This check is done to help ensure that
 the Client has not been given a unique key that could allow the Issuer to fingerprint or target
@@ -438,9 +447,9 @@ the Client. If the key does not match, the Attester rejects the request with an 
 400 error. Note that Attesters need to be careful in cases of key rotation; see
 {{privacy-considerations}}.
 
-The Attester finally checks to ensure that the AccessTokenRequest.client_origin_index_request is valid
-for the given Client Key; see {{nizk-dl}} for verification details. If the index is invalid,
-the Attester rejects the request with an HTTP 400 error.
+The Attester finally checks to ensure that the TokenRequest.request_key is valid
+for the given Client Key; see {{client-stable-mapping}} for verification details.
+If the index is invalid, the Attester rejects the request with an HTTP 400 error.
 
 If the Attester accepts the request, it will look up the state stored for this Client.
 It will look up the count of previously generate tokens for this Client using the same
@@ -462,7 +471,7 @@ TLS or another form of application-layer authentication. They MAY additionally u
 mechanisms such as TLS certificate pinning, to mitigate the risk of channel
 compromise; see {{sec-considerations}} for additional about this channel.
 
-Before copying and forwarding the Client's AccessTokenRequest request to the Issuer,
+Before copying and forwarding the Client's TokenRequest request to the Issuer,
 the Attester validates the Client's stable mapping request as described in {{attester-stable-mapping}}.
 If this fails, the Attester MUST return an HTTP 400 error to the Client. Otherwise, the
 Attester then adds a header that includes the count of previous tokens as "Sec-Token-Count".
@@ -480,19 +489,19 @@ content-type = message/token-request
 content-length = 512
 sec-token-count = 3
 
-<Bytes containing the AccessTokenRequest>
+<Bytes containing the TokenRequest>
 ~~~
 
 Upon receipt of the forwarded request, the Issuer validates the following conditions:
 
 - The "Sec-Token-Count" header is present
-- The AccessTokenRequest contains a supported version
-- For version 1, the AccessTokenRequest.issuer_key_id corresponds to the ID of the Origin Name Key held by the Issuer
-- For version 1, the AccessTokenRequest.encrypted_origin_name can be decrypted using the
+- The TokenRequest contains a supported version
+- For version 1, the TokenRequest.issuer_key_id corresponds to the ID of the Origin Name Key held by the Issuer
+- For version 1, the TokenRequest.encrypted_origin_name can be decrypted using the
 Issuer's private key (the private key associated with Origin Name Key), and matches
 an Origin Name that is served by the Issuer
-- For version 1, the AccessTokenRequest.blinded_req is of the correct size
-- For version 1, the AccessTokenRequest.token_key_id corresponds to an ID of an Issuer Key
+- For version 1, the TokenRequest.blinded_msg is of the correct size
+- For version 1, the TokenRequest.origin_name_key_id corresponds to an ID of an Issuer Key
 for the corresponding Origin Name
 
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Attester,
@@ -504,37 +513,37 @@ Issuer refuses to issue more tokens, it responds with an HTTP 429 (Too Many Requ
 Attester, which will forward the error to the client.
 
 The Issuer determines the correct Issuer Key by using the decrypted Origin Name value and
-AccessTokenRequest.token_key_id. If there is no Issuer Key whose truncated key ID matches
-AccessTokenRequest.token_key_id, the Issuer MUST return an HTTP 401 error to Attester, which will
+TokenRequest.issuer_key_id. If there is no Issuer Key whose truncated key ID matches
+TokenRequest.issuer_key_id, the Issuer MUST return an HTTP 401 error to Attester, which will
 forward the error to the client. The Attester learns that the client's view of the Origin key
 was invalid in the process.
 
 ## Issuer-to-Attester Response {#response-one}
 
 If the Issuer is willing to give a token to the Client, the Issuer decrypts
-AccessTokenRequest.encrypted_origin_name to discover "origin". If this fails, the Issuer rejects
+TokenRequest.encrypted_origin_name to discover "origin". If this fails, the Issuer rejects
 the request with a 400 error. Otherwise, the Issuer validates and processes the token request
 with Issuer Origin Secret corresponding to the designated Origin as described in {{issuer-stable-mapping}}.
 If this fails, the Issuer rejects the request with a 400 error. Otherwise, the output is
-client_origin_index_result.
+index_result.
 
 The Issuer completes the issuance flow by computing a blinded response as follows:
 
 ~~~
-blind_sig = rsabssa_blind_sign(skP, AccessTokenRequest.blinded_req)
+blind_sig = rsabssa_blind_sign(skP, TokenRequest.blinded_msg)
 ~~~
 
 `skP` is the private key corresponding to Issuer Key, known only to the Issuer.
 
 The Issuer generates an HTTP response with status code 200 whose body consists of
 blind_sig, with the content type set as "message/token-response" and the
-client_origin_index_result set in the "Sec-Token-Origin" header.
+index_result set in the "Sec-Token-Origin" header.
 
 ~~~
 :status = 200
 content-type = message/token-response
 content-length = 512
-sec-token-origin = client_origin_index_result
+sec-token-origin = index_result
 
 <Bytes containing the blind_sig>
 ~~~
@@ -570,19 +579,21 @@ If this succeeds, the Client then constructs a token as described in
 # Encrypting Origin Names {#encrypt-origin}
 
 Given a `KeyConfig` (Origin Name Key), Clients produce encrypted_origin_name and authenticate
-all other contents of the AccessTokenRequest using the following values:
+the contents of the TokenRequest using the following values:
 
 - the key identifier from the configuration, keyID, with the corresponding KEM identified by kemID,
 the public key from the configuration, pkI, and;
 - a selected combination of KDF, identified by kdfID, and AEAD, identified by aeadID.
 
-Beyond the key configuration inputs, Clients also require the AccessTokenRequest inputs.
+Beyond the key configuration inputs, Clients also require the following inputs defined
+in {{request-one}}: `issuer_key_id`, `blinded_msg`, `request_key`, and `origin_name_key_id`.
+
 Together, these are used to encapsulate Origin Name (`origin_name`) and produce
 ENCRYPTED_Origin Name (`encrypted_origin`) as follows:
 
 1. Compute an {{HPKE}} context using pkI, yielding context and encapsulation key enc.
 1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID,
-   aeadID, and all other values of the AccessTokenRequest structure.
+   aeadID, and all other values of the TokenRequest structure.
 1. Encrypt (seal) request with aad as associated data using context, yielding ciphertext ct.
 1. Concatenate the values of aad, enc, and ct, yielding an Encapsulated Request enc_request.
 
@@ -591,16 +602,16 @@ Note that enc is of fixed-length, so there is no ambiguity in parsing this struc
 In pseudocode, this procedure is as follows:
 
 ~~~
-enc, context = SetupBaseS(pkI, "AccessTokenRequest")
+enc, context = SetupBaseS(pkI, "TokenRequest")
 aad = concat(encode(1, keyID),
              encode(2, kemID),
              encode(2, kdfID),
              encode(2, aeadID),
-             encode(1, version),
-             encode(Ne+Ne+Np, client_origin_index_request),
-             encode(1, token_key_id),
-             encode(Nk, blinded_req),
-             encode(32, issuer_key_id))
+             encode(2, token_type),
+             encode(1, issuer_key_id),
+             encode(Nk, blinded_msg),
+             encode(32, request_key),
+             encode(32, origin_name_key_id))
 ct = context.Seal(aad, origin_name)
 encrypted_origin_name = concat(enc, ct)
 ~~~
@@ -615,18 +626,18 @@ aad = concat(encode(1, keyID),
              encode(2, kemID),
              encode(2, kdfID),
              encode(2, aeadID),
-             encode(1, version),
-             encode(Ne+Ne+Np, client_origin_index_request),
-             encode(1, token_key_id),
-             encode(Nk, blinded_req),
-             encode(32, issuer_key_id))
-enc, context = SetupBaseR(enc, skI, "AccessTokenRequest")
+             encode(2, token_type),
+             encode(1, issuer_key_id),
+             encode(Nk, blinded_msg),
+             encode(32, request_key),
+             encode(32, origin_name_key_id))
+enc, context = SetupBaseR(enc, skI, "TokenRequest")
 origin_name, error = context.Open(aad, ct)
 ~~~
 
-# Stable Mapping Computation {#stable-mapping}
+# Index Computation {#stable-mapping}
 
-This section describes the Client, Attester, and Issuer behavior in computing
+This section describes the Client, Attester, and Issuer behavior in computing `index`,
 the stable mapping based on client identity and origin name. At a high level,
 this functionality computes y = F(x, k), where x is a per-Client secret and
 k is a per-Origin secret, subject to the following constraints:
@@ -641,9 +652,9 @@ functionality is shown below.
 
 ~~~
 Client               Attester                Issuer
-      (request, proof)
+      (request, signature)
   ---------------------->
-                             (request, proof)
+                           (request, signature)
                          ---------------------->
                                 (response)
                          <----------------------
@@ -657,180 +668,153 @@ describes Issuer behavior for computing the mapping with its per-Origin secret,
 and {{attester-output-stable-mapping}} describes the final Attester step for
 computing the mapping output.
 
+The index computation is based on Ed25519 {{!RFC8032}}. It uses the following
+ functions based on this protocol:
+
+- RandomScalar(): Generate a random Ed25519 scalar as per {{RFC8032, Section 5.1.5}}.
+- ScalarMult(P, k): Multiply the Ed25519 public key P by scalar k, producing a new
+  public key as a result.
+- SerializeScalar(k): Serialize an Ed25519 scalar k, producing an opaque byte string
+  as a result. DeserializeScalar(x) deserializes input byte string x into an Ed25519
+  scalar, or fails with a "DeserializationError" otherwise.
+- Ed25519-Sign(sk, msg): Sign input message msg using the Ed25519 private key sk,
+  as defined in {{RFC8032, Section 5.1.6}}, producing an opaque byte string signature.
+- Ed25519-Verify(pk, msg, sig): Verify the signature sig over input message msg against
+  the Ed25519 public key pk, as defined in {{RFC8032, Section 5.1.7}}, producing a
+  boolean value indicating success.
+
+ Multiplication of Ed25519 scalar values is denoted by '*'.
+
 ## Client Behavior {#client-stable-mapping}
 
-Given a client secret (Client Secret) and the corresponding key (Client Key),
-Clients produce client_origin_index using a Prime Order Groups (POGs) as
-described in {{!VOPRF=I-D.irtf-cfrg-voprf, Section 2.1}}. In particular,
-the functions RandomScalar(), Generator(), SerializeScalar(), SerializeElement(),
-and HashToScalar() are used in the following way.
+This section describes the Client behavior for generating an one-time-use
+request key and signature. Clients provide their Client Secret as input
+to the request key generation step, and the rest of the token request inputs
+to the signature generation step.
 
-1. Generate a random scalar blind and multiply Client Key and the group
-   generator by this blind, yielding a blinded key and blinded generator.
-1. Compute a Schnorr proof-of-knowledge demonstrating knowledge of the
-   discrete log of the blinded key with respect to the blinded generator.
-1. Serialize the blinded key, blinded generator, and proof, yielding
-   client_origin_index_key, client_origin_index_base, and client_origin_index_proof,
-   and concatenate each, yielding client_origin_index_request.
-1. Serialize the blind, yielding client_origin_index_blind.
-1. Output client_origin_index_blind, client_origin_index_request.
+#### Request Key {#index-request}
+
+Clients produce `request_key` by masking CLIENT_KEY and CLIENT_SECRET with a
+ randomly chosen blind as follows:
+
+1. Generate a random Ed25519 scalar r.
+1. Blind Client Key and Client Secret by r to compute a blinded key pair.
+1. Serialize and output the blinded key and blind value, along with the
+   blinded secret key.
 
 In pseudocode, this is as follows:
 
 ~~~
 // Generate blind, blinded key, blinded generator, and the proof
 blind = RandomScalar()
-blind_key = blind * Client Key
-blind_generator = blind * Generator()
-blind_proof = SchnorrProof(Client Secret, blind_generator, blind_key)
+blind_secret = blind * Client Secrety
+request_key = ScalarMult(Client Key, blind)
+request_key_blind = SerializeScalar(blind)
+~~~
 
-// Serialize and produce outputs
-client_origin_index_proof = SerializeProof(blind_proof)
-client_origin_index_key = SerializeElement(blind_key)
-client_origin_index_base = SerializeElement(blind_generator)
-client_origin_index_request = concat(client_origin_index_key,
-    client_origin_index_base, client_origin_index_proof)
-client_origin_index_blind = SerializeScalar(blind)
+### Request Signature {#index-proof}
+
+Clients produce signature of their request based on the following inputs defined in {{request-one}}:
+`issuer_key_id`, `blinded_msg`, `request_key`, `origin_name_key_id`, `encrypted_origin_name`.
+This process requires the `blind` and `blind_secret` values produced during
+the {{index-request}} process, and works as follows:
+
+1. Concatenate all signature inputs to yield a message to sign.
+1. Compute an Ed25519 signature over the input message using the blinded secret key.
+1. Output the signature.
+
+In pseudocode, this is as follows:
+
+~~~
+context = concat(0x0003, // token_type
+                 issuer_key_id,
+                 blinded_msg,
+                 request_key,
+                 origin_name_key_id,
+                 encrypted_origin_name)
+request_signature = Ed25519-Sign(blind_secret, context)
 ~~~
 
 ## Attester Behavior (Client Request Validation) {#attester-stable-mapping}
 
-Given a client key (Client Key), client_origin_index_blind, and client_origin_index_request,
+Given a client key (Client Key), request_key_blind, and request_key,
 Attesters verify the proof for correctness as follows:
 
-1. Deserialize client_origin_index_blind, yielding blind. If this fails, abort.
-1. Parse client_origin_index_request as client_origin_index_key, client_origin_index_base, and
-   client_origin_index_proof, and deserialize each to yield the blinded key, blinded generator,
-   and blind proof.
-1. Multiply Client Key and the group generator by blind, yielding a blinded key and
-   blinded generator. If these do not match the deserialized blinded key and generator,
-   abort.
-1. Verify the blind proof against the blinded key and generator. If proof verification
+1. Deserialize request_key_blind, yielding blind. If this fails, abort.
+1. Parse the final 64 bytes of the request as request_signature. If this fails, abort.
+1. Parse request_key and check if it's a valid public key. If this fails, abort.
+1. Multiply Client Key by blind, yielding a blinded key. If this does not match
+   the blinded key from the request, abort.
+1. Verify the request signature against request_key. If signature verification
    fails, abort.
 
 In pseudocode, this is as follows:
 
 ~~~
-blind = DeserializeScalar(client_origin_index_blind)
+// Parse and deserialize all client values
+blind = DeserializeScalar(request_key_blind)
+blind_key  = parse(request_key)
+request_signature = parse(request_key[len(request_key)-64..])
 
 // Verify the proof parameters against the client's public key
-client_origin_index_key, client_origin_index_base, client_origin_index_proof =
-    parse(client_origin_index_request)
-expected_blind_key = DeserializeElement(client_origin_index_key)
-expected_blind_generator = DeserializeElement(client_origin_index_base)
-blind_key = blind * Client Key
-blind_generator = blind * Generator()
+expected_blind_key = ScalarMult(Client Key, blind)
 if expected_blind_key != blind_key:
     raise InvalidParameterError
-if expected_blind_generator != blind_generator:
-    raise InvalidParameterError
 
-// Verify the proof
-proof = DeserializeProof(client_origin_index_proof)
-valid = SchnorrVerify(blind_generator, blind_key, proof)
+// Verify the siganture
+context = parse(request_key[..len(request_key)-64])
+valid = Ed25519-Verify(blind_key, context, request_signature)
 if not valid:
-   raise InvalidProofError
+    raise InvalidSignatureError
 ~~~
 
 ## Issuer Behavior {#issuer-stable-mapping}
 
-Given a Client request client_origin_index_request and Issuer Origin Secret, Issuers
+Given a Client request request_key and Issuer Origin Secret, Issuers
 verify the request and compute a response as follows:
 
-1. Parse client_origin_index_request as client_origin_index_key, client_origin_index_base, and
-   client_origin_index_proof, and deserialize each to yield the blinded key, blinded generator,
-   and proof.
-1. Verify client_origin_index_proof against the blinded key and generator. If proof verification
-   fails, abort.
-1. Multiply the blinded key by Issuer Origin Secret, yielding a blinded client key.
-1. Serialize the blinded client key, yielding client_origin_index_result.
-1. Output client_origin_index_result.
+1. Parse the final 64 bytes of the request as request_signature. If this fails, abort.
+1. Parse request_key as the blinded key and check if it's a valid Ed25519 public key. If this fails, abort.
+1. Verify the request signature against the blinded key. If signature verification
+ fails, abort.
+1. Multiply the blinded key by Issuer Origin Secret, yielding an index key.
+1. Output the index key.
 
 In pseudocode, this is as follows:
 
 ~~~
+// Parse and deserialize all request values
+blind_key  = parse(request_key)
+request_signature = parse(request_key[len(request_key)-64..])
+
 // Verify the proof
-client_origin_index_key, client_origin_index_base, client_origin_index_proof =
-    parse(client_origin_index_request)
-blind_key = DeserializeElement(client_origin_index_key)
-blind_generator = DeserializeElement(client_origin_index_base)
-proof = DeserializeProof(client_origin_index_proof)
-valid = SchnorrVerify(blind_generator, blind_key, proof)
+context = parse(request_key[..len(request_key)-64])
+valid = Ed25519-Verify(blind_key, context, request_signature)
 if not valid:
-   raise InvalidProofError
+    raise InvalidSignatureError
 
 // Evaluate the request with the per-Origin secret
-evaluated_key = Issuer Origin Secret * blind_key
-client_origin_index_result = SerializeElement(evaluated_key)
+index_key = ScalarMult(blind_key, Issuer Origin Secret)
 ~~~
 
 ## Attester Behavior (Mapping Output Computation) {#attester-output-stable-mapping}
 
-Given an Issuer response client_origin_index_result, Client blind, and Client public
+Given an Issuer response index_key, Client blind, and Client public
 key (Client Key), Attesters complete the mapping computation as follows:
 
-1. Deserialize client_origin_index_result, yielding the evaluated client key.
-   If this fails, abort.
-1. Multiply the evaluated client key by the multiplicative inverse of the
-   Client blind, yielding the mapping result.
-1. Run HKDF with the mapping result as the secret, Client Key as the salt, and
-   ASCII string "PrivateAccessTokens" as the info string, yielding Anonymous Issuer Origin ID.
-1. Output Anonymous Issuer Origin ID.
+1. Check that index_key is a valid Ed25519 public key. If this fails, abort.
+1. Multiply the index key by the multiplicative inverse of the Client blind, yielding the index result.
+1. Run HKDF {{!RFC5869}} with the index result as the secret, Client Key as the salt, and
+    ASCII string "anon_issuer_origin_id" as the info string, yielding Anonymous Issuer Origin ID.
 
 In pseudocode, this is as follows:
 
 ~~~
-evaluated_key = DeserialiesElement(client_origin_index_result)
-mapping_result = blind^(-1) * evaluated_key
-encoded_mapping_result = SerializeElement(mapping_result)
-encoded_client_key = SerializeElement(Client Key)
-Anonymous Issuer Origin ID = HKDF(secret=encoded_mapping_result,
-                             salt=encoded_client_key,
-                             info="PrivateAccessTokens")
+index_result = ScalarMult(index_key, blind^(-1))
+Anonymous Issuer Origin ID = HKDF(secret=index_result,
+                                  salt=Client Key,
+                                  info="anon_issuer_origin_id")
 ~~~
-
-# Non-Interactive Schnorr Proof of Knowledge {#nizk-dl}
-
-Each Issuance request requires evaluation and verification of a Schnorr proof-of-knowledge.
-Given input secret "secret" and two elements, "base" and "target", this proof demonstrates
-knowledge of the discrete log of "target" with respect to "base". Computation of this proof,
-denoted SchnorrProof(secret, base, target), works as follows:
-
-~~~
-r = RandomScalar()
-u = r * base
-c = HashToScalar(SerializeElement(base) ||
-                 SerializeElement(target) ||
-                 SerializeElement(u),
-                 dst = "PrivateAccessTokensProof")
-z = r + (c * secret)
-~~~
-
-The proof is encoded by serializing (u, c, z) as follows:
-
-~~~
-struct {
-   uint8_t u[Ne];
-   uint8_t c[Ns];
-   uint8_t z[Ns];
-} Proof;
-~~~
-
-The size of this structure is Np = Ne + 2*Ns bytes.
-
-Verification of a proof (u, c, z), denoted SchnorrVerify(base, target, proof),
-works as follows:
-
-~~~
-c = HashToScalar(SerializeElement(base) ||
-                 SerializeElement(target) ||
-                 SerializeElement(u),
-                 dst = "PrivateAccessTokensProof")
-expected_left = base * z
-expected_right = u + (target * c)
-~~~
-
-The proof is considered valid if expected_left is the same as expected_right.
 
 # Security considerations {#sec-considerations}
 
@@ -876,7 +860,7 @@ at specific Clients or sets of Clients.
 
 To mitigate the risk of a targeted Origin Name Key, the Attester can observe and validate
 the issuer_key_id presented by the Client to the Issuer. As described in {{issuance}}, Attesters
-MUST validate that the issuer_key_id in the Client's AccessTokenRequest matches a known public key
+MUST validate that the issuer_key_id in the Client's TokenRequest matches a known public key
 for the Issuer. The Attester needs to support key rotation, but ought to disallow very rapid key
 changes, which could indicate that an Origin is colluding with an Issuer to try to rotate the key
 for each new Client in order to link the client activity.
@@ -906,10 +890,10 @@ identity (as known to the Attester) to the Origin, especially if repeated over m
 Issuers SHOULD generate a new (Issuer Key, Issuer Origin Secret) regularly, and
 SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED
 rotation interval is two times the length of the policy window for that
-information. During generation, issuers must ensure the `token_key_id` (the 8-bit
-prefix of SHA256(Issuer Key)) is different from all other `token_key_id`
+information. During generation, issuers must ensure the `issuer_key_id` (the 8-bit
+prefix of SHA256(Issuer Key)) is different from all other `issuer_key_id`
 values for that origin currently in rotation. One way to ensure this uniqueness
-is via rejection sampling, where a new key is generated until its `token_key_id` is
+is via rejection sampling, where a new key is generated until its `issuer_key_id` is
 unique among all currently in rotation for the origin.
 
 # IANA considerations
