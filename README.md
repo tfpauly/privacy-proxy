@@ -12,7 +12,7 @@ This repository collects various specifications and Internet drafts that will be
 
 * [Rate-Limited Token Issuance](https://tfpauly.github.io/privacy-proxy/#go.draft-privacypass-rate-limit-tokens.html)
 
-## Private Access Tokens
+## Private Access Tokens (Being replaced by rate-limited token issuance in privacy pass)
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-private-access-tokens.html)
 
@@ -20,7 +20,7 @@ This repository collects various specifications and Internet drafts that will be
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geohash-hint.html)
 
-## The Privacy Token HTTP Authentication Scheme
+## The Privacy Token HTTP Authentication Scheme (Being replaced by privacy pass authentication scheme)
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-privacy-token.html)
 
