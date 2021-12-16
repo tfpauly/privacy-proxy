@@ -2,13 +2,19 @@
 
 This repository collects various specifications and Internet drafts that will be supported by privacy proxies.
 
-## Private Access Tokens
+## Privacy Pass Tokens
 
-* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-private-access-tokens.html)
+* [Architecture](https://ietf-wg-privacypass.github.io/base-drafts/caw/arch-refactor/draft-ietf-privacypass-architecture.html)
 
 * [Authentication Scheme](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-privacypass-auth-scheme.html)
 
+* [Basic Issuance](https://ietf-wg-privacypass.github.io/base-drafts/caw/pp-issuance/draft-ietf-privacypass-protocol.html)
+
 * [Rate-Limited Token Issuance](https://tfpauly.github.io/privacy-proxy/#go.draft-privacypass-rate-limit-tokens.html)
+
+## Private Access Tokens
+
+* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-private-access-tokens.html)
 
 ## The Geohash HTTP Client Hint
 
