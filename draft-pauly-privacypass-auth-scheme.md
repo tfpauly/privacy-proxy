@@ -337,12 +337,15 @@ CAPTCHA validation today, but without the need for user interaction. If issuance
 is taking a long time, a website could show an indicator that it is waiting,
 or fall back to another method of user validation.
 
-An origin MUST NOT issue more than one challenge per client request. If an
-origin issues a large number of challenges, such as more than once for each
-request, this can indicate that the origin is either not functioning correctly
-or is trying to attack or overload the client or issuance server. In such cases,
-a client MUST ignore redundant token challenges for the same request and SHOULD
-alert the user if possible.
+An origin MUST NOT issue more than one interactive challenge for a given token type
+and issuer per client request. If an origin issues a large number of challenges, such
+as more than once for each request, this can indicate that the origin is either not
+functioning correctly or is trying to attack or overload the client or issuance server.
+In such cases, a client MUST ignore redundant token challenges for the same
+request and SHOULD alert the user if possible.
+
+Origins MAY include multiple challenges, where each challenge refers to a different issuer
+or a different token type, to allow clients to choose a preferred issuer or type.
 
 # Security Considerations {#sec-considerations}
 
