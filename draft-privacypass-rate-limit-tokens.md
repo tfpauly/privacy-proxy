@@ -408,13 +408,13 @@ Its ABNF is:
     Sec-Token-Client = sf-binary
 ~~~
 
-The "Sec-Token-Nonce" is an Item Structured Header {{!RFC8941}}. Its
+The "Sec-Token-Request-Blind" is an Item Structured Header {{!RFC8941}}. Its
 value MUST be a Byte Sequence. This header is sent on Client-to-Attester
 requests ({{request-one}}), and contains a per-request nonce value.
 Its ABNF is:
 
 ~~~
-    Sec-Token-Nonce = sf-binary
+    Sec-Token-Request-Blind = sf-binary
 ~~~
 
 The "Sec-Token-Count" is an Item Structured Header {{!RFC8941}}. Its
@@ -492,7 +492,7 @@ The Client then generates an HTTP POST request to send through the Attester to
 the Issuer, with the TokenRequest as the body. The media type for this request
 is "message/token-request". The Client includes the "Sec-Token-Origin" header,
 whose value is Anonymous Origin ID; the "Sec-Token-Client" header, whose value is Client Key; and
-the "Sec-Token-Nonce" header, whose value is request_key_blind. The Client
+the "Sec-Token-Request-Blind" header, whose value is request_key_blind. The Client
 sends this request to the Attester's proxy URI. An example request is shown below,
 where Nk = 512.
 
@@ -507,7 +507,7 @@ content-type = message/token-request
 content-length = 512
 sec-token-origin = Anonymous Origin ID
 sec-token-client = Client Key
-sec-token-nonce = request_key_blind
+sec-token-request-blind = request_key_blind
 
 <Bytes containing the TokenRequest>
 ~~~
@@ -759,18 +759,18 @@ functions based on this protocol:
 - ScalarInverse(x): Compute the multiplicative inverse of input scalar x modulo the
   order of the edwards25519 group, 2^252+27742317777372353535851937790883648493, as
   defined in {{!RFC7748}}.
+- Ed25519-KeyGen(sk): Produce signing scalar s and hash input prefix as described
+  Sections 5.1.5 and Section 5.1.6 in {{RFC8032}}.
 - Ed25519-Verify(pk, msg, sig): Verify the signature sig over input message msg against
   the Ed25519 public key pk, as defined in {{RFC8032, Section 5.1.7}}, producing a
   boolean value indicating success.
-- Ed25519-BlindSign(sk, r, msg): Sign input message msg using the Ed25519 private
-  key sk blinded by the scalar r. This is the same as the Sign procedure defined in
-  {{RFC8032, Section 5.1.6}} with one modification. In particular, the secret scalar
-  `s` derived from `h` is blinded by `r` before use in the rest of the procedure.
-  The rest of the procecure is the same. This produces an opaque string of 64 bytes.
-
-In pseudocode descriptions below, integer multiplication of two Ed25519 scalar values
-is denoted by the '*' operator. For example, the product of two scalars `x` and `y`
-is denoted as `x * y`.
+- Ed25519-MaskSign(sk, msg, r, mask): Sign input message msg using the Ed25519 private
+  key sk blinded by the scalar r and hash input prefix blinded by mask. This is the
+  same as the Sign procedure defined in {{RFC8032, Section 5.1.6}} with two modifications:
+  First, the secret scalar `s` derived from `h` is blinded by `r` before use in the
+  rest of the procedure. Second, the message hash prefix is blinded by mask using XOR,
+  i.e., new_prefix = xor(prefix, mask). The rest of the procecure is the same.
+  This produces an opaque string of 64 bytes.
 
 ## Client Behavior {#client-stable-mapping}
 
@@ -793,17 +793,17 @@ respectively. This process is done as follows:
 In pseudocode, this is as follows:
 
 ~~~
-r = RandomScalar()
+blind = RandomBytes(32)
+r, mask = Ed25519-KeyGen(blind)
 pk_r = ScalarMult(pk, r)
 request_key = SerializeKey(pk_r)
-request_key_blind = SerializeScalar(r)
 ~~~
 
 ### Request Signature {#index-proof}
 
 Clients produce signature of their request based on the following inputs defined in {{request-one}}:
 `issuer_key_id`, `blinded_msg`, `request_key`, `origin_name_key_id`, `encrypted_origin_name`.
-This process requires the blind `r` value produced during the {{index-request}} process.
+This process requires the blind `r` value and `mask` produced during the {{index-request}} process.
 As above, let pk and sk denote Client Key and Client Secret, respectively. Given these
 values, this signature process works as follows:
 
@@ -820,7 +820,7 @@ context = concat(0x0003, // token_type
                  request_key,
                  origin_name_key_id,
                  encrypted_origin_name)
-request_signature = Ed25519-BlindSign(sk, r, context)
+request_signature = Ed25519-MaskSign(sk, context, r, mask)
 ~~~
 
 ## Attester Behavior (Client Request Validation) {#attester-stable-mapping}
@@ -829,7 +829,6 @@ Given a Client Key (denoted pk) and an AccessTokenRequest request, from which
 request_key_blind, request_key, and request_signature are parsed,
 Attesters verify the signature as follows:
 
-1. Deserialize request_key_blind, yielding r. If this fails, abort.
 1. Check that request_key is a valid Ed25519 public key. If this fails, abort.
 1. Blind Client Key by r, yielding a blinded key. If this does not match
    request_key, abort.
@@ -839,7 +838,7 @@ Attesters verify the signature as follows:
 In pseudocode, this is as follows:
 
 ~~~
-r = DeserializeScalar(request_key_blind)
+r, _ = Ed25519-KeyGen(request_key_blind)
 expected_request_ke = SerializeKey(ScalarMult(pk, r))
 if expected_request_ke != request_key:
    raise InvalidParameterError
@@ -992,16 +991,16 @@ This document registers four new headers for use on the token issuance path
 in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignments/message-headers)>.
 
 ~~~
-    +-------------------+----------+--------+---------------+
-    | Header Field Name | Protocol | Status |   Reference   |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Origin  |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Client  |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Nonce   |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Count   |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
+    +-------------------------+----------+--------+---------------+
+    | Header Field Name       | Protocol | Status |   Reference   |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Origin        |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Client        |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Request-Blind |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Count         |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
 ~~~
 {: #iana-header-type-table title="Registered HTTP Header"}
