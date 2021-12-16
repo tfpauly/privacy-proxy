@@ -759,18 +759,18 @@ functions based on this protocol:
 - ScalarInverse(x): Compute the multiplicative inverse of input scalar x modulo the
   order of the edwards25519 group, 2^252+27742317777372353535851937790883648493, as
   defined in {{!RFC7748}}.
+- Ed25519-KeyGen(sk): Produce signing scalar s and hash input prefix as described
+  Sections 5.1.5 and Section 5.1.6 in {{RFC8032}}.
 - Ed25519-Verify(pk, msg, sig): Verify the signature sig over input message msg against
   the Ed25519 public key pk, as defined in {{RFC8032, Section 5.1.7}}, producing a
   boolean value indicating success.
-- Ed25519-BlindSign(sk, r, msg): Sign input message msg using the Ed25519 private
-  key sk blinded by the scalar r. This is the same as the Sign procedure defined in
-  {{RFC8032, Section 5.1.6}} with one modification. In particular, the secret scalar
-  `s` derived from `h` is blinded by `r` before use in the rest of the procedure.
-  The rest of the procecure is the same. This produces an opaque string of 64 bytes.
-
-In pseudocode descriptions below, integer multiplication of two Ed25519 scalar values
-is denoted by the '*' operator. For example, the product of two scalars `x` and `y`
-is denoted as `x * y`.
+- Ed25519-MaskSign(sk, msg, r, mask): Sign input message msg using the Ed25519 private
+  key sk blinded by the scalar r and hash input prefix blinded by mask. This is the
+  same as the Sign procedure defined in {{RFC8032, Section 5.1.6}} with two modifications:
+  First, the secret scalar `s` derived from `h` is blinded by `r` before use in the
+  rest of the procedure. Second, the message hash prefix is blinded by mask using XOR,
+  i.e., new_prefix = xor(prefix, mask). The rest of the procecure is the same.
+  This produces an opaque string of 64 bytes.
 
 ## Client Behavior {#client-stable-mapping}
 
@@ -793,7 +793,8 @@ respectively. This process is done as follows:
 In pseudocode, this is as follows:
 
 ~~~
-r = RandomScalar()
+blind = RandomBytes(32)
+r, mask = Ed25519-KeyGen(blind)
 pk_r = ScalarMult(pk, r)
 request_key = SerializeKey(pk_r)
 request_key_blind = SerializeScalar(r)
@@ -803,7 +804,7 @@ request_key_blind = SerializeScalar(r)
 
 Clients produce signature of their request based on the following inputs defined in {{request-one}}:
 `issuer_key_id`, `blinded_msg`, `request_key`, `origin_name_key_id`, `encrypted_origin_name`.
-This process requires the blind `r` value produced during the {{index-request}} process.
+This process requires the blind `r` value and `mask` produced during the {{index-request}} process.
 As above, let pk and sk denote Client Key and Client Secret, respectively. Given these
 values, this signature process works as follows:
 
@@ -820,7 +821,7 @@ context = concat(0x0003, // token_type
                  request_key,
                  origin_name_key_id,
                  encrypted_origin_name)
-request_signature = Ed25519-BlindSign(sk, r, context)
+request_signature = Ed25519-MaskSign(sk, context, r, mask)
 ~~~
 
 ## Attester Behavior (Client Request Validation) {#attester-stable-mapping}
