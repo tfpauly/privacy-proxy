@@ -495,14 +495,13 @@ sec-token-count = 3
 Upon receipt of the forwarded request, the Issuer validates the following conditions:
 
 - The "Sec-Token-Count" header is present
-- The TokenRequest contains a supported version
-- For version 1, the TokenRequest.issuer_key_id corresponds to the ID of the Origin Name Key held by the Issuer
-- For version 1, the TokenRequest.encrypted_origin_name can be decrypted using the
+- The TokenRequest contains a supported token_type
+- The TokenRequest.issuer_key_id and TokenRequest.origin_name_key_id correspond to known
+Issuer Keys and Origin Name Keys held by the Issuer.
+- The TokenRequest.encrypted_origin_name can be decrypted using the
 Issuer's private key (the private key associated with Origin Name Key), and matches
 an Origin Name that is served by the Issuer
-- For version 1, the TokenRequest.blinded_msg is of the correct size
-- For version 1, the TokenRequest.origin_name_key_id corresponds to an ID of an Issuer Key
-for the corresponding Origin Name
+- The TokenRequest.blinded_msg is of the correct size
 
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Attester,
 which will forward the error to the client.
