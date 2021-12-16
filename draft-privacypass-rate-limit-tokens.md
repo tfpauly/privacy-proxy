@@ -40,6 +40,11 @@ author:
     org: Cloudflare
     email: caw@heapingbits.net
 
+normative:
+  AUTHSCHEME:
+    title: The Privacy Pass HTTP Authentication Scheme
+    target: https://tfpauly.github.io/privacy-proxy/draft-pauly-privacypass-auth-scheme.html
+
 --- abstract
 
 This document specifies a variant of the Privacy Pass issuance protocol
@@ -68,7 +73,7 @@ with a given origin server within a fixed period of time.
 
 This issuance protocol registers the Rate-Limited Blind RSA token type
 ({{iana-token-type}}), to be used with the PrivateToken HTTP authentication
-scheme defined in [http-auth-doc].
+scheme defined in {{AUTHSCHEME}}.
 
 ## Motivation
 
@@ -189,7 +194,7 @@ including previous patterns of access.
 - Issuance Protocol: The protocol exchange that involves the client,
 attester, and issuer, used to generate tokens.
 
-The following terms are defined in [http-auth-doc], which defines the
+The following terms are defined in {{AUTHSCHEME}}, which defines the
 interactions between clients and origins:
 
 - Issuer Name: The name that identifies the Issuer, which is an entity
@@ -644,7 +649,7 @@ sig = rsabssa_finalize(Issuer Key, nonce, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a token as described in
-[http-auth-doc] using the token input message and output sig.
+{{AUTHSCHEME}} using the token input message and output sig.
 
 # Encrypting Origin Names {#encrypt-origin}
 
@@ -917,7 +922,7 @@ in the given policy window.
 
 Rate-limited tokens are defined in terms of a Client authenticating to an Origin, where
 the "origin" is used as defined in {{?RFC6454}}. In order to limit cross-origin correlation,
-Clients MUST verify that the origin_name presented in the TokenChallenge structure ([http-auth-doc])
+Clients MUST verify that the origin_name presented in the TokenChallenge structure ({{AUTHSCHEME}})
 matches the origin that is providing the HTTP authentication challenge, where the matching logic
 is defined for same-origin policies in {{?RFC6454}}. Clients MAY further limit which
 authentication challenges they are willing to respond to, for example by only accepting
@@ -970,7 +975,7 @@ unique among all currently in rotation for the origin.
 
 ## Token Type {#iana-token-type}
 
-This document updates the "Token Type" Registry [http-auth-doc] with the following value:
+This document updates the "Token Type" Registry ({{AUTHSCHEME}}) with the following value:
 
 | Value  | Name                   | Public | Public Metadata | Private Metadata | Nk  | Reference        |
 |:-------|:-----------------------|:-------|:----------------|:-----------------|:----|:-----------------|
