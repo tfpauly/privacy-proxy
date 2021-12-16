@@ -201,9 +201,12 @@ following attributes:
 
 - "challenge", which contains a base64url-encoded {{!RFC4648}} TokenChallenge
 value. This MUST be unique for every 401 HTTP response to prevent replay attacks.
+This attribute is required for all challenges.
 
 - "issuer-key", which contains a base64url encoding of the SubjectPublicKeyInfo object
-for use with the issuance protocol indicated by the challenge.
+for use with the issuance protocol indicated by the challenge. This attribute MAY
+be omitted in deployments where clients are able to retrieve the issuer key using
+an out-of-band mechanism.
 
 - "max-age", an optional attribute that consists of the number of seconds for which
 the challenge will be accepted by the Origin.
@@ -394,7 +397,7 @@ Template:
 
 * Value: The two-byte identifier for the algorithm
 * Name: Name of the issuance protocol
-* Public: A Y/N value indicating if the output tokens are publicly verifiable
+* Publicly Verifiable: A Y/N value indicating if the output tokens are publicly verifiable
 * Public Metadata: A Y/N value indicating if the output tokens can contain public metadata.
 * Private Metadata: A Y/N value indicating if the output tokens can contain private metadata.
 * Nk: The length in bytes of an output authenticator
