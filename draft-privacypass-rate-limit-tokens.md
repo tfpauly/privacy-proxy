@@ -271,11 +271,18 @@ and are located at the well-known location /.well-known/token-issuer-directory.
 
 # Token Challenge Requirements
 
-TODO
+Clients receive challenges for tokens, as described in {{AUTHSCHEME}}.
 
-- Must be interactive, include a nonce
-- Must be per-origin
-- Add the origin name key to the challenge
+For the rate-limited token issuance protocol described in this document,
+the token challenge MUST be interactive and per-origin. That is, the
+TokenChallenge structure MUST contain both the redemption_nonce and
+origin_name fields.
+
+The HTTP authentication challenge also SHOULD contain the following
+additional attribute:
+
+- "origin-name-key", which contains a base64url encoding of a `KeyConfig` as defined
+in {{OHTTP}} to use when encrypting the Origin Name in issuance requests.
 
 # Issuance Protocol {#issuance}
 
