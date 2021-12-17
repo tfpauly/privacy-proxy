@@ -415,13 +415,13 @@ Its ABNF is:
     Sec-Token-Client = sf-binary
 ~~~
 
-The "Sec-Token-Nonce" is an Item Structured Header {{!RFC8941}}. Its
+The "Sec-Token-Request-Blind" is an Item Structured Header {{!RFC8941}}. Its
 value MUST be a Byte Sequence. This header is sent on Client-to-Attester
 requests ({{request-one}}), and contains a per-request nonce value.
 Its ABNF is:
 
 ~~~
-    Sec-Token-Nonce = sf-binary
+    Sec-Token-Request-Blind = sf-binary
 ~~~
 
 The "Sec-Token-Count" is an Item Structured Header {{!RFC8941}}. Its
@@ -452,7 +452,7 @@ a salt length of at least 32 bytes.
 
 The Client then uses Client Key to generate its one-time-use request public
 key `request_key` and blind `request_key_blind` as described in {{client-stable-mapping}}.
- 
+
 The Client then encrypts the origin name using Origin Name Key, producing
 `issuer_key_id` and `encrypted_origin_name` as described in {{encrypt-origin}}.
 
@@ -499,7 +499,7 @@ The Client then generates an HTTP POST request to send through the Attester to
 the Issuer, with the TokenRequest as the body. The media type for this request
 is "message/token-request". The Client includes the "Sec-Token-Origin" header,
 whose value is Anonymous Origin ID; the "Sec-Token-Client" header, whose value is Client Key; and
-the "Sec-Token-Nonce" header, whose value is request_key_blind. The Client
+the "Sec-Token-Request-Blind" header, whose value is request_key_blind. The Client
 sends this request to the Attester's proxy URI. An example request is shown below,
 where Nk = 512.
 
@@ -514,7 +514,7 @@ content-type = message/token-request
 content-length = 512
 sec-token-origin = Anonymous Origin ID
 sec-token-client = Client Key
-sec-token-nonce = request_key_blind
+sec-token-request-blind = request_key_blind
 
 <Bytes containing the TokenRequest>
 ~~~
@@ -671,7 +671,7 @@ Beyond the key configuration inputs, Clients also require the following inputs d
 in {{request-one}}: `issuer_key_id`, `blinded_msg`, `request_key`, and `origin_name_key_id`.
 
 Together, these are used to encapsulate Origin Name (`origin_name`) and produce
-ENCRYPTED_Origin Name (`encrypted_origin`) as follows:
+Encrypted Origin Name (`encrypted_origin`) as follows:
 
 1. Compute an {{HPKE}} context using pkI, yielding context and encapsulation key enc.
 1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID,
@@ -734,7 +734,7 @@ functionality is shown below.
 
 ~~~
 Client               Attester                Issuer
-      (request, signature)
+    (request, signature)
   ---------------------->
                            (request, signature)
                          ---------------------->
@@ -751,21 +751,33 @@ and {{attester-output-stable-mapping}} describes the final Attester step for
 computing the mapping output.
 
 The index computation is based on Ed25519 {{!RFC8032}}. It uses the following
- functions based on this protocol:
+functions based on this protocol:
 
 - RandomScalar(): Generate a random Ed25519 scalar as per {{RFC8032, Section 5.1.5}}.
 - ScalarMult(P, k): Multiply the Ed25519 public key P by scalar k, producing a new
   public key as a result.
-- SerializeScalar(k): Serialize an Ed25519 scalar k, producing an opaque byte string
+- SerializeKey(P): Serialize an Ed25519 public key according to {{RFC8032, Section 5.1.2}},
+  yielding an opaque string of 32 bytes as a result. DeserializeKey(x) deserializes input
+  byte string x into an Ed25519 public key according to {{RFC8032, Section 5.1.3}}, or fails
+  with a "DeserializationError" otherwise.
+- SerializeScalar(k): Serialize an Ed25519 scalar k, producing an opaque string of 32 bytes
   as a result. DeserializeScalar(x) deserializes input byte string x into an Ed25519
   scalar, or fails with a "DeserializationError" otherwise.
-- Ed25519-Sign(sk, msg): Sign input message msg using the Ed25519 private key sk,
-  as defined in {{RFC8032, Section 5.1.6}}, producing an opaque byte string signature.
+- ScalarInverse(x): Compute the multiplicative inverse of input scalar x modulo the
+  order of the edwards25519 group, 2^252+27742317777372353535851937790883648493, as
+  defined in {{!RFC7748}}.
+- Ed25519-KeyGen(sk): Produce signing scalar s and hash input prefix as described
+  Sections 5.1.5 and Section 5.1.6 in {{RFC8032}}.
 - Ed25519-Verify(pk, msg, sig): Verify the signature sig over input message msg against
   the Ed25519 public key pk, as defined in {{RFC8032, Section 5.1.7}}, producing a
   boolean value indicating success.
-
- Multiplication of Ed25519 scalar values is denoted by '*'.
+- Ed25519-MaskSign(sk, msg, r, mask): Sign input message msg using the Ed25519 private
+  key sk blinded by the scalar r and hash input prefix blinded by mask. This is the
+  same as the Sign procedure defined in {{RFC8032, Section 5.1.6}} with two modifications:
+  First, the secret scalar `s` derived from `h` is blinded by `r` before use in the
+  rest of the procedure. Second, the message hash prefix is blinded by mask using XOR,
+  i.e., new_prefix = xor(prefix, mask). The rest of the procecure is the same.
+  This produces an opaque string of 64 bytes.
 
 ## Client Behavior {#client-stable-mapping}
 
@@ -776,33 +788,34 @@ to the signature generation step.
 
 #### Request Key {#index-request}
 
-Clients produce `request_key` by masking CLIENT_KEY and CLIENT_SECRET with a
- randomly chosen blind as follows:
+Clients produce `request_key` by masking Client Key and Client Secret with a
+randomly chosen blind. Let pk and sk denote Client Key and Client Secret,
+respectively. This process is done as follows:
 
 1. Generate a random Ed25519 scalar r.
-1. Blind Client Key and Client Secret by r to compute a blinded key pair.
+1. Blind pk and sk by r to compute a blinded key pair.
 1. Serialize and output the blinded key and blind value, along with the
    blinded secret key.
 
 In pseudocode, this is as follows:
 
 ~~~
-// Generate blind, blinded key, blinded generator, and the proof
-blind = RandomScalar()
-blind_secret = blind * Client Secrety
-request_key = ScalarMult(Client Key, blind)
-request_key_blind = SerializeScalar(blind)
+blind = RandomBytes(32)
+r, mask = Ed25519-KeyGen(blind)
+pk_r = ScalarMult(pk, r)
+request_key = SerializeKey(pk_r)
 ~~~
 
 ### Request Signature {#index-proof}
 
 Clients produce signature of their request based on the following inputs defined in {{request-one}}:
 `issuer_key_id`, `blinded_msg`, `request_key`, `origin_name_key_id`, `encrypted_origin_name`.
-This process requires the `blind` and `blind_secret` values produced during
-the {{index-request}} process, and works as follows:
+This process requires the blind `r` value and `mask` produced during the {{index-request}} process.
+As above, let pk and sk denote Client Key and Client Secret, respectively. Given these
+values, this signature process works as follows:
 
 1. Concatenate all signature inputs to yield a message to sign.
-1. Compute an Ed25519 signature over the input message using the blinded secret key.
+1. Compute an Ed25519 signature over the input message using Client Secret and the blind.
 1. Output the signature.
 
 In pseudocode, this is as follows:
@@ -814,88 +827,78 @@ context = concat(0x0003, // token_type
                  request_key,
                  origin_name_key_id,
                  encrypted_origin_name)
-request_signature = Ed25519-Sign(blind_secret, context)
+request_signature = Ed25519-MaskSign(sk, context, r, mask)
 ~~~
 
 ## Attester Behavior (Client Request Validation) {#attester-stable-mapping}
 
-Given a client key (Client Key), request_key_blind, and request_key,
-Attesters verify the proof for correctness as follows:
+Given a Client Key (denoted pk) and an AccessTokenRequest request, from which
+request_key_blind, request_key, and request_signature are parsed,
+Attesters verify the signature as follows:
 
-1. Deserialize request_key_blind, yielding blind. If this fails, abort.
-1. Parse the final 64 bytes of the request as request_signature. If this fails, abort.
-1. Parse request_key and check if it's a valid public key. If this fails, abort.
-1. Multiply Client Key by blind, yielding a blinded key. If this does not match
-   the blinded key from the request, abort.
-1. Verify the request signature against request_key. If signature verification
-   fails, abort.
+1. Check that request_key is a valid Ed25519 public key. If this fails, abort.
+1. Blind Client Key by r, yielding a blinded key. If this does not match
+   request_key, abort.
+1. Verify request_signature over the contents of the request, excluding the
+   signature itself, using request_key. If signature verification fails, abort.
 
 In pseudocode, this is as follows:
 
 ~~~
-// Parse and deserialize all client values
-blind = DeserializeScalar(request_key_blind)
-blind_key  = parse(request_key)
-request_signature = parse(request_key[len(request_key)-64..])
+r, _ = Ed25519-KeyGen(request_key_blind)
+expected_request_ke = SerializeKey(ScalarMult(pk, r))
+if expected_request_ke != request_key:
+   raise InvalidParameterError
 
-// Verify the proof parameters against the client's public key
-expected_blind_key = ScalarMult(Client Key, blind)
-if expected_blind_key != blind_key:
-    raise InvalidParameterError
-
-// Verify the siganture
-context = parse(request_key[..len(request_key)-64])
-valid = Ed25519-Verify(blind_key, context, request_signature)
+context = parse(request[..len(request)-64]) // this matches context computed during signing
+valid = Ed25519-Verify(request_key, context, request_signature)
 if not valid:
-    raise InvalidSignatureError
+   raise InvalidSignatureError
 ~~~
 
 ## Issuer Behavior {#issuer-stable-mapping}
 
-Given a Client request request_key and Issuer Origin Secret, Issuers
-verify the request and compute a response as follows:
+Given an Issuer Origin Secret (denoted k) and an AccessTokenRequest, from which
+request_key_blind, request_key, and request_signature are parsed, Issuers verify
+the request signature and compute a response as follows:
 
-1. Parse the final 64 bytes of the request as request_signature. If this fails, abort.
-1. Parse request_key as the blinded key and check if it's a valid Ed25519 public key. If this fails, abort.
-1. Verify the request signature against the blinded key. If signature verification
- fails, abort.
-1. Multiply the blinded key by Issuer Origin Secret, yielding an index key.
+1. Check that request_key is a valid Ed25519 public key. If this fails, abort.
+1. Verify request_signature over the contents of the request, excluding the
+   signature itself, using request_key. If signature verification fails, abort.
+1. Multiply request_key by Issuer Origin Secret, yielding an index key.
 1. Output the index key.
 
 In pseudocode, this is as follows:
 
 ~~~
-// Parse and deserialize all request values
-blind_key  = parse(request_key)
-request_signature = parse(request_key[len(request_key)-64..])
-
-// Verify the proof
-context = parse(request_key[..len(request_key)-64])
-valid = Ed25519-Verify(blind_key, context, request_signature)
+context = parse(request[..len(request)-64]) // this matches context computed during signing
+valid = Ed25519-Verify(reuest_key, context, request_signature)
 if not valid:
-    raise InvalidSignatureError
+   raise InvalidSignatureError
 
-// Evaluate the request with the per-Origin secret
-index_key = ScalarMult(blind_key, Issuer Origin Secret)
+pk_r = DeserializeKey(request_key)
+index_key = SerializeKey(ScalarMult(pk_r, k))
 ~~~
 
 ## Attester Behavior (Mapping Output Computation) {#attester-output-stable-mapping}
 
-Given an Issuer response index_key, Client blind, and Client public
-key (Client Key), Attesters complete the mapping computation as follows:
+Given an Issuer response `index_key`, Client blind `request_key_blind`, and Client
+Key (denoted pk), Attesters complete the mapping computation as follows:
 
 1. Check that index_key is a valid Ed25519 public key. If this fails, abort.
-1. Multiply the index key by the multiplicative inverse of the Client blind, yielding the index result.
+1. Multiply index_key by the multiplicative inverse of request_key_blind, yielding the index result.
 1. Run HKDF {{!RFC5869}} with the index result as the secret, Client Key as the salt, and
-    ASCII string "anon_issuer_origin_id" as the info string, yielding Anonymous Issuer Origin ID.
+   ASCII string "anon_issuer_origin_id" as the info string, yielding Anonymous Issuer Origin ID.
 
 In pseudocode, this is as follows:
 
 ~~~
-index_result = ScalarMult(index_key, blind^(-1))
-Anonymous Issuer Origin ID = HKDF(secret=index_result,
-                                  salt=Client Key,
-                                  info="anon_issuer_origin_id")
+pk_r = DeserializeKey(index_key)
+r_inv = ScalarInverse(r)
+index_result = SerializeKey(ScalarMult(pk_r, r_inv))
+anon_issuer_origin_id = HKDF(secret=index_result,
+                             salt=pk,
+                             info="anon_issuer_origin_id")
 ~~~
 
 # Security considerations {#sec-considerations}
@@ -995,16 +998,16 @@ This document registers four new headers for use on the token issuance path
 in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignments/message-headers)>.
 
 ~~~
-    +-------------------+----------+--------+---------------+
-    | Header Field Name | Protocol | Status |   Reference   |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Origin  |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Client  |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Nonce   |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
-    | Sec-Token-Count   |   http   |  std   | This document |
-    +-------------------+----------+--------+---------------+
+    +-------------------------+----------+--------+---------------+
+    | Header Field Name       | Protocol | Status |   Reference   |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Origin        |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Client        |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Request-Blind |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
+    | Sec-Token-Count         |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
 ~~~
 {: #iana-header-type-table title="Registered HTTP Header"}
