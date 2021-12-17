@@ -887,8 +887,8 @@ Key (denoted pk), Attesters complete the mapping computation as follows:
 
 1. Check that index_key is a valid Ed25519 public key. If this fails, abort.
 1. Multiply index_key by the multiplicative inverse of request_key_blind, yielding the index result.
-1. Run HKDF {{!RFC5869}} with the index result as the secret, Client Key as the salt, and
-   ASCII string "anon_issuer_origin_id" as the info string, yielding Anonymous Issuer Origin ID.
+1. Run HKDF {{!RFC5869}} with SHA-256 using the index result as the secret, Client Key as the salt, 
+   and ASCII string "anon_issuer_origin_id" as the info string, yielding Anonymous Issuer Origin ID.
 
 In pseudocode, this is as follows:
 
@@ -896,9 +896,9 @@ In pseudocode, this is as follows:
 pk_r = DeserializeKey(index_key)
 r_inv = ScalarInverse(r)
 index_result = SerializeKey(ScalarMult(pk_r, r_inv))
-anon_issuer_origin_id = HKDF(secret=index_result,
-                             salt=pk,
-                             info="anon_issuer_origin_id")
+anon_issuer_origin_id = HKDF-SHA256(secret=index_result,
+                                    salt=pk,
+                                    info="anon_issuer_origin_id")
 ~~~
 
 # Security considerations {#sec-considerations}
