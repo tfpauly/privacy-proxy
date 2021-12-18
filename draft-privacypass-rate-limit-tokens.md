@@ -440,15 +440,16 @@ connection. They MAY use mutual authentication or mechanisms such as TLS
 certificate pinning, to mitigate the risk of channel compromise; see
 {{sec-considerations}} for additional about this channel.
 
-Issuance begins by Clients hashing the TokenChallenge to produce a token input
-as `message = SHA256(challenge)`, and then blinding `message` as follows:
+The Client first creates an issuance request message for a random value `nonce`
+using the input TokenChallenge `challenge` and the Issuer key identifier `key_id`
+as follows:
 
 ~~~
-blinded_msg, blind_inv = rsabssa_blind(Issuer Key, message)
+nonce = random(32)
+context = SHA256(challenge)
+token_input = concat(0x0003, nonce, context, key_id)
+blinded_msg, blind_inv = rsabssa_blind(pkI, message)
 ~~~
-
-The Client MUST use a randomized variant of RSABSSA in producing this signature with
-a salt length of at least 32 bytes.
 
 The Client then uses Client Key to generate its one-time-use request public
 key `request_key` and blind `request_key_blind` as described in {{client-stable-mapping}}.
@@ -652,11 +653,21 @@ Upon receipt, the Client handles the response and, if successful, processes the
 body as follows:
 
 ~~~
-sig = rsabssa_finalize(Issuer Key, nonce, blind_sig, blind_inv)
+authenticator = rsabssa_finalize(pkI, nonce, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a token as described in
-{{AUTHSCHEME}} using the token input message and output sig.
+{{AUTHSCHEME}} as follows:
+
+~~~
+struct {
+    uint16_t token_type = 0x0003
+    uint8_t nonce[32];
+    uint8_t context[32];
+    uint8_t key_id[32];
+    uint8_t authenticator[Nk]
+} Token;
+~~~
 
 # Encrypting Origin Names {#encrypt-origin}
 
