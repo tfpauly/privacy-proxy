@@ -448,7 +448,7 @@ as follows:
 nonce = random(32)
 context = SHA256(challenge)
 token_input = concat(0x0003, nonce, context, key_id)
-blinded_msg, blind_inv = rsabssa_blind(pkI, message)
+blinded_msg, blind_inv = rsabssa_blind(pkI, token_input)
 ~~~
 
 The Client then uses Client Key to generate its one-time-use request public
