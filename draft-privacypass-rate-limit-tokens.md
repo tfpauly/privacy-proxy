@@ -426,7 +426,7 @@ Its ABNF is:
 
 The "Sec-Token-Count" is an Item Structured Header {{!RFC8941}}. Its
 value MUST be an Integer. This header is sent on Attester-to-Issuer
-requests ({{request-one}}), and contains the number of times a
+requests ({{request-two}}), and contains the number of times a
 Client has previously received a token for an Origin. Its ABNF is:
 
 ~~~
