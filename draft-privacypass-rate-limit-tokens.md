@@ -455,7 +455,7 @@ The Client then uses Client Key to generate its one-time-use request public
 key `request_key` and blind `request_key_blind` as described in {{client-stable-mapping}}.
 
 The Client then encrypts the origin name using Origin Name Key, producing
-`issuer_key_id` and `encrypted_origin_name` as described in {{encrypt-origin}}.
+`encrypted_origin_name` as described in {{encrypt-origin}}.
 
 Finally, the Client uses Client Secret to produce `request_signature`
 as described in {{index-proof}}.
