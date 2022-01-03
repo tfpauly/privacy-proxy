@@ -424,13 +424,14 @@ Its ABNF is:
     Sec-Token-Request-Blind = sf-binary
 ~~~
 
-The "Sec-Token-Count" is an Item Structured Header {{!RFC8941}}. Its
-value MUST be an Integer. This header is sent on Attester-to-Issuer
-requests ({{request-two}}), and contains the number of times a
-Client has previously received a token for an Origin. Its ABNF is:
+The "Sec-Token-Limit" is an Item Structured Header {{!RFC8941}}. Its
+value MUST be an Integer. This header is sent on Issuer-to-Attester
+responses ({{response-one}}), and contains the number of times a
+Client can retrieve a token for the requested Origin, set by the
+Issuer. Its ABNF is:
 
 ~~~
-    Sec-Token-Count = sf-integer
+    Sec-Token-Limit = sf-integer
 ~~~
 
 ## Client-to-Attester Request {#request-one}
@@ -557,8 +558,7 @@ compromise; see {{sec-considerations}} for additional about this channel.
 
 Before copying and forwarding the Client's TokenRequest request to the Issuer,
 the Attester validates the Client's stable mapping request as described in {{attester-stable-mapping}}.
-If this fails, the Attester MUST return an HTTP 400 error to the Client. Otherwise, the
-Attester then adds a header that includes the count of previous tokens as "Sec-Token-Count".
+If this fails, the Attester MUST return an HTTP 400 error to the Client.
 The Attester MAY also add additional context information, but MUST NOT add information
 that will uniquely identify a Client.
 
@@ -571,14 +571,12 @@ accept = message/token-response
 cache-control = no-cache, no-store
 content-type = message/token-request
 content-length = 512
-sec-token-count = 3
 
 <Bytes containing the TokenRequest>
 ~~~
 
 Upon receipt of the forwarded request, the Issuer validates the following conditions:
 
-- The "Sec-Token-Count" header is present
 - The TokenRequest contains a supported token_type
 - The TokenRequest.issuer_key_id and TokenRequest.origin_name_key_id correspond to known
 Issuer Keys and Origin Name Keys held by the Issuer.
@@ -589,11 +587,6 @@ an Origin Name that is served by the Issuer
 
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Attester,
 which will forward the error to the client.
-
-If the request is valid, the Issuer then can use the value from "Sec-Token-Count" to determine if
-the Client is allowed to receive a token for this Origin during the current policy window. If the
-Issuer refuses to issue more tokens, it responds with an HTTP 429 (Too Many Requests) error to the
-Attester, which will forward the error to the client.
 
 The Issuer determines the correct Issuer Key by using the decrypted Origin Name value and
 TokenRequest.issuer_key_id. If there is no Issuer Key whose truncated key ID matches
@@ -619,14 +612,17 @@ blind_sig = rsabssa_blind_sign(skP, TokenRequest.blinded_msg)
 `skP` is the private key corresponding to Issuer Key, known only to the Issuer.
 
 The Issuer generates an HTTP response with status code 200 whose body consists of
-blind_sig, with the content type set as "message/token-response" and the
-index_result set in the "Sec-Token-Origin" header.
+blind_sig, with the content type set as "message/token-response", the
+index_result set in the "Sec-Token-Origin" header, and the limit of tokens
+allowed for a Client for the Origin within a policy window set in the
+"Sec-Token-Limit" header.
 
 ~~~
 :status = 200
 content-type = message/token-response
 content-length = 512
 sec-token-origin = index_result
+set-token-limit = Token limit
 
 <Bytes containing the blind_sig>
 ~~~
@@ -642,6 +638,11 @@ received in a response for a different Anonymous Origin ID within the same polic
 the Attester MUST drop the token and respond to the client with an HTTP 400 status.
 If there is not an error, the Anonymous Issuer Origin ID is stored alongside the state
 for the Anonymous Origin ID.
+
+The Attester also extracts the "Sec-Token-Limit" header, and compares the limit against the
+previous count of accesses for this Client for the Anonymous Origin ID. If the count is greater
+than or equal to the limit, the Attester drops the token and responds to the client with an
+HTTP 429 (Too Many Requests) error.
 
 For all other cases, the Attester forwards all HTTP responses unmodified to the Client
 as the response to the original request for this issuance.
@@ -1018,7 +1019,7 @@ in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignmen
     +-------------------------+----------+--------+---------------+
     | Sec-Token-Request-Blind |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
-    | Sec-Token-Count         |   http   |  std   | This document |
+    | Sec-Token-Limit         |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
 ~~~
 {: #iana-header-type-table title="Registered HTTP Header"}
