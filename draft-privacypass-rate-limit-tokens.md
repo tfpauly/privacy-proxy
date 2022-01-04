@@ -427,8 +427,8 @@ Its ABNF is:
 The "Sec-Token-Limit" is an Item Structured Header {{!RFC8941}}. Its
 value MUST be an Integer. This header is sent on Issuer-to-Attester
 responses ({{response-one}}), and contains the number of times a
-Client can retrieve a token for the requested Origin, set by the
-Issuer. Its ABNF is:
+Client can retrieve a token for the requested Origin within a policy window,
+as set by the Issuer. Its ABNF is:
 
 ~~~
     Sec-Token-Limit = sf-integer
