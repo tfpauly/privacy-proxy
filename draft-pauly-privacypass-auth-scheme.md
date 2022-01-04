@@ -203,15 +203,15 @@ following attributes:
 value. This MUST be unique for every 401 HTTP response to prevent replay attacks.
 This attribute is required for all challenges.
 
-- "issuer-key", which contains a base64url encoding of the SubjectPublicKeyInfo object
-for use with the issuance protocol indicated by the challenge. This attribute MAY
+- "token-issuance-key", which contains a base64url encoding of the public key for
+use with the issuance protocol indicated by the challenge. This attribute MAY
 be omitted in deployments where clients are able to retrieve the issuer key using
 an out-of-band mechanism.
 
 - "max-age", an optional attribute that consists of the number of seconds for which
 the challenge will be accepted by the Origin.
 
-Clients can ignore the challenge if the issuer-key is invalid or otherwise untrusted.
+Clients can ignore the challenge if the token-issuance-key is invalid or otherwise untrusted.
 
 Origins MAY also include the standard "realm" attribute, if desired. Issuance protocols
 MAY require other attributes.
@@ -219,7 +219,7 @@ MAY require other attributes.
 As an example, the WWW-Authenticate header could look like this:
 
 ~~~
-WWW-Authenticate: PrivateToken challenge=abc..., issuer-key=123...
+WWW-Authenticate: PrivateToken challenge=abc..., token-issuance-key=123...
 ~~~
 
 Upon receipt of this challenge, a client uses the message and keys in the
@@ -234,8 +234,8 @@ for future use.
 For example, the WWW-Authenticate header could look like this:
 
 ~~~
-WWW-Authenticate: PrivateToken challenge=abc..., issuer-key=123...,
-PrivateToken challenge=def..., issuer-key=234...
+WWW-Authenticate: PrivateToken challenge=abc..., token-issuance-key=123...,
+PrivateToken challenge=def..., token-issuance-key=234...
 ~~~
 
 ## Token Redemption {#redemption}
@@ -250,7 +250,7 @@ struct {
     uint16_t token_type;
     uint8_t nonce[32];
     uint8_t context[32];
-    uint8_t key_id[32];
+    uint8_t token_issuance_key_id[32];
     uint8_t authenticator[Nk];
 } Token;
 ~~~
@@ -266,16 +266,15 @@ nonce.
 - "context" is a 32-octet message containing the hash of the original
 TokenChallenge, SHA256(TokenChallenge).
 
-- "key_id" is a collision-resistant hash that identifies the issuer key
-used to produce the authenticator. This is generated as SHA256(public_key), where
-public_key is a DER-encoded SubjectPublicKeyInfo object carrying the public key.
+- "token_issuance_key_id" is a unique identifier for the the token authentication
+key. This is constructed as specified by the corresponding issuance protocol.
 
 - "authenticator" is a Nk-octet authenticator that covers the preceding fields in
 the token. The value of this field is defined by the token_type and corresponding
 issuance protocol.
 
 The authenticator value in the Token structure is computed over the token_type,
-nonce, context, and key_id fields.
+nonce, context, and token_issuance_key_id fields.
 
 When used for client authorization, the "PrivateToken" authentication
 scheme defines one parameter, "token", which contains the base64url-encoded
