@@ -870,7 +870,7 @@ if not valid:
 ## Issuer Behavior {#issuer-stable-mapping}
 
 Given an Issuer Origin Secret (denoted k) and an AccessTokenRequest, from which
-request_key_blind, request_key, and request_signature are parsed, Issuers verify
+request_key and request_signature are parsed, Issuers verify
 the request signature and compute a response as follows:
 
 1. Check that request_key is a valid Ed25519 public key. If this fails, abort.
@@ -883,7 +883,7 @@ In pseudocode, this is as follows:
 
 ~~~
 context = parse(request[..len(request)-64]) // this matches context computed during signing
-valid = Ed25519-Verify(reuest_key, context, request_signature)
+valid = Ed25519-Verify(request_key, context, request_signature)
 if not valid:
    raise InvalidSignatureError
 
