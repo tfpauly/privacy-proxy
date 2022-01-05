@@ -635,7 +635,7 @@ sec-token-origin = index_result
 
 Upon receipt of a successful response from the Issuer, the Attester extracts the
 "Sec-Token-Origin" header, and uses the value to determine Anonymous Issuer Origin ID
-as described in {{attester-stable-mapping}}.
+as described in {{attester-output-stable-mapping}}.
 
 If the "Sec-Token-Origin" is missing, or if the same Anonymous Issuer Origin ID was previously
 received in a response for a different Anonymous Origin ID within the same policy window,
