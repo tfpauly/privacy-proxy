@@ -190,7 +190,7 @@ document:
 - Issuer: An entity that produces Privacy Pass tokens to clients.
 - Attester: An entity that can attest to properties about the client,
 including previous patterns of access.
-- Origin: The server which which the client can redeem tokens.
+- Origin: The server from which the client can redeem tokens.
 - Issuance Protocol: The protocol exchange that involves the client,
 attester, and issuer, used to generate tokens.
 
