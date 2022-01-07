@@ -653,7 +653,7 @@ Upon receipt, the Client handles the response and, if successful, processes the
 body as follows:
 
 ~~~
-authenticator = rsabssa_finalize(pkI, nonce, blind_sig, blind_inv)
+authenticator = rsabssa_finalize(pkI, token_input, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a token as described in
