@@ -241,7 +241,7 @@ Issuers MUST provide three parameters for configuration:
 
 1. Issuer Policy Window: a uint64 of seconds as defined in {{terms}}.
 1. Issuer Request URI: a token request URL for generating access tokens.
-   For example, an Issuer URL might be https://issuer.example.net/access-token-request. This parameter
+   For example, an Issuer URL might be https://issuer.example.net/token-request. This parameter
    uses resource media type "text/plain".
 1. Origin Name Key: a `KeyConfig` as defined in {{!OHTTP=I-D.thomson-http-oblivious}} to use when
    encrypting the Origin Name in issuance requests. This parameter uses resource media type
@@ -261,7 +261,7 @@ As an example, the Issuer's JSON directory could look like:
 ~~~
  {
     "issuer-token-window": 86400,
-    "issuer-request-uri": "https://issuer.example.net/access-token-request"
+    "issuer-request-uri": "https://issuer.example.net/token-request"
     "origin-name-key": "https://issuer.example.net/key",
  }
 ~~~
@@ -440,6 +440,20 @@ connection. They MAY use mutual authentication or mechanisms such as TLS
 certificate pinning, to mitigate the risk of channel compromise; see
 {{sec-considerations}} for additional about this channel.
 
+Requests to the Attester need to indicate the Issuer Name to which issuance
+requests will be forwarded. Attesters SHOULD provide Clients with a URI template
+that contains one variable that contains the Issuer Name, "issuer", using
+Level 3 URI template encoding as defined in Section 1.2 of {{!RFC6570}}.
+
+An example of an Attester URI templates is shown below:
+
+~~~
+https://attester.net/token-request{?issuer}
+~~~
+
+Attesters and Clients MAY agree on other mechanisms to specify the Issuer Name
+in requests.
+
 The Client first creates an issuance request message for a random value `nonce`
 using the input TokenChallenge `challenge` and the Issuer key identifier `key_id`
 as follows:
@@ -502,13 +516,14 @@ is "message/token-request". The Client includes the "Sec-Token-Origin" header,
 whose value is Anonymous Origin ID; the "Sec-Token-Client" header, whose value is Client Key; and
 the "Sec-Token-Request-Blind" header, whose value is request_key_blind. The Client
 sends this request to the Attester's proxy URI. An example request is shown below,
-where Nk = 512.
+where Nk = 512, the Issuer Name is "issuer.net", and the Attester URI template is
+"https://attester.net/token-request{?issuer}"
 
 ~~~
 :method = POST
 :scheme = https
-:authority = issuer.net
-:path = /token-request
+:authority = attester.net
+:path = /token-request?issuer=issuer.net
 accept = message/token-response
 cache-control = no-cache, no-store
 content-type = message/token-request
