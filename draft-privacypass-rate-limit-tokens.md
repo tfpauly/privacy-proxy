@@ -254,7 +254,7 @@ object whose field names and values are raw values and URLs for the parameters.
 |:---------------------|:-------------------------------------------------|
 | issuer-policy-window | Issuer Policy Window as a JSON number            |
 | issuer-request-uri   | Issuer Request URI resource URL as a JSON string |
-| origin-name-key      | Origin Name Key resource URL as a JSON string    |
+| origin-name-key-uri  | Origin Name Key URI resource URL as a JSON string |
 
 As an example, the Issuer's JSON directory could look like:
 
@@ -262,7 +262,7 @@ As an example, the Issuer's JSON directory could look like:
  {
     "issuer-token-window": 86400,
     "issuer-request-uri": "https://issuer.example.net/token-request"
-    "origin-name-key": "https://issuer.example.net/key",
+    "origin-name-key-uri": "https://issuer.example.net/key",
  }
 ~~~
 
