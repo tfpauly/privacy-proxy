@@ -382,7 +382,7 @@ following state:
 Issuers maintain a stable Issuer Origin Secret that they use in calculating values returned
 to the Attester for each origin. If this value changes, it will open up a possibility
 for Clients to request extra tokens for an Origin without being limited, within a
-policy window. See {{origin-key-rollout}} for details about generating and rotating
+policy window. See {{token-key-management}} for details about generating and rotating
 the Issuer Origin Secret.
 
 Issuers are expected to have the private key that corresponds to Origin Name Key,
