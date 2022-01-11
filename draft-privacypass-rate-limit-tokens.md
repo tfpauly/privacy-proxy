@@ -259,7 +259,7 @@ struct {
   HpkePublicKey public_key;
   HpkeKdfId kdf_id;
   HpkeAeadId aead_id;
-} NameKeNameKeyyConfig;
+} NameKey;
 ~~~
 
 The Issuer parameters can be obtained from an Issuer via a directory object, which is a JSON
