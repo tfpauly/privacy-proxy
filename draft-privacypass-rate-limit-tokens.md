@@ -199,7 +199,7 @@ interactions between clients and origins:
 
 - Issuer Name: The name that identifies the Issuer, which is an entity
 that can generate tokens for a Client using one or more issuance protocols.
-- Issuer Key: Keying material that can be used with an issuance protocol
+- Token Key: Keying material that can be used with an issuance protocol
 to create a signed token.
 - Origin Name: The name that identifies the Origin, as included in a
 TokenChallenge.
@@ -325,10 +325,10 @@ A Client is required to have the following information, derived from a given Tok
 
 - Origin Name, a hostname referring to the Origin {{!RFC6454}}. This is
   the value of TokenChallenge.origin_name.
-- Issuer Key, a blind signature public key corresponding to the Issuer Name
+- Token Key, a blind signature public key corresponding to the Issuer
   identified by the TokenChallenge.issuer_name.
-- Origin Name Key, a public key used to encrypt requests corresponding to the
-  Issuer identified by TokenChallenge.issuer_name.
+- Origin Name Key, a public key used to encrypt request information corresponding
+  to the Issuer identified by TokenChallenge.issuer_name.
 
 Clients maintain a stable Client Key that they use for all communication with
 a specific Attester. Client Key is a public key, where the corresponding private key
@@ -387,10 +387,10 @@ policy window.
 Issuers are expected to have the private key that corresponds to Origin Name Key,
 which allows them to decrypt the Origin Name values in requests.
 
-Issuers also need to know the set of valid Issuer Key public keys and corresponding
+Issuers also need to know the set of valid Token Key public keys and corresponding
 private key, for each Origin Name that is served by the Issuer. Origins SHOULD update
-their view of the Issuer Key regularly to ensure that Client requests do not fail
-after Issuer Key rotation.
+their view of the Token Key regularly to ensure that Client requests do not fail
+after Token Key rotation.
 
 ## Issuance HTTP Headers
 
@@ -467,7 +467,7 @@ structure is based on the publicly verifiable token issuance path in
 ~~~
 struct {
    uint16_t token_type = 0x0003;
-   uint8_t issuer_key_id;
+   uint8_t token_key_id;
    uint8_t blinded_msg[Nk];
    uint8_t request_key[32];
    uint8_t origin_name_key_id[32];
@@ -480,9 +480,9 @@ The structure fields are defined as follows:
 
 - "token_type" is a 2-octet integer, which matches the type in the challenge.
 
-- "issuer_key_id" is the least significant byte of the Issuer Key key ID, which is
+- "token_key_id" is the least significant byte of the Token Key key ID, which is
 generated as SHA256(public_key), where public_key is a DER-encoded SubjectPublicKeyInfo
-object carrying Issuer Key.
+object carrying Token Key.
 
 - "blinded_msg" is the Nk-octet request defined above.
 
@@ -523,7 +523,7 @@ sec-token-request-blind = request_key_blind
 If the Attester detects a token_type in the TokenRequest that it does not recognize
 or support, it MUST reject the request with an HTTP 400 error.
 
-The Attester also checks to validate that the issuer_key_id in the client's TokenRequest
+The Attester also checks to validate that the token_key_id in the client's TokenRequest
 matches a known Origin Name Key public key for the Issuer. For example, the Attester can
 fetch this key using the API defined in {{setup}}. This check is done to help ensure that
 the Client has not been given a unique key that could allow the Issuer to fingerprint or target
@@ -580,8 +580,8 @@ Upon receipt of the forwarded request, the Issuer validates the following condit
 
 - The "Sec-Token-Count" header is present
 - The TokenRequest contains a supported token_type
-- The TokenRequest.issuer_key_id and TokenRequest.origin_name_key_id correspond to known
-Issuer Keys and Origin Name Keys held by the Issuer.
+- The TokenRequest.token_key_id and TokenRequest.origin_name_key_id correspond to known
+Token Keys and Origin Name Keys held by the Issuer.
 - The TokenRequest.encrypted_origin_name can be decrypted using the
 Issuer's private key (the private key associated with Origin Name Key), and matches
 an Origin Name that is served by the Issuer
@@ -595,9 +595,9 @@ the Client is allowed to receive a token for this Origin during the current poli
 Issuer refuses to issue more tokens, it responds with an HTTP 429 (Too Many Requests) error to the
 Attester, which will forward the error to the client.
 
-The Issuer determines the correct Issuer Key by using the decrypted Origin Name value and
-TokenRequest.issuer_key_id. If there is no Issuer Key whose truncated key ID matches
-TokenRequest.issuer_key_id, the Issuer MUST return an HTTP 401 error to Attester, which will
+The Issuer determines the correct Token Key by using the decrypted Origin Name value and
+TokenRequest.token_key_id. If there is no Token Key whose truncated key ID matches
+TokenRequest.token_key_id, the Issuer MUST return an HTTP 401 error to Attester, which will
 forward the error to the client. The Attester learns that the client's view of the Origin key
 was invalid in the process.
 
@@ -616,7 +616,7 @@ The Issuer completes the issuance flow by computing a blinded response as follow
 blind_sig = rsabssa_blind_sign(skP, TokenRequest.blinded_msg)
 ~~~
 
-`skP` is the private key corresponding to Issuer Key, known only to the Issuer.
+`skP` is the private key corresponding to Token Key, known only to the Issuer.
 
 The Issuer generates an HTTP response with status code 200 whose body consists of
 blind_sig, with the content type set as "message/token-response" and the
@@ -664,7 +664,7 @@ struct {
     uint16_t token_type = 0x0003
     uint8_t nonce[32];
     uint8_t context[32];
-    uint8_t key_id[32];
+    uint8_t token_key_id[Nid];
     uint8_t authenticator[Nk]
 } Token;
 ~~~
@@ -679,7 +679,7 @@ the public key from the configuration, pkI, and;
 - a selected combination of KDF, identified by kdfID, and AEAD, identified by aeadID.
 
 Beyond the key configuration inputs, Clients also require the following inputs defined
-in {{request-one}}: `issuer_key_id`, `blinded_msg`, `request_key`, and `origin_name_key_id`.
+in {{request-one}}: `token_key_id`, `blinded_msg`, `request_key`, and `origin_name_key_id`.
 
 Together, these are used to encapsulate Origin Name (`origin_name`) and produce
 Encrypted Origin Name (`encrypted_origin`) as follows:
@@ -701,7 +701,7 @@ aad = concat(encode(1, keyID),
              encode(2, kdfID),
              encode(2, aeadID),
              encode(2, token_type),
-             encode(1, issuer_key_id),
+             encode(1, token_key_id),
              encode(Nk, blinded_msg),
              encode(32, request_key),
              encode(32, origin_name_key_id))
@@ -720,7 +720,7 @@ aad = concat(encode(1, keyID),
              encode(2, kdfID),
              encode(2, aeadID),
              encode(2, token_type),
-             encode(1, issuer_key_id),
+             encode(1, token_key_id),
              encode(Nk, blinded_msg),
              encode(32, request_key),
              encode(32, origin_name_key_id))
@@ -820,7 +820,7 @@ request_key = SerializeKey(pk_r)
 ### Request Signature {#index-proof}
 
 Clients produce signature of their request based on the following inputs defined in {{request-one}}:
-`issuer_key_id`, `blinded_msg`, `request_key`, `origin_name_key_id`, `encrypted_origin_name`.
+`token_key_id`, `blinded_msg`, `request_key`, `origin_name_key_id`, `encrypted_origin_name`.
 This process requires the blind `r` value and `mask` produced during the {{index-request}} process.
 As above, let pk and sk denote Client Key and Client Secret, respectively. Given these
 values, this signature process works as follows:
@@ -833,7 +833,7 @@ In pseudocode, this is as follows:
 
 ~~~
 context = concat(0x0003, // token_type
-                 issuer_key_id,
+                 token_key_id,
                  blinded_msg,
                  request_key,
                  origin_name_key_id,
@@ -898,7 +898,7 @@ Key (denoted pk), Attesters complete the mapping computation as follows:
 
 1. Check that index_key is a valid Ed25519 public key. If this fails, abort.
 1. Multiply index_key by the multiplicative inverse of request_key_blind, yielding the index result.
-1. Run HKDF {{!RFC5869}} with SHA-256 using the index result as the secret, Client Key as the salt, 
+1. Run HKDF {{!RFC5869}} with SHA-256 using the index result as the secret, Client Key as the salt,
    and ASCII string "anon_issuer_origin_id" as the info string, yielding Anonymous Issuer Origin ID.
 
 In pseudocode, this is as follows:
@@ -955,8 +955,8 @@ Client activity could be linked if an Origin and Issuer collude to have unique k
 at specific Clients or sets of Clients.
 
 To mitigate the risk of a targeted Origin Name Key, the Attester can observe and validate
-the issuer_key_id presented by the Client to the Issuer. As described in {{issuance}}, Attesters
-MUST validate that the issuer_key_id in the Client's TokenRequest matches a known public key
+the token_key_id presented by the Client to the Issuer. As described in {{issuance}}, Attesters
+MUST validate that the token_key_id in the Client's TokenRequest matches a known public key
 for the Issuer. The Attester needs to support key rotation, but ought to disallow very rapid key
 changes, which could indicate that an Origin is colluding with an Issuer to try to rotate the key
 for each new Client in order to link the client activity.
@@ -981,15 +981,15 @@ identity (as known to the Attester) to the Origin, especially if repeated over m
 
 # Deployment Considerations {#deploy}
 
-## Origin Key Rollout
+## Token Key Management
 
-Issuers SHOULD generate a new (Issuer Key, Issuer Origin Secret) regularly, and
+Issuers SHOULD generate a new (Token Key, Issuer Origin Secret) regularly, and
 SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED
 rotation interval is two times the length of the policy window for that
-information. During generation, issuers must ensure the `issuer_key_id` (the 8-bit
-prefix of SHA256(Issuer Key)) is different from all other `issuer_key_id`
+information. During generation, issuers must ensure the `token_key_id` (the 8-bit
+prefix of SHA256(Token Key)) is different from all other `token_key_id`
 values for that origin currently in rotation. One way to ensure this uniqueness
-is via rejection sampling, where a new key is generated until its `issuer_key_id` is
+is via rejection sampling, where a new key is generated until its `token_key_id` is
 unique among all currently in rotation for the origin.
 
 # IANA considerations
@@ -998,9 +998,9 @@ unique among all currently in rotation for the origin.
 
 This document updates the "Token Type" Registry ({{AUTHSCHEME}}) with the following value:
 
-| Value  | Name                   | Publicly Verifiable | Public Metadata | Private Metadata | Nk  | Reference        |
-|:-------|:-----------------------|:--------------------|:----------------|:-----------------|:----|:-----------------|
-| 0x0003 | Rate-Limited Blind RSA | Y                   | N               | N                | 512 | This document    |
+| Value  | Name                   | Publicly Verifiable | Public Metadata | Private Metadata | Nk  | Nid | Reference        |
+|:-------|:-----------------------|:--------------------|:----------------|:-----------------|:----|:----|:-----------------|
+| 0x0003 | Rate-Limited Blind RSA | Y                   | N               | N                | 512 | 32  | This document    |
 {: #aeadid-values title="Token Types"}
 
 ## HTTP Headers {#iana-headers}
