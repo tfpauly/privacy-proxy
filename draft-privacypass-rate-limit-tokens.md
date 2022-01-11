@@ -190,7 +190,7 @@ document:
 - Issuer: An entity that produces Privacy Pass tokens to clients.
 - Attester: An entity that can attest to properties about the client,
 including previous patterns of access.
-- Origin: The server which which the client can redeem tokens.
+- Origin: The server from which the client can redeem tokens.
 - Issuance Protocol: The protocol exchange that involves the client,
 attester, and issuer, used to generate tokens.
 
@@ -241,7 +241,7 @@ Issuers MUST provide three parameters for configuration:
 
 1. Issuer Policy Window: a uint64 of seconds as defined in {{terms}}.
 1. Issuer Request URI: a token request URL for generating access tokens.
-   For example, an Issuer URL might be https://issuer.example.net/access-token-request. This parameter
+   For example, an Issuer URL might be https://issuer.example.net/token-request. This parameter
    uses resource media type "text/plain".
 1. Origin Name Key: a `KeyConfig` as defined in {{!OHTTP=I-D.thomson-http-oblivious}} to use when
    encrypting the Origin Name in issuance requests. This parameter uses resource media type
@@ -254,15 +254,15 @@ object whose field names and values are raw values and URLs for the parameters.
 |:---------------------|:-------------------------------------------------|
 | issuer-policy-window | Issuer Policy Window as a JSON number            |
 | issuer-request-uri   | Issuer Request URI resource URL as a JSON string |
-| origin-name-key      | Origin Name Key resource URL as a JSON string    |
+| origin-name-key-uri  | Origin Name Key URI resource URL as a JSON string |
 
 As an example, the Issuer's JSON directory could look like:
 
 ~~~
  {
     "issuer-token-window": 86400,
-    "issuer-request-uri": "https://issuer.example.net/access-token-request"
-    "origin-name-key": "https://issuer.example.net/key",
+    "issuer-request-uri": "https://issuer.example.net/token-request"
+    "origin-name-key-uri": "https://issuer.example.net/key",
  }
 ~~~
 
@@ -382,7 +382,8 @@ following state:
 Issuers maintain a stable Issuer Origin Secret that they use in calculating values returned
 to the Attester for each origin. If this value changes, it will open up a possibility
 for Clients to request extra tokens for an Origin without being limited, within a
-policy window.
+policy window. See {{origin-key-rollout}} for details about generating and rotating
+the Issuer Origin Secret.
 
 Issuers are expected to have the private key that corresponds to Origin Name Key,
 which allows them to decrypt the Origin Name values in requests.
@@ -424,13 +425,14 @@ Its ABNF is:
     Sec-Token-Request-Blind = sf-binary
 ~~~
 
-The "Sec-Token-Count" is an Item Structured Header {{!RFC8941}}. Its
-value MUST be an Integer. This header is sent on Attester-to-Issuer
-requests ({{request-two}}), and contains the number of times a
-Client has previously received a token for an Origin. Its ABNF is:
+The "Sec-Token-Limit" is an Item Structured Header {{!RFC8941}}. Its
+value MUST be an Integer. This header is sent on Issuer-to-Attester
+responses ({{response-one}}), and contains the number of times a
+Client can retrieve a token for the requested Origin within a policy window,
+as set by the Issuer. Its ABNF is:
 
 ~~~
-    Sec-Token-Count = sf-integer
+    Sec-Token-Limit = sf-integer
 ~~~
 
 ## Client-to-Attester Request {#request-one}
@@ -439,6 +441,20 @@ The Client and Attester MUST use a secure and Attester-authenticated HTTPS
 connection. They MAY use mutual authentication or mechanisms such as TLS
 certificate pinning, to mitigate the risk of channel compromise; see
 {{sec-considerations}} for additional about this channel.
+
+Requests to the Attester need to indicate the Issuer Name to which issuance
+requests will be forwarded. Attesters SHOULD provide Clients with a URI template
+that contains one variable that contains the Issuer Name, "issuer", using
+Level 3 URI template encoding as defined in Section 1.2 of {{!RFC6570}}.
+
+An example of an Attester URI templates is shown below:
+
+~~~
+https://attester.net/token-request{?issuer}
+~~~
+
+Attesters and Clients MAY agree on other mechanisms to specify the Issuer Name
+in requests.
 
 The Client first creates an issuance request message for a random value `nonce`
 using the input TokenChallenge `challenge` and the Issuer key identifier `key_id`
@@ -502,13 +518,14 @@ is "message/token-request". The Client includes the "Sec-Token-Origin" header,
 whose value is Anonymous Origin ID; the "Sec-Token-Client" header, whose value is Client Key; and
 the "Sec-Token-Request-Blind" header, whose value is request_key_blind. The Client
 sends this request to the Attester's proxy URI. An example request is shown below,
-where Nk = 512.
+where Nk = 512, the Issuer Name is "issuer.net", and the Attester URI template is
+"https://attester.net/token-request{?issuer}"
 
 ~~~
 :method = POST
 :scheme = https
-:authority = issuer.net
-:path = /token-request
+:authority = attester.net
+:path = /token-request?issuer=issuer.net
 accept = message/token-response
 cache-control = no-cache, no-store
 content-type = message/token-request
@@ -557,8 +574,7 @@ compromise; see {{sec-considerations}} for additional about this channel.
 
 Before copying and forwarding the Client's TokenRequest request to the Issuer,
 the Attester validates the Client's stable mapping request as described in {{attester-stable-mapping}}.
-If this fails, the Attester MUST return an HTTP 400 error to the Client. Otherwise, the
-Attester then adds a header that includes the count of previous tokens as "Sec-Token-Count".
+If this fails, the Attester MUST return an HTTP 400 error to the Client.
 The Attester MAY also add additional context information, but MUST NOT add information
 that will uniquely identify a Client.
 
@@ -571,14 +587,12 @@ accept = message/token-response
 cache-control = no-cache, no-store
 content-type = message/token-request
 content-length = 512
-sec-token-count = 3
 
 <Bytes containing the TokenRequest>
 ~~~
 
 Upon receipt of the forwarded request, the Issuer validates the following conditions:
 
-- The "Sec-Token-Count" header is present
 - The TokenRequest contains a supported token_type
 - The TokenRequest.token_key_id and TokenRequest.origin_name_key_id correspond to known
 Token Keys and Origin Name Keys held by the Issuer.
@@ -590,12 +604,7 @@ an Origin Name that is served by the Issuer
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Attester,
 which will forward the error to the client.
 
-If the request is valid, the Issuer then can use the value from "Sec-Token-Count" to determine if
-the Client is allowed to receive a token for this Origin during the current policy window. If the
-Issuer refuses to issue more tokens, it responds with an HTTP 429 (Too Many Requests) error to the
-Attester, which will forward the error to the client.
-
-The Issuer determines the correct Token Key by using the decrypted Origin Name value and
+The Issuer determines the correct Issuer Key by using the decrypted Origin Name value and
 TokenRequest.token_key_id. If there is no Token Key whose truncated key ID matches
 TokenRequest.token_key_id, the Issuer MUST return an HTTP 401 error to Attester, which will
 forward the error to the client. The Attester learns that the client's view of the Origin key
@@ -619,14 +628,17 @@ blind_sig = rsabssa_blind_sign(skP, TokenRequest.blinded_msg)
 `skP` is the private key corresponding to Token Key, known only to the Issuer.
 
 The Issuer generates an HTTP response with status code 200 whose body consists of
-blind_sig, with the content type set as "message/token-response" and the
-index_result set in the "Sec-Token-Origin" header.
+blind_sig, with the content type set as "message/token-response", the
+index_result set in the "Sec-Token-Origin" header, and the limit of tokens
+allowed for a Client for the Origin within a policy window set in the
+"Sec-Token-Limit" header.
 
 ~~~
 :status = 200
 content-type = message/token-response
 content-length = 512
 sec-token-origin = index_result
+set-token-limit = Token limit
 
 <Bytes containing the blind_sig>
 ~~~
@@ -635,13 +647,18 @@ sec-token-origin = index_result
 
 Upon receipt of a successful response from the Issuer, the Attester extracts the
 "Sec-Token-Origin" header, and uses the value to determine Anonymous Issuer Origin ID
-as described in {{attester-stable-mapping}}.
+as described in {{attester-output-stable-mapping}}.
 
 If the "Sec-Token-Origin" is missing, or if the same Anonymous Issuer Origin ID was previously
 received in a response for a different Anonymous Origin ID within the same policy window,
 the Attester MUST drop the token and respond to the client with an HTTP 400 status.
 If there is not an error, the Anonymous Issuer Origin ID is stored alongside the state
 for the Anonymous Origin ID.
+
+The Attester also extracts the "Sec-Token-Limit" header, and compares the limit against the
+previous count of accesses for this Client for the Anonymous Origin ID. If the count is greater
+than or equal to the limit, the Attester drops the token and responds to the client with an
+HTTP 429 (Too Many Requests) error.
 
 For all other cases, the Attester forwards all HTTP responses unmodified to the Client
 as the response to the original request for this issuance.
@@ -653,7 +670,7 @@ Upon receipt, the Client handles the response and, if successful, processes the
 body as follows:
 
 ~~~
-authenticator = rsabssa_finalize(pkI, nonce, blind_sig, blind_inv)
+authenticator = rsabssa_finalize(pkI, token_input, blind_sig, blind_inv)
 ~~~
 
 If this succeeds, the Client then constructs a token as described in
@@ -870,7 +887,7 @@ if not valid:
 ## Issuer Behavior {#issuer-stable-mapping}
 
 Given an Issuer Origin Secret (denoted k) and an AccessTokenRequest, from which
-request_key_blind, request_key, and request_signature are parsed, Issuers verify
+request_key and request_signature are parsed, Issuers verify
 the request signature and compute a response as follows:
 
 1. Check that request_key is a valid Ed25519 public key. If this fails, abort.
@@ -883,7 +900,7 @@ In pseudocode, this is as follows:
 
 ~~~
 context = parse(request[..len(request)-64]) // this matches context computed during signing
-valid = Ed25519-Verify(reuest_key, context, request_signature)
+valid = Ed25519-Verify(request_key, context, request_signature)
 if not valid:
    raise InvalidSignatureError
 
@@ -1018,7 +1035,7 @@ in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignmen
     +-------------------------+----------+--------+---------------+
     | Sec-Token-Request-Blind |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
-    | Sec-Token-Count         |   http   |  std   | This document |
+    | Sec-Token-Limit         |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
 ~~~
 {: #iana-header-type-table title="Registered HTTP Header"}
