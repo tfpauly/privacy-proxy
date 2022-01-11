@@ -382,7 +382,8 @@ following state:
 Issuers maintain a stable Issuer Origin Secret that they use in calculating values returned
 to the Attester for each origin. If this value changes, it will open up a possibility
 for Clients to request extra tokens for an Origin without being limited, within a
-policy window.
+policy window. See {{origin-key-rollout}} for details about generating and rotating
+the Issuer Origin Secret.
 
 Issuers are expected to have the private key that corresponds to Origin Name Key,
 which allows them to decrypt the Origin Name values in requests.
@@ -914,7 +915,7 @@ Key (denoted pk), Attesters complete the mapping computation as follows:
 
 1. Check that index_key is a valid Ed25519 public key. If this fails, abort.
 1. Multiply index_key by the multiplicative inverse of request_key_blind, yielding the index result.
-1. Run HKDF {{!RFC5869}} with SHA-256 using the index result as the secret, Client Key as the salt, 
+1. Run HKDF {{!RFC5869}} with SHA-256 using the index result as the secret, Client Key as the salt,
    and ASCII string "anon_issuer_origin_id" as the info string, yielding Anonymous Issuer Origin ID.
 
 In pseudocode, this is as follows:
