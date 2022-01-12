@@ -501,7 +501,7 @@ struct {
    uint8_t token_key_id;
    uint8_t blinded_msg[Nk];
    uint8_t request_key[32];
-   uint8_t origin_name_key_id;
+   uint8_t name_key_id;
    uint8_t encrypted_origin_name<1..2^16-1>;
    uint8_t request_signature[64];
 } TokenRequest;
@@ -519,8 +519,8 @@ object carrying Token Key.
 
 - "request_key" is computed as described in {{index-request}}.
 
-- "origin_name_key_id" is a one-octet value that identifies the Origin Name Key public
-key, equal to NameKey.key_id.
+- "name_key_id" is a collision-resistant hash that identifies the Origin Name Key, 
+generated as SHA256(NameKey).
 
 - "encrypted_origin_name" is an encrypted structure that contains Origin Name,
 calculated as described in {{encrypt-origin}}.
@@ -609,7 +609,7 @@ content-length = 512
 Upon receipt of the forwarded request, the Issuer validates the following conditions:
 
 - The TokenRequest contains a supported token_type
-- The TokenRequest.token_key_id and TokenRequest.origin_name_key_id correspond to known
+- The TokenRequest.token_key_id and TokenRequest.name_key_id correspond to known
 Token Keys and Origin Name Keys held by the Issuer.
 - The TokenRequest.encrypted_origin_name can be decrypted using the
 Issuer's private key (the private key associated with Origin Name Key), and matches
@@ -706,12 +706,12 @@ struct {
 Given a `NameKey` (Origin Name Key), Clients produce encrypted_origin_name and authenticate
 the contents of the TokenRequest using the following values:
 
-- the key identifier from the configuration, keyID, with the corresponding KEM identified by kemID,
+- the one octet key identifier from the Name Key, keyID, with the corresponding KEM identified by kemID,
 the public key from the configuration, pkI, and;
 - a selected combination of KDF, identified by kdfID, and AEAD, identified by aeadID.
 
 Beyond the key configuration inputs, Clients also require the following inputs defined
-in {{request-one}}: `token_key_id`, `blinded_msg`, `request_key`, and `origin_name_key_id`.
+in {{request-one}}: `token_key_id`, `blinded_msg`, `request_key`, and `name_key_id`.
 
 Together, these are used to encapsulate Origin Name (`origin_name`) and produce
 Encrypted Origin Name (`encrypted_origin`) as follows:
@@ -736,7 +736,7 @@ aad = concat(encode(1, keyID),
              encode(1, token_key_id),
              encode(Nk, blinded_msg),
              encode(32, request_key),
-             encode(1, origin_name_key_id))
+             encode(32, name_key_id))
 ct = context.Seal(aad, origin_name)
 encrypted_origin_name = concat(enc, ct)
 ~~~
@@ -755,7 +755,7 @@ aad = concat(encode(1, keyID),
              encode(1, token_key_id),
              encode(Nk, blinded_msg),
              encode(32, request_key),
-             encode(1, origin_name_key_id))
+             encode(32, name_key_id))
 enc, context = SetupBaseR(enc, skI, "TokenRequest")
 origin_name, error = context.Open(aad, ct)
 ~~~
@@ -852,7 +852,7 @@ request_key = SerializeKey(pk_r)
 ### Request Signature {#index-proof}
 
 Clients produce signature of their request based on the following inputs defined in {{request-one}}:
-`token_key_id`, `blinded_msg`, `request_key`, `origin_name_key_id`, `encrypted_origin_name`.
+`token_key_id`, `blinded_msg`, `request_key`, `name_key_id`, `encrypted_origin_name`.
 This process requires the blind `r` value and `mask` produced during the {{index-request}} process.
 As above, let pk and sk denote Client Key and Client Secret, respectively. Given these
 values, this signature process works as follows:
@@ -868,7 +868,7 @@ context = concat(0x0003, // token_type
                  token_key_id,
                  blinded_msg,
                  request_key,
-                 origin_name_key_id,
+                 name_key_id,
                  encrypted_origin_name)
 request_signature = Ed25519-MaskSign(sk, context, r, mask)
 ~~~
