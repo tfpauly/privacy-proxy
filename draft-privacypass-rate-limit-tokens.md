@@ -501,7 +501,7 @@ struct {
    uint8_t token_key_id;
    uint8_t blinded_msg[Nk];
    uint8_t request_key[32];
-   uint8_t name_key_id;
+   uint8_t name_key_id[32];
    uint8_t encrypted_origin_name<1..2^16-1>;
    uint8_t request_signature[64];
 } TokenRequest;
