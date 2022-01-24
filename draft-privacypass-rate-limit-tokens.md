@@ -287,14 +287,8 @@ and are located at the well-known location /.well-known/token-issuer-directory.
 # Token Challenge Requirements
 
 Clients receive challenges for tokens, as described in {{AUTHSCHEME}}.
-
 For the rate-limited token issuance protocol described in this document,
-the token challenge MUST be interactive and per-origin. That is, the
-TokenChallenge structure MUST contain both the redemption_nonce and
-origin_name fields.
-
-The HTTP authentication challenge also SHOULD contain the following
-additional attribute:
+the HTTP authentication challenge SHOULD contain the following attribute:
 
 - "origin-name-key", which contains a base64url encoding of a `NameKey` as defined
 in {{setup}} to use when encrypting the Origin Name in issuance requests.
@@ -519,7 +513,7 @@ object carrying Token Key.
 
 - "request_key" is computed as described in {{index-request}}.
 
-- "name_key_id" is a collision-resistant hash that identifies the Origin Name Key, 
+- "name_key_id" is a collision-resistant hash that identifies the Origin Name Key,
 generated as SHA256(NameKey).
 
 - "encrypted_origin_name" is an encrypted structure that contains Origin Name,
