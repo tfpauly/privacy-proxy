@@ -859,7 +859,7 @@ request_signature = Ed25519-BlindKeySign(sk_sign, sk_blind, context)
 
 ## Attester Behavior (Client Request Validation) {#attester-anon-issuer-origin-id}
 
-Given an AccessTokenRequest request containing `request_key` and `request_signature`,
+Given a TokenRequest request containing `request_key` and `request_signature`,
 Client Key `pk_blind`, and blind `sk_blind`, Attesters verify the signature as follows:
 
 1. Check that `request_key` is a valid Ed25519 public key. If this fails, abort.
@@ -883,7 +883,7 @@ if not valid:
 
 ## Issuer Behavior {#issuer-anon-issuer-origin-id}
 
-Given an Issuer Origin Secret (denoted `sk_origin`) and an AccessTokenRequest, from which
+Given an Issuer Origin Secret (denoted `sk_origin`) and a TokenRequest, from which
 `request_key` and `request_signature` are parsed, Issuers verify
 the request signature and compute a response as follows:
 
