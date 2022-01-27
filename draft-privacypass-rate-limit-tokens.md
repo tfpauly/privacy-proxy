@@ -558,13 +558,13 @@ sec-token-request-blind = sk_blind
 If the Attester detects a token_type in the TokenRequest that it does not recognize
 or support, it MUST reject the request with an HTTP 400 error.
 
-The Attester also checks to validate that the token_key_id in the client's TokenRequest
+The Attester also checks to validate that the name_key_id in the client's TokenRequest
 matches a known Origin Name Key public key for the Issuer. For example, the Attester can
 fetch this key using the API defined in {{setup}}. This check is done to help ensure that
 the Client has not been given a unique key that could allow the Issuer to fingerprint or target
 the Client. If the key does not match, the Attester rejects the request with an HTTP
-400 error. Note that Attesters need to be careful in cases of key rotation; see
-{{privacy-considerations}}.
+400 error. Note that this can lead to failures in the event of Issuer Origin Name Key
+rotation; see {{privacy-considerations}} for considerations.
 
 The Attester finally checks to ensure that the TokenRequest.request_key is valid
 for the given Client Key; see {{client-anon-issuer-origin-id}} for verification details.
