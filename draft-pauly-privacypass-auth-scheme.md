@@ -377,7 +377,7 @@ a client is challenged for an interactive token at time T1 and then subsequently
 a token at time T2, a colluding issuer and origin can link this to the same client if
 T2 is unique to the client. This linkability is less feasible as the number of issuance
 events at time T2 increases. Depending on the "max-age" token challenge attribute,
-clients MAY try to augment the time between getting challenged then redeemning a token
+clients MAY try to augment the time between getting challenged then redeeming a token
 so as to make this sort of linkability more difficult.
 
 Applications SHOULD constrain tokens to a single origin unless the use case can
