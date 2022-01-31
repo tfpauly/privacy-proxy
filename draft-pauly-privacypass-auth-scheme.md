@@ -372,7 +372,7 @@ by another, as shown below.
 
 Interactive token challenges require clients to obtain matching tokens when challenged,
 rather than presenting a token that was obtained in the past. This means that issuance
-and redemption events will occur at approximately the same time. In particular, if
+and redemption events will occur at approximately the same time. For example, if
 a client is challenged for an interactive token at time T1 and then subsequently obtains
 a token at time T2, a colluding issuer and origin can link this to the same client if
 T2 is unique to the client. This linkability is less feasible as the number of issuance
