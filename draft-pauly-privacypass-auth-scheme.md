@@ -378,7 +378,8 @@ a token at time T2, a colluding issuer and origin can link this to the same clie
 T2 is unique to the client. This linkability is less feasible as the number of issuance
 events at time T2 increases. Depending on the "max-age" token challenge attribute,
 clients MAY try to augment the time between getting challenged then redeeming a token
-so as to make this sort of linkability more difficult.
+so as to make this sort of linkability more difficult. For more discussion on correlation risks between
+token issuance and redemption, see {{?I-D.ietf-privacypass-architecture}}.
 
 Applications SHOULD constrain tokens to a single origin unless the use case can
 accommodate such replay attacks.
