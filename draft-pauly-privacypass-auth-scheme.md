@@ -370,6 +370,16 @@ by another, as shown below.
 ~~~
 {: #fig-replay title="Token Architectural Components"}
 
+Interactive token challenges require clients to obtain matching tokens when challenged,
+rather than presenting a token that was obtained in the past. This means that issuance
+and redemption events will occur at approximately the same time. In particular, if
+a client is challenged for an interactive token at time T1 and then subsequently obtains
+a token at time T2, a colluding issuer and origin can link this to the same client if
+T2 is unique to the client. This linkability is less feasible as the number of issuance
+events at time T2 increases. Depending on the "max-age" token challenge attribute,
+clients MAY try to augment the time between getting challenged and then redeemning a token
+so as to make this sort of linkability more difficult.
+
 Applications SHOULD constrain tokens to a single origin unless the use case can
 accommodate such replay attacks.
 
