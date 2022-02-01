@@ -819,9 +819,9 @@ functions:
 - ECDSA-BlindKeySign(sk, msg, r): Sign input message msg with signing key sk and
   blind r according to {{KEYBLINDING}}, Section 6.2.
 - ECDSA-SerializePublicKey(pk): Serialize an ECDSA public key using the
-  uncompressed Elliptic-Curve-Point-to-Octet-String method according to {{SECG}}.
+  compressed Elliptic-Curve-Point-to-Octet-String method according to {{SECG}}.
 - ECDSA-DeserializePublicKey(buf) attempts to deserialize a public key using
-  the uncompressed Octet-String-to-Elliptic-Curve-Point method according to {{SECG}},
+  the compressed Octet-String-to-Elliptic-Curve-Point method according to {{SECG}},
   and then performs partial public-key validation as defined in section 5.6.2.3.4 of
   {{!KEYAGREEMENT=DOI.10.6028/NIST.SP.800-56Ar3}}. This validation includes checking
   that the coordinates are in the correct range, that the point is on the curve, and
