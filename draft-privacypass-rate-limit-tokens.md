@@ -948,7 +948,7 @@ index_result = ECDSA-SerializePublicKey(unblinded_key)
 pk_encoded = ECDSA-SerializePublicKey(pk_sign)
 
 anon_issuer_origin_id = HKDF-SHA256(secret=index_result,
-                                    salt=pk_sign,
+                                    salt=pk_encoded,
                                     info="anon_issuer_origin_id")
 ~~~
 
