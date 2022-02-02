@@ -41,6 +41,17 @@ author:
     email: caw@heapingbits.net
 
 normative:
+  ECDSA:
+    title: "Public Key Cryptography for the Financial Services Industry - The Elliptic Curve Digital Signature Algorithm (ECDSA)"
+    date: 2005-11
+    seriesinfo:
+      ANSI: ANS X9.62-2005
+    author:
+      org: American National Standards Institute
+  SECG:
+    title: "Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2"
+    target: https://secg.org/sec1-v2.pdf
+    date: 2009
   AUTHSCHEME:
     title: The Privacy Pass HTTP Authentication Scheme
     target: https://tfpauly.github.io/privacy-proxy/draft-pauly-privacypass-auth-scheme.html
@@ -327,10 +338,10 @@ is the same as used in the base publicly verifiable token issuance protocol {{IS
 
 - {{HPKE}}, for encrypting the origin server name in transit between Client and Issuer across the Attester.
 
-- Ed25519 signatures with key blinding, as described in {{!RFC8032}}, for verifying correctness of Client requests.
+- {{ECDSA}} signatures with key blinding, as described in {{KEYBLINDING}}, for verifying correctness of Client requests.
 
 Clients and Issuers are required to implement all of these dependencies, whereas Attesters are required
-to implement Ed25519 signature with key blinding support.
+to implement ECDSA signature with key blinding support.
 
 ## State Requirements
 
@@ -796,17 +807,25 @@ describes Issuer behavior for computing the mapping with its per-Origin secret,
 and {{attester-output-anon-issuer-origin-id}} describes the final Attester step for
 computing the client-origin index.
 
-The index computation is based on Ed25519 {{!RFC8032}} with key blinding support,
-as described in {{KEYBLINDING}}. It uses the following functions:
+The index computation is based on ECDSA {{ECDSA}} instantiated with P-384 and SHA-384 and
+extended with key blinding support as described in {{KEYBLINDING}}. It uses the following
+functions:
 
-- RandomBytes(n): Generate n random bytes.
-- Ed25519-BlindPublicKey(pk, r): Produce a blinded public key based on the input public
-  key pk and blind r according to {{KEYBLINDING}}, Section 4.1.
-- Ed25519-Verify(pk, msg, sig): Verify the signature sig over input message msg against
-  the Ed25519 public key pk, as defined in {{RFC8032, Section 5.1.7}}, producing a
-  boolean value indicating success.
-- Ed25519-BlindKeySign(sk, msg, r): Sign input message msg with signing key sk and
-  blind r according to {{KEYBLINDING}}, Section 4.2.
+- ECDSA-KeyGen(): Generate a random ECDSA private and public key pair (sk, pk).
+- ECDSA-BlindPublicKey(pk, r): Produce a blinded public key based on the input public
+  key pk and blind r according to {{KEYBLINDING}}, Section 6.1.
+- ECDSA-Verify(pk, msg, sig): Verify the signature sig over input message msg against
+  the ECDSA public key pk, producing a boolean value indicating success.
+- ECDSA-BlindKeySign(sk, msg, r): Sign input message msg with signing key sk and
+  blind r according to {{KEYBLINDING}}, Section 6.2.
+- ECDSA-SerializePublicKey(pk): Serialize an ECDSA public key using the
+  compressed Elliptic-Curve-Point-to-Octet-String method according to {{SECG}}.
+- ECDSA-DeserializePublicKey(buf) attempts to deserialize a public key using
+  the compressed Octet-String-to-Elliptic-Curve-Point method according to {{SECG}},
+  and then performs partial public-key validation as defined in section 5.6.2.3.4 of
+  {{!KEYAGREEMENT=DOI.10.6028/NIST.SP.800-56Ar3}}. This validation includes checking
+  that the coordinates are in the correct range, that the point is on the curve, and
+  that the point is not the point at infinity.
 
 ## Client Behavior {#client-anon-issuer-origin-id}
 
@@ -821,15 +840,16 @@ Clients produce `request_key` by masking Client Key and Client Secret with a
 randomly chosen blind. Let `pk_sign` and `sk_sign` denote Client Key and
 Client Secret, respectively. This process is done as follows:
 
-1. Generate a random Ed25519 private key, sk_blind.
+1. Generate a random ECDSA private key, sk_blind.
 1. Blind `pk_blind` with `sk_blind` to compute a blinded public key, `request_key`.
 1. Output the blinded public key.
 
 In pseudocode, this is as follows:
 
 ~~~
-sk_blind = RandomBytes(32)
-request_key = Ed25519-BlindPublicKey(pk_sign, sk_blind)
+sk_blind = ECDSA-KeyGen()
+blinded_key = ECDSA-BlindPublicKey(pk_sign, sk_blind)
+request_key = ECDSA-SerializePublicKey(blinded_key)
 ~~~
 
 ### Request Signature {#index-proof}
@@ -841,7 +861,7 @@ As above, let pk and sk denote Client Key and Client Secret, respectively. Given
 values, this signature process works as follows:
 
 1. Concatenate all signature inputs to yield a message to sign.
-1. Compute an Ed25519 signature with the blind `sk_blind` over the input message using
+1. Compute an ECDSA signature with the blind `sk_blind` over the input message using
    Client Secret, `sk_sign` as the signing key.
 1. Output the signature.
 
@@ -854,7 +874,7 @@ context = concat(0x0003, // token_type
                  request_key,
                  name_key_id,
                  encrypted_origin_name)
-request_signature = Ed25519-BlindKeySign(sk_sign, sk_blind, context)
+request_signature = ECDSA-BlindKeySign(sk_sign, sk_blind, context)
 ~~~
 
 ## Attester Behavior (Client Request Validation) {#attester-anon-issuer-origin-id}
@@ -862,7 +882,7 @@ request_signature = Ed25519-BlindKeySign(sk_sign, sk_blind, context)
 Given a TokenRequest request containing `request_key` and `request_signature`,
 Client Key `pk_blind`, and blind `sk_blind`, Attesters verify the signature as follows:
 
-1. Check that `request_key` is a valid Ed25519 public key. If this fails, abort.
+1. Check that `request_key` is a valid ECDSA public key. If this fails, abort.
 1. Blind the Client Key `pk_blind` by blind `sk_blind`, yielding a blinded key.
    If this does not match `request_key`, abort.
 1. Verify `request_signature` over the contents of the request, excluding the
@@ -871,12 +891,13 @@ Client Key `pk_blind`, and blind `sk_blind`, Attesters verify the signature as f
 In pseudocode, this is as follows:
 
 ~~~
-pk_blind = Ed25519-BlindPublicKey(pk_sign, sk_blind)
-if pk_blind != request_key:
+blind_key = ECDSA-DeserializePublicKey(request_key)
+pk_blind = ECDSA-BlindPublicKey(pk_sign, sk_blind)
+if pk_blind != blind_key:
   raise InvalidParameterError
 
 context = parse(request[..len(request)-64]) // this matches context computed during signing
-valid = Ed25519-Verify(request_key, context, request_signature)
+valid = ECDSA-Verify(blind_key, context, request_signature)
 if not valid:
   raise InvalidSignatureError
 ~~~
@@ -887,7 +908,7 @@ Given an Issuer Origin Secret (denoted `sk_origin`) and a TokenRequest, from whi
 `request_key` and `request_signature` are parsed, Issuers verify
 the request signature and compute a response as follows:
 
-1. Check that `request_key` is a valid Ed25519 public key. If this fails, abort.
+1. Check that `request_key` is a valid ECDSA public key. If this fails, abort.
 1. Verify `request_signature` over the contents of the request, excluding the
    signature itself, using `request_key`. If signature verification fails, abort.
 1. Blind `request_key` by Issuer Origin Secret, `sk_origin`, yielding an index key.
@@ -896,20 +917,22 @@ the request signature and compute a response as follows:
 In pseudocode, this is as follows:
 
 ~~~
+blind_key = ECDSA-DeserializePublicKey(request_key)
 context = parse(request[..len(request)-64]) // this matches context computed during signing
-valid = Ed25519-Verify(request_key, context, request_signature)
+valid = ECDSA-Verify(blind_key, context, request_signature)
 if not valid:
   raise InvalidSignatureError
 
-index_key = Ed25519-BlindPublicKey(request_key, sk_origin)
+evaluated_key = ECDSA-BlindPublicKey(request_key, sk_origin)
+index_key = ECDSA-SerializePublicKey(evaluated_key)
 ~~~
 
 ## Attester Behavior (Index Computation) {#attester-output-anon-issuer-origin-id}
 
 Given an Issuer response `index_key`, Client blind `sk_blind`, and Client
-Key (denoted pk), Attesters complete the Anonymous Issuer Origin ID computation as follows:
+Key (denoted pk_sign), Attesters complete the Anonymous Issuer Origin ID computation as follows:
 
-1. Check that `index_key` is a valid Ed25519 public key. If this fails, abort.
+1. Check that `index_key` is a valid ECDSA public key. If this fails, abort.
 1. Unblind the `index_key` using the Client blind `sk_blind`, yielding the index result.
 1. Run HKDF {{!RFC5869}} with SHA-256 using the index result as the secret, Client Key
    `pk_sign` as the salt, and ASCII string "anon_issuer_origin_id" as the info string,
@@ -918,9 +941,14 @@ Key (denoted pk), Attesters complete the Anonymous Issuer Origin ID computation 
 In pseudocode, this is as follows:
 
 ~~~
-index_result = Ed25519-UnblindPublicKey(index_key, sk_blind)
+evaluated_key = ECDSA-DeserializePublicKey(request_key)
+unblinded_key = ECDSA-UnblindPublicKey(evaluated_key, sk_blind)
+
+index_result = ECDSA-SerializePublicKey(unblinded_key)
+pk_encoded = ECDSA-SerializePublicKey(pk_sign)
+
 anon_issuer_origin_id = HKDF-SHA256(secret=index_result,
-                                    salt=pk_sign,
+                                    salt=pk_encoded,
                                     info="anon_issuer_origin_id")
 ~~~
 
