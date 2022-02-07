@@ -4,11 +4,11 @@ This repository collects various specifications and Internet drafts that will be
 
 ## Privacy Pass Tokens
 
-* [Architecture](https://ietf-wg-privacypass.github.io/base-drafts/caw/arch-refactor/draft-ietf-privacypass-architecture.html)
+* [Architecture](https://ietf-wg-privacypass.github.io/base-drafts/draft-ietf-privacypass-architecture.html)
 
 * [Authentication Scheme](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-privacypass-auth-scheme.html)
 
-* [Basic Issuance](https://ietf-wg-privacypass.github.io/base-drafts/caw/pp-issuance/draft-ietf-privacypass-protocol.html)
+* [Basic Issuance](https://ietf-wg-privacypass.github.io/base-drafts/draft-ietf-privacypass-protocol.html)
 
 * [Rate-Limited Token Issuance](https://tfpauly.github.io/privacy-proxy/#go.draft-privacypass-rate-limit-tokens.html)
 
