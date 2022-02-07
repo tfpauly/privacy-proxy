@@ -109,6 +109,9 @@ Privacy Pass work {{DGSTV18}}.
 
 <!-- TODO: Remove duplicates that occur in Architecture doc -->
 
+Unless otherwise specified, this document encodes protocol messages in TLS
+notation from {{!TLS13=RFC8446}}, Section 3.
+
 This document uses the following terms to refer to various roles and functions
 in the Privacy Pass architecture:
 
