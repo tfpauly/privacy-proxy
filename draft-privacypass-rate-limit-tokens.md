@@ -41,6 +41,13 @@ author:
     email: caw@heapingbits.net
 
 normative:
+  X690:
+    title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
+    date: February 2021
+    author:
+      org: ITU-T
+    seriesinfo:
+      ISO/IEC 8824-1:2021
   ECDSA:
     title: "Public Key Cryptography for the Financial Services Industry - The Elliptic Curve Digital Signature Algorithm (ECDSA)"
     date: 2005-11
@@ -814,10 +821,11 @@ functions:
 - ECDSA-KeyGen(): Generate a random ECDSA private and public key pair (sk, pk).
 - ECDSA-BlindPublicKey(pk, r): Produce a blinded public key based on the input public
   key pk and blind r according to {{KEYBLINDING}}, Section 6.1.
-- ECDSA-Verify(pk, msg, sig): Verify the signature sig over input message msg against
-  the ECDSA public key pk, producing a boolean value indicating success.
-- ECDSA-BlindKeySign(sk, msg, r): Sign input message msg with signing key sk and
-  blind r according to {{KEYBLINDING}}, Section 6.2.
+- ECDSA-Verify(pk, msg, sig): Verify the DER-encoded {{X690}} ECDSA-Sig-Value signature 
+  sig over input message msg against the ECDSA public key pk, producing a boolean value indicating success.
+- ECDSA-BlindKeySign(sk_sign, sk_blind, msg): Sign input message msg with signing key sk_sign and
+  blind sk_blind according to {{KEYBLINDING}}, Section 6.2, and serializes the resulting signature
+  pair (r, s) is represented as a DER-encoded {{X690}} ECDSA-Sig-Value structure.
 - ECDSA-SerializePublicKey(pk): Serialize an ECDSA public key using the
   compressed Elliptic-Curve-Point-to-Octet-String method according to {{SECG}}.
 - ECDSA-DeserializePublicKey(buf) attempts to deserialize a public key using
