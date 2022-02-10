@@ -521,10 +521,10 @@ struct {
    uint16_t token_type = 0x0003;
    uint8_t token_key_id;
    uint8_t blinded_msg[Nk];
-   uint8_t request_key[32];
+   uint8_t request_key[97];
    uint8_t name_key_id[32];
    uint8_t encrypted_origin_name<1..2^16-1>;
-   uint8_t request_signature[64];
+   uint8_t request_signature<1..2^16-1>;
 } TokenRequest;
 ~~~
 
@@ -622,7 +622,7 @@ that will uniquely identify a Client.
 accept = message/token-response
 cache-control = no-cache, no-store
 content-type = message/token-request
-content-length = 512
+content-length = <Length of TokenRequest>
 
 <Bytes containing the TokenRequest>
 ~~~
@@ -672,7 +672,7 @@ allowed for a Client for the Origin within a policy window set in the
 ~~~
 :status = 200
 content-type = message/token-response
-content-length = 512
+content-length = <Length of blind_sig>
 sec-token-origin = index_result
 set-token-limit = Token limit
 
@@ -756,7 +756,7 @@ aad = concat(encode(1, keyID),
              encode(2, token_type),
              encode(1, token_key_id),
              encode(Nk, blinded_msg),
-             encode(32, request_key),
+             encode(97, request_key),
              encode(32, name_key_id))
 ct = context.Seal(aad, origin_name)
 encrypted_origin_name = concat(enc, ct)
@@ -775,7 +775,7 @@ aad = concat(encode(1, keyID),
              encode(2, token_type),
              encode(1, token_key_id),
              encode(Nk, blinded_msg),
-             encode(32, request_key),
+             encode(97, request_key),
              encode(32, name_key_id))
 enc, context = SetupBaseR(enc, skI, "TokenRequest")
 origin_name, error = context.Open(aad, ct)
@@ -827,9 +827,9 @@ functions:
   blind sk_blind according to {{KEYBLINDING}}, Section 6.2, and serializes the resulting signature
   pair (r, s) is represented as a DER-encoded {{X690}} ECDSA-Sig-Value structure.
 - ECDSA-SerializePublicKey(pk): Serialize an ECDSA public key using the
-  compressed Elliptic-Curve-Point-to-Octet-String method according to {{SECG}}.
+  uncompressed Elliptic-Curve-Point-to-Octet-String method according to {{SECG}}.
 - ECDSA-DeserializePublicKey(buf) attempts to deserialize a public key using
-  the compressed Octet-String-to-Elliptic-Curve-Point method according to {{SECG}},
+  the uncompressed Octet-String-to-Elliptic-Curve-Point method according to {{SECG}},
   and then performs partial public-key validation as defined in section 5.6.2.3.4 of
   {{!KEYAGREEMENT=DOI.10.6028/NIST.SP.800-56Ar3}}. This validation includes checking
   that the coordinates are in the correct range, that the point is on the curve, and
@@ -904,7 +904,7 @@ pk_blind = ECDSA-BlindPublicKey(pk_sign, sk_blind)
 if pk_blind != blind_key:
   raise InvalidParameterError
 
-context = parse(request[..len(request)-64]) // this matches context computed during signing
+context = parse(request) // this matches context computed during signing
 valid = ECDSA-Verify(blind_key, context, request_signature)
 if not valid:
   raise InvalidSignatureError
@@ -926,7 +926,7 @@ In pseudocode, this is as follows:
 
 ~~~
 blind_key = ECDSA-DeserializePublicKey(request_key)
-context = parse(request[..len(request)-64]) // this matches context computed during signing
+context = parse(request) // this matches context computed during signing
 valid = ECDSA-Verify(blind_key, context, request_signature)
 if not valid:
   raise InvalidSignatureError
