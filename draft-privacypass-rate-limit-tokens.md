@@ -841,7 +841,7 @@ randomly chosen blind. Let `pk_sign` and `sk_sign` denote Client Key and
 Client Secret, respectively. This process is done as follows:
 
 1. Generate a random ECDSA private key, sk_blind.
-1. Blind `pk_blind` with `sk_blind` to compute a blinded public key, `request_key`.
+1. Blind `pk_sign` with `sk_blind` to compute a blinded public key, `request_key`.
 1. Output the blinded public key.
 
 In pseudocode, this is as follows:
