@@ -521,7 +521,7 @@ struct {
    uint16_t token_type = 0x0003;
    uint8_t token_key_id;
    uint8_t blinded_msg[Nk];
-   uint8_t request_key[97];
+   uint8_t request_key[49];
    uint8_t name_key_id[32];
    uint8_t encrypted_origin_name<1..2^16-1>;
    uint8_t request_signature[96];
@@ -756,7 +756,7 @@ aad = concat(encode(1, keyID),
              encode(2, token_type),
              encode(1, token_key_id),
              encode(Nk, blinded_msg),
-             encode(97, request_key),
+             encode(49, request_key),
              encode(32, name_key_id))
 ct = context.Seal(aad, origin_name)
 encrypted_origin_name = concat(enc, ct)
@@ -775,7 +775,7 @@ aad = concat(encode(1, keyID),
              encode(2, token_type),
              encode(1, token_key_id),
              encode(Nk, blinded_msg),
-             encode(97, request_key),
+             encode(49, request_key),
              encode(32, name_key_id))
 enc, context = SetupBaseR(enc, skI, "TokenRequest")
 origin_name, error = context.Open(aad, ct)
@@ -832,9 +832,9 @@ functions:
   string buf using Octet-String-to-Field-Element from {{SECG}}. This function can fail if buf
   does not represent a valid private key.
 - ECDSA-SerializePublicKey(pk): Serialize an ECDSA public key using the
-  uncompressed Elliptic-Curve-Point-to-Octet-String method according to {{SECG}}.
+  compressed Elliptic-Curve-Point-to-Octet-String method according to {{SECG}}.
 - ECDSA-DeserializePublicKey(buf): Attempt to deserialize a public key using
-  the uncompressed Octet-String-to-Elliptic-Curve-Point method according to {{SECG}},
+  the compressed Octet-String-to-Elliptic-Curve-Point method according to {{SECG}},
   and then performs partial public-key validation as defined in section 5.6.2.3.4 of
   {{!KEYAGREEMENT=DOI.10.6028/NIST.SP.800-56Ar3}}. This validation includes checking
   that the coordinates are in the correct range, that the point is on the curve, and
