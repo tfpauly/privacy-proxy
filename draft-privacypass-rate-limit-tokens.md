@@ -504,7 +504,7 @@ blinded_msg, blind_inv = rsabssa_blind(pkI, token_input)
 ~~~
 
 The Client then uses Client Key to generate its one-time-use request public
-key `request_key` and blind `sk_blind` as described in {{client-anon-issuer-origin-id}}.
+key `request_key` and blind `request_blind` as described in {{client-anon-issuer-origin-id}}.
 
 The Client then encrypts the origin name using Origin Name Key, producing
 `encrypted_origin_name` as described in {{encrypt-origin}}.
@@ -521,10 +521,10 @@ struct {
    uint16_t token_type = 0x0003;
    uint8_t token_key_id;
    uint8_t blinded_msg[Nk];
-   uint8_t request_key[32];
+   uint8_t request_key[49];
    uint8_t name_key_id[32];
    uint8_t encrypted_origin_name<1..2^16-1>;
-   uint8_t request_signature[64];
+   uint8_t request_signature[96];
 } TokenRequest;
 ~~~
 
@@ -552,7 +552,7 @@ The Client then generates an HTTP POST request to send through the Attester to
 the Issuer, with the TokenRequest as the body. The media type for this request
 is "message/token-request". The Client includes the "Sec-Token-Origin" header,
 whose value is Anonymous Origin ID; the "Sec-Token-Client" header, whose value is Client Key; and
-the "Sec-Token-Request-Blind" header, whose value is sk_blind. The Client
+the "Sec-Token-Request-Blind" header, whose value is request_blind. The Client
 sends this request to the Attester's proxy URI. An example request is shown below,
 where Nk = 512, the Issuer Name is "issuer.net", and the Attester URI template is
 "https://attester.net/token-request{?issuer}"
@@ -568,7 +568,7 @@ content-type = message/token-request
 content-length = <Length of TokenRequest>
 sec-token-origin = Anonymous Origin ID
 sec-token-client = Client Key
-sec-token-request-blind = sk_blind
+sec-token-request-blind = request_blind
 
 <Bytes containing the TokenRequest>
 ~~~
@@ -622,7 +622,7 @@ that will uniquely identify a Client.
 accept = message/token-response
 cache-control = no-cache, no-store
 content-type = message/token-request
-content-length = 512
+content-length = <Length of TokenRequest>
 
 <Bytes containing the TokenRequest>
 ~~~
@@ -672,7 +672,7 @@ allowed for a Client for the Origin within a policy window set in the
 ~~~
 :status = 200
 content-type = message/token-response
-content-length = 512
+content-length = <Length of blind_sig>
 sec-token-origin = index_result
 set-token-limit = Token limit
 
@@ -756,7 +756,7 @@ aad = concat(encode(1, keyID),
              encode(2, token_type),
              encode(1, token_key_id),
              encode(Nk, blinded_msg),
-             encode(32, request_key),
+             encode(49, request_key),
              encode(32, name_key_id))
 ct = context.Seal(aad, origin_name)
 encrypted_origin_name = concat(enc, ct)
@@ -775,7 +775,7 @@ aad = concat(encode(1, keyID),
              encode(2, token_type),
              encode(1, token_key_id),
              encode(Nk, blinded_msg),
-             encode(32, request_key),
+             encode(49, request_key),
              encode(32, name_key_id))
 enc, context = SetupBaseR(enc, skI, "TokenRequest")
 origin_name, error = context.Open(aad, ct)
@@ -821,14 +821,19 @@ functions:
 - ECDSA-KeyGen(): Generate a random ECDSA private and public key pair (sk, pk).
 - ECDSA-BlindPublicKey(pk, r): Produce a blinded public key based on the input public
   key pk and blind r according to {{KEYBLINDING}}, Section 6.1.
-- ECDSA-Verify(pk, msg, sig): Verify the DER-encoded {{X690}} ECDSA-Sig-Value signature 
+- ECDSA-Verify(pk, msg, sig): Verify the DER-encoded {{X690}} ECDSA-Sig-Value signature
   sig over input message msg against the ECDSA public key pk, producing a boolean value indicating success.
 - ECDSA-BlindKeySign(sk_sign, sk_blind, msg): Sign input message msg with signing key sk_sign and
   blind sk_blind according to {{KEYBLINDING}}, Section 6.2, and serializes the resulting signature
-  pair (r, s) is represented as a DER-encoded {{X690}} ECDSA-Sig-Value structure.
+  pair (r, s) in "raw" form, i.e., as the concatenation of two 48-byte, big endian scalars.
+- ECDSA-SerializePrivatekey(sk): Serialize an ECDSA private key using the Field-Element-to-Octet-String
+  conversion according to {{SECG}}.
+- ECDSA-DeserializePrivatekey(buf): Attempt to deserialize an ECDSA private key from a 48-byte
+  string buf using Octet-String-to-Field-Element from {{SECG}}. This function can fail if buf
+  does not represent a valid private key.
 - ECDSA-SerializePublicKey(pk): Serialize an ECDSA public key using the
   compressed Elliptic-Curve-Point-to-Octet-String method according to {{SECG}}.
-- ECDSA-DeserializePublicKey(buf) attempts to deserialize a public key using
+- ECDSA-DeserializePublicKey(buf): Attempt to deserialize a public key using
   the compressed Octet-String-to-Elliptic-Curve-Point method according to {{SECG}},
   and then performs partial public-key validation as defined in section 5.6.2.3.4 of
   {{!KEYAGREEMENT=DOI.10.6028/NIST.SP.800-56Ar3}}. This validation includes checking
@@ -858,6 +863,7 @@ In pseudocode, this is as follows:
 sk_blind = ECDSA-KeyGen()
 blinded_key = ECDSA-BlindPublicKey(pk_sign, sk_blind)
 request_key = ECDSA-SerializePublicKey(blinded_key)
+request_blind = ECDSA-SerializePrivatekey(sk_blind)
 ~~~
 
 ### Request Signature {#index-proof}
@@ -887,10 +893,11 @@ request_signature = ECDSA-BlindKeySign(sk_sign, sk_blind, context)
 
 ## Attester Behavior (Client Request Validation) {#attester-anon-issuer-origin-id}
 
-Given a TokenRequest request containing `request_key` and `request_signature`,
-Client Key `pk_blind`, and blind `sk_blind`, Attesters verify the signature as follows:
+Given a TokenRequest request containing `request_key`, `request_signature`, and `request_blind`,
+as well as Client Key `pk_blind`, Attesters verify the signature as follows:
 
 1. Check that `request_key` is a valid ECDSA public key. If this fails, abort.
+1. Check that `request_blind` is a valid ECDSA private key. If this fails, abort.
 1. Blind the Client Key `pk_blind` by blind `sk_blind`, yielding a blinded key.
    If this does not match `request_key`, abort.
 1. Verify `request_signature` over the contents of the request, excluding the
@@ -900,11 +907,12 @@ In pseudocode, this is as follows:
 
 ~~~
 blind_key = ECDSA-DeserializePublicKey(request_key)
+sk_blind = ECDSA-DeserializePrivatekey(request_blind)
 pk_blind = ECDSA-BlindPublicKey(pk_sign, sk_blind)
 if pk_blind != blind_key:
   raise InvalidParameterError
 
-context = parse(request[..len(request)-64]) // this matches context computed during signing
+context = parse(request[..len(request)-96]) // this matches context computed during signing
 valid = ECDSA-Verify(blind_key, context, request_signature)
 if not valid:
   raise InvalidSignatureError
@@ -926,7 +934,7 @@ In pseudocode, this is as follows:
 
 ~~~
 blind_key = ECDSA-DeserializePublicKey(request_key)
-context = parse(request[..len(request)-64]) // this matches context computed during signing
+context = parse(request[..len(request)-96]) // this matches context computed during signing
 valid = ECDSA-Verify(blind_key, context, request_signature)
 if not valid:
   raise InvalidSignatureError
@@ -942,7 +950,7 @@ Key (denoted pk_sign), Attesters complete the Anonymous Issuer Origin ID computa
 
 1. Check that `index_key` is a valid ECDSA public key. If this fails, abort.
 1. Unblind the `index_key` using the Client blind `sk_blind`, yielding the index result.
-1. Run HKDF {{!RFC5869}} with SHA-256 using the index result as the secret, Client Key
+1. Run HKDF {{!RFC5869}} with SHA-384 using the index result as the secret, Client Key
    `pk_sign` as the salt, and ASCII string "anon_issuer_origin_id" as the info string,
    yielding Anonymous Issuer Origin ID.
 
@@ -955,7 +963,7 @@ unblinded_key = ECDSA-UnblindPublicKey(evaluated_key, sk_blind)
 index_result = ECDSA-SerializePublicKey(unblinded_key)
 pk_encoded = ECDSA-SerializePublicKey(pk_sign)
 
-anon_issuer_origin_id = HKDF-SHA256(secret=index_result,
+anon_issuer_origin_id = HKDF-SHA384(secret=index_result,
                                     salt=pk_encoded,
                                     info="anon_issuer_origin_id")
 ~~~
