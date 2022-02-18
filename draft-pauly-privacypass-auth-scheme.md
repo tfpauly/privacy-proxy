@@ -203,11 +203,13 @@ When used in an authentication challenge, the "PrivateToken" scheme uses the
 following attributes:
 
 - "challenge", which contains a base64url-encoded {{!RFC4648}} TokenChallenge
-value. This MUST be unique for every 401 HTTP response to prevent replay attacks.
-This attribute is required for all challenges.
+value. Since the length of the challenge is not fixed, the base64url data MUST
+include padding. This MUST be unique for every 401 HTTP response to prevent
+replay attacks. This attribute is required for all challenges.
 
 - "token-key", which contains a base64url encoding of the public key for
-use with the issuance protocol indicated by the challenge. This attribute MAY
+use with the issuance protocol indicated by the challenge. Since the length of
+the key is not fixed, the base64url data MUST include padding. This attribute MAY
 be omitted in deployments where clients are able to retrieve the issuer key using
 an out-of-band mechanism.
 
@@ -282,7 +284,8 @@ nonce, context, and token_key_id fields.
 
 When used for client authorization, the "PrivateToken" authentication
 scheme defines one parameter, "token", which contains the base64url-encoded
-Token struct. All unknown or unsupported parameters to "PrivateToken"
+Token struct. Since the length of the Token struct is not fixed, the base64url 
+data MUST include padding. All unknown or unsupported parameters to "PrivateToken"
 authentication credentials MUST be ignored.
 
 Clients present this Token structure to Origins in a new HTTP request using
