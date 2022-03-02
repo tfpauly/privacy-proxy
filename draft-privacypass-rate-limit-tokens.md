@@ -135,16 +135,17 @@ about the pieces of information):
 
 - The Attester knows the Client's identity and learns the Client's public key
   (Client Key), the Issuer being targeted (Issuer Name), the period of time
-  for which the Issuer's policy is valid (Issuer Policy Window), and the number
-  of tokens issued to a given Client for the claimed Origin in the given policy
-  window.  The Attester does not know the identity of the Origin the Client is
+  for which the Issuer's policy is valid (Issuer Policy Window), the number of
+  tokens the Issuer is willing to issue within the current policy window, and the
+  number of tokens issued to a given Client for the claimed Origin in the policy
+  window. The Attester does not know the identity of the Origin the Client is
   trying to access (Origin Name), but knows a Client-anonymized identifier for
   it (Anonymous Origin ID).
 
 - The Issuer knows the Origin's secret (Issuer Origin Secret) and policy about client
-  access, and learns the Origin's identity (Origin Name) and the number of
-  previous tokens issued to the Client (as communicated by the Attester) during
-  issuance. The Issuer does not learn the Client's identity.
+  access, and learns the Origin's identity (Origin Name) during issuance. The Issuer
+  does not learn the Client's identity or information about the Client's access
+  pattern.
 
 - The Origin knows the Issuer to which it will delegate an incoming Client
   (Issuer Name), and can verify that any tokens presented by the Client were
