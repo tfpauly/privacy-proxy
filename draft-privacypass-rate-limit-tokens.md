@@ -614,9 +614,8 @@ If this fails, the Attester MUST return an HTTP 400 error to the Client.
 The Attester MUST NOT add information that will uniquely identify a Client,
 or associate the request with a small set of possible Clients. Extensions
 to this protocol MAY allow Attesters to add information that can be used
-to separate large populations (numbering in the thousands or more), such
-as providing information about what country or region to which a Client
-belongs.
+to separate large populations, such as providing information about the country
+or region to which a Client belongs.
 
 ~~~
 :method = POST
