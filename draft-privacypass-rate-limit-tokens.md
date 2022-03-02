@@ -612,8 +612,11 @@ compromise; see {{sec-considerations}} for additional about this channel.
 Before copying and forwarding the Client's TokenRequest request to the Issuer,
 the Attester validates the Client's stable mapping request as described in {{attester-anon-issuer-origin-id}}.
 If this fails, the Attester MUST return an HTTP 400 error to the Client.
-The Attester MAY also add additional context information, but MUST NOT add information
-that will uniquely identify a Client.
+The Attester MUST NOT add information that will uniquely identify a Client,
+or associate the request with a small set of possible Clients. Extensions
+to this protocol MAY allow Attesters to add information that can be used
+to separate large populations, such as providing information about the country
+or region to which a Client belongs.
 
 ~~~
 :method = POST
