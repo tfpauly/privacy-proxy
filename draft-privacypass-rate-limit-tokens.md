@@ -1010,7 +1010,7 @@ The Client learns the output token. It does not learn the Anonymous Issuer Origi
 Client token requests are constructed such that an Issuer cannot distinguish between
 any two token requests from the same Client and two requests from different Clients.
 We refer to this property as issuance unlinkability. This property is achieved
-by construction. In particular, TokenRequest.request_key and TokenRequest.request_signature
+by the way the tokens are constructed. In particular, TokenRequest.request_key and TokenRequest.request_signature
 are the only value in a TokenRequest that is derived from per-Client information, i.e.,
 the Client Secret.
 
@@ -1030,7 +1030,7 @@ flow, as doing this would allow the Issuer to trivially link two requests to the
 Client.
 
 The token request signature is also required to be unforgeable. Informally, unforgeability
-means that one cannot produce a valid (message, signature) pair for any blinding key without
+means that no entity can produce a valid (message, signature) pair for any blinding key without
 access to the private signing key. Importantly, the means the Attester cannot forge
 signatures on behalf of a given Client in an attempt to learn the origin name.
 
