@@ -746,7 +746,9 @@ Encrypted Origin Name (`encrypted_origin`) as follows:
 1. Compute an {{HPKE}} context using pkI, yielding context and encapsulation key enc.
 1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID,
    aeadID, and all other values of the TokenRequest structure.
-1. Encrypt (seal) request with aad as associated data using context, yielding ciphertext ct.
+1. Pad origin_name with N zero bytes, where N = 31 - ((L - 1) % 32) and L is the length
+   of origin_name. Denote this padding process as the function `pad`.
+1. Encrypt (seal) the padded origin_name with aad as associated data using context, yielding ciphertext ct.
 1. Concatenate the values of aad, enc, and ct, yielding encrypted_origin_name.
 
 Note that enc is of fixed-length, so there is no ambiguity in parsing this structure.
@@ -764,13 +766,14 @@ aad = concat(encode(1, keyID),
              encode(Nk, blinded_msg),
              encode(49, request_key),
              encode(32, name_key_id))
-ct = context.Seal(aad, origin_name)
+ct = context.Seal(aad, pad(origin_name))
 encrypted_origin_name = concat(enc, ct)
 ~~~
 
-Issuers reverse this procedure to recover Origin Name by computing the AAD as described
-above and decrypting encrypted_origin_name with their private key skI, the private key
-corresponding to pkI. In pseudocode, this procedure is as follows:
+Issuers reverse this procedure to recover the (padded) Origin Name by computing the AAD as
+described above and decrypting encrypted_origin_name with their private key skI (the private
+key corresponding to pkI), and stripping off padding bytes. In pseudocode, this procedure
+is as follows:
 
 ~~~
 enc, ct = parse(encrypted_origin_name)
