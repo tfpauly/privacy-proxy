@@ -767,8 +767,9 @@ encrypted_origin_name = concat(enc, ct)
 ~~~
 
 Issuers reverse this procedure to recover the (padded) Origin Name by computing the AAD as
-described above and decrypting encrypted_origin_name with their private key skI, the private
-key corresponding to pkI. In pseudocode, this procedure is as follows:
+described above and decrypting encrypted_origin_name with their private key skI (the private
+key corresponding to pkI), and stripping off padding bytes. In pseudocode, this procedure
+is as follows:
 
 ~~~
 enc, ct = parse(encrypted_origin_name)
