@@ -233,7 +233,8 @@ rate-limited issuance protocol:
 policy, defined in terms of seconds and represented as a uint64. The state
 that the Attester keeps for a Client is specific to a policy window.
 The effective policy window for a specific Client starts when the Client
-first sends a request associated with an Issuer.
+first sends a request associated with an Issuer. This window is conveyed from
+Issuer to Attester in the "RateLimit-Limit" header as defined in {{!RATELIMIT=I-D.ietf-httpapi-ratelimit-headers}}.
 
 - Origin Name Key: The public key used to encrypt values such as
 Origin Name in requests from Clients to the Issuer, so that Attesters cannot learn
@@ -289,7 +290,6 @@ object whose field names and values are raw values and URLs for the parameters.
 
 | Field Name           | Value                                            |
 |:---------------------|:-------------------------------------------------|
-| issuer-policy-window | Issuer Policy Window as a JSON number            |
 | issuer-request-uri   | Issuer Request URI resource URL as a JSON string |
 | origin-name-key-uri  | Origin Name Key URI resource URL as a JSON string |
 
@@ -297,7 +297,6 @@ As an example, the Issuer's JSON directory could look like:
 
 ~~~
  {
-    "issuer-token-window": 86400,
     "issuer-request-uri": "https://issuer.example.net/token-request"
     "origin-name-key-uri": "https://issuer.example.net/name-key",
  }
@@ -460,16 +459,6 @@ Its ABNF is:
 
 ~~~
     Sec-Token-Request-Blind = sf-binary
-~~~
-
-The "Sec-Token-Limit" is an Item Structured Header {{!RFC8941}}. Its
-value MUST be an Integer. This header is sent on Issuer-to-Attester
-responses ({{response-one}}), and contains the number of times a
-Client can retrieve a token for the requested Origin within a policy window,
-as set by the Issuer. Its ABNF is:
-
-~~~
-    Sec-Token-Limit = sf-integer
 ~~~
 
 ## Client-to-Attester Request {#request-one}
@@ -671,14 +660,14 @@ The Issuer generates an HTTP response with status code 200 whose body consists o
 blind_sig, with the content type set as "message/token-response", the
 index_result set in the "Sec-Token-Origin" header, and the limit of tokens
 allowed for a Client for the Origin within a policy window set in the
-"Sec-Token-Limit" header.
+"RateLimit-Limit" header, defined in {{RATELIMIT}}.
 
 ~~~
 :status = 200
 content-type = message/token-response
 content-length = <Length of blind_sig>
 sec-token-origin = index_result
-set-token-limit = Token limit
+RateLimit-Limit = sf-list
 
 <Bytes containing the blind_sig>
 ~~~
@@ -695,7 +684,7 @@ the Attester MUST drop the token and respond to the client with an HTTP 400 stat
 If there is not an error, the Anonymous Issuer Origin ID is stored alongside the state
 for the Anonymous Origin ID.
 
-The Attester also extracts the "Sec-Token-Limit" header, and compares the limit against the
+The Attester also extracts the "RateLimit-Limit" header, and compares the limit against the
 previous count of accesses for this Client for the Anonymous Origin ID. If the count is greater
 than or equal to the limit, the Attester drops the token and responds to the client with an
 HTTP 429 (Too Many Requests) error.
@@ -1077,8 +1066,6 @@ in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignmen
     | Sec-Token-Client        |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
     | Sec-Token-Request-Blind |   http   |  std   | This document |
-    +-------------------------+----------+--------+---------------+
-    | Sec-Token-Limit         |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
 ~~~
 {: #iana-header-type-table title="Registered HTTP Header"}
