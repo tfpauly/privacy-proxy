@@ -64,7 +64,7 @@ normative:
     target: https://tfpauly.github.io/privacy-proxy/draft-pauly-privacypass-auth-scheme.html
   KEYBLINDING:
     title: Key Blinding for Signature Schemes
-    target: https://chris-wood.github.io/draft-wood-cfrg-eddsa-blinding/draft-wood-cfrg-eddsa-blinding.html
+    target: https://chris-wood.github.io/draft-dew-cfrg-signature-key-blinding/draft-dew-cfrg-signature-key-blinding.html
 
 --- abstract
 
@@ -585,9 +585,9 @@ the Client. If the key does not match, the Attester rejects the request with an 
 400 error. Note that this can lead to failures in the event of Issuer Origin Name Key
 rotation; see {{privacy-considerations}} for considerations.
 
-The Attester finally checks to ensure that the TokenRequest.request_key is valid
-for the given Client Key; see {{client-anon-issuer-origin-id}} for verification details.
-If the index is invalid, the Attester rejects the request with an HTTP 400 error.
+The Attester finally validates the Client's stable mapping request as described in
+{{attester-anon-issuer-origin-id}}. If this fails, the Attester MUST return an HTTP 400
+error to the Client.
 
 If the Attester accepts the request, it will look up the state stored for this Client.
 It will look up the count of previously generate tokens for this Client using the same
@@ -603,20 +603,12 @@ the Issuer.
 
 ## Attester-to-Issuer Request {#request-two}
 
-The Attester and the Issuer MUST use a secure and Issuer-authenticated HTTPS
-connection. Also, Issuers MUST authenticate Attesters, either via mutual
-TLS or another form of application-layer authentication. They MAY additionally use
-mechanisms such as TLS certificate pinning, to mitigate the risk of channel
-compromise; see {{sec-considerations}} for additional about this channel.
-
-Before copying and forwarding the Client's TokenRequest request to the Issuer,
-the Attester validates the Client's stable mapping request as described in {{attester-anon-issuer-origin-id}}.
-If this fails, the Attester MUST return an HTTP 400 error to the Client.
-The Attester MUST NOT add information that will uniquely identify a Client,
-or associate the request with a small set of possible Clients. Extensions
-to this protocol MAY allow Attesters to add information that can be used
-to separate large populations, such as providing information about the country
-or region to which a Client belongs.
+Assuming all checks in {{request-one}} succeed, the Attester generates an HTTP POST request
+to send to the Issuer with the Client's TokenRequest as the body. The Attester MUST NOT
+add information that will uniquely identify a Client, or associate the request with a small
+set of possible Clients. Extensions to this protocol MAY allow Attesters to add information
+that can be used to separate large populations, such as providing information about the country
+or region to which a Client belongs. An example request is shown below.
 
 ~~~
 :method = POST
@@ -630,6 +622,12 @@ content-length = <Length of TokenRequest>
 
 <Bytes containing the TokenRequest>
 ~~~
+
+The Attester and the Issuer MUST use a secure and Issuer-authenticated HTTPS
+connection. Also, Issuers MUST authenticate Attesters, either via mutual
+TLS or another form of application-layer authentication. They MAY additionally use
+mechanisms such as TLS certificate pinning, to mitigate the risk of channel
+compromise; see {{sec-considerations}} for additional about this channel.
 
 Upon receipt of the forwarded request, the Issuer validates the following conditions:
 
@@ -745,7 +743,7 @@ Encrypted Origin Name (`encrypted_origin`) as follows:
 1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID,
    aeadID, and all other values of the TokenRequest structure.
 1. Encrypt (seal) request with aad as associated data using context, yielding ciphertext ct.
-1. Concatenate the values of aad, enc, and ct, yielding an Encapsulated Request enc_request.
+1. Concatenate the values of aad, enc, and ct, yielding encrypted_origin_name.
 
 Note that enc is of fixed-length, so there is no ambiguity in parsing this structure.
 
@@ -902,7 +900,7 @@ as well as Client Key `pk_blind`, Attesters verify the signature as follows:
 
 1. Check that `request_key` is a valid ECDSA public key. If this fails, abort.
 1. Check that `request_blind` is a valid ECDSA private key. If this fails, abort.
-1. Blind the Client Key `pk_blind` by blind `sk_blind`, yielding a blinded key.
+1. Blind the Client Key `pk_sign` by blind `sk_blind`, yielding a blinded key.
    If this does not match `request_key`, abort.
 1. Verify `request_signature` over the contents of the request, excluding the
    signature itself, using `request_key`. If signature verification fails, abort.
