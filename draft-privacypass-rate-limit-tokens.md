@@ -245,7 +245,8 @@ on requests to the Attester, which represents a specific Origin anonymously. The
 generates a stable Anonymous Origin ID for each Origin Name, to allow the Attester
 to count token access without learning the Origin Name.
 
-- Client Key: A public key chosen by the Client and shared only with the Attester.
+- Client Key: A public key chosen by the Client and shared only with the Attester;
+  see {{issuance-unlinkability}} for more details about this restriction.
 
 - Client Secret: The secret key used by the Client during token issuance, whose public key
 (Client Key) is shared with the Attester.
@@ -337,6 +338,9 @@ signature, and proxies the request to the Issuer
 and produces a token response sent back to the Attester
 
 1. The Attester verifies the response and proxies the response to the Client
+
+The Issuance protocol is designed such that Client, Attester, and Issuer learn only
+what is necessary for completing the protocol; see {{info-disclosure}} for more details.
 
 The Issuance protocol has a number of underlying cryptographic dependencies for
 operation:
@@ -970,7 +974,11 @@ anon_issuer_origin_id = HKDF-SHA384(secret=index_result,
                                     info="anon_issuer_origin_id")
 ~~~
 
-# Security considerations {#sec-considerations}
+# Security Considerations {#sec-considerations}
+
+This section describes security considerations relevant to the use of this protocol.
+
+## Channel Security
 
 An attacker that can act as an intermediate between Attester and Issuer
 communication can influence or disrupt the ability for the Issuer to correctly
@@ -980,7 +988,53 @@ mutual authentication between both endpoints. Where appropriate, endpoints
 MAY use further enhancements such as TLS certificate pinning to mitigate
 the risk of channel compromise.
 
+## Information Disclosure {#info-disclosure}
+
+The protocol in this document is designed such that information pertaining to issuance
+of a token is limited to parties that need it for completing the protocol. In particular,
+Attesters learn only the Anonymous Issuer Origin ID as described in {{anon-issuer-origin-id}},
+any per-Client information necessary for attestation, and the target Issuer for a given
+token request. The Attester does not learn the origin name associated with a given token
+request.
+
+The Issuer only learns the Attester that vouches for a particular Client's token request
+and the origin name associated with a token request. The Issuer does not learn the
+Anonymous Issuer Origin ID or any per-Client information used when creating a token request.
+
+The Client learns the output token. It does not learn the Anonymous Issuer Origin ID.
+
+## Token Request Unlinkability and Unforgeability {#issuance-unlinkability}
+
+Client token requests are constructed such that an Issuer cannot distinguish between
+any two token requests from the same Client and two requests from different Clients.
+We refer to this property as issuance unlinkability. This property is achieved
+by the way the tokens are constructed. In particular, TokenRequest.request_key and TokenRequest.request_signature
+are the only value in a TokenRequest that is derived from per-Client information, i.e.,
+the Client Secret.
+
+TokenRequest.request_key is computed using a freshly generated blind for each token
+request. As a result, the value of TokenRequest.request_key in one token request is
+statistically independent from Client Key. Similarly, TokenRequest.request_signature
+is computed using the same freshly generated blind as TokenRequest.request_key for each
+token request, and the resulting signature is therefore independent from signatures
+produced using Client Secret. More details about this unlinkability property can be
+found in {{KEYBLINDING}}.
+
+This unlinkability property is only intended for requests observed by the Issuer.
+In contrast, the Attester is required to link requests from the same Client together
+for the purposes of enforcing rate limits. This Attester does this by observing the
+Client Key. Importantly, the Client Key is not sent to the Issuer during the issuance
+flow, as doing this would allow the Issuer to trivially link two requests to the same
+Client.
+
+The token request signature is also required to be unforgeable. Informally, unforgeability
+means that no entity can produce a valid (message, signature) pair for any blinding key without
+access to the private signing key. Importantly, the means the Attester cannot forge
+signatures on behalf of a given Client in an attempt to learn the origin name.
+
 # Privacy Considerations {#privacy-considerations}
+
+This section describes privacy considerations relevant to use of this protocol.
 
 ## Client Token State and Origin Tracking
 
