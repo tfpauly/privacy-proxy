@@ -62,9 +62,6 @@ normative:
   AUTHSCHEME:
     title: The Privacy Pass HTTP Authentication Scheme
     target: https://tfpauly.github.io/privacy-proxy/draft-pauly-privacypass-auth-scheme.html
-  KEYBLINDING:
-    title: Key Blinding for Signature Schemes
-    target: https://chris-wood.github.io/draft-dew-cfrg-signature-key-blinding/draft-dew-cfrg-signature-key-blinding.html
 
 --- abstract
 
@@ -350,7 +347,8 @@ is the same as used in the base publicly verifiable token issuance protocol {{IS
 
 - {{HPKE}}, for encrypting the origin server name in transit between Client and Issuer across the Attester.
 
-- {{ECDSA}} signatures with key blinding, as described in {{KEYBLINDING}}, for verifying correctness of Client requests.
+- {{ECDSA}} signatures with key blinding, as described in {{!KEYBLINDING=I-D.dew-cfrg-signature-key-blinding}}, for verifying
+  correctness of Client requests.
 
 Clients and Issuers are required to implement all of these dependencies, whereas Attesters are required
 to implement ECDSA signature with key blinding support.
