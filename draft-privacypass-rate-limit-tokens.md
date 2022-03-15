@@ -678,7 +678,7 @@ allowed for a Client for the Origin within a policy window set in the
 content-type = message/token-response
 content-length = <Length of blind_sig>
 sec-token-origin = index_result
-set-token-limit = Token limit
+sec-token-limit = Token limit
 
 <Bytes containing the blind_sig>
 ~~~
