@@ -657,7 +657,7 @@ TokenRequest.encrypted_origin_name to discover "origin". If this fails, the Issu
 the request with a 400 error. Otherwise, the Issuer validates and processes the token request
 with Issuer Origin Secret corresponding to the designated Origin as described in {{issuer-anon-issuer-origin-id}}.
 If this fails, the Issuer rejects the request with a 400 error. Otherwise, the output is
-index_result.
+index_key.
 
 The Issuer completes the issuance flow by computing a blinded response as follows:
 
@@ -669,7 +669,7 @@ blind_sig = rsabssa_blind_sign(skP, TokenRequest.blinded_msg)
 
 The Issuer generates an HTTP response with status code 200 whose body consists of
 blind_sig, with the content type set as "message/token-response", the
-index_result set in the "Sec-Token-Origin" header, and the limit of tokens
+index_key set in the "Sec-Token-Origin" header, and the limit of tokens
 allowed for a Client for the Origin within a policy window set in the
 "Sec-Token-Limit" header.
 
@@ -677,7 +677,7 @@ allowed for a Client for the Origin within a policy window set in the
 :status = 200
 content-type = message/token-response
 content-length = <Length of blind_sig>
-sec-token-origin = index_result
+sec-token-origin = index_key
 sec-token-limit = Token limit
 
 <Bytes containing the blind_sig>
@@ -964,7 +964,7 @@ Key (denoted pk_sign), Attesters complete the Anonymous Issuer Origin ID computa
 In pseudocode, this is as follows:
 
 ~~~
-evaluated_key = ECDSA-DeserializePublicKey(request_key)
+evaluated_key = ECDSA-DeserializePublicKey(index_key)
 unblinded_key = ECDSA-UnblindPublicKey(evaluated_key, sk_blind)
 
 index_result = ECDSA-SerializePublicKey(unblinded_key)
