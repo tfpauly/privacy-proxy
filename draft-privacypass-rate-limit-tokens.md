@@ -62,6 +62,9 @@ normative:
   AUTHSCHEME:
     title: The Privacy Pass HTTP Authentication Scheme
     target: https://tfpauly.github.io/privacy-proxy/draft-pauly-privacypass-auth-scheme.html
+  ANTIFRAUDUSECASES:
+    title: W3C Anti-Fraud Use Cases
+    target: https://github.com/antifraudcg/proposals/blob/main/use-cases/use-cases.md
 
 --- abstract
 
@@ -106,7 +109,7 @@ protocol ({{ISSUANCE}}) can be used to verify that a client meets a particular
 bar for attestation, but cannot be used by a redeeming server to rate-limit
 specific clients.
 
-There are several common use cases for rate-limiting anonymous clients that
+There are several use cases for rate-limiting anonymous clients that
 are common on the Internet. These routinely use client IP address tracking,
 among other characteristics, to implement rate-limiting.
 
@@ -114,7 +117,8 @@ One example of this use case is rate-limiting website accesses to a client to
 help prevent fraud. Operations that are sensitive to fraud, such as account
 creation on a website or logging into an account, often employ rate-limiting
 as a defense-in-depth strategy. Additional verification can be required by these
-pages when a client exceeds a set rate-limit.
+pages when a client exceeds a set rate-limit. See {{ANTIFRAUDUSECASES}} and related
+documents of the working group for an in depth discussion on this topic.
 
 Another example of this use case is a metered paywall, where an origin limits the
 number of page requests from each unique user over a period of time before the
@@ -122,6 +126,13 @@ user is required to pay for access. The origin typically resets this state
 periodically, say, once per month. For example, an origin may serve ten (major
 content) requests in a month before a paywall is enacted. Origins may want to
 differentiate quick refreshes from distinct accesses.
+
+One could imagine applying the 'Joint Attester and Issuer' model from {{ARCH}}
+for this use case. However this necessitates that the attester/issuer learns all
+origins used by a participating client. In some cases this might be a significant portion of
+browsing history. The rate limited proposal employs the 'Split Origin, Attester, Issuer'
+model to combat this, where the issuer would know all per-origin policies, and the
+attester would mantain per-client state without knowing all origins a client visits.
 
 ## Properties and Requirements {#properties}
 
