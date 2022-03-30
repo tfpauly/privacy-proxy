@@ -6,9 +6,11 @@ This repository collects various specifications and Internet drafts that will be
 
 * [Rate-Limited Token Issuance](https://tfpauly.github.io/privacy-proxy/#go.draft-privacypass-rate-limit-tokens.html)
 
-## The Geohash HTTP Client Hint
+## Geo IP HTTP Client Hint
 
-* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geohash-hint.html)
+* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geoip-hint.html)
+
+* [Previous Version](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geohash-hint.html)
 
 ## HTTP Header Fields for Proxied SVCB Metadata
 
