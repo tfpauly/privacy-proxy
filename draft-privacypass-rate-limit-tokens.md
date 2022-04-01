@@ -59,9 +59,6 @@ normative:
     title: "Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2"
     target: https://secg.org/sec1-v2.pdf
     date: 2009
-  AUTHSCHEME:
-    title: The Privacy Pass HTTP Authentication Scheme
-    target: https://tfpauly.github.io/privacy-proxy/draft-pauly-privacypass-auth-scheme.html
 
 --- abstract
 
@@ -91,7 +88,7 @@ with a given origin server within a fixed period of time.
 
 This issuance protocol registers the Rate-Limited Blind RSA token type
 ({{iana-token-type}}), to be used with the PrivateToken HTTP authentication
-scheme defined in {{AUTHSCHEME}}.
+scheme defined in {{!AUTHSCHEME=I-D.ietf-privacypass-auth-scheme}}.
 
 ## Motivation
 

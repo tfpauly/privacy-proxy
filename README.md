@@ -10,8 +10,6 @@ This repository collects various specifications and Internet drafts that will be
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geoip-hint.html)
 
-* [Previous Version](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geohash-hint.html)
-
 ## HTTP Header Fields for Proxied SVCB Metadata
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-proxied-svcb-headers.html)
