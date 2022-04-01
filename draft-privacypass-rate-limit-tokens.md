@@ -62,9 +62,6 @@ normative:
   AUTHSCHEME:
     title: The Privacy Pass HTTP Authentication Scheme
     target: https://tfpauly.github.io/privacy-proxy/draft-pauly-privacypass-auth-scheme.html
-  ANTIFRAUDUSECASES:
-    title: W3C Anti-Fraud Use Cases
-    target: https://github.com/antifraudcg/proposals/blob/main/use-cases/use-cases.md
 
 --- abstract
 
@@ -117,8 +114,7 @@ One example of this use case is rate-limiting website accesses to a client to
 help prevent fraud. Operations that are sensitive to fraud, such as account
 creation on a website or logging into an account, often employ rate-limiting
 as a defense-in-depth strategy. Additional verification can be required by these
-pages when a client exceeds a set rate-limit. See {{ANTIFRAUDUSECASES}} and related
-documents of the working group for an in depth discussion on this topic.
+pages when a client exceeds a set rate-limit.
 
 Another example of this use case is a metered paywall, where an origin limits the
 number of page requests from each unique user over a period of time before the
