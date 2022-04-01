@@ -668,7 +668,9 @@ The Issuer generates an HTTP response with status code 200 whose body consists o
 blind_sig, with the content type set as "message/token-response", the
 index_key set in the "Sec-Token-Origin" header, and the limit of tokens
 allowed for a Client for the Origin within a policy window set in the
-"Sec-Token-Limit" header.
+"Sec-Token-Limit" header. This limit SHOULD NOT be unique to a specific
+Origin, such that the Attester could use the value to infer which Origin
+the Client is accessing (see {{privacy-considerations}}).
 
 ~~~
 :status = 200
@@ -1070,6 +1072,26 @@ MUST validate that the token_key_id in the Client's TokenRequest matches a known
 for the Issuer. The Attester needs to support key rotation, but ought to disallow very rapid key
 changes, which could indicate that an Origin is colluding with an Issuer to try to rotate the key
 for each new Client in order to link the client activity.
+
+## Origin Identification
+
+As stated in {{properties}}, the design of this protocol is such that Attesters cannot
+learn the identity of origins that Clients are accessing. The Origin Name itself is
+encrypted in the request between the Client and the Issuer, so the Attester cannot
+directly learn the value. However, in order to prevent the Attester from inferring the
+value, additional constraints need to be added:
+
+- Each Issuer SHOULD serve tokens a large number of Origins. A one-to-one relationship
+between Origin and Issuer would allow an Attester to infer which Origin is accessed
+simply by observing the Issuer identity.
+
+- Issuers SHOULD NOT return rate-limit values that are specific to Origins, such
+that an Attester can recognize an Origin simply by observing the rate limit. This
+can be mitigated by having many Origins share the same rate-limit value, or by introducing
+variability into return the rate-limit value.
+
+Some deployments MAY choose to relax these requirements, such as in cases where the
+origins being accessed are ubiquitous or do not represent user interaction.
 
 ## Collusion Among Different Entities {#collusion}
 
