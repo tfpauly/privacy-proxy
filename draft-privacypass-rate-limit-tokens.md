@@ -128,7 +128,7 @@ content) requests in a month before a paywall is enacted. Origins may want to
 differentiate quick refreshes from distinct accesses.
 
 One could imagine applying the 'Joint Attester and Issuer' model from {{ARCH}}
-for this use case. However this necessitates that the attester/issuer learns all
+for this use case. However, this would mean that the attester/issuer learns all
 origins used by a participating client. In some cases this might be a significant portion of
 browsing history. The rate limited proposal employs the 'Split Origin, Attester, Issuer'
 model to combat this, where the issuer would know all per-origin policies, and the
