@@ -745,7 +745,7 @@ Encrypted Origin Name (`encrypted_origin`).
 
 `origin_name` contains the name of the origin that initiated the challenge, as
 taken from the TokenChallenge.origin_info field. If the TokenChallenge.origin_info field
-is empty, `origin_name` is set to a fixed string "EmptyOrigin".
+is empty, `origin_name` is set to the empty string "".
 
 The process for generating `encrypted_origin` from `origin_name` is as follows:
 
