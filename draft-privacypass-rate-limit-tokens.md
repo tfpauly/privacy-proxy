@@ -1086,7 +1086,7 @@ between Origin and Issuer would allow an Attester to infer which Origin is acces
 simply by observing the Issuer identity.
 
 - Issuers SHOULD NOT return rate-limit values that are specific to Origins, such
-that an Attester can recognize an Origin simply by observing the rate limit. This
+that an Attester can infer which Origin is accessed by observing the rate limit. This
 can be mitigated by having many Origins share the same rate-limit value, or by introducing
 variability into return the rate-limit value.
 
