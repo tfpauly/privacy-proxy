@@ -1087,8 +1087,7 @@ simply by observing the Issuer identity.
 
 - Issuers SHOULD NOT return rate-limit values that are specific to Origins, such
 that an Attester can infer which Origin is accessed by observing the rate limit. This
-can be mitigated by having many Origins share the same rate-limit value, or by introducing
-variability into return the rate-limit value.
+can be mitigated by having many Origins share the same rate-limit value.
 
 Some deployments MAY choose to relax these requirements, such as in cases where the
 origins being accessed are ubiquitous or do not represent user interaction.
