@@ -1081,7 +1081,7 @@ encrypted in the request between the Client and the Issuer, so the Attester cann
 directly learn the value. However, in order to prevent the Attester from inferring the
 value, additional constraints need to be added:
 
-- Each Issuer SHOULD serve tokens a large number of Origins. A one-to-one relationship
+- Each Issuer SHOULD serve tokens to a large number of Origins. A one-to-one relationship
 between Origin and Issuer would allow an Attester to infer which Origin is accessed
 simply by observing the Issuer identity.
 
