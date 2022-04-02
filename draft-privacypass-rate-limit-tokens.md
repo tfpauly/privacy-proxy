@@ -1090,7 +1090,7 @@ that an Attester can infer which Origin is accessed by observing the rate limit.
 can be mitigated by having many Origins share the same rate-limit value.
 
 Some deployments MAY choose to relax these requirements, such as in cases where the
-origins being accessed are ubiquitous or do not represent user interaction.
+origins being accessed are ubiquitous or do not correspond to user-specific behavior.
 
 ## Collusion Among Different Entities {#collusion}
 
