@@ -65,7 +65,7 @@ The "Sec-CH-IP-Geo" is an Item Structured Field {{!STRUCTURED-FIELDS=RFC8941}}.
 The field's value is a String. The string uses the format defined in
 {{Section 2.1.1 of GEOFEED}}, with the IP Prefix element removed. Thus, this
 contains a comma-separated list of Alpha2code, Region, and City. The
-value SHOULD NOT contain a Postal Code. 
+value SHOULD NOT contain a Postal Code.
 
 For example, the header for an entry "192.0.2.5,US,US-AL,Alabaster" would be:
 
