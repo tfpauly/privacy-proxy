@@ -311,7 +311,7 @@ to the Issuer. If the TokenChallenge.origin_info field contains a single
 origin name, that origin name is used. If the origin_info field contains
 multiple origin names, the client selects the single origin name that
 presented the challenge. If the origin_info field is empty, the
-encrypted message uses a special value, defined in {{encrypt-origin}}.
+encrypted message is the empty string "".
 
 The HTTP authentication challenge also SHOULD contain the following
 additional attribute:
