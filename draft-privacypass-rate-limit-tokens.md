@@ -123,8 +123,9 @@ periodically, say, once per month. For example, an origin may serve ten (major
 content) requests in a month before a paywall is enacted. Origins may want to
 differentiate quick refreshes from distinct accesses.
 
-One could imagine applying the 'Joint Attester and Issuer' model from {{ARCH}}
-for this use case. However, this would mean that the attester/issuer learns all
+For some applications, the basic issuance protocol from {{?BASIC-ISSUANCE=I-D.ietf-privacypass-protocol}}
+could be used to implement rate limits. In particular, the 'Joint Attester and Issuer' model from {{ARCH}} could
+be used to restrict the number of tokens issued to individual clients over a time window. However, in this deployment model, the Attester and Issuer would learn all
 origins used by a participating client. In some cases this might be a significant portion of
 browsing history. The issuance protocol defined in this document employs the 'Split Origin, Attester, Issuer'
 model to combat this, where the issuer would know all per-origin policies, and the
