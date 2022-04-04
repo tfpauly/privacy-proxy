@@ -314,9 +314,12 @@ and are located at the well-known location /.well-known/token-issuer-directory.
 Clients receive challenges for tokens, as described in {{AUTHSCHEME}}.
 
 For the rate-limited token issuance protocol described in this document,
-the token challenge MUST be interactive and per-origin. That is, the
-TokenChallenge structure MUST contain both the redemption_nonce and
-origin_name fields.
+the name of the origin is sent in an encrypted message from the Client
+to the Issuer. If the TokenChallenge.origin_info field contains a single
+origin name, that origin name is used. If the origin_info field contains
+multiple origin names, the client selects the single origin name that
+presented the challenge. If the origin_info field is empty, the
+encrypted message is the empty string "".
 
 The HTTP authentication challenge also SHOULD contain the following
 additional attribute:
@@ -367,8 +370,10 @@ necessary state, as described in this section.
 
 A Client is required to have the following information, derived from a given TokenChallenge:
 
-- Origin Name, a hostname referring to the Origin {{!RFC6454}}. This is
-  the value of TokenChallenge.origin_name.
+- Origin Name, a hostname referring to the Origin {{!RFC6454}}. This is the name
+  of the Origin that issued the token challenge. One or more names can be listed
+  in the TokenChallenge.origin_info field. Rate-limited token issuance relies on the
+  client selecting a single origin name from this list if multiple are present.
 - Token Key, a blind signature public key corresponding to the Issuer
   identified by the TokenChallenge.issuer_name.
 - Origin Name Key, a public key used to encrypt request information corresponding
@@ -643,7 +648,9 @@ Upon receipt of the forwarded request, the Issuer validates the following condit
 Token Keys and Origin Name Keys held by the Issuer.
 - The TokenRequest.encrypted_origin_name can be decrypted using the
 Issuer's private key (the private key associated with Origin Name Key), and matches
-an Origin Name that is served by the Issuer
+an Origin Name that is served by the Issuer. This name might be the empty string "",
+as described in {{encrypt-origin}}, in which case the Issuer applies a cross-origin
+policy if supported. If a cross-origin policy is not supported, this condition is not met.
 - The TokenRequest.blinded_msg is of the correct size
 
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Attester,
@@ -744,7 +751,13 @@ Beyond the key configuration inputs, Clients also require the following inputs d
 in {{request-one}}: `token_key_id`, `blinded_msg`, `request_key`, and `name_key_id`.
 
 Together, these are used to encapsulate Origin Name (`origin_name`) and produce
-Encrypted Origin Name (`encrypted_origin`) as follows:
+Encrypted Origin Name (`encrypted_origin`).
+
+`origin_name` contains the name of the origin that initiated the challenge, as
+taken from the TokenChallenge.origin_info field. If the TokenChallenge.origin_info field
+is empty, `origin_name` is set to the empty string "".
+
+The process for generating `encrypted_origin` from `origin_name` is as follows:
 
 1. Compute an {{HPKE}} context using pkI, yielding context and encapsulation key enc.
 1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID,
@@ -792,6 +805,12 @@ aad = concat(encode(1, keyID),
 enc, context = SetupBaseR(enc, skI, "TokenRequest")
 origin_name, error = context.Open(aad, ct)
 ~~~
+
+The resulting value of origin_name is used by the Issuer to determine which rate-limit values
+to send to the Attester for enforcement. If the decrypted origin_name is the empty string "",
+the Issuer applies a cross-origin rate-limit policy, if supported. If the decrypted origin_name
+is the empty string "" and the Issuer does not support cross-origin rate limiting, then it MUST
+abort the protocol as described in {{request-two}}.
 
 # Anonymous Issuer Origin ID Computation {#anon-issuer-origin-id}
 
@@ -1061,10 +1080,10 @@ in the given policy window.
 
 Rate-limited tokens are defined in terms of a Client authenticating to an Origin, where
 the "origin" is used as defined in {{?RFC6454}}. In order to limit cross-origin correlation,
-Clients MUST verify that the origin_name presented in the TokenChallenge structure ({{AUTHSCHEME}})
-matches the origin that is providing the HTTP authentication challenge, where the matching logic
-is defined for same-origin policies in {{?RFC6454}}. Clients MAY further limit which
-authentication challenges they are willing to respond to, for example by only accepting
+Clients MUST verify that the name of the origin that is providing the HTTP authentication
+challenge is present in the TokenChallenge.origin_info list ({{AUTHSCHEME}}), where the
+matching logic is defined for same-origin policies in {{?RFC6454}}. Clients MAY further limit
+which authentication challenges they are willing to respond to, for example by only accepting
 challenges when the origin is a web site to which the user navigated.
 
 ## Client Identification with Unique Keys
