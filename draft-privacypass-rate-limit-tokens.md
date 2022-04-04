@@ -800,7 +800,9 @@ origin_name, error = context.Open(aad, ct)
 
 The resulting value of origin_name is used by the Issuer to determine which rate-limit values
 to send to the Attester for enforcement. If the decrypted origin_name is the empty string "",
-the Issuer applies a cross-origin rate-limit policy, if supported.
+the Issuer applies a cross-origin rate-limit policy, if supported. If the decrypted origin_name
+is the empty string "" and the Issuer does not support cross-origin rate limiting, then it MUST
+abort the protocol as described in {{request-two}}.
 
 # Anonymous Issuer Origin ID Computation {#anon-issuer-origin-id}
 
