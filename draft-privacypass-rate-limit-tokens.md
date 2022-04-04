@@ -1075,7 +1075,7 @@ Both of these are detectable by the Attester, though. Issuers can also lie about
 rate limits without detection, e.g., by increasing the limit to a value well beyond any configured
 limit by an Origin, or return different limits for different origins to the Attester.
 
-Clients learn the output token. They does not learn the Anonymous Issuer Origin ID, though
+Clients learn the output token. They does not learn the Anonymous Issuer Origin ID, though the
 security of the protocol does not depend on keeping this value secret from the Client. Moreover,
 even malicious Clients cannot tamper with per-Client state stored on the Attester for other
 Clients, as doing so requires knowledge of their unique Client Secret.
