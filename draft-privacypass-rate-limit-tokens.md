@@ -642,7 +642,7 @@ Token Keys and Origin Name Keys held by the Issuer.
 Issuer's private key (the private key associated with Origin Name Key), and matches
 an Origin Name that is served by the Issuer. This name might be the empty string "",
 as described in {{encrypt-origin}}, in which case the Issuer applies a cross-origin
-policy if allowed.
+policy if supported. If a cross-origin policy is not supported, this condition is not met.
 - The TokenRequest.blinded_msg is of the correct size
 
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Attester,
