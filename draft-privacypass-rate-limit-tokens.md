@@ -1078,7 +1078,7 @@ limit by an Origin, or return different limits for different origins to the Atte
 Clients learn the output token. They does not learn the Anonymous Issuer Origin ID, though
 security of the protocol does not depend on keeping this value secret from the Client. Moreover,
 even malicious Clients cannot tamper with per-Client state stored on the Attester for other
-Clients, as doing so requires knowledge to their unique Client Secret.
+Clients, as doing so requires knowledge of their unique Client Secret.
 
 # Privacy Considerations {#privacy-considerations}
 
