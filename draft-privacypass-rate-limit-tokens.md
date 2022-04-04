@@ -640,7 +640,9 @@ Upon receipt of the forwarded request, the Issuer validates the following condit
 Token Keys and Origin Name Keys held by the Issuer.
 - The TokenRequest.encrypted_origin_name can be decrypted using the
 Issuer's private key (the private key associated with Origin Name Key), and matches
-an Origin Name that is served by the Issuer
+an Origin Name that is served by the Issuer. This name might be the empty string "",
+as described in {{encrypt-origin}}, in which case the Issuer applies a cross-origin
+policy if allowed.
 - The TokenRequest.blinded_msg is of the correct size
 
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Attester,
@@ -795,6 +797,10 @@ aad = concat(encode(1, keyID),
 enc, context = SetupBaseR(enc, skI, "TokenRequest")
 origin_name, error = context.Open(aad, ct)
 ~~~
+
+The resulting value of origin_name is used by the Issuer to determine which rate-limit values
+to send to the Attester for enforcement. If the decrypted origin_name is the empty string "",
+the Issuer applies a cross-origin rate-limit policy, if supported.
 
 # Anonymous Issuer Origin ID Computation {#anon-issuer-origin-id}
 
