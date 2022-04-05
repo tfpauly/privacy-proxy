@@ -200,7 +200,7 @@ Unless otherwise specified, this document encodes protocol messages in TLS notat
 from {{!TLS13=RFC8446}}, Section 3.
 
 This draft includes pseudocode that uses the functions and conventions defined
-in {{!HPKE=I-D.irtf-cfrg-hpke}}.
+in {{!HPKE=RFC9180}}.
 
 Encoding an integer to a sequence of bytes in network byte order is described
 using the function "encode(n, v)", where "n" is the number of bytes and "v" is
@@ -273,10 +273,10 @@ Issuers MUST provide three parameters for configuration:
    The Npk parameter corresponding to the HpkeKdfId can be found in {{HPKE}}.
 
 ~~~
-opaque HpkePublicKey[Npk]; // defined in I-D.irtf-cfrg-hpke
-uint16 HpkeKemId;          // defined in I-D.irtf-cfrg-hpke
-uint16 HpkeKdfId;          // defined in I-D.irtf-cfrg-hpke
-uint16 HpkeAeadId;         // defined in I-D.irtf-cfrg-hpke
+opaque HpkePublicKey[Npk]; // defined in RFC9180
+uint16 HpkeKemId;          // defined in RFC9180
+uint16 HpkeKdfId;          // defined in RFC9180
+uint16 HpkeAeadId;         // defined in RFC9180
 
 struct {
   uint8 key_id;
@@ -535,7 +535,7 @@ struct {
    uint8_t token_key_id;
    uint8_t blinded_msg[Nk];
    uint8_t request_key[49];
-   uint8_t name_key_id[32];
+   uint8_t origin_name_key_id[32];
    uint8_t encrypted_origin_name<1..2^16-1>;
    uint8_t request_signature[96];
 } TokenRequest;
@@ -553,7 +553,7 @@ object carrying Token Key.
 
 - "request_key" is computed as described in {{index-request}}.
 
-- "name_key_id" is a collision-resistant hash that identifies the Origin Name Key,
+- "origin_name_key_id" is a collision-resistant hash that identifies the Origin Name Key,
 generated as SHA256(NameKey).
 
 - "encrypted_origin_name" is an encrypted structure that contains Origin Name,
@@ -589,7 +589,7 @@ sec-token-request-blind = request_blind
 If the Attester detects a token_type in the TokenRequest that it does not recognize
 or support, it MUST reject the request with an HTTP 400 error.
 
-The Attester also checks to validate that the name_key_id in the client's TokenRequest
+The Attester also checks to validate that the origin_name_key_id in the client's TokenRequest
 matches a known Origin Name Key public key for the Issuer. For example, the Attester can
 fetch this key using the API defined in {{setup}}. This check is done to help ensure that
 the Client has not been given a unique key that could allow the Issuer to fingerprint or target
@@ -644,7 +644,7 @@ compromise; see {{sec-considerations}} for additional about this channel.
 Upon receipt of the forwarded request, the Issuer validates the following conditions:
 
 - The TokenRequest contains a supported token_type
-- The TokenRequest.token_key_id and TokenRequest.name_key_id correspond to known
+- The TokenRequest.token_key_id and TokenRequest.origin_name_key_id correspond to known
 Token Keys and Origin Name Keys held by the Issuer.
 - The TokenRequest.encrypted_origin_name can be decrypted using the
 Issuer's private key (the private key associated with Origin Name Key), and matches
@@ -750,7 +750,7 @@ the public key from the configuration, pkI, and;
 - a selected combination of KDF, identified by kdfID, and AEAD, identified by aeadID.
 
 Beyond the key configuration inputs, Clients also require the following inputs defined
-in {{request-one}}: `token_key_id`, `blinded_msg`, `request_key`, and `name_key_id`.
+in {{request-one}}: `token_key_id`, `blinded_msg`, `request_key`, and `origin_name_key_id`.
 
 Together, these are used to encapsulate Origin Name (`origin_name`) and produce
 Encrypted Origin Name (`encrypted_origin`).
@@ -783,7 +783,7 @@ aad = concat(encode(1, keyID),
              encode(1, token_key_id),
              encode(Nk, blinded_msg),
              encode(49, request_key),
-             encode(32, name_key_id))
+             encode(32, origin_name_key_id))
 ct = context.Seal(aad, pad(origin_name))
 encrypted_origin_name = concat(enc, ct)
 ~~~
@@ -803,7 +803,7 @@ aad = concat(encode(1, keyID),
              encode(1, token_key_id),
              encode(Nk, blinded_msg),
              encode(49, request_key),
-             encode(32, name_key_id))
+             encode(32, origin_name_key_id))
 enc, context = SetupBaseR(enc, skI, "TokenRequest")
 origin_name, error = context.Open(aad, ct)
 ~~~
@@ -1201,3 +1201,96 @@ in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignmen
     +-------------------------+----------+--------+---------------+
 ~~~
 {: #iana-header-type-table title="Registered HTTP Header"}
+
+--- back
+
+# Acknowledgements
+
+The authors of this document would like to acknowledge feedback from contributors
+to the Privacy Pass working group for their help in improving this document.
+The authors also thank Frank Denis and David Schinazi for their contributions.
+
+# Test Vectors
+
+This section includes test vectors for Origin Name encryption in {{encrypt-origin}}
+and Anonymous Origin ID computation in {{anon-issuer-origin-id}}. Test vectors for
+the token request and response protocol can be found in {{ISSUANCE}}.
+
+## Origin Name Encryption Test Vector
+
+The test vector below for the procedure in {{encrypt-origin}} lists the following values:
+
+- origin_name: The Origin Name to encrypt, represented as a hexadecimal string.
+- kem_id, kdf_id, aead_id: The HPKE algorithms comprising the ciphersuite DHKEM(X25519, HKDF-SHA256), HKDF-SHA256, AES-128-GCM.
+- origin_name_key_seed: The seed used to derive the private key corresponding to
+  Origin Name Key via the DeriveKeyPair function as defined in {{Section 7.1.3. of HPKE}},
+  represented as a hexadecimal string.
+- origin_name_key: The public Origin Name Key, represented as a hexadecimal string.
+- token_type: The type of the protocol specified in this document, 0x0003.
+- token_key_id: The ID of Token Key computed as in {{request-one}}, a single octet.
+- blinded_msg: A random blinded_msg value, represented as a hexadecimal string.
+- request_key: A random request_key value, represented as a hexadecimal string.
+- origin_name_key_id: The Origin Name Key ID computed as in {{request-one}}, represented as a hexadecimal string.
+- encrypted_origin_name: The encrypted Origin Name, represented as a hexadecimal string.
+
+~~~
+origin_name: 746573742e6578616d706c65
+kem_id: 32
+kdf_id: 1
+aead_id: 1
+origin_name_key_seed:
+ccc9e9744e7461acc6f3967757e7564b78f04ae5c9cd33f8c0c9b51ddff61f4f
+origin_name_key: 010020c9a7a358ab74c0664b0cffd11a5f7090108086153d77e2824
+72d254991fdbe1b00010001
+token_type: 3
+token_key_id: 104
+blinded_msg: 01a7031dbbcca4ac6acaa4650219406fd9fbceb8c264e2b3be22823a679
+6571230f29ec01fe2dd633bbd4c208addfa0a6dbb149aeb4aca9070bafe849301076a40b
+442469066ef78525f16a4e8cb3596ac0c548932aa421d7294d98e86187100598e9b8a968
+c56d2c0277132c3efdc04b6030b9800642db686254784927cfd941f8a3a1f71893e33af4
+d73f71403108c882afed2129b050663839d77bbd38f9479e7242a2d31f2fbce72259aab4
+acecf7da7168347a214c6e9bb77974812b363355ac8bf4703085de54e2af85e970a3a83e
+2ee3d658951167fae57ab313569dcb7551c916cb0bda9c6293843fe75849eb6a33953145
+43bccb7e5146b618c637ffe8fc1bae2fddb102ce6d9a9c5eee0d267849a9bfb12e633fbf
+ffc80b76b017ae16f70ee6c3d841b9a4b1bf88264a2d62ae564941f943001ed95b869d2f
+d81e82efc399507a0ed5450be2832076a40ce1dbd1e555fb0cf360e65c4087d101d87919
+9180dfcecdd0a3a2340b893fd130e5d6ece273b4a646f157b344f110973403a14a5f46d3
+b2ec4457e2164ce850fc395c71d4adeab69f7ec617b6b062c1afb8da558970dfea3196e9
+b2acb58dcfd23f54fc2084373cd9a78f7c84047c6f64e7464999597267e9b6a0f95bf13f
+634c2a23f861fc83a09d08309ad00af4abf8cf48f1f7d286f65750f20faa1310849e8aee
+44c4ec6abb1c846a16a222116ad94
+request_key: 8a9ffd91064e498f0b14b4b82d65255b2859da8d349e2bb362ca7c8211e
+23fcd5cd01813ef6eb4b994d532c3520e1aa89e
+origin_name_key_id:
+590ef89ec14ebd7cd0598c7c1e045838e7c484713265c10d923d314fa1ef433f
+encrypted_origin_name: b9d946ee16d9114b6d42524a1fe1e5fae9768c45d4b48ce13
+2e758d614911c31c3c1b73a90b63735a0c53f5b94cf176c1a00392618dac727bc287d18
+~~~
+
+## Anonymous Origin ID Test Vector
+
+The test vector below for the procedure in {{anon-issuer-origin-id}} lists the following values:
+
+- sk_client: Client Secret, serialized and represented as a hexadecimal string.
+- pk_client: Client Key, serialized and represented as a hexadecimal string.
+- sk_origin: Origin Secret, serialized and represented as a hexadecimal string.
+- request_blind: The request_blind value computed in {{index-request}}, represented as a hexadecimal string.
+- index_key: The index_key value computed in {{issuer-anon-issuer-origin-id}}, represented as a hexadecimal string.
+- anon_issuer_origin_id: The anon_issuer_origin_id value computed in {{attester-output-anon-issuer-origin-id}}, represented as a hexadecimal string.
+
+~~~
+sk_sign: a04e2a1c1a58ed8ca09419fe937507964b640981de40c6c05c14bb547b17830
+d5b18c1acf236482234f0e4ed8a6a36e5
+pk_sign: 03edf9e62abec27bd25f7171dcf24aeb163fbb026381cb634a8c41058b70b74
+083a704177d0aee92a9be2740fd627fa3a4
+sk_origin: abc3bbe04e44502bb3549551a87f4f843b7d6ba2fb789bd82ccebe7e304f0
+77f52125a4829747bd5c68a8942500d898c
+request_blind: 0d19ff14f8d24f7cceb377a0f54b27295e270624814293493d264d967
+c541b490d7e95ff1fbb40e4f89dfdd9e25ad997
+request_key: 02031027dcbe5e5607749fc6e4e0967cca89d591545c0badc640febc682
+50199b87f3e60112a40425a03b9e8ac58d5bb77
+index_key: 03878a9ff9e8bc58c05f8b6e71374d14f81a113f2a6828c4fa482e2d3ea50
+04c0d790022a71d6437f905fb5d5daf036f52
+anon_issuer_origin_id: 3edd83377d6a22f5726dac066ee1864f2c0424cd4868f994b
+2e16ec270f4cc4e382a5b0730ca378797171fa2aec8222f
+~~~
