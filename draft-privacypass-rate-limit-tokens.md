@@ -1015,21 +1015,6 @@ mutual authentication between both endpoints. Where appropriate, endpoints
 MAY use further enhancements such as TLS certificate pinning to mitigate
 the risk of channel compromise.
 
-## Information Disclosure {#info-disclosure}
-
-The protocol in this document is designed such that information pertaining to issuance
-of a token is limited to parties that need it for completing the protocol. In particular,
-Attesters learn only the Anonymous Issuer Origin ID as described in {{anon-issuer-origin-id}},
-any per-Client information necessary for attestation, and the target Issuer for a given
-token request. The Attester does not learn the origin name associated with a given token
-request.
-
-The Issuer only learns the Attester that vouches for a particular Client's token request
-and the origin name associated with a token request. The Issuer does not learn the
-Anonymous Issuer Origin ID or any per-Client information used when creating a token request.
-
-The Client learns the output token. It does not learn the Anonymous Issuer Origin ID.
-
 ## Token Request Unlinkability and Unforgeability {#issuance-unlinkability}
 
 Client token requests are constructed such that an Issuer cannot distinguish between
@@ -1058,6 +1043,42 @@ The token request signature is also required to be unforgeable. Informally, unfo
 means that no entity can produce a valid (message, signature) pair for any blinding key without
 access to the private signing key. Importantly, the means the Attester cannot forge
 signatures on behalf of a given Client in an attempt to learn the origin name.
+
+## Information Disclosure {#info-disclosure}
+
+The protocol in this document is designed such that information pertaining to issuance
+of a token is limited to parties that need it for completing the protocol. In particular,
+honest-but-curious Attesters learn only the Anonymous Issuer Origin ID as described in
+{{anon-issuer-origin-id}}, any per-Client information necessary for attestation, and the
+target Issuer for a given token request. The Attester does not directly learn the origin
+name associated with a given token request, though it does learn the distribution of tokens
+across Client interactions. This auxiliary information could be used to infer the Origin
+for a given token. For example, if an Issuer has only two configured Origins, each with
+a different token request pattern, then the distribution of Client tokens might reveal
+the Origin associated with a given token.
+
+Malicious or otherwise compromised Attesters can choose to not follow the protocol described
+in this specification, allowing, for example, Clients to bypass rate limits imposed by
+Origins. Moreover, malicious Attesters could reveal the per-request blind (request_blind)
+to Issuers, breaking the unlinkability property described in {{issuance-unlinkability}}.
+
+Honest-but-curious Issuers only learn the Attester that vouches for a particular Client's
+token request and the origin name associated with a token request. Issuers do not learn
+the Anonymous Issuer Origin ID or any per-Client information used when creating a token
+request.
+
+Conversely, malicious Issuers that do not follow the protocol can choose to not validate
+the token request signature, thereby allowing others to forge token requests in an attempt
+to learn the origin name. Malicious Issuers can also rotate token signing keys or Issuer
+Origin Secret values frequently in an attempt to bypass Attester-enforced rate limits.
+Both of these are detectable by the Attester, though. Issuers can also lie about per-origin
+rate limits without detection, e.g., by increasing the limit to a value well beyond any configured
+limit by an Origin, or return different limits for different origins to the Attester.
+
+Clients learn the output token. They do not learn the Anonymous Issuer Origin ID, though the
+security of the protocol does not depend on keeping this value secret from Clients. Moreover,
+even malicious Clients cannot tamper with per-Client state stored on the Attester for other
+Clients, as doing so requires knowledge of their unique Client Secret.
 
 # Privacy Considerations {#privacy-considerations}
 
