@@ -1187,6 +1187,7 @@ in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignmen
 
 The authors of this document would like to acknowledge feedback from contributors
 to the Privacy Pass working group for their help in improving this document.
+The authors also thank Frank Denis and David Schinazi for their contributions.
 
 # Test Vectors
 
