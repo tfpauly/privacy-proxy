@@ -765,7 +765,7 @@ The process for generating `encrypted_origin` from `origin_name` is as follows:
 1. Construct associated data, aad, by concatenating the values of keyID, kemID, kdfID,
    aeadID, and all other values of the TokenRequest structure.
 1. Pad origin_name with N zero bytes, where N = 31 - ((L - 1) % 32) and L is the length
-   of origin_name. Denote this padding process as the function `pad`.
+   of origin_name. If L is 0, N = 32. Denote this padding process as the function `pad`.
 1. Encrypt (seal) the padded origin_name with aad as associated data using context, yielding ciphertext ct.
 1. Concatenate the values of aad, enc, and ct, yielding encrypted_origin_name.
 
