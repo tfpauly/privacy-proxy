@@ -1282,6 +1282,8 @@ in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignmen
     +-------------------------+----------+--------+---------------+
     | Sec-Token-Request-Blind |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
+    | Sec-Token-Request-Key   |   http   |  std   | This document |
+    +-------------------------+----------+--------+---------------+
     | Sec-Token-Limit         |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
 ~~~
