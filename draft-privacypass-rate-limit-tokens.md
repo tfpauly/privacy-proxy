@@ -269,7 +269,7 @@ Issuers MUST provide three parameters for configuration:
    For example, an Issuer URL might be https://issuer.example.net/token-request. This parameter
    uses resource media type "text/plain".
 1. Issuer Encapsulation Key: a `EncapsulationKey` structure as defined below to use when encapsulating
-   information to the Issuer in issuance requests. This parameter uses resource media type
+   information, such as the origin name, to the Issuer in issuance requests. This parameter uses resource media type
    "application/issuer-encap-key". The Npk parameter corresponding to the HpkeKdfId can be found in {{HPKE}}.
 
 ~~~
