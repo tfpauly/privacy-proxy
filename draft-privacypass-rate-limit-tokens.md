@@ -528,7 +528,7 @@ blinded_msg, blind_inv = rsabssa_blind(pkI, token_input)
 The Client then uses Client Key to generate its one-time-use request public
 key `request_key` and blind `request_blind` as described in {{client-anon-issuer-origin-id}}.
 
-The Client then constructs a OriginTokenRequest value, denoted `origin_token_request`,
+The Client then constructs a InnerTokenRequest value, denoted `origin_token_request`,
 combining `blinded_msg`,  `request_key`, and the origin name as follows:
 
 ~~~
@@ -536,7 +536,7 @@ struct {
   uint8_t blinded_msg[Nk];
   uint8_t request_key[49];
   uint8_t padded_origin_name<0..2^16-1>;
-} OriginTokenRequest;
+} InnerTokenRequest;
 ~~~
 
 This structure is initialized and then encrypted using Issuer Encryption Key, producing
@@ -570,7 +570,7 @@ object carrying Token Key.
 - "issuer_encap_key_id" is a collision-resistant hash that identifies the Issuer
 Encryption Key, generated as SHA256(EncapsulationKey).
 
-- "encrypted_token_request" is an encrypted structure that contains an OriginTokenRequest
+- "encrypted_token_request" is an encrypted structure that contains an InnerTokenRequest
 value, calculated as described in {{encrypt-origin}}.
 
 - "request_signature" is computed as described in {{index-proof}}.
@@ -664,8 +664,8 @@ Upon receipt of the forwarded request, the Issuer validates the following condit
 Token Keys and Issuer Encapsulation Keys held by the Issuer.
 - The TokenRequest.encrypted_token_request can be decrypted using the
 Issuer's private key (the private key associated with Issuer Encapsulation Key), and contains
-a valid OriginTokenRequest whose unpadded origin name matches an Origin Name that is served by
-the Issuer. The Origin name associated with the OriginTokenRequest value might be the empty string "",
+a valid InnerTokenRequest whose unpadded origin name matches an Origin Name that is served by
+the Issuer. The Origin name associated with the InnerTokenRequest value might be the empty string "",
 as described in {{encrypt-origin}}, in which case the Issuer applies a cross-origin
 policy if supported. If a cross-origin policy is not supported, this condition is not met.
 
@@ -681,7 +681,7 @@ was invalid in the process.
 ## Issuer-to-Attester Response {#response-one}
 
 If the Issuer is willing to give a token to the Client, the Issuer decrypts
-TokenRequest.encrypted_token_request to discover a OriginTokenRequest value. If this fails,
+TokenRequest.encrypted_token_request to discover a InnerTokenRequest value. If this fails,
 the Issuer rejects the request with a 400 error. Otherwise, the Issuer validates and
 processes the token request with Issuer Origin Secret corresponding to the designated
 Origin as described in {{issuer-anon-issuer-origin-id}}. If this fails, the Issuer
@@ -691,7 +691,7 @@ index_key.
 The Issuer completes the issuance flow by computing a blinded response as follows:
 
 ~~~
-blind_sig = rsabssa_blind_sign(skP, OriginTokenRequest.blinded_msg)
+blind_sig = rsabssa_blind_sign(skP, InnerTokenRequest.blinded_msg)
 ~~~
 
 `skP` is the private key corresponding to Token Key, known only to the Issuer.
@@ -785,7 +785,7 @@ Beyond the key configuration inputs, Clients also require the following inputs d
 in {{request-one}}: `token_key_id`, `blinded_msg`, `request_key`, `origin_name`, and
 `issuer_encap_key_id`.
 
-Together, these are used to encapsulate an OriginTokenRequest and produce an encrypted token
+Together, these are used to encapsulate an InnerTokenRequest and produce an encrypted token
 request (`encrypted_token_request`).
 
 `origin_name` contains the name of the origin that initiated the challenge, as
@@ -808,7 +808,7 @@ Note that enc is of fixed-length, so there is no ambiguity in parsing this struc
 In pseudocode, this procedure is as follows:
 
 ~~~
-enc, context = SetupBaseS(pkI, "OriginTokenRequest")
+enc, context = SetupBaseS(pkI, "InnerTokenRequest")
 aad = concat(encode(1, keyID),
              encode(2, kemID),
              encode(2, kdfID),
@@ -824,9 +824,9 @@ ct = context.Seal(aad, input)
 encrypted_token_request = concat(enc, ct)
 ~~~
 
-Issuers reverse this procedure to recover the OriginTokenRequest value by computing the AAD as
+Issuers reverse this procedure to recover the InnerTokenRequest value by computing the AAD as
 described above and decrypting encrypted_token_request with their private key skI (the private
-key corresponding to pkI). The `origin_name` value is recovered from OriginTokenRequest.padded_origin_name
+key corresponding to pkI). The `origin_name` value is recovered from InnerTokenRequest.padded_origin_name
 by stripping off padding bytes. In pseudocode, this procedure is as follows:
 
 ~~~
@@ -842,7 +842,7 @@ context = SetupBaseR(enc, skI, "TokenRequest")
 origin_token_request, error = context.Open(aad, ct)
 ~~~
 
-The `OriginTokenRequest.blinded_msg` and `OriginTokenRequest.request_key` values, along
+The `InnerTokenRequest.blinded_msg` and `InnerTokenRequest.request_key` values, along
 with the unpadded `origin_name` value, are used by the Issuer as described in {{request-two}}.
 
 ## Issuer to Client Encapsulation {#encap-issuer-to-client}
@@ -1318,7 +1318,7 @@ The test vector below for the procedure in {{encrypt-origin}} lists the followin
 - blinded_msg: A random blinded_msg value, represented as a hexadecimal string.
 - request_key: A random request_key value, represented as a hexadecimal string.
 - issuer_encap_key_id: The Issuer Encapsulation Key ID computed as in {{request-one}}, represented as a hexadecimal string.
-- encrypted_token_request: The encrypted OriginTokenRequest, represented as a hexadecimal string.
+- encrypted_token_request: The encrypted InnerTokenRequest, represented as a hexadecimal string.
 
 ~~~
 origin_name: 746573742e6578616d706c65
@@ -1326,36 +1326,37 @@ kem_id: 32
 kdf_id: 1
 aead_id: 1
 issuer_encap_key_seed:
-41248ac396c4dcdfabf297b7e70c5d371586203fa1637cc850aa9f1d9f18cd0d
-issuer_encap_key: 0100200bd088cc920ddf38ec2d3e08dbefc38c6b1b8ed088a38ab5
-f0fa0b7f968f181200010001
+d2653816496f400baec656f213f1345092f4406af4f2a63e164956c4c3d240ca
+issuer_encap_key: 010020d7b6a2c10e75c4239feb9897e8d23f3f3c377d78e7903611
+53167736a24a9c5400010001
 token_type: 3
-token_key_id: 10
-blinded_msg: 5417bdb08796fcc44f69e79d3cb1d77e399a86b41448fdbd3f347bcd91b
-0603b93e5c687080af856eea4357135b816ee5be37e20ab91ca6017afafe68ab6c071e4b
-f27ea40dc3a8c43ac39def7198409c5fabfac4747fec0690c909ea3cf4c2fb5b693df3fb
-cdefd0dc7ea38dd0a552ffdac2ee615bcbba85a973033ecbdc62ae75236835d4a55b8e61
-3f45c6772e67eb214f244633cd9497e8eaeec6b1023ee5a4658a31225fbbc2da5e3bea36
-6f6c56fafe4a01b6f361abedfb24dc3ed180c9b027c4fab111a24df3c72f9e024e2a1637
-c76afd7cd31db30fbcd3e9d4d452d25ce73073e03952b8e01f90265c082a4384a9dcdb83
-5e25cc02a7838ff093c6f
-request_key: 6e70ae1114137bd83f26d4aac2bd5b5a7e9b05fc848de8b18961525fbb0
-f22f33cc71880362c53bc5ae9eb91efba3efe55
+token_key_id: 125
+blinded_msg: 89da551a48270b053e53c9eb741badf89e43cb7e66366bb936e11fb2aa0
+d30866986a790378bb9fc6a7cf5c32b7b7584d448ffa4ced3be650e354b3136428a52ec0
+b27c4103c5855c2b9b4f521ad0713c800d7e6925b6c62e1a6f58b31d13335f468cf509b7
+46a16e79b23862d277d0880706c3fb84b127d94faf8d6d2f3e124e681994441b19be084e
+c5c159bcd0abab433bbc308d90ea2cabdf4216e1b07155be66a048d686e383ca1e517ab8
+0025bb4849d98beb8c3d05d045c1167cb74f4451d8f85695babb604418385464f21f9a81
+5fb850ed83fd16a966130427e5637816501f7a79c0010e06adeba55781ceb50f56eae152
+ebd06f3cef80dc7ab121d
+request_key: 0161d905e4e37f515cb61f863b60e5896aa9e4a17dbe238e752a144c64a
+5412e244f0b1f75e010831e185cac023d33cb20
 issuer_encap_key_id:
-ba410bcdb718620be04dd9c1efbfd2b471aabb5dc8ed89dbddd2a7b37ad41d0d
-encrypted_token_request: 4454924990bb6efe407c4f7abe5c5c28c6a4b63120b020b
-a08dd013bf1acc958cebbe4618963793828ec7bdcfdc53f057f4a56a017618f22ca3a457
-55c94fb2789fcf6ad12359468681becc540aa4b0b2016921f8f7788ff48a433728f2f9cb
-c8a74c84b51784204827f6931c966cb52e961c685a668bfb67da9136650e737df2f43908
-433ede7802897d61bb136b0e3d75480fd2d606713b2f9ef60eb31dc6c0005e7549fbbe5a
-9133a8513b8be2a16cd381fe0dbe8555353bb7a4fe27c8449f232a6b522334870ffd64d6
-6ac29cb10d172c56f86a76688c7fd6303e13fa80fb481f5c286681af70d20682d1b67ffb
-48ea70e41402919f2b827802ab927d484a6c71f7655cc5aad00d1d80c0b3a92235912c60
-6fc96aa59cd6c2bb91999ad39eb710ce77fe484f5e28169e1daef991656b3c1ace941318
-7dfed7311b6f60192ed179bdf8d7e08060ce80136e9e7b2bdfae76dc3ae848b3b9d50b64
-a3beee41524c967ace27cb5d5cf80cc25109c92b7ad7dbbd9e1127237f9541c00f153fdb
-8efbdcb
+dd2c6de3091f1873643233d229a7a0e9defe0f9fe43f6a7c42ae3a6b16f77837
+encrypted_token_request: 82ef7c068506bcabc27d068a51c7ead2cbaf600b76a15e4
+d9df99a0da676da5a073fcc8f5ac77b25064d7379037b4e1b186977cface31eceb611978
+c73c9aef38c9a0e8ae846881624fa6d454523a0a91d22b02b022891d0469deebd66a912a
+a1ab3391b203e92e0a681f0a10c2a2d59b668daf1e5219ed16227d707fa0e8e29188bd58
+7ab38b3584564ce9b6538ba82e301cfed4231a2fa4f64a67285a1b9bf648e25f3eb1644c
+88d43552bdea6e4bfcbaef0de3ac245e0432be6b019494927fde0743b775f9efe8ca5fef
+afbf2048890d54618d408a6001fc8fb276f6828c46f4fe1381e9775eec72ee47593df738
+95d18952440d33756d78caea4bd8218950d35afa6c46c535211eda39da277260cb8dab7c
+00c6840a745e8150a6ee4893e72b6a51382f877f8c05a15e891a2bde07049760f0f09879
+78d78b97e47ecaf90a44996d724dd3720e308abbbf04f672bc5a4db573291986be191b06
+03ff521accb6fa081c151c758f3092a89fc6ef591934ff4bc860896c57f83a31b237dd1b
+803516c
 ~~~
+
 
 ## Anonymous Origin ID Test Vector
 
@@ -1369,18 +1370,18 @@ The test vector below for the procedure in {{anon-issuer-origin-id}} lists the f
 - anon_issuer_origin_id: The anon_issuer_origin_id value computed in {{attester-output-anon-issuer-origin-id}}, represented as a hexadecimal string.
 
 ~~~
-sk_sign: 1b6cd0e7b3a0391d2c5290d75aa969473ce1f118abc1518832e99fe07bf42e8
-810313389c9ee7b9c8faa948a69c052a3
-pk_sign: 03b0cae5e5e690d427d557215c8c0ed6d3b122e11a012e29a9323fef4356cc8
-750febbfdcccb3d1feacac5d7bc0baf4ad0
-sk_origin: 5102e6accdb88f828863e013145f70b76cc2c46ab5a500b05056fb41a9ac3
-61b4929cd2262d3f708dede063c20ed70a1
-request_blind: ac4911867976f45429a60ae06889fef40aaab259145497237ac4d9ad7
-0cbc74403d5e3d8de6f6b1d9b9d9ee7d433ff95
-request_key: 02ed5a740afd08f25ea1e5f4a7bc38e11ddbb9b9ed70548900693c7887c
-37e22e83ec8d63435e4906495be96b45bcf7eab
-index_key: 020b853b9129e6977f9ba5716bc4fc3f91d1a3ef1a0b13bc577f68c674c1d
-1cde464b3d6cc09cb50ead24c067d4be93b9d
-anon_issuer_origin_id: 7123dbf4bea85465fb63c140c176f15282212f3b94d159dac
-cf96a4f5b59612c343c4ff33098bfbcc2ddc7ebf87bcd67
+sk_sign: f6e6a0c9de38663ca539ff2e6a04e4fca11dc569794dc405e2d17439d6ce4f6
+7abb2b81a1852e0db993b6a0452eb60d6
+pk_sign: 032db7483c710673e6999a5fb2a2c6eac1d891f89bbf58d985ff168d182ad51
+605c4369280efabb7692f661162e683f03c
+sk_origin: 85de5fbbd787da5093da0adb240eba0cc6ea90d72032fc4b6925dd7d0ab1d
+a1e5ae0be27fe9f59e9ec7e1f1b15b28696
+request_blind: 0698a149fb9d16bcb0a856062f74f9191e82b35e91224a57abce60f5b
+79f03a669c6b5e093d57e647865f9fd4305b5a9
+request_key: 0287b0ce6b957111263d8c6126af96d400bd5a9d0b0f62ade15ab789446
+06c209470ced7086d3c418dd32bf9245fd42678
+index_key: 03188bec3dc02d2382b5251b6b4fd729d0472bbddf008c5e93b7c12270d9f
+57dde111c861c13be53822a1cebb604946066
+anon_issuer_origin_id: 9b0f980e5c1142fddb4401e5cd2107a87d22b73753b0d5dc9
+3f9a8f5ed2ee7db78163c6a93cc41ae8158d562381c51ee
 ~~~
