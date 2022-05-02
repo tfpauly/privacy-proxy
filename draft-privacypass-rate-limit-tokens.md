@@ -1317,7 +1317,7 @@ Ed25519 as described in {{!RFC8032}}.
   blind sk_blind according to {{KEYBLINDING, Section 5.2}}, yielding an `Nsig=64` byte signature.
 - BKS-SerializePrivatekey(sk): Identity function which outputs sk as an `Nsk=32` byte buffer.
 - BKS-DeserializePrivatekey(buf): Identity function which outputs buf interpreted as `sk`.
-- BKS-SerializePublicKey(pk): Identity function which outputs sk as an `Npk=32` byte buffer.
+- BKS-SerializePublicKey(pk): Identity function which outputs pk as an `Npk=32` byte buffer.
 - BKS-DeserializePublicKey(buf): Identity function which outputs buf interpreted as `pk`.
 
 ## HTTP Headers {#iana-headers}
