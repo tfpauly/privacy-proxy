@@ -1306,7 +1306,7 @@ Ed25519 as described in {{!RFC8032}}.
 
 - BKS-KeyGen(): Generate a random Ed25519 private and public key pair (sk, pk), where
   sk is randomly generated 32 bytes (See {{?RFC4086}} for information about randomness
-  generation) and pk is computed according to {{RFC8032, 5.1.5}}.
+  generation) and pk is computed according to {{RFC8032, Section 5.1.5}}.
 - BKS-BlindKeyGen(): Generate and output 32 random bytes.
 - BKS-BlindPublicKey(pk, bk): Produce a blinded public key based on the input public
   key pk and blind bk according to {{KEYBLINDING, Section 5.1}}.
