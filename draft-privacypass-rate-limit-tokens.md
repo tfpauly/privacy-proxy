@@ -986,8 +986,9 @@ request_blind = BKS-SerializePrivatekey(sk_blind)
 
 ### Request Signature {#index-proof}
 
-Clients produce signature of their request based on the following inputs defined in {{request-one}}:
-`token_key_id`, `blinded_msg`, `request_key`, `issuer_encap_key_id`, `encrypted_token_request`.
+Clients produce a signature of their request by signing its entire contents
+consisting of the following values defined in {{request-one}}:
+`token_key_id`, `blinded_msg`, `request_key`, `issuer_encap_key_id`, and `encrypted_token_request`.
 This process requires the blind value `sk_blind` produced during the {{index-request}} process.
 As above, let pk and sk denote Client Key and Client Secret, respectively. Given these
 values, this signature process works as follows:
@@ -1003,6 +1004,7 @@ In pseudocode, this is as follows:
 context = concat(token_type,
                  token_key_id,
                  issuer_encap_key_id,
+                 encode(2, len(encrypted_token_request)),
                  encrypted_token_request)
 request_signature = BKS-BlindKeySign(sk_sign, sk_blind, context)
 ~~~
