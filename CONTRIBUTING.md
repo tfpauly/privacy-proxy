@@ -19,10 +19,16 @@ subject to a Simplified BSD License) in Contributions.
 
 ## Other Resources
 
-Discussion of this work occurs on the
-[hint working group mailing list](https://mailarchive.ietf.org/arch/browse/hint/)
-([subscribe](https://www.ietf.org/mailman/listinfo/hint)).  In addition to
-contributions in GitHub, you are encouraged to participate in discussions there.
+Discussion of this work occurs on various IETF mailing lists.
+In addition to contributions in GitHub, you are encouraged to participate in 
+discussions on these lists.
+
+Rate-Limited Token Issuance is covered in
+[privacy pass](https://mailarchive.ietf.org/arch/browse/privacy-pass/)
+([subscribe](https://www.ietf.org/mailman/listinfo/privacy-pass)).  
+
+Geo IP HTTP Client hints are covered in
+[httpbis](https://lists.w3.org/Archives/Public/ietf-http-wg/).  
 
 **Note**: Some working groups adopt a policy whereby substantive discussion of
 technical issues needs to occur on the mailing list.
