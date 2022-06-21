@@ -429,7 +429,8 @@ following state:
 
 The Issuer-provided rate limit for a single Origin is intended to not change more frequently
 than once per policy window. If the Attester detects a change of rate limit multiple times
-for the state kept for a single policy window, it SHOULD reject the token.
+for the state kept for a single policy window, it SHOULD reject tokens issued in the remainder
+of the policy window.
 
 ### Issuer State {#issuer-state}
 
@@ -1229,8 +1230,8 @@ can be mitigated by having many Origins share the same rate-limit value.
 
 - If an Issuer changes the rate-limit values for a single Origin, that change occurring
 at the same time across multiple Clients could allow Attesters to recognize an Origin
-in common between Clients. To mitigate this, Issuers either can change the limits for
-multiple Origins simultaneously, or have an Origin switch to a separate Issuer name.
+in common across Clients. To mitigate this, Issuers either can change the limits for
+multiple Origins simultaneously, or have an Origin switch to a separate Issuer.
 
 Some deployments MAY choose to relax these requirements, such as in cases where the
 origins being accessed are ubiquitous or do not correspond to user-specific behavior.
