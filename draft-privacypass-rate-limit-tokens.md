@@ -144,7 +144,7 @@ about the pieces of information):
   trying to access (Origin Name), but knows a Client-anonymized identifier for
   it (Anonymous Origin ID).
 
-- The Issuer knows the Origin's secret (Issuer Origin Secret) and policy about client
+- The Issuer knows a per-Origin secret (Issuer Origin Secret) and policy about client
   access, and learns the Origin's identity (Origin Name) during issuance. The Issuer
   does not learn the Client's identity or information about the Client's access
   pattern.
@@ -407,7 +407,7 @@ of identifying a Client is specific to each Attester, and is not defined in this
 As examples, the Attester could use device-specific certificates or account authentication
 to identify a Client.
 
-Attesters must enforce that Clients don't change their Client Key frequently, to ensure Clients can't
+Attesters need to enforce that Clients don't change their Client Key frequently, to ensure Clients can't
 regularly evade the per-client policy as seen by the issuer. Attesters MUST NOT allow Clients to
 change their Client Key more than once within a policy window, or in the subsequent policy window
 after a previous Client Key change. Alternative schemes where the Attester stores the encrypted
@@ -424,7 +424,13 @@ following state:
 
 - A counter of successful tokens issued
 - Whether or not a previous request was rejected by the Issuer
+- The previous rate limit provided by the Issuer
 - The last received Anonymous Issuer Origin ID value for this Anonymous Origin ID, if any
+
+The Issuer-provided rate limit for a single Origin is intended to not change more frequently
+than once per policy window. If the Attester detects a change of rate limit multiple times
+for the state kept for a single policy window, it SHOULD reject tokens issued in the remainder
+of the policy window.
 
 ### Issuer State {#issuer-state}
 
@@ -437,10 +443,11 @@ the Issuer Origin Secret.
 Issuers are expected to have the private key that corresponds to Issuer Encapsulation Key,
 which allows them to decrypt the Origin Name values in requests.
 
-Issuers also need to know the set of valid Token Key public keys and corresponding
-private key, for each Origin Name that is served by the Issuer. Origins SHOULD update
-their view of the Token Key regularly to ensure that Client requests do not fail
-after Token Key rotation.
+For each Origin, Issuers need to know what rate limit to enforce during a policy window.
+Issuers SHOULD NOT use unique values for specific Origins, which would allow Attesters
+to recognize an Origin being accessed by multiple Clients. Each Origin limit is allowed
+to change, but SHOULD NOT change more often than once per policy window, to ensure that
+the limit is useful.
 
 ## Issuance HTTP Headers
 
@@ -1220,6 +1227,11 @@ simply by observing the Issuer identity.
 - Issuers SHOULD NOT return rate-limit values that are specific to Origins, such
 that an Attester can infer which Origin is accessed by observing the rate limit. This
 can be mitigated by having many Origins share the same rate-limit value.
+
+- If an Issuer changes the rate-limit values for a single Origin, that change occurring
+at the same time across multiple Clients could allow Attesters to recognize an Origin
+in common across Clients. To mitigate this, Issuers either can change the limits for
+multiple Origins simultaneously, or have an Origin switch to a separate Issuer.
 
 Some deployments MAY choose to relax these requirements, such as in cases where the
 origins being accessed are ubiquitous or do not correspond to user-specific behavior.
