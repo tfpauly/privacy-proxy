@@ -262,12 +262,13 @@ of derivation.
 
 # Configuration {#setup}
 
-Issuers MUST provide three parameters for configuration:
+Issuers MUST provide the following parameters for configuration:
 
 1. Issuer Policy Window: a uint64 of seconds as defined in {{terms}}.
 1. Issuer Request URI: a token request URL for generating access tokens.
    For example, an Issuer URL might be https://issuer.example.net/token-request. This parameter
    uses resource media type "text/plain".
+1. Issuer Public Key values: an Issuer Public Key for an issuance protocol.
 1. Issuer Encapsulation Key: a `EncapsulationKey` structure as defined below to use when encapsulating
    information, such as the origin name, to the Issuer in issuance requests. This parameter uses resource media type
    "application/issuer-encap-key". The Npk parameter corresponding to the HpkeKdfId can be found in {{HPKE}}.
@@ -294,7 +295,20 @@ object whose field names and values are raw values and URLs for the parameters.
 |:---------------------|:-------------------------------------------------|
 | issuer-policy-window | Issuer Policy Window as a JSON number            |
 | issuer-request-uri   | Issuer Request URI resource URL as a JSON string |
+| token-keys           | List of Issuer Public Key values, each as JSON objects |
 | issuer-encap-key-uri | Issuer Encapsulation Key URI resource URL as a JSON string |
+
+Each "token-keys" JSON object contains the following fields and corresponding raw values.
+
+| Field Name   | Value                                                  |
+|:-------------|:-------------------------------------------------------|
+| token-type   | Integer value of the Token Type, as defined in {{iana-token-type}}, as a JSON number |
+| token-key    | The base64url encoding of the public key for use with the issuance protocol, including padding, as a JSON string |
+
+Issuers MAY advertise multiple token-keys for the same token-type to
+support key rotation. In this case, Issuers indicate preference for which
+token key to use based on the order of keys in the list, with preference
+given to keys earlier in the list.
 
 As an example, the Issuer's JSON directory could look like:
 
@@ -303,6 +317,16 @@ As an example, the Issuer's JSON directory could look like:
     "issuer-token-window": 86400,
     "issuer-request-uri": "https://issuer.example.net/token-request"
     "issuer-encap-key-uri": "https://issuer.example.net/encap-key",
+    "token-keys": [
+      {
+        "token-type": 3,
+        "token-key": "MI...AB",
+      },
+      {
+        "token-type": 3,
+        "token-key": "MI...AQ",
+      }
+    ]
  }
 ~~~
 
