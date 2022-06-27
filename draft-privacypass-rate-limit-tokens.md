@@ -379,7 +379,7 @@ is the same as used in the base publicly verifiable token issuance protocol {{IS
 
 - {{HPKE}}, for encrypting the origin server name in transit between Client and Issuer across the Attester.
 
-- Signatures with key blinding, as described in {{!KEYBLINDING=I-D.dew-cfrg-signature-key-blinding}}, for verifying
+- Signatures with key blinding, as described in {{!KEYBLINDING=I-D.irtf-cfrg-signature-key-blinding}}, for verifying
   correctness of Client requests.
 
 Clients and Issuers are required to implement all of these dependencies, whereas Attesters are required
