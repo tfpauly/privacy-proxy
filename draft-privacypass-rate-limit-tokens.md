@@ -309,8 +309,8 @@ Issuers MAY advertise multiple token-keys for the same token-type to
 support key rotation. In this case, Issuers indicate preference for which
 token key to use based on the order of keys in the list, with preference
 given to keys earlier in the list. Likewise, Issuers MAY advertise multiple
-encap-keys to support key rotation, wherein the order of the keys in the
-list indicates preference just like token-keys.
+encap-keys to support key rotation, where the order of the keys in the
+list indicates preference as with token-keys.
 
 As an example, the Issuer's JSON directory could look like:
 
