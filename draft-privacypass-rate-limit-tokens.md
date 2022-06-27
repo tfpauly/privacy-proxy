@@ -296,7 +296,7 @@ object whose field names and values are raw values and URLs for the parameters.
 | issuer-policy-window | Issuer Policy Window as a JSON number            |
 | issuer-request-uri   | Issuer Request URI resource URL as a JSON string |
 | token-keys           | List of Issuer Public Key values, each as JSON objects |
-| issuer-encap-key-uri | Issuer Encapsulation Key URI resource URL as a JSON string |
+| encap-keys           | List of Encapsulation Key values, each as a base64url encoded EncapsulationKey value |
 
 Each "token-keys" JSON object contains the following fields and corresponding raw values.
 
@@ -308,7 +308,9 @@ Each "token-keys" JSON object contains the following fields and corresponding ra
 Issuers MAY advertise multiple token-keys for the same token-type to
 support key rotation. In this case, Issuers indicate preference for which
 token key to use based on the order of keys in the list, with preference
-given to keys earlier in the list.
+given to keys earlier in the list. Likewise, Issuers MAY advertise multiple
+encap-keys to support key rotation, where the order of the keys in the
+list indicates preference as with token-keys.
 
 As an example, the Issuer's JSON directory could look like:
 
@@ -316,7 +318,9 @@ As an example, the Issuer's JSON directory could look like:
  {
     "issuer-token-window": 86400,
     "issuer-request-uri": "https://issuer.example.net/token-request"
-    "issuer-encap-key-uri": "https://issuer.example.net/encap-key",
+    "encap-keys": [
+      <encoded EncapsulationKey>
+    ],
     "token-keys": [
       {
         "token-type": 3,
