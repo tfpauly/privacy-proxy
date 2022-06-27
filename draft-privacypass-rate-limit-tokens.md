@@ -317,7 +317,7 @@ As an example, the Issuer's JSON directory could look like:
 ~~~
  {
     "issuer-token-window": 86400,
-    "issuer-request-uri": "https://issuer.example.net/token-request"
+    "issuer-request-uri": "https://issuer.example.net/token-request",
     "encap-keys": [
       <encoded EncapsulationKey>
     ],
