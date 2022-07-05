@@ -541,8 +541,15 @@ change their Client Key more than once within a policy window, or in the subsequ
 after a previous Client Key change. Alternative schemes where the Attester stores the encrypted
 (Client Key, Client Secret) tuple on behalf of the client are possible but not described here.
 
-Attesters are expected to know the Issuer Policy Window for any Issuer Name to which
-they allow access. This information can be retrieved using the URIs defined in {{setup}}.
+Attesters are expected to know both the Issuer Policy Window and current Issuer Encapsulation Key
+for any Issuer Name to which they allow access. This information can be retrieved using the
+URIs defined in {{setup}}. The current Issuer Encapsulation Key value is used to check the value
+of the issuer_encap_key_id in Client-generated requests ({{request-one}}) to reject cases where
+clients are using unique key IDs. Such unique keys could indicate a key-targeting attack that
+intends to reveal a client identity to the Issuer. In order to handle key rotation, the Attester
+needs to know the current key value and the previou key value, and remember the last time the
+value changed to ensure that it does not happen too frequently (such as no more than once per
+policy window, or no more than once per day).
 
 For each Client-Issuer pair, an Attester maintains a policy window
 start and end time for each Issuer from which a Client requests a token.
@@ -1347,17 +1354,20 @@ matching logic is defined for same-origin policies in {{?RFC6454}}. Clients MAY 
 which authentication challenges they are willing to respond to, for example by only accepting
 challenges when the origin is a web site to which the user navigated.
 
-## Client Identification with Unique Keys
+## Client Identification with Unique Encapsulation Keys
 
 Client activity could be linked if an Origin and Issuer collude to have unique keys targeted
 at specific Clients or sets of Clients.
 
+As with the basic issuance protocol {{ISSUANCE}}, the token_key_id is truncated to a single
+octet to mitigate the risk of unique keys per client.
+
 To mitigate the risk of a targeted Issuer Encapsulation Key, the Attester can observe and validate
-the token_key_id presented by the Client to the Issuer. As described in {{issuance}}, Attesters
-MUST validate that the token_key_id in the Client's TokenRequest matches a known public key
-for the Issuer. The Attester needs to support key rotation, but ought to disallow very rapid key
-changes, which could indicate that an Origin is colluding with an Issuer to try to rotate the key
-for each new Client in order to link the client activity.
+the issuer_encap_key_id presented by the Client to the Issuer. As described in {{request-one}}, Attesters
+MUST validate that the issuer_encap_key_id in the Client's TokenRequest matches a known Issuer
+Encapsulation Key public key for the Issuer. The Attester needs to support key rotation, but
+ought to disallow very rapid key changes, which could indicate that an Origin is colluding with
+an Issuer to try to rotate the key for each new Client in order to link the client activity.
 
 ## Origin Identification
 
