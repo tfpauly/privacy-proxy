@@ -182,9 +182,9 @@ to {{response-two}}) so that the resulting token can be redeemed by the Origin.
 {: #fig-example-allow title="Successful rate-limited issuance"}
 
 {{fig-example-deny}} shows how this interaction works for client requests that
-exceed the rate limit. The client's request to the issuer and the issuer's
-response to the attester are the same. However, in this scenario, the client
-is not within the rate limit, so the attester responds to the client with an
+exceed the rate limit. The Client's request to the Issuer and the Issuer's
+response to the Attester are the same. However, in this scenario, the Client
+is not within the rate limit, so the Attester responds to the Client with an
 error instead of the issuer's token response.
 
 ~~~
