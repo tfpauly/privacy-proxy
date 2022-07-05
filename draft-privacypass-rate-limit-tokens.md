@@ -544,9 +544,9 @@ after a previous Client Key change. Alternative schemes where the Attester store
 Attesters are expected to know both the Issuer Policy Window and current Issuer Encapsulation Key
 for any Issuer Name to which they allow access. This information can be retrieved using the
 URIs defined in {{setup}}. The current Issuer Encapsulation Key value is used to check the value
-of the issuer_encap_key_id in Client-generated requests ({{request-one}}) to reject cases where
+of the issuer_encap_key_id in Client-generated requests ({{request-one}}) to reject requests where
 clients are using unique key IDs. Such unique keys could indicate a key-targeting attack that
-intends to reveal a client identity to the Issuer. In order to handle key rotation, the Attester
+intends de-anonymize a client to the Issuer. In order to handle encapsulation key rotation, the Attester
 needs to know the current key value and the previou key value, and remember the last time the
 value changed to ensure that it does not happen too frequently (such as no more than once per
 policy window, or no more than once per day).
