@@ -1239,7 +1239,8 @@ The protocol in this document uses {{HPKE}} directly to encrypt token request in
 to the issuer while also authenticating information exposed to the attester. Oblivious HTTP
 {{?OHTTP=I-D.ietf-ohai-oblivious-http}}, which is a protocol built on top of HPKE for
 request encapsulation, is not suitable for this purpose since it does not allow clients to
-additionally authenticate application-layer information.
+additionally authenticate application-layer information that is visible to intermediaries,
+which is the case for the data visible to the Attester.
 
 ## Channel Security
 
