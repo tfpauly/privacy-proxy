@@ -130,11 +130,13 @@ contexts. In some cases this might be a significant portion of browsing history.
 
 ## Protocol Overview
 
-The issuance protocol defined in this document decouples sensitive information in the attestation context,
-such as the client identity, from the information in the redemption context, such as the origin. It does
-so by employing the 'Split Origin, Attester, Issuer' model. In this model, the Issuer
-learns redemption information like origin identity (used to determine per-origin rate limit policies), and the Attester
-learns attestation information like client identity (used to keep track of the previous instances of token issuance).
+The issuance protocol defined in this document decouples sensitive information in the
+attestation context, such as the client identity, from the information in the redemption
+context, such as the origin. It does so by employing the 'Split Origin, Attester, Issuer'
+model. In this model, the Issuer learns redemption information like origin identity (used
+to determine per-origin rate limit policies), and the Attester learns attestation
+information like client identity (used to keep track of the previous instances of token
+issuance).
 
 {{fig-example-allow}} shows how this interaction works for client requests that
 are within the rate limit. The Client's token request to the Attester (constructed
@@ -157,13 +159,18 @@ to {{response-two}}) so that the resulting token can be redeemed by the Origin.
         |          | Attest      |    +----------+   |           |
         +----------------->      |    |  Issuer  |   |           |
         |          |             |    |          |   |           |
+        |   TokenRequest         |    |          |   |           |
+        |   + Origin ID          |    |          |   |           |
+        | [ + Encrypted Origin ] |    |          |   |           |
+        +----------------->      |    |          |   |           |
+        |          |             |    |          |   |           |
         |          |       TokenRequest          |   |           |
-        |          |      [ + encrypted origin ] |   |           |
-        +---------------------------------->     |   |           |
+        |          |      [ + Encrypted origin ] |   |           |
+        |          |     +------------------->   |   |           |
         |          |             |    |          |   |           |
         |          |             |    |          |   |           |
         |          |       TokenResponse         |   |           |
-        |          |      [ + rate limit ]       |   |           |
+        |          |      [ + Rate limit ]       |   |           |
         |          |     <-------------------+   |   |           |
         |          |             |    |          |   |           |
         |          |  in limit?  |    |          |   |           |
@@ -199,13 +206,18 @@ error instead of the issuer's token response.
         |          | Attest      |    +----------+   |           |
         +----------------->      |    |  Issuer  |   |           |
         |          |             |    |          |   |           |
+        |   TokenRequest         |    |          |   |           |
+        |   + Origin ID          |    |          |   |           |
+        | [ + Encrypted Origin ] |    |          |   |           |
+        +----------------->      |    |          |   |           |
+        |          |             |    |          |   |           |
         |          |       TokenRequest          |   |           |
-        |          |      [ + encrypted origin ] |   |           |
-        +---------------------------------->     |   |           |
+        |          |      [ + Encrypted origin ] |   |           |
+        |          |     +------------------->   |   |           |
         |          |             |    |          |   |           |
         |          |             |    |          |   |           |
         |          |       TokenResponse         |   |           |
-        |          |      [ + rate limit ]       |   |           |
+        |          |       + Rate limit          |   |           |
         |          |     <-------------------+   |   |           |
         |          |             |    |          |   |           |
         |          |  in limit?  |    |          |   |           |
@@ -219,6 +231,39 @@ error instead of the issuer's token response.
   issuance failed                                    +-----------+
 ~~~
 {: #fig-example-deny title="Failed rate-limited issuance"}
+
+Each Issuer has a window over which a rate limit policy is applied. The window
+begins upon a Client's first token request and ends after the window time elapses,
+after which the Client's rate limit state is reset. Issuers apply the rate limit
+policy corresponding to a Client's encrypted Origin by using a per-Origin secret
+key to produce the token response. Attesters enforce the rate limit by combining
+the Issuer's response with a per-Client value, yielding an (Anonymous) Issuer
+Origin ID that is stable for all client requests to the designated Origin.
+The Anonymous Issuer Origin ID is used to track and enforce the Client rate limit.
+
+Issuers can rotate the secret they use when applying rate limits as desired. If
+a rotation event happens during a Client's active policy window, the Attester would
+compute a different Anonymous Issuer Origin ID and mistakenly conclude that the
+Client is acccessing a new Origin. To mitigate this, Client's provide a stable
+(Anonymous) Origin ID in their request to the Attester, which is constant for all
+requests to that Origin. This allows the Attester to detect when Issuer rotation
+events occur without affecting Client rate limits.
+
+~~~
+                          Per-Origin
+                         secret rotate
+Issuer:      -----+------------X----------+------------> Time
+                  |         policy        |
+Client            |         window        |
+Token Requests:   *--------------*--------|
+                  |              |        |
+                  v              v        |
+            Issuer Origin  Issuer Origin  |
+                ID x           ID y       |
+                  |                       |
+            (policy start)          (policy end)
+~~~
+{: #fig-example-policy-windows title="Issuer policy window rotation"}
 
 Unlike the basic issuance protocol {{ISSUANCE}}, the rate-limited issuance protocol
 in this document has additional functional and state requirements for Client, Attester,
