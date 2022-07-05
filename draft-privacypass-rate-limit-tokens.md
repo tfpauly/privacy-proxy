@@ -1228,10 +1228,11 @@ This section describes security considerations relevant to the use of this proto
 
 The Client Secret key is used for two purposes in this protocol: (1) computing request
 signatures and (2) computing the Anonymous Issuer Origin ID (with the corresponding
-public key). In general, using the same cryptographic key for two distinct purposes
-is considered bad practice. However, analysis of this protocol demonstrates that it
-is safe in this context. The Client Secret MUST NOT be used for any purpose outside
-of this protocol.
+public key). This is necessary to ensure the client associated with the Anonymous Issuer
+Origin ID is the same client that produced a corresponding request. In general, using
+the same cryptographic key for two distinct purposes is considered bad practice.
+However, analysis of this protocol demonstrates that it is safe in this context.
+The Client Secret MUST NOT be used for any purpose outside of this protocol.
 
 ## Custom Token Request Encapsulation
 
