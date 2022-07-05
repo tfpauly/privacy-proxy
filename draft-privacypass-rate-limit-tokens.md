@@ -132,8 +132,8 @@ contexts. In some cases this might be a significant portion of browsing history.
 
 The issuance protocol defined in this document decouples sensitive information in the attestation context,
 such as the client identity, from the information in the redemption context, such as the origin. It does
-so by employing the 'Split Origin, Attester, Issuer' model. In this model, the issuer
-learns redemption information like per-origin rate limit policies, and the attester
+so by employing the 'Split Origin, Attester, Issuer' model. In this model, the Issuer
+learns redemption information like origin identity (used to determine per-origin rate limit policies), and the Attester
 learns attestation information like client identity used to maintain and enforce
 rate limits based on encrypted origins.
 
