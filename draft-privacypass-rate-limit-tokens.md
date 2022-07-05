@@ -221,11 +221,11 @@ error instead of the issuer's token response.
 {: #fig-example-deny title="Failed rate-limited issuance"}
 
 Unlike the basic issuance protocol {{ISSUANCE}}, the rate-limited issuance protocol
-in this document has additional functional and state requirements for client, attester,
-and issuer. {{attester-state}} describes the state that the attester must track
-in order to enforce these limits, {{client-state}} describes the client state necessary
-for successive token requests with the attester, and {{issuer-state}} describes the state
-necessary for the issuer to apply rate limits. The functional description of each
+in this document has additional functional and state requirements for Client, Attester,
+and Issuer. {{attester-state}} describes the state that the Attester must track
+in order to enforce these limits, {{client-state}} describes the Client state necessary
+for successive token requests with the Attester, and {{issuer-state}} describes the state
+necessary for the Issuer to apply rate limits. The functional description of each
 participant in this protocol is explained in {{issuance}}
 
 ## Properties and Requirements {#properties}
