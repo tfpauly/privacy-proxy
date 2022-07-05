@@ -160,7 +160,7 @@ to {{response-two}}) so that the resulting token can be redeemed by the Origin.
         +----------------->      |    |  Issuer  |   |           |
         |          |             |    |          |   |           |
         |   TokenRequest         |    |          |   |           |
-        |   + Origin ID          |    |          |   |           |
+        |   + Anon Origin ID     |    |          |   |           |
         | [ + Encrypted Origin ] |    |          |   |           |
         +----------------->      |    |          |   |           |
         |          |             |    |          |   |           |
@@ -207,7 +207,7 @@ error instead of the issuer's token response.
         +----------------->      |    |  Issuer  |   |           |
         |          |             |    |          |   |           |
         |   TokenRequest         |    |          |   |           |
-        |   + Origin ID          |    |          |   |           |
+        |   + Anon Origin ID     |    |          |   |           |
         | [ + Encrypted Origin ] |    |          |   |           |
         +----------------->      |    |          |   |           |
         |          |             |    |          |   |           |
@@ -245,7 +245,7 @@ Issuers can rotate the secret they use when applying rate limits as desired. If
 a rotation event happens during a Client's active policy window, the Attester would
 compute a different Anonymous Issuer Origin ID and mistakenly conclude that the
 Client is acccessing a new Origin. To mitigate this, Client's provide a stable
-(Anonymous) Origin ID in their request to the Attester, which is constant for all
+Anonymous Origin ID in their request to the Attester, which is constant for all
 requests to that Origin. This allows the Attester to detect when Issuer rotation
 events occur without affecting Client rate limits.
 
