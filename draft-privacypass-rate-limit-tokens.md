@@ -108,7 +108,7 @@ are common on the Internet. These routinely use client IP address tracking,
 among other characteristics, to implement rate-limiting.
 
 One example of this use case is rate-limiting website accesses to a client to
-help prevent fraud. Operations that are sensitive to fraud, such as account
+help prevent abusive behavior. Operations that are sensitive to abuse, such as account
 creation on a website or logging into an account, often employ rate-limiting
 as a defense-in-depth strategy. Additional verification can be required by these
 pages when a client exceeds a set rate-limit.
@@ -122,7 +122,8 @@ differentiate quick refreshes from distinct accesses.
 
 For some applications, the basic issuance protocol from {{?BASIC-ISSUANCE=I-D.ietf-privacypass-protocol}}
 could be used to implement rate limits. In particular, the 'Joint Attester and Issuer' model from {{ARCH}} could
-be used to restrict the number of tokens issued to individual clients over a time window. However, in this deployment model, the Attester and Issuer would learn all
+be used to restrict the number of tokens issued to individual clients over a
+time window. However, in this deployment model, the Attester and Issuer would learn all
 origins used by a participating client. In some cases this might be a significant portion of
 browsing history. The issuance protocol defined in this document employs the 'Split Origin, Attester, Issuer'
 model to combat this, where the issuer would know all per-origin policies, and the
