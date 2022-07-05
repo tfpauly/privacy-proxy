@@ -137,13 +137,13 @@ learns redemption information like origin identity (used to determine per-origin
 learns attestation information like client identity (used to keep track of the previous instances of token issuance).
 
 {{fig-example-allow}} shows how this interaction works for client requests that
-are within the rate limit. The client's token request to the attester (constructed
-according to {{request-one}}, and forwarded to the issuer according to {{request-two}})
-contains encrypted information that the issuer uses to identify the relevant rate
-limit policy to apply. This rate limit policy is returned to the attester (according
-to {{response-one}}), which then checks whether or not the client is within this
-policy. If yes, the attester forwards the issuer token response to the client (according
-to {{response-two}}) so that the resulting token can be redeemed to the origin.
+are within the rate limit. The Client's token request to the Attester (constructed
+according to {{request-one}}, and forwarded to the Issuer according to {{request-two}})
+contains encrypted information that the Issuer uses to identify the relevant rate
+limit policy to apply. This rate limit policy is returned to the Attester (according
+to {{response-one}}), which then checks whether or not the Client is within this
+policy. If yes, the Attester forwards the issuer token response to the Client (according
+to {{response-two}}) so that the resulting token can be redeemed by the Origin.
 
 ~~~
                                                      +-----------+
