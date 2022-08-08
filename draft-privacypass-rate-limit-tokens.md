@@ -698,14 +698,15 @@ blinded_msg, blind_inv = rsabssa_blind(pkI, token_input)
 The Client then uses Client Key to generate its one-time-use request public
 key `request_key` and blind `request_blind` as described in {{client-anon-issuer-origin-id}}.
 
-The Client then computes `token_key_id` as SHA256(public_key), where public_key is a DER-encoded
+The Client then computes `token_key_id` as the least significant byte of the Token Key
+ID, where the Token Key ID is generated as SHA256(public_key) and public_key is a DER-encoded
 SubjectPublicKeyInfo object carrying Token Key. The Client then constructs a InnerTokenRequest
 value, denoted `origin_token_request`, combining `token_key_id`, `blinded_msg`, and a padded
 representation of the origin name as follows:
 
 ~~~
 struct {
-  uint8_t token_key_id[32];
+  uint8_t token_key_id;
   uint8_t blinded_msg[Nk];
   uint8_t padded_origin_name<0..2^16-1>;
 } InnerTokenRequest;
@@ -840,10 +841,10 @@ If any of these conditions is not met, the Issuer MUST return an HTTP 400 error 
 which will forward the error to the client.
 
 The Issuer determines the correct Issuer Key by using the decrypted Origin Name and
-InnerTokenRequest.token_key_id values. If there is no Token Key whose key ID matches
-InnerTokenRequest.token_key_id and whose Origin matches the Origin Name, the Issuer
-MUST return an HTTP 401 error to the Attester, which will forward the error to the
-client. The Attester learns that the client's view of the Origin key was invalid in the process.
+InnerTokenRequest.token_key_id values. If there is no Token Key whose truncated key ID matches
+InnerTokenRequest.token_key_id, the Issuer MUST return an HTTP 401 error to Attester, which will
+forward the error to the client. The Attester learns that the client's view of the Origin key
+was invalid in the process.
 
 ## Issuer-to-Attester Response {#response-one}
 
@@ -1156,7 +1157,7 @@ request_blind = BKS-SerializePrivatekey(sk_blind)
 
 Clients produce a signature of their request by signing its entire contents
 consisting of the following values defined in {{request-one}}:
-`request_key`, `blinded_msg`, `issuer_encap_key_id`, and `encrypted_token_request`.
+`token_key_id`, `blinded_msg`, `request_key`, `issuer_encap_key_id`, and `encrypted_token_request`.
 This process requires the blind value `sk_blind` produced during the {{index-request}} process.
 As above, let pk and sk denote Client Key and Client Secret, respectively. Given these
 values, this signature process works as follows:
@@ -1170,7 +1171,7 @@ In pseudocode, this is as follows:
 
 ~~~
 context = concat(token_type,
-                 request_key,
+                 token_key_id,
                  issuer_encap_key_id,
                  encode(2, len(encrypted_token_request)),
                  encrypted_token_request)
@@ -1385,6 +1386,9 @@ challenges when the origin is a web site to which the user navigated.
 Client activity could be linked if an Origin and Issuer collude to have unique keys targeted
 at specific Clients or sets of Clients.
 
+As with the basic issuance protocol {{ISSUANCE}}, the token_key_id is truncated to a single
+octet to mitigate the risk of unique keys per client.
+
 To mitigate the risk of a targeted Issuer Encapsulation Key, the Attester can observe and validate
 the issuer_encap_key_id presented by the Client to the Issuer. As described in {{request-one}}, Attesters
 MUST validate that the issuer_encap_key_id in the Client's TokenRequest matches a known Issuer
@@ -1438,13 +1442,11 @@ identity (as known to the Attester) to the Origin, especially if repeated over m
 
 ## Token Key Management
 
-Each Origin MUST be associated with a unique Token Key and Origin Secret pair in order
-to prevent tokens issued for one Origin from being redeemed to another Origin.
-Issuers SHOULD generate new (Token Key, Issuer Origin Secret) pairs regularly, and
+Issuers SHOULD generate new (Token Key, Issuer Origin Secret) values regularly, and
 SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED
 rotation interval is two times the length of the policy window for that
-information. During generation, issuers must ensure the `token_key_id` (the cryptographic
-hash digest of Token Key, i.e., SHA256(Token Key)) is different from all other `token_key_id`
+information. During generation, issuers must ensure the `token_key_id` (the 8-bit
+prefix of SHA256(Token Key)) is different from all other `token_key_id`
 values for that Origin currently in rotation. One way to ensure this uniqueness
 is via rejection sampling, where a new key is generated until its `token_key_id` is
 unique among all currently in rotation for the Origin.
@@ -1561,7 +1563,7 @@ The test vector below for the procedure in {{encrypt-origin}} lists the followin
   represented as a hexadecimal string.
 - issuer_encap_key: The public Issuer Encapsulation Key, represented as a hexadecimal string.
 - token_type: The type of the protocol specified in this document.
-- token_key_id: The ID of Token Key computed as in {{request-one}}, 32 bytes, represented as a hexadecimal string.
+- token_key_id: The ID of Token Key computed as in {{request-one}}, a single octet.
 - blinded_msg: A random blinded_msg value, represented as a hexadecimal string.
 - request_key: A random request_key value, represented as a hexadecimal string.
 - issuer_encap_key_id: The Issuer Encapsulation Key ID computed as in {{request-one}}, represented as a hexadecimal string.
