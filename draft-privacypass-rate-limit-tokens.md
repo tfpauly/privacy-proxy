@@ -530,7 +530,7 @@ A Client is required to have the following information, derived from a given Tok
   of the Origin that issued the token challenge. One or more names can be listed
   in the TokenChallenge.origin_info field. Rate-limited token issuance relies on the
   client selecting a single origin name from this list if multiple are present.
-- Token Key, a blind signature public key for the Origin that is owned by the
+- Token Key, a blind signature public key specific to the Origin. This key is owned by the
   Issuer identified by the TokenChallenge.issuer_name.
 - Issuer Encapsulation Key, a public key used to encrypt request information corresponding
   to the Issuer identified by TokenChallenge.issuer_name.
