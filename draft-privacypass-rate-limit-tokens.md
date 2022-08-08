@@ -459,7 +459,8 @@ As an example, the Issuer's JSON directory could look like:
 Issuers MUST support at least one Token Key per origin. Issuers MAY support
 multiple Token Key values for the same Origin in order to support rotation.
 Origin configuration for Issuers is out of scope for this document, and so
-the mechanism by which Origins obtain their Token Key value is not specified.
+the mechanism by which Origins obtain their Token Key value is not specified
+here.
 
 Issuer directory resources have the media type "application/json"
 and are located at the well-known location /.well-known/token-issuer-directory.
