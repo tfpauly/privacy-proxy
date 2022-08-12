@@ -1168,7 +1168,7 @@ In pseudocode, this is as follows:
 ~~~
 sk_blind = BKS-BlindKeyGen()
 ctx = concat(encode(2, token_type)), "ClientBlind")
-blinded_key = BKS-BlindPublicKey(pk_sign, sk_blind)
+blinded_key = BKS-BlindPublicKey(pk_sign, sk_blind, ctx)
 request_key = BKS-SerializePublicKey(blinded_key)
 request_blind = BKS-SerializePrivatekey(sk_blind)
 ~~~
