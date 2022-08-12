@@ -413,7 +413,6 @@ Issuers MUST provide the following parameters for configuration:
 1. Issuer Request URI: a token request URL for generating access tokens.
    For example, an Issuer URL might be https://issuer.example.net/token-request. This parameter
    uses resource media type "text/plain".
-1. Issuer Public Key values: an Issuer Public Key for an issuance protocol.
 1. Issuer Encapsulation Key: a `EncapsulationKey` structure as defined below to use when encapsulating
    information, such as the origin name, to the Issuer in issuance requests. This parameter uses resource media type
    "application/issuer-encap-key". The Npk parameter corresponding to the HpkeKdfId can be found in {{HPKE}}.
@@ -440,22 +439,10 @@ object whose field names and values are raw values and URLs for the parameters.
 |:---------------------|:-------------------------------------------------|
 | issuer-policy-window | Issuer Policy Window as a JSON number            |
 | issuer-request-uri   | Issuer Request URI resource URL as a JSON string |
-| token-keys           | List of Issuer Public Key values, each as JSON objects |
 | encap-keys           | List of Encapsulation Key values, each as a base64url encoded EncapsulationKey value |
 
-Each "token-keys" JSON object contains the following fields and corresponding raw values.
-
-| Field Name   | Value                                                  |
-|:-------------|:-------------------------------------------------------|
-| token-type   | Integer value of the Token Type, as defined in {{iana-token-type}}, as a JSON number |
-| token-key    | The base64url encoding of the public key for use with the issuance protocol, including padding, as a JSON string |
-
-Issuers MAY advertise multiple token-keys for the same token-type to
-support key rotation. In this case, Issuers indicate preference for which
-token key to use based on the order of keys in the list, with preference
-given to keys earlier in the list. Likewise, Issuers MAY advertise multiple
-encap-keys to support key rotation, where the order of the keys in the
-list indicates preference as with token-keys.
+Issuers MAY advertise multiple encap-keys to support key rotation, where the order
+of the keys in the list indicates preference as with token-keys.
 
 As an example, the Issuer's JSON directory could look like:
 
@@ -465,19 +452,15 @@ As an example, the Issuer's JSON directory could look like:
     "issuer-request-uri": "https://issuer.example.net/token-request",
     "encap-keys": [
       <encoded EncapsulationKey>
-    ],
-    "token-keys": [
-      {
-        "token-type": 3,
-        "token-key": "MI...AB",
-      },
-      {
-        "token-type": 3,
-        "token-key": "MI...AQ",
-      }
     ]
  }
 ~~~
+
+Issuers MUST support at least one Token Key per origin. Issuers MAY support
+multiple Token Key values for the same Origin in order to support rotation.
+Origin configuration for Issuers is out of scope for this document, and so
+the mechanism by which Origins obtain their Token Key value is not specified
+here.
 
 Issuer directory resources have the media type "application/json"
 and are located at the well-known location /.well-known/token-issuer-directory.
@@ -547,8 +530,8 @@ A Client is required to have the following information, derived from a given Tok
   of the Origin that issued the token challenge. One or more names can be listed
   in the TokenChallenge.origin_info field. Rate-limited token issuance relies on the
   client selecting a single origin name from this list if multiple are present.
-- Token Key, a blind signature public key corresponding to the Issuer
-  identified by the TokenChallenge.issuer_name.
+- Token Key, a blind signature public key specific to the Origin. This key is owned by the
+  Issuer identified by the TokenChallenge.issuer_name.
 - Issuer Encapsulation Key, a public key used to encrypt request information corresponding
   to the Issuer identified by TokenChallenge.issuer_name.
 
@@ -715,13 +698,16 @@ blinded_msg, blind_inv = rsabssa_blind(pkI, token_input)
 The Client then uses Client Key to generate its one-time-use request public
 key `request_key` and blind `request_blind` as described in {{client-anon-issuer-origin-id}}.
 
-The Client then constructs a InnerTokenRequest value, denoted `origin_token_request`,
-combining `blinded_msg`,  `request_key`, and the origin name as follows:
+The Client then computes `token_key_id` as the least significant byte of the Token Key
+ID, where the Token Key ID is generated as SHA256(public_key) and public_key is a DER-encoded
+SubjectPublicKeyInfo object carrying Token Key. The Client then constructs a InnerTokenRequest
+value, denoted `origin_token_request`, combining `token_key_id`, `blinded_msg`, and a padded
+representation of the origin name as follows:
 
 ~~~
 struct {
+  uint8_t token_key_id;
   uint8_t blinded_msg[Nk];
-  uint8_t request_key[Npk];
   uint8_t padded_origin_name<0..2^16-1>;
 } InnerTokenRequest;
 ~~~
@@ -739,7 +725,7 @@ structure is based on the publicly verifiable token issuance path in
 ~~~
 struct {
    uint16_t token_type = 0x0003;
-   uint8_t token_key_id;
+   uint8_t request_key[Npk];
    uint8_t issuer_encap_key_id[32];
    uint8_t encrypted_token_request<1..2^16-1>;
    uint8_t request_signature[Nsig];
@@ -750,9 +736,7 @@ The structure fields are defined as follows:
 
 - "token_type" is a 2-octet integer, which matches the type in the challenge.
 
-- "token_key_id" is the least significant byte of the Token Key key ID, which is
-generated as SHA256(public_key), where public_key is a DER-encoded SubjectPublicKeyInfo
-object carrying Token Key.
+- "request_key" is the request_key value generated above.
 
 - "issuer_encap_key_id" is a collision-resistant hash that identifies the Issuer
 Encryption Key, generated as SHA256(EncapsulationKey).
@@ -766,10 +750,9 @@ The Client then generates an HTTP POST request to send through the Attester to
 the Issuer, with the TokenRequest as the body. The media type for this request
 is "message/token-request". The Client includes the "Sec-Token-Origin" header,
 whose value is Anonymous Origin ID; the "Sec-Token-Client" header, whose value is
-Client Key; the "Sec-Token-Request-Blind" header, whose value is request_blind; and
-the "Sec-Token-Request-Key" header, whose value is `request_key`. The Client
-sends this request to the Attester's proxy URI. An example request is shown below,
-where the Issuer Name is "issuer.net" and the Attester URI template is
+Client Key; and the "Sec-Token-Request-Blind" header, whose value is request_blind.
+The Client sends this request to the Attester's proxy URI. An example request is
+shown below, where the Issuer Name is "issuer.net" and the Attester URI template is
 "https://attester.net/token-request{?issuer}"
 
 ~~~
@@ -784,7 +767,6 @@ content-length = <Length of TokenRequest>
 sec-token-origin = Anonymous Origin ID
 sec-token-client = Client Key
 sec-token-request-blind = request_blind
-sec-token-request-key = request_key
 
 <Bytes containing the TokenRequest>
 ~~~
@@ -847,8 +829,7 @@ compromise; see {{sec-considerations}} for additional about this channel.
 Upon receipt of the forwarded request, the Issuer validates the following conditions:
 
 - The TokenRequest contains a supported token_type
-- The TokenRequest.token_key_id and TokenRequest.issuer_encap_key_id correspond to known
-Token Keys and Issuer Encapsulation Keys held by the Issuer.
+- The TokenRequest.issuer_encap_key_id correspond to known Issuer Encapsulation Keys held by the Issuer.
 - The TokenRequest.encrypted_token_request can be decrypted using the
 Issuer's private key (the private key associated with Issuer Encapsulation Key), and contains
 a valid InnerTokenRequest whose unpadded origin name matches an Origin Name that is served by
@@ -859,9 +840,9 @@ policy if supported. If a cross-origin policy is not supported, this condition i
 If any of these conditions is not met, the Issuer MUST return an HTTP 400 error to the Attester,
 which will forward the error to the client.
 
-The Issuer determines the correct Issuer Key by using the decrypted Origin Name value and
-TokenRequest.token_key_id. If there is no Token Key whose truncated key ID matches
-TokenRequest.token_key_id, the Issuer MUST return an HTTP 401 error to Attester, which will
+The Issuer determines the correct Issuer Key by using the decrypted Origin Name and
+InnerTokenRequest.token_key_id values. If there is no Token Key whose truncated key ID matches
+InnerTokenRequest.token_key_id, the Issuer MUST return an HTTP 401 error to Attester, which will
 forward the error to the client. The Attester learns that the client's view of the Origin key
 was invalid in the process.
 
@@ -881,7 +862,7 @@ The Issuer completes the issuance flow by computing a blinded response as follow
 blind_sig = rsabssa_blind_sign(skP, InnerTokenRequest.blinded_msg)
 ~~~
 
-`skP` is the private key corresponding to Token Key, known only to the Issuer.
+`skP` is the private key corresponding to the per-Origin Token Key, known only to the Issuer.
 The Issuer then encrypts `blind_sig` to the Client as described in {{encap-issuer-to-client}},
 yielding `encrypted_token_response`.
 
@@ -1001,13 +982,14 @@ aad = concat(encode(1, keyID),
              encode(2, kdfID),
              encode(2, aeadID),
              encode(2, token_type),
-             encode(1, token_key_id),
+             encode(Npk, request_key),
              encode(32, issuer_encap_key_id))
 padded_origin_name = pad(origin_name)
-input = concat(encode(Nk, blinded_msg),
-               encode(49, request_key),
-               encode(len(padded_origin_name), padded_origin_name))
-ct = context.Seal(aad, input)
+inner_token_request_enc = concat(encode(1, token_key_id),
+                                 encode(Nk, blinded_msg),
+                                 encode(2, len(padded_origin_name)),
+                                 encode(len(padded_origin_name), padded_origin_name))
+ct = context.Seal(aad, inner_token_request_enc)
 encrypted_token_request = concat(enc, ct)
 ~~~
 
@@ -1023,14 +1005,14 @@ aad = concat(encode(1, keyID),
              encode(2, kdfID),
              encode(2, aeadID),
              encode(2, token_type),
-             encode(1, token_key_id),
+             encode(Npk, request_key),
              encode(32, issuer_encap_key_id))
 context = SetupBaseR(enc, skI, "TokenRequest")
-origin_token_request, error = context.Open(aad, ct)
+inner_token_request_enc, error = context.Open(aad, ct)
 ~~~
 
-The `InnerTokenRequest.blinded_msg` and `InnerTokenRequest.request_key` values, along
-with the unpadded `origin_name` value, are used by the Issuer as described in {{request-two}}.
+The `InnerTokenRequest.blinded_msg`, `InnerTokenRequest.token_key_id`, and unpadded `origin_name`
+values are used by the Issuer as described in {{request-two}}.
 
 ## Issuer to Client Encapsulation {#encap-issuer-to-client}
 
@@ -1189,7 +1171,7 @@ In pseudocode, this is as follows:
 
 ~~~
 context = concat(token_type,
-                 token_key_id,
+                 request_key,
                  issuer_encap_key_id,
                  encode(2, len(encrypted_token_request)),
                  encrypted_token_request)
@@ -1460,14 +1442,14 @@ identity (as known to the Attester) to the Origin, especially if repeated over m
 
 ## Token Key Management
 
-Issuers SHOULD generate a new (Token Key, Issuer Origin Secret) regularly, and
+Issuers SHOULD generate new (Token Key, Issuer Origin Secret) values regularly, and
 SHOULD maintain old and new secrets to allow for graceful updates. The RECOMMENDED
 rotation interval is two times the length of the policy window for that
 information. During generation, issuers must ensure the `token_key_id` (the 8-bit
 prefix of SHA256(Token Key)) is different from all other `token_key_id`
-values for that origin currently in rotation. One way to ensure this uniqueness
+values for that Origin currently in rotation. One way to ensure this uniqueness
 is via rejection sampling, where a new key is generated until its `token_key_id` is
-unique among all currently in rotation for the origin.
+unique among all currently in rotation for the Origin.
 
 # IANA considerations
 
@@ -1550,8 +1532,6 @@ in the "Permanent Message Header Field Names" <[](https://www.iana.org/assignmen
     | Sec-Token-Client        |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
     | Sec-Token-Request-Blind |   http   |  std   | This document |
-    +-------------------------+----------+--------+---------------+
-    | Sec-Token-Request-Key   |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
     | Sec-Token-Limit         |   http   |  std   | This document |
     +-------------------------+----------+--------+---------------+
