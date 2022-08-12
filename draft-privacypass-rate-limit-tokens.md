@@ -1171,7 +1171,7 @@ In pseudocode, this is as follows:
 
 ~~~
 context = concat(token_type,
-                 token_key_id,
+                 request_key,
                  issuer_encap_key_id,
                  encode(2, len(encrypted_token_request)),
                  encrypted_token_request)
