@@ -1104,18 +1104,19 @@ and {{attester-output-anon-issuer-origin-id}} describes the final Attester step 
 computing the client-origin index.
 
 The index computation is based on a signature scheme with key blinding and unblinding
-support, denoted BKS, as described in {{KEYBLINDING}}. Such a scheme has the following
-functions:
+support, denoted BKS, as described in {{Section 3 of KEYBLINDING}}. Such a scheme has the
+following functions:
 
 - BKS-KeyGen(): Generate a random private and public key pair (sk, pk).
 - BKS-BlindKeyGen(): Generate a random blinding key bk.
-- BKS-BlindPublicKey(pk, bk): Produce a blinded public key based on the input public
-  key pk and blind key bk according to {{KEYBLINDING}}, Section 6.1.
+- BKS-BlindPublicKey(pk, bk, ctx): Produce a blinded public key based on the input public
+  key pk, blind key bk, and context ctx.
+- BKS-UnblindPublicKey(pk, bk, ctx): Produce an unblinded public key based on the input
+  blinded public key pk, blind bk, and context ctx.
 - BKS-Verify(pk, msg, sig): Verify signature sig over input message msg against the
   public key pk, producing a boolean value indicating success.
-- BKS-BlindKeySign(sk_sign, sk_blind, msg): Sign input message msg with signing key sk_sign and
-  blind key sk_blind according to {{KEYBLINDING}}, Section 6.2, and produce a signature of size
-  `Nsig` bytes.
+- BKS-BlindKeySign(sk_sign, sk_blind, ctx, msg): Sign input message msg with signing key sk_sign, blind
+  key sk_blind, and context ctx and produce a signature of size `Nsig` bytes.
 - BKS-SerializePrivatekey(sk): Serialize a private key to a byte string of length `Nsk`.
 - BKS-DeserializePrivatekey(buf): Attempt to deserialize a private key from an `Nsk`-byte
   string buf. This function can fail if buf does not represent a valid private key.
@@ -1148,7 +1149,8 @@ In pseudocode, this is as follows:
 
 ~~~
 sk_blind = BKS-BlindKeyGen()
-blinded_key = BKS-BlindPublicKey(pk_sign, sk_blind)
+ctx = concat(encode(2, token_type)), "ClientBlind")
+blinded_key = BKS-BlindPublicKey(pk_sign, sk_blind, ctx)
 request_key = BKS-SerializePublicKey(blinded_key)
 request_blind = BKS-SerializePrivatekey(sk_blind)
 ~~~
@@ -1170,12 +1172,13 @@ values, this signature process works as follows:
 In pseudocode, this is as follows:
 
 ~~~
-context = concat(token_type,
+message = concat(token_type,
                  request_key,
                  issuer_encap_key_id,
                  encode(2, len(encrypted_token_request)),
                  encrypted_token_request)
-request_signature = BKS-BlindKeySign(sk_sign, sk_blind, context)
+ctx = concat(encode(2, token_type)), "ClientBlind")
+request_signature = BKS-BlindKeySign(sk_sign, sk_blind, ctx, message)
 ~~~
 
 ## Attester Behavior (Client Request Validation) {#attester-anon-issuer-origin-id}
@@ -1195,7 +1198,8 @@ In pseudocode, this is as follows:
 ~~~
 blind_key = BKS-DeserializePublicKey(request_key)
 sk_blind = BKS-DeserializePrivatekey(request_blind)
-pk_blind = BKS-BlindPublicKey(pk_sign, sk_blind)
+ctx = concat(encode(2, token_type)), "ClientBlind")
+pk_blind = BKS-BlindPublicKey(pk_sign, sk_blind, ctx)
 if pk_blind != blind_key:
   raise InvalidParameterError
 
@@ -1226,7 +1230,8 @@ valid = BKS-Verify(blind_key, context, request_signature)
 if not valid:
   raise InvalidSignatureError
 
-evaluated_key = BKS-BlindPublicKey(request_key, sk_origin)
+ctx = concat(encode(2, token_type)), "IssuerBlind")
+evaluated_key = BKS-BlindPublicKey(request_key, sk_origin, ctx)
 index_key = BKS-SerializePublicKey(evaluated_key)
 ~~~
 
@@ -1245,7 +1250,8 @@ In pseudocode, this is as follows:
 
 ~~~
 evaluated_key = BKS-DeserializePublicKey(index_key)
-unblinded_key = BKS-UnblindPublicKey(evaluated_key, sk_blind)
+ctx = concat(encode(2, token_type)), "ClientBlind")
+unblinded_key = BKS-UnblindPublicKey(evaluated_key, sk_blind, ctx)
 
 index_result = BKS-SerializePublicKey(unblinded_key)
 pk_encoded = BKS-SerializePublicKey(pk_sign)
@@ -1474,12 +1480,14 @@ hash function.
 
 - BKS-KeyGen(): Generate a random ECDSA private and public key pair (sk, pk).
 - BKS-BlindKeyGen(): Generate a random ECDSA private key bk.
-- BKS-BlindPublicKey(pk, bk): Produce a blinded public key based on the input public
-  key pk and blind bk according to {{KEYBLINDING}}, Section 6.1.
+- BKS-BlindPublicKey(pk, bk, ctx): Produce a blinded public key based on the input public
+  key pk, blind bk, and context ctx according to {{KEYBLINDING}}, Section 6.1.
+- BKS-UnblindPublicKey(pk, bk, ctx): Produce an unblinded public key based on the input
+  blinded public key pk, blind bk, and context ctx according to {{KEYBLINDING}}, Section 6.1.
 - BKS-Verify(pk, msg, sig): Verify the DER-encoded {{X690}} BKS-Sig-Value signature
   sig over input message msg against the ECDSA public key pk, producing a boolean value indicating success.
-- BKS-BlindKeySign(sk_sign, sk_blind, msg): Sign input message msg with signing key sk_sign and
-  blind sk_blind according to {{KEYBLINDING}}, Section 6.2, and serializes the resulting signature
+- BKS-BlindKeySign(sk_sign, sk_blind, ctx, msg): Sign input message msg with signing key sk_sign, blind sk_blind,
+  and context ctx according to {{KEYBLINDING}}, Section 6.2, and serializes the resulting signature
   pair (r, s) in "raw" form, i.e., as the concatenation of two 48-byte, big endian scalars,
   yielding an `Nsig=96` byte signature.
 - BKS-SerializePrivatekey(sk): Serialize an ECDSA private key using the Field-Element-to-Octet-String
@@ -1506,13 +1514,15 @@ Ed25519 as described in {{!RFC8032}}.
   sk is randomly generated 32 bytes (See {{?RFC4086}} for information about randomness
   generation) and pk is computed according to {{RFC8032, Section 5.1.5}}.
 - BKS-BlindKeyGen(): Generate and output 32 random bytes.
-- BKS-BlindPublicKey(pk, bk): Produce a blinded public key based on the input public
-  key pk and blind bk according to {{KEYBLINDING, Section 5.1}}.
+- BKS-BlindPublicKey(pk, bk, ctx): Produce a blinded public key based on the input public
+  key pk, blind bk, and context ctx according to {{KEYBLINDING, Section 5.1}}.
+- BKS-UnblindPublicKey(pk, bk, ctx): Produce an unblinded public key based on the input
+  blinded public key pk, blind bk, and context ctx according to {{KEYBLINDING}}, Section 5.1.
 - BKS-Verify(pk, msg, sig): Verify the signature sig over input message msg against
   the Ed25519 public key pk, as defined in {{RFC8032, Section 5.1.7}}, producing a
   boolean value indicating success.
-- BKS-BlindKeySign(sk_sign, sk_blind, msg): Sign input message msg with signing key sk_sign and
-  blind sk_blind according to {{KEYBLINDING, Section 5.2}}, yielding an `Nsig=64` byte signature.
+- BKS-BlindKeySign(sk_sign, sk_blind, ctx, msg): Sign input message msg with signing key sk_sign, blind
+  sk_blind, and context ctx according to {{KEYBLINDING, Section 5.2}}, yielding an `Nsig=64` byte signature.
 - BKS-SerializePrivatekey(sk): Identity function which outputs sk as an `Nsk=32` byte buffer.
 - BKS-DeserializePrivatekey(buf): Identity function which outputs buf interpreted as `sk`.
 - BKS-SerializePublicKey(pk): Identity function which outputs pk as an `Npk=32` byte buffer.
