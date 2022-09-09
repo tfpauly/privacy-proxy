@@ -1,6 +1,6 @@
 ---
 title: The IP Geolocation HTTP Client Hint
-abbrev: Geohash CH
+abbrev: IP-Geo Client Hint
 docname: draft-pauly-httpbis-geoip-hint-latest
 category: exp
 
