@@ -2,10 +2,6 @@
 
 This repository collects various specifications and Internet drafts that will be supported by privacy proxies.
 
-## Rate-Limited Token Issuance 
-
-* [Rate-Limited Token Issuance](https://tfpauly.github.io/privacy-proxy/#go.draft-privacypass-rate-limit-tokens.html)
-
 ## Geo IP HTTP Client Hint
 
 * [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geoip-hint.html)
