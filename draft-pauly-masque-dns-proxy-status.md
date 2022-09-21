@@ -85,7 +85,7 @@ Proxy-Status: proxy.example.net; next-hop=target.example.com
 ~~~
 
 indicates that proxy.example.net, which used target.example.com as the next hop for this request, used
-the IP address "12.12.12.12" to connect to the target, and encountered the CNAME "tracker.example.com."
+the IP address "2001:db8::1" to connect to the target, and encountered the CNAME "tracker.example.com."
 in DNS resolution chain. Note that while this example includes both the next-hop and dns-used
 parameters, dns-used can be included without including next-hop.
 
