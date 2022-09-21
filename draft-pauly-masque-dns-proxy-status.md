@@ -81,7 +81,7 @@ For example:
 
 ~~~ example
 Proxy-Status: proxy.example.net; next-hop=target.example.com
-    dns-used="12.12.12.12,tracker.example.com."
+    dns-used="2001:db8::1,tracker.example.com."
 ~~~
 
 indicates that proxy.example.net, which used target.example.com as the next hop for this request, used
