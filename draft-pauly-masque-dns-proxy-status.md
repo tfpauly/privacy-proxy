@@ -74,7 +74,7 @@ The dns-used parameter's value is a String that contains one or more IP addresse
 DNS names in a comma-separated list. The first item in the list SHOULD be the IP address
 that was resolved using DNS and was used to open connectivity to the next hop. The
 remaining items in the list SHOULD include all names received in CNAME records {{!DNS=RFC1912}} or
-AliasMode SVCB records {{!SVCB=I-D.ietf-dnsop-svcb-https}} during the course of resolving
+AliasMode SVCB or HTTPS records {{!SVCB=I-D.ietf-dnsop-svcb-https}} during the course of resolving
 the address.
 
 For example:
