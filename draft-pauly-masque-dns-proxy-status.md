@@ -75,7 +75,8 @@ DNS names in a comma-separated list. The first item in the list SHOULD be the IP
 that was resolved using DNS and was used to open connectivity to the next hop. The
 remaining items in the list SHOULD include all names received in CNAME records {{!DNS=RFC1912}} or
 AliasMode SVCB or HTTPS records {{!SVCB=I-D.ietf-dnsop-svcb-https}} during the course of resolving
-the address.
+the address. Since DNS names can include comma (`,`) characters in them, any commas that appear
+in a DNS names MUST be represented using a percent-encoded `%2C` value instead.
 
 For example:
 
