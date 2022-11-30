@@ -2,9 +2,9 @@
 
 This repository collects various specifications and Internet drafts that will be supported by privacy proxies.
 
-## HTTP Proxy-Status Parameter for DNS Information
+## HTTP Proxy-Status Parameter for Next-Hop Aliases
 
-* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-masque-dns-proxy-status.html)
+* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-alias-proxy-status.html)
 
 ## Geo IP HTTP Client Hint
 
