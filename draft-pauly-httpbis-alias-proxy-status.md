@@ -56,12 +56,12 @@ by including the list of names in a new `next-hop-aliases` Proxy-Status paramete
 
 The `next-hop-aliases` parameter's value is a String that contains one or more DNS names in
 a comma-separated list. The items in the list include all names received in CNAME
-records {{!DNS=RFC1912}} or AliasMode SVCB or HTTPS records {{!SVCB=I-D.ietf-dnsop-svcb-https}}
-during the course of resolving the next hop's hostname using DNS. Since DNS names can include
-comma (`,`) characters in them, any commas that appear in a DNS names MUST be represented
-using a percent-encoded `%2C` value instead. The aliases SHOULD appear in the order in which
-they were received in DNS; that is, if a name has a CNAME record with a first alias, which
-has a CNAME record for a second alias, the aliases should appear in that order.
+records {{!DNS=RFC1912}} during the course of resolving the next hop's hostname using DNS.
+Since DNS names can include comma (`,`) characters in them, any commas that appear in a DNS
+names MUST be represented using a percent-encoded `%2C` value instead. The aliases SHOULD
+appear in the order in which they were received in DNS; that is, if a name has a CNAME record
+with a first alias, which has a CNAME record for a second alias, the aliases should appear
+in that order.
 
 For example:
 
