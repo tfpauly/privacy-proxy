@@ -85,7 +85,7 @@ in which this parameter is not present.
 The `next-hop-aliases` parameter does not include any DNSSEC information or imply that DNSSEC was used.
 The information included in the parameter can only be trusted to be valid insofar as the client
 trusts its proxy to provide accurate information. This information is intended to be used as
-a hint, and SHOULD NOT be used for making security decisions about the identity resource access
+a hint, and SHOULD NOT be used for making security decisions about the identity of a resource accessed
 through the proxy.
 
 # IANA Considerations
