@@ -54,12 +54,12 @@ This document defines two mechanisms to use PvDs to help clients understand how
 to use proxies:
 
 1. A way to fetch PvD Additional Information associated with a proxy URI, which
-allows defining a limisted set of DNS zones that are accessible through the
+allows defining a limited set of DNS zones that are accessible through the
 proxy {{proxy-pvd}}.
 
-1. A way to associate one or proxy URIs with a known PvD to allow clients to learn
-about other proxies when they already know about a proxy PvD or network-provided
-PvD {{proxy-enumeration}}.
+1. A way to associate one or more proxy URIs with a known PvD to allow clients to
+learn about other proxies when they already know about a proxy PvD or
+network-provided PvD {{proxy-enumeration}}.
 
 ## Background
 
