@@ -94,12 +94,11 @@ accessible through the proxy.
 
 ## Fetching proxy PvDs
 
-Some HTTP forward proxies, like those used for UDP and IP proxying, are identified
-by URI templates that contains paths, such as
-"https://proxy.example.org/masque{?target_host,target_port}". For such
-cases, a client can fetch the PvD Additional Information by issuing a GET request
-{{Section 9.3.1 of HTTP}} to the proxy URI, with template variables removed,
-and setting the media type "application/pvd+json" {{PVDDATA}} in an Accept header.
+In order to fetch PvD Additional Information associated with a proxy, a client
+can issue an HTTP GET request for the well-known PvD URI (".well-known/pvd") {{PVDDATA}}
+and the host authority of the proxy. This is applicable for both proxies that are identified
+by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
+that are identified by a URL.
 
 For example, a client would issue the following request for the PvD associated
 with "https://proxy.example.org/masque{?target_host,target_port}":
@@ -108,21 +107,24 @@ with "https://proxy.example.org/masque{?target_host,target_port}":
 :method = GET
 :scheme = https
 :authority = proxy.example.org
-:path = /masque
+:path = /.well-known/pvd
 accept = application/pvd+json
 ~~~
 
-CONNECT forward proxies that proxy TCP streams do not contain a path. For such cases,
-a client can fetch the PvD Additional Information by issuing a GET request to the path
-"/". For example:
+For a HTTP CONNECT proxy on "proxy.example.org:8080", the client would send the following
+request:
 
 ~~~
 :method = GET
 :scheme = https
-:authority = proxy.example.org
-:path = /
+:authority = proxy.example.org:8080
+:path = /.well-known/pvd
 accept = application/pvd+json
 ~~~
+
+Note that all proxies that are colocated on the same host and port share the same PvD
+Additional Information. Proxy deployments that need separate PvD configuration properties
+SHOULD use different hosts.
 
 ## Proxy PvD contents
 
@@ -168,7 +170,7 @@ with the following request:
 :method = GET
 :scheme = https
 :authority = proxy.example.org
-:path = /masque
+:path = /.well-known/pvd
 accept = application/pvd+json
 ~~~
 
@@ -217,29 +219,13 @@ in addition to the known proxy.
 
 Such cases are useful for informing clients of related proxies as a discovery
 method, with the assumption that the client already is aware of one proxy.
-
-## Associating proxies with a PvD identifier
-
-When a PvD that contains the `proxies` key is fetched from the well-known
-PvD URI (".well-known/pvd"), the list allows enumeration of proxies
-that apply to the entire PvD identifier. There are two use cases this can
-support: configuring proxies from an FQDN and configuring proxies from a
-network.
-
-### Proxy configuration from a FQDN
-
 Many historical methods of configuring a proxy only allow configuring
 a single FQDN hostname for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
 URIs that support non-default protocols, such as {{CONNECTUDP}} and
 {{CONNECTIP}}.
 
-For example, if a user has configured a proxy with the name
-"proxy.example.com", the client can fetch
-"https://proxy.example.com/.well-known/pvd" to detect a list of
-associated proxies.
-
-### Network-specified proxies
+## Network-specified proxies
 
 {{PVDDATA}} defines how PvD Additional Information is discovered based
 on network advertisements using Router Advertisements {{?RFC4861}}. A network
