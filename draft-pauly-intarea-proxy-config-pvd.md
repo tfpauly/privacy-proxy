@@ -26,9 +26,8 @@ author:
 --- abstract
 
 This document defines a mechanism for accessing provisioning domain information
-associated with a proxy, such a list of DNS zones that are accessible via an HTTP
-CONNECT proxy. It also defines a way to enumerate proxies that are associated with
-a known provisioning domain.
+associated with a proxy, such as other proxy URIs that support different protocols
+and a list of DNS zones that are accessible via a proxy.
 
 --- middle
 
@@ -55,16 +54,19 @@ configuration details {{Section 2 of PVD}}. {{!PVDDATA=RFC8801}} defines a JSON
 {{!JSON=RFC8259}} format for describing Provisioning Domain Additional Information,
 which is an extensible dictionary of properties of the Provisioning Domain.
 
-This document defines two mechanisms to use PvDs to help clients understand how
+This document defines several mechanisms to use PvDs to help clients understand how
 to use proxies:
 
-1. A way to fetch PvD Additional Information associated with a proxy URI, which
-allows defining a limited set of DNS zones that are accessible through the
-proxy {{proxy-pvd}}.
+1. A way to fetch PvD Additional Information associated with a known proxy URI ({{proxy-pvd}})
 
-1. A way to associate one or more proxy URIs with a known PvD to allow clients to
-learn about other proxies when they already know about a proxy PvD or
-network-provided PvD {{proxy-enumeration}}.
+1. A way to list one or more proxy URIs in a PvD, allowing clients to
+learn about other proxy options given a known proxy ({{proxy-enumeration}}).
+
+1. A way to define a limited set of DNS zones that are accessible through the
+proxy ({{split-dns}}).
+
+Additionally, this document partly describes how these mechanisms might be used
+to discover proxies associated with a network ({{network-proxies}}).
 
 ## Background
 
@@ -91,16 +93,13 @@ on executing Javascript scripts, which can open up security vulnerabilities.
 
 {::boilerplate bcp14}
 
-# Accessing PvD Additional Information for proxies {#proxy-pvd}
+# Fetching PvD Additional Information for proxies {#proxy-pvd}
 
 This document defines a way to fetch PvD Additional Information associated with
-a particular proxy resource. This PvD describes the properties of the network
-accessible through the proxy.
-
-## Fetching proxy PvDs
+a proxy. This PvD describes the properties of the network accessible through the proxy.
 
 In order to fetch PvD Additional Information associated with a proxy, a client
-can issue an HTTP GET request for the well-known PvD URI (".well-known/pvd") {{PVDDATA}}
+issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") {{PVDDATA}}
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
 that are identified by a URL.
@@ -131,15 +130,69 @@ Note that all proxies that are colocated on the same host and port share the sam
 Additional Information. Proxy deployments that need separate PvD configuration properties
 SHOULD use different hosts.
 
-## Proxy PvD contents
-
 PvD Additional Information is required to contain the "identifier", "expires", and
-"prefixes" keys.
+"prefixes" keys. For proxy PvDs as defined in this document, the "identifier" MUST
+match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.
 
-For proxy PvDs as defined in this document, the "identifier" MUST match the hostname
-of the HTTP proxy. The "prefixes" array SHOULD be empty by default.
+# Enumerating proxies within a PvD {#proxy-enumeration}
 
-### Split DNS accessibility
+This document defines a new PvD Additional Information key, `proxies`, that
+is an array of strings that is a list of proxy URIs (or URI templates
+{{!URITEMPLATE=RFC6570}}) that are available as part of a PvD. The new
+key is registered in {{iana}}.
+
+The kind of proxy is implied by the URI scheme and any template variables.
+For example, since UDP proxying {{CONNECTUDP}} has the URI template variables
+`target_host` and `target_port`, the URI
+"https://proxy.example.org:4443/masque{?target_host,target_port}" implies
+that the proxy supports UDP proxying.
+
+When a PvD that contains the `proxies` key is fetched from a known proxy
+using the method described in {{proxy-pvd}} the proxies list describes
+equivalent proxies (potentially supporting other protocols) that can be used
+in addition to the known proxy.
+
+Such cases are useful for informing clients of related proxies as a discovery
+method, with the assumption that the client already is aware of one proxy.
+Many historical methods of configuring a proxy only allow configuring
+a single FQDN hostname for the proxy. A client can attempt to fetch the
+PvD information from the well-known URI to learn the list of complete
+URIs that support non-default protocols, such as {{CONNECTUDP}} and
+{{CONNECTIP}}.
+
+## Example
+
+Given a known HTTP CONNECT proxy FQDN, "proxy.example.org", a client could
+request PvD Additional Information with the following request:
+
+~~~
+:method = GET
+:scheme = https
+:authority = proxy.example.org
+:path = /.well-known/pvd
+accept = application/pvd+json
+~~~
+
+If the proxy has a PvD definition for this FQDN, it would return the following
+response to indicate a PvD that has two related proxy URIs.
+
+~~~
+:status = 200
+content-type = application/pvd+json
+content-length = 222
+
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2023-06-23T06:00:00Z",
+  "prefixes": [],
+  "proxies": ["https://proxy.example.org","https://proxy.example.org/masque{?target_host,target_port}"]
+}
+~~~
+
+The client would learn the URI template of the proxy that supports UDP using {{CONNECTUDP}},
+at "https://proxy.example.org/masque{?target_host,target_port}".
+
+# Split DNS information for proxies {#split-dns}
 
 Split DNS configurations are cases where only a subset of domains is routed through
 a VPN tunnel or a proxy. For example, IKEv2 defines split DNS configuration in
@@ -151,11 +204,11 @@ configuration.
 {{Section 4.3 of PVDDATA}} defines the optional `dnsZones` key, which contains
 searchable and accessible DNS zones as an array of strings.
 
-When present in a PvD Additional Information dictionary that is retrieved using a GET
-request to the proxy URI as described in {{proxy-pvd}}, domains in the `dnsZones`
-array indicate specific zones that are accessible using the proxy. If a hostname is
-not included in the enumerated zones, then a client SHOULD assume that the hostname
-will not be accessible through the proxy.
+When present in a PvD Additional Information dictionary that is retrieved for a proxy
+as described in {{proxy-pvd}}, domains in the `dnsZones` array indicate specific zones
+that are accessible using the proxy. If a hostname is not included in the enumerated
+zones, then a client SHOULD assume that the hostname will not be accessible through the
+proxy.
 
 Entries listed in `dnsZones` MUST NOT expand the set of domains that a client is
 willing to send to a particular proxy. The list can only narrow the list of domains
@@ -198,81 +251,22 @@ content-length = 135
 The client could then choose to use this proxy only for accessing names that fall
 within the "internal.example.org" zone.
 
-# Enumerating proxies within a PvD {#proxy-enumeration}
-
-PvD Additional Information can also be used to list proxies that
-are associated with a particular PvD. This association represents
-availability of a proxy, but does not indicate any policy of the PvD that
-requires clients to use a proxy or not.
-
-This document defines a new PvD Additional Information key, `proxies`, that
-is an array of strings that is a list of proxy URIs (or URI templates
-{{!URITEMPLATE=RFC6570}}). The new key is registered in {{iana}}.
-
-The kind of proxy is implied by the URI scheme and any template variables.
-For example, since UDP proxying {{CONNECTUDP}} has the URI template variables
-`target_host` and `target_port`, the URI
-"https://proxy.example.org:4443/masque{?target_host,target_port}" implies
-that the proxy supports UDP proxying.
-
-## Associating proxies with known proxies
-
-When a PvD that contains the `proxies` key is fetched from a known proxy URI,
-using the method described in {{proxy-pvd}}, the proxies list describes
-equivalent proxies (potentially supporting other protocols) that can be used
-in addition to the known proxy.
-
-Such cases are useful for informing clients of related proxies as a discovery
-method, with the assumption that the client already is aware of one proxy.
-Many historical methods of configuring a proxy only allow configuring
-a single FQDN hostname for the proxy. A client can attempt to fetch the
-PvD information from the well-known URI to learn the list of complete
-URIs that support non-default protocols, such as {{CONNECTUDP}} and
-{{CONNECTIP}}.
-
-## Network-specified proxies
+# Discovering proxies from network PvDs {#network-proxies}
 
 {{PVDDATA}} defines how PvD Additional Information is discovered based
 on network advertisements using Router Advertisements {{?RFC4861}}. A network
 defining its configuration via PvD information can include the `proxies`
-key to inform clients of a list of proxies available on the network.
+key ({{proxy-enumeration}}) to inform clients of a list of proxies available
+on the network.
 
-Policy for whether or not clients use the proxies is implementation-specific
-and might depend on other keys defined in the PvD Additional Information.
+This association of proxies with the network's PvD can be used as a mechanism
+to discover proxies, as an alternative to PAC files. However, client systems MUST
+NOT automatically send traffic over proxies advertised in this way without
+explicit configuration, policy, or user permission. For example, a client
+can use this mechanism to choose between known proxies, such as if the client was
+already proxying traffic and has multiple options to choose between.
 
-## Example
-
-Given a known FQDN "company.example.org", which was discovered
-from a PvD Router Advertisement option, a client could request PvD
-additional information with the following request:
-
-~~~
-:method = GET
-:scheme = https
-:authority = company.example.org
-:path = /.well-known/pvd
-accept = application/pvd+json
-~~~
-
-If the proxy has a PvD definition for this FQDN, it could return the following
-response to indicate a PvD that has two related proxy URIs.
-
-~~~
-:status = 200
-content-type = application/pvd+json
-content-length = 222
-
-{
-  "identifier": "company.example.org.",
-  "expires": "2023-06-23T06:00:00Z",
-  "prefixes": ["2001:db8:cafe::/48"],
-  "proxies": ["https://proxy.example.org","https://proxy.example.org/masque{?target_host,target_port}"]
-}
-~~~
-
-The client could then choose to use the available proxies, and could
-look up the PvD Additional Information files on those URIs, depending on client
-policy for using proxies.
+Further security and experience considerations are needed for these cases.
 
 # Security Considerations {#sec-considerations}
 
@@ -291,4 +285,4 @@ Description: Array of proxy URIs associated with this PvD
 
 Type: Array of strings
 
-Example: ["https://proxy.example.com", "https://proxy.example.com/masque{?target_host,tcp_port}"]
+Example: ["https://proxy.example.com", "https://proxy.example.com/masque{?target_host,target_port}"]
