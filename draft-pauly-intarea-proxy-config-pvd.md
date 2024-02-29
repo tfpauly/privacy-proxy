@@ -321,7 +321,10 @@ Description: Array of proxy dictionaries associated with this PvD
 
 Type: Array of dictionaries
 
-Example: [ { "protocol": "connect", "uri":"https://proxy.example.com" } ]
+Example: [ {
+  "protocol": "connect",
+  "uri": "https://proxy.example.com"
+} ]
 
 ## New PvD Proxy Information Registry {#proxy-info-iana}
 
