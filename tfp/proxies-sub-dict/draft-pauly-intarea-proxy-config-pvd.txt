@@ -83,9 +83,9 @@ Table of Contents
    HTTP proxies that use the CONNECT method Section 9.3.6 of [HTTP]
    (often referred to as "forward" proxies) allow clients to open
    connections to hosts via a proxy.  These typically allow for TCP
-   stream proxying, but can also support UDP proxying [CONNECTUDP] and
-   IP packet proxying [CONNECTIP].  Such proxies are not just defined as
-   hostnames and ports, but can use URI templates [URITEMPLATE].
+   stream proxying, but can also support UDP proxying [CONNECT-UDP] and
+   IP packet proxying [CONNECT-IP].  Such proxies are not just defined
+   as hostnames and ports, but can use URI templates [URITEMPLATE].
 
    In order to make use of multiple related proxies, clients need a way
    to understand which proxies are associated with one another.
@@ -238,11 +238,11 @@ Table of Contents
                +----------------+-------------------------+
                | connect        | Section 9.3.6 of [HTTP] |
                +----------------+-------------------------+
-               | connect-udp    | [CONNECTUDP]            |
+               | connect-udp    | [CONNECT-UDP]           |
                +----------------+-------------------------+
-               | connect-ip     | [CONNECTIP]             |
+               | connect-ip     | [CONNECT-IP]            |
                +----------------+-------------------------+
-               | connect-tcp    | [CONNECTTCP]            |
+               | connect-tcp    | [CONNECT-TCP]           |
                +----------------+-------------------------+
 
                                  Table 2
@@ -261,7 +261,7 @@ Table of Contents
    only allow configuring a single FQDN hostname for the proxy.  A
    client can attempt to fetch the PvD information from the well-known
    URI to learn the list of complete URIs that support non-default
-   protocols, such as [CONNECTUDP] and [CONNECTIP].
+   protocols, such as [CONNECT-UDP] and [CONNECT-IP].
 
 3.1.  Example
 
@@ -298,7 +298,7 @@ content-length = 222
 }
 
    The client would learn the URI template of the proxy that supports
-   UDP using [CONNECTUDP], at "https://proxy.example.org/
+   UDP using [CONNECT-UDP], at "https://proxy.example.org/
    masque{?target_host,target_port}".
 
 4.  Split DNS information for proxies
@@ -438,20 +438,20 @@ content-length = 222
 
 8.1.  Normative References
 
-   [CONNECTIP]
+   [CONNECT-IP]
               Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,
               Kühlewind, M., and M. Westerlund, "Proxying IP in HTTP",
               RFC 9484, DOI 10.17487/RFC9484, October 2023,
               <https://www.rfc-editor.org/rfc/rfc9484>.
 
-   [CONNECTTCP]
+   [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
               httpbis-connect-tcp-02, 7 December 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
               connect-tcp-02>.
 
-   [CONNECTUDP]
+   [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
               DOI 10.17487/RFC9298, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9298>.

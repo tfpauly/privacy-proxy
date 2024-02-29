@@ -1203,8 +1203,8 @@ and a list of DNS zones that are accessible via a proxy.<a href="#section-abstra
 <p id="section-1-1">HTTP proxies that use the CONNECT method <span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>
 (often referred to as "forward" proxies) allow clients to open connections to
 hosts via a proxy. These typically allow for TCP stream proxying, but can also support
-UDP proxying <span>[<a href="#CONNECTUDP" class="cite xref">CONNECTUDP</a>]</span> and IP packet proxying
-<span>[<a href="#CONNECTIP" class="cite xref">CONNECTIP</a>]</span>. Such proxies are not just defined as
+UDP proxying <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span> and IP packet proxying
+<span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>. Such proxies are not just defined as
 hostnames and ports, but can use URI templates <span>[<a href="#URITEMPLATE" class="cite xref">URITEMPLATE</a>]</span>.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">In order to make use of multiple related proxies, clients need a way to understand
 which proxies are associated with one another.<a href="#section-1-2" class="pilcrow">¶</a></p>
@@ -1382,19 +1382,19 @@ use the <code>:protocol</code> pseudo-header), the <code>protocol</code> value w
           <tr>
             <td class="text-left" rowspan="1" colspan="1">connect-udp</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <span>[<a href="#CONNECTUDP" class="cite xref">CONNECTUDP</a>]</span>
+              <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span>
 </td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">connect-ip</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <span>[<a href="#CONNECTIP" class="cite xref">CONNECTIP</a>]</span>
+              <span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>
 </td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">connect-tcp</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <span>[<a href="#CONNECTTCP" class="cite xref">CONNECTTCP</a>]</span>
+              <span>[<a href="#CONNECT-TCP" class="cite xref">CONNECT-TCP</a>]</span>
 </td>
           </tr>
         </tbody>
@@ -1410,8 +1410,8 @@ method, with the assumption that the client already is aware of one proxy.
 Many historical methods of configuring a proxy only allow configuring
 a single FQDN hostname for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
-URIs that support non-default protocols, such as <span>[<a href="#CONNECTUDP" class="cite xref">CONNECTUDP</a>]</span> and
-<span>[<a href="#CONNECTIP" class="cite xref">CONNECTIP</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
+URIs that support non-default protocols, such as <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span> and
+<span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <div id="example">
 <section id="section-3.1">
         <h3 id="name-example">
@@ -1453,7 +1453,7 @@ content-length = 222
 }
 </pre><a href="#section-3.1-4" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1-5">The client would learn the URI template of the proxy that supports UDP using <span>[<a href="#CONNECTUDP" class="cite xref">CONNECTUDP</a>]</span>,
+<p id="section-3.1-5">The client would learn the URI template of the proxy that supports UDP using <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span>,
 at "https://proxy.example.org/masque{?target_host,target_port}".<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1610,15 +1610,15 @@ Experts are requested to ensure that defined keys do not overlap in names or sem
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
-<dt id="CONNECTIP">[CONNECTIP]</dt>
+<dt id="CONNECT-IP">[CONNECT-IP]</dt>
         <dd>
 <span class="refAuthor">Pauly, T., Ed.</span>, <span class="refAuthor">Schinazi, D.</span>, <span class="refAuthor">Chernyakhovsky, A.</span>, <span class="refAuthor">Kühlewind, M.</span>, and <span class="refAuthor">M. Westerlund</span>, <span class="refTitle">"Proxying IP in HTTP"</span>, <span class="seriesInfo">RFC 9484</span>, <span class="seriesInfo">DOI 10.17487/RFC9484</span>, <time datetime="2023-10" class="refDate">October 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9484">https://www.rfc-editor.org/rfc/rfc9484</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="CONNECTTCP">[CONNECTTCP]</dt>
+<dt id="CONNECT-TCP">[CONNECT-TCP]</dt>
         <dd>
 <span class="refAuthor">Schwartz, B. M.</span>, <span class="refTitle">"Template-Driven HTTP CONNECT Proxying for TCP"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-connect-tcp-02</span>, <time datetime="2023-12-07" class="refDate">7 December 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-02">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-02</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="CONNECTUDP">[CONNECTUDP]</dt>
+<dt id="CONNECT-UDP">[CONNECT-UDP]</dt>
         <dd>
 <span class="refAuthor">Schinazi, D.</span>, <span class="refTitle">"Proxying UDP in HTTP"</span>, <span class="seriesInfo">RFC 9298</span>, <span class="seriesInfo">DOI 10.17487/RFC9298</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9298">https://www.rfc-editor.org/rfc/rfc9298</a>&gt;</span>. </dd>
 <dd class="break"></dd>
