@@ -102,7 +102,7 @@ In order to fetch PvD Additional Information associated with a proxy, a client
 issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") {{PVDDATA}}
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
-that are identified by a URI.
+that are identified by a URI or URI template.
 
 For example, a client would issue the following request for the PvD associated
 with "https://proxy.example.org/masque{?target_host,target_port}":
@@ -163,7 +163,7 @@ use the `:protocol` pseudo-header), the `protocol` value will match the Upgrade 
 
 | Proxy Protocol | Reference |
 | --- | --- |
-| socks | {{!SOCKS=RFC1928}} |
+| socks5 | {{!SOCKSv5=RFC1928}} |
 | connect | {{Section 9.3.6 of HTTP}} |
 | connect-udp | {{CONNECTUDP}} |
 | connect-ip | {{CONNECTIP}} |
