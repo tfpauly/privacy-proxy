@@ -4,34 +4,32 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>The IP Geolocation HTTP Client Hint</title>
+<title>HTTP Header Fields for Proxied SVCB Metadata</title>
 <meta content="Tommy Pauly" name="author">
-<meta content="David Schinazi" name="author">
 <meta content="
-       This documents defines an HTTP Client Hint that allows a client to share information
-about its IP Geolocation. This helps ensure that servers have information about location
-that is consistent with what a client expects and what other servers use. 
+       This document defines HTTP header fields for the passing Service Binding (SVCB) DNS metadata
+in HTTP responses. 
     " name="description">
-<meta content="xml2rfc 3.18.1" name="generator">
+<meta content="xml2rfc 3.19.4" name="generator">
 <meta content="Internet-Draft" name="keyword">
-<meta content="draft-pauly-httpbis-geoip-hint-latest" name="ietf.draft">
+<meta content="draft-proxied-svcb-headers-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.18.1
-    Python 3.11.5
-    ConfigArgParse 1.5.3
+  xml2rfc 3.19.4
+    Python 3.11.6
+    ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
-    platformdirs 3.11.0
+    platformdirs 4.2.0
     pycountry 22.3.5
-    PyYAML 6.0
+    PyYAML 6.0.1
     requests 2.31.0
-    setuptools 67.7.2
+    setuptools 68.2.2
     six 1.16.0
-    wcwidth 0.2.8
+    wcwidth 0.2.13
 -->
-<link href="draft-pauly-httpbis-geoip-hint.xml" rel="alternate" type="application/rfc+xml">
+<link href="draft-proxied-svcb-headers.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
 <style type="text/css">@font-face {
   font-family: 'Lora';
@@ -1027,12 +1025,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">IP-Geo Client Hint</td>
-<td class="right">October 2023</td>
+<td class="center">Proxied SVCB Headers</td>
+<td class="right">February 2024</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Pauly &amp; Schinazi</td>
-<td class="center">Expires 14 April 2024</td>
+<td class="left">Pauly</td>
+<td class="center">Expires 1 September 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1042,34 +1040,29 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">Network Working Group</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-pauly-httpbis-geoip-hint-latest</dd>
+<dd class="internet-draft">draft-proxied-svcb-headers-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-10-12" class="published">12 October 2023</time>
+<time datetime="2024-02-29" class="published">29 February 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
-<dd class="intended-status">Experimental</dd>
+<dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-04-14">14 April 2024</time></dd>
-<dt class="label-authors">Authors:</dt>
+<dd class="expires"><time datetime="2024-09-01">1 September 2024</time></dd>
+<dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
       <div class="author-name">T. Pauly</div>
-<div class="org">Apple Inc.</div>
-</div>
-<div class="author">
-      <div class="author-name">D. Schinazi</div>
-<div class="org">Google LLC</div>
+<div class="org">Apple, Inc.</div>
 </div>
 </dd>
 </dl>
 </div>
-<h1 id="title">The IP Geolocation HTTP Client Hint</h1>
+<h1 id="title">HTTP Header Fields for Proxied SVCB Metadata</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This documents defines an HTTP Client Hint that allows a client to share information
-about its IP Geolocation. This helps ensure that servers have information about location
-that is consistent with what a client expects and what other servers use.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document defines HTTP header fields for the passing Service Binding (SVCB) DNS metadata
+in HTTP responses.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
@@ -1098,7 +1091,7 @@ that is consistent with what a client expects and what other servers use.<a href
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 14 April 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 September 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1107,7 +1100,7 @@ that is consistent with what a client expects and what other servers use.<a href
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2023 IETF Trust and the persons identified as the
+            Copyright (c) 2024 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1136,35 +1129,27 @@ that is consistent with what a client expects and what other servers use.<a href
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-ip-geo-header" class="internal xref">IP Geo Header</a></p>
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-svcb-request-header-field" class="internal xref">SVCB Request Header Field</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-server-behavior" class="internal xref">Server Behavior</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-svcb-response-header-fields" class="internal xref">SVCB Response Header Fields</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-http-headers" class="internal xref">HTTP Headers</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-http-headers" class="internal xref">HTTP Headers</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
-                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
-                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1175,22 +1160,22 @@ that is consistent with what a client expects and what other servers use.<a href
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">HTTP Client Hints <span>[<a href="#RFC8942" class="cite xref">RFC8942</a>]</span> defines a convention for HTTP headers
-to communicate optional information from clients to servers as hints. This can be done
-conditionally based on if a server claims supports for a particular hint.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This document defines a client hint that can be used to send a IP geolocation entry that
-maps to the client's IP address. This location can be used to influence server behavior,
-such as by causing the server to return responses relevant to the client's location.
-The format of the IP geolocation entry is the same as that defined for IP geolocation
-feeds in <span>[<a href="#GEOFEED" class="cite xref">GEOFEED</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">This header is intended to be used to provide rough geolocation hints to servers that do
-not already have accurate or authoritative mappings for the IP addresses of clients. This
-can be particularly useful for cases where IP geolocation mappings have changed recently,
-or a client is using a VPN or proxy that may not be commonly recognized by servers.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">The mechanism for how a client learns the IP geolocation mapping to send is beyond the
-scope of this document. <span>[<a href="#RFC9092" class="cite xref">RFC9092</a>]</span> defines some mechanisms for discovery, but clients
-can also have other mechanisms (such as coordinating with a VPN or proxy that is assigning
-the client a tunnelled or proxied address) to learn what hint to sent.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-1">CONNECT <span>[<a href="#RFC7231" class="cite xref">RFC7231</a>]</span> and CONNECT-UDP <span>[<a href="#I-D.ietf-masque-connect-udp" class="cite xref">I-D.ietf-masque-connect-udp</a>]</span> are HTTP methods that
+clients may use to establish TCP or UDP flows to target servers. Once proxy servers establish
+these flows, proxy servers treat allocated flows as opaque byte or datagram streams respectively.
+Clients specify the target in authority-form (Section 5.3 of <span>[<a href="#RFC7230" class="cite xref">RFC7230</a>]</span>), including the name or
+IP address of the server along with a port number. When using a name instead of an IP address, the
+proxy server locally resolves the name to an IPv4 or IPv6 address with A or AAAA queries. The
+client does not see these A or AAAA answers, as they are only relevant to the proxy in establishing
+a connection to the target.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">In some circumstances, some DNS metadata may be useful to clients. This is especially true for
+information contained in Service Binding (SVCB or HTTPS) records <span>[<a href="#I-D.ietf-dnsop-svcb-https" class="cite xref">I-D.ietf-dnsop-svcb-https</a>]</span>.
+These records can influence client behavior even when clients are not directly interacting with
+target IP addresses. The records can be used to determine which application-level protocols
+are supported by an endpoint. These records also can include a TLS Encrypted Client Hello
+<span>[<a href="#I-D.ietf-tls-esni" class="cite xref">I-D.ietf-tls-esni</a>]</span> configuration, which can be used in protecting the end-to-end TLS handshake.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This document specifies HTTP header fields that proxy servers may use to relay information retrieved
+from SVCB records from proxy servers to clients when using CONNECT or CONNECT-UDP.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <div id="requirements">
 <section id="section-1.1">
         <h3 id="name-requirements">
@@ -1205,199 +1190,173 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 </div>
 </section>
 </div>
-<div id="ip-geo-header">
+<div id="svcb-params-request">
 <section id="section-2">
-      <h2 id="name-ip-geo-header">
-<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-ip-geo-header" class="section-name selfRef">IP Geo Header</a>
+      <h2 id="name-svcb-request-header-field">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-svcb-request-header-field" class="section-name selfRef">SVCB Request Header Field</a>
       </h2>
-<p id="section-2-1">The "Sec-CH-IP-Geo" is an Item Structured Field <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.
-The field's value is a String. The string uses the format defined in
-<span><a href="https://rfc-editor.org/rfc/rfc8805#section-2.1.1" class="relref">Section 2.1.1</a> of [<a href="#GEOFEED" class="cite xref">GEOFEED</a>]</span>, with the IP Prefix element removed. Thus, this
-contains a comma-separated list of Alpha2code, Region, and City. The
-value SHOULD NOT contain a Postal Code.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">For example, the header for an entry "192.0.2.5,US,US-AL,Alabaster" would be:<a href="#section-2-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2-3">
+<p id="section-2-1">Clients can request SVCB parameters with the Structured Header
+<span>[<a href="#RFC8941" class="cite xref">RFC8941</a>]</span> "DNS-SVCB-Keys". Its value MUST
+be an sf-list whose members are sf-integer items that MUST NOT contain parameters. Its
+ABNF is:<a href="#section-2-1" class="pilcrow">¶</a></p>
+<div class="lang-abnf sourcecode" id="section-2-2">
 <pre>
-    Sec-CH-IP-Geo = "US,US-AL,Alabaster"
-</pre><a href="#section-2-3" class="pilcrow">¶</a>
+DNS-SVCB-Keys = sf-list
+</pre><a href="#section-2-2" class="pilcrow">¶</a>
 </div>
-<p id="section-2-4">This field also defines a parameter, "feed", that contains the URI of the
-IP geolocation feed that is authoritative for this entry. For example:<a href="#section-2-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2-5">
+<p id="section-2-3">Each list member corresponds to the numeric version of an SvcParamKey.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">For example, a client wanting to receive ALPN and ECH Config parameters would
+send a request for 1 (alpn) and 5 (echconfig):<a href="#section-2-4" class="pilcrow">¶</a></p>
+<div class="lang-example sourcecode" id="section-2-5">
 <pre>
-    Sec-CH-IP-Geo = "SG,SG-01,Singapore"; feed="https://noc.ietf.org/geo/google.csv"
+HEADERS
+:method = CONNECT
+:authority = svc.example.com:443
+dns-svcb-keys = 1, 5
 </pre><a href="#section-2-5" class="pilcrow">¶</a>
 </div>
-<p id="section-2-6">Servers that can provide different content based on Geohash hints SHOULD include
-the headers in their "Accept-CH" list.<a href="#section-2-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2-7">
-<pre>
-    Accept-CH: Sec-CH-IP-Geo
-</pre><a href="#section-2-7" class="pilcrow">¶</a>
-</div>
-<p id="section-2-8">Servers also SHOULD indicate for any cacheable content if the IP geo hints will influence
-the cached content, using the "Vary" header.<a href="#section-2-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2-9">
-<pre>
-    Vary: Sec-CH-IP-Geo
-</pre><a href="#section-2-9" class="pilcrow">¶</a>
-</div>
 </section>
 </div>
-<div id="server-behavior">
+<div id="svcb-params-response">
 <section id="section-3">
-      <h2 id="name-server-behavior">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-server-behavior" class="section-name selfRef">Server Behavior</a>
+      <h2 id="name-svcb-response-header-fields">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-svcb-response-header-fields" class="section-name selfRef">SVCB Response Header Fields</a>
       </h2>
-<p id="section-3-1">Upon receiving a IP Geolocation Client Hint, a server can use the information to influence
-its behavior in various ways, such as determining the content of HTTP responses.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">Many servers have existing IP geolocation feeds that they use to identify client locations.
-Servers can choose to use the hint value in one of several ways:<a href="#section-3-2" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3-3.1">
-          <p id="section-3-3.1.1">Use the client hint information instead of consulting another geolocation feed.<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-3-3.2">
-          <p id="section-3-3.2.1">Check the value of the "feed" parameter on the header and determine if it is a trusted feed.
- If this feed is trusted, but is not the default feed used by the server, the server
- can choose to prefer the feed indicated by the client.<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-3-3.3">
-          <p id="section-3-3.3.1">Check the value of the "feed" parameter on the header and fetch a copy of the feed
- to verify the mapping, if a copy of the feed has not been fetched recently.<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-3-3.4">
-          <p id="section-3-3.4.1">If the feed indicated in the "feed" parameter is unknown or untrusted, but starts
- becoming common, the server can flag this feed as one to be manually checked and
- added, if appropriate. This allows servers to automatically discover when new
- feeds and services are brought up..<a href="#section-3-3.4.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<p id="section-3-4">If the server is acting as a forward proxy, such as a CONNECT proxy, it can use the hint
-to determine an appropriate geo-mapped IP address to use for outbound connections, or a
-client subnet to present in the EDNS0 Client Subnet extension for DNS queries <span>[<a href="#RFC6891" class="cite xref">RFC6891</a>]</span>
-        <span>[<a href="#RFC7871" class="cite xref">RFC7871</a>]</span>.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-1">A proxy server that receives a request with "DNS-SVCB-Keys" MAY respond with
+the Structured Header "DNS-SVCB-Params" response header fields. The value of
+"DNS-SVCB-Params" MUST be an sf-list whose members are sf-string, each of
+which MUST contain parameters.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<div class="lang-abnf sourcecode" id="section-3-2">
+<pre>
+DNS-SVCB-Params = sf-list
+</pre><a href="#section-3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3-3">Each list member is an sf-string that represents the TargetName of a single received
+SVCB or HTTPS record. The Parameters associated with each list member correspond
+to the SvcParam key-value pairs for that record, the priority of the record, and the
+TTL of the record.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4">The priority of the record MUST be a parameter with the key "priority", and a value as an
+sf-integer. Alias forms, with priority 0, MUST NOT be included.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">The TTL of the record MUST be a parameter with the key "ttl", and a value as an sf-integer.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">Each SvcParam that matches a key requested by the client is a parameters with a key
+that is the character "p" followed by the numeric version of the SvcParamKey. For example,
+the ALPN SvcParamKey, with the numeric value 1, would have a parameter key "p1". The value
+of each parameter MUST be an sf-binary item that contains the bytes of the SvcParamValue.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-7">Proxy servers MUST NOT include the "DNS-SVCB-Params" response header field if the
+corresponding request did not include a "DNS-SVCB-Keys". Servers MAY include
+specific SvcParamKey values that were not requested. Specifically, servers SHOULD include
+the "mandatory" parameter if present, which would be presented as "p0", along with any
+parameters that are defined as mandatory for that record.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">As an example, assume that the server received the following "svc.example.com" SVCB records:<a href="#section-3-8" class="pilcrow">¶</a></p>
+<div class="lang-diagram sourcecode" id="section-3-9">
+<pre>
+   svc.example.com. 3600 IN HTTPS 1 svc2.example.com. alpn=h2,h3 echconfig="123..."
+   svc.example.com. 3600 IN HTTPS 2 . alpn=h2 echconfig="abc..."
+</pre><a href="#section-3-9" class="pilcrow">¶</a>
+</div>
+<p id="section-3-10">A successful CONNECT response would include the following headers, if the client requested both
+"alpn" and "echconfig":<a href="#section-3-10" class="pilcrow">¶</a></p>
+<div class="lang-example sourcecode" id="section-3-11">
+<pre>
+HEADERS
+:method = CONNECT
+:status = 200
+dns-svcb-params = "svc2.example.com.";priority=1;ttl=3600;p1=:aDIsaDM=:;p5=:MTIzLi4u:,
+                  "svc.example.com.";priority=2;ttl=3600;p1=:aDI=:;p5=:YWJjLi4u:
+</pre><a href="#section-3-11" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
-<div id="security">
+<div id="iana-considerations">
 <section id="section-4">
-      <h2 id="name-security-considerations">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
-      </h2>
-<p id="section-4-1">The use of the IP Geolocation Client Hint MUST use the Sec- header prefix as recommended
-in <span>[<a href="#RFC8942" class="cite xref">RFC8942</a>]</span>.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">Servers MUST NOT use IP Geolocation Client Hints for making security or access-control decisions,
-as the value can be spoofed by a client. The hint is intended only for use in optimizing behavior.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">The value contained in this hint SHOULD be based only on a IP Geolocation feed value for
-an IP address the client is already presenting to a server. In order to avoid disclosing
-any private information, this value MUST not be based on geolocation of the client determined
-by other means, such as physical latitude and longitude coordinates.<a href="#section-4-3" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="iana">
-<section id="section-5">
       <h2 id="name-iana-considerations">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <div id="iana-header">
-<section id="section-5.1">
+<section id="section-4.1">
         <h3 id="name-http-headers">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-http-headers" class="section-name selfRef">HTTP Headers</a>
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-http-headers" class="section-name selfRef">HTTP Headers</a>
         </h3>
-<p id="section-5.1-1">This document registers the "Sec-CH-IP-Geo" header in the
-"Permanent Message Header Field Names" registry
-&lt;<span><a href="https://www.iana.org/assignments/message-headers">https://www.iana.org/assignments/message-headers</a></span>&gt;.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1-2">
+<p id="section-4.1-1">This document registers the "DNS-SVCB-Keys" and "DNS-SVCB-Params",
+headers in the "Permanent Message Header Field Names"
+&lt;<span><a href="https://www.iana.org/assignments/message-headers">https://www.iana.org/assignments/message-headers</a></span>&gt;.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-2">
 <pre>
   +----------------------+----------+--------+---------------+
   | Header Field Name    | Protocol | Status |   Reference   |
   +----------------------+----------+--------+---------------+
-  | Sec-CH-IP-Geo        |   http   |  exp   | This document |
+  | DNS-SVCB-Keys        |   http   |  exp   | This document |
   +----------------------+----------+--------+---------------+
-</pre><a href="#section-5.1-2" class="pilcrow">¶</a>
+  | DNS-SVCB-Params      |   http   |  exp   | This document |
+  +----------------------+----------+--------+---------------+
+</pre><a href="#section-4.1-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 </section>
 </div>
-<section id="section-6">
-      <h2 id="name-references">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-references" class="section-name selfRef">References</a>
+<div id="sec-considerations">
+<section id="section-5">
+      <h2 id="name-security-considerations">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
+<p id="section-5-1">The "DNS-SVCB-Params" header in <a href="#svcb-params-response" class="auto internal xref">Section 3</a> does not include any DNSSEC information. Clients that
+depend on the contents of the SVCB record being DNSSEC-validated MUST NOT use this metadata without
+otherwise fetching the record and its corresponding RRSIG record and locally verifying its contents.<a href="#section-5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 <div id="sec-normative-references">
-<section id="section-6.1">
-        <h3 id="name-normative-references">
-<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
-        </h3>
+<section id="section-6">
+      <h2 id="name-normative-references">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      </h2>
 <dl class="references">
-<dt id="GEOFEED">[GEOFEED]</dt>
-        <dd>
-<span class="refAuthor">Kline, E.</span>, <span class="refAuthor">Duleba, K.</span>, <span class="refAuthor">Szamonek, Z.</span>, <span class="refAuthor">Moser, S.</span>, and <span class="refAuthor">W. Kumari</span>, <span class="refTitle">"A Format for Self-Published IP Geolocation Feeds"</span>, <span class="seriesInfo">RFC 8805</span>, <span class="seriesInfo">DOI 10.17487/RFC8805</span>, <time datetime="2020-08" class="refDate">August 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8805">https://www.rfc-editor.org/rfc/rfc8805</a>&gt;</span>. </dd>
+<dt id="I-D.ietf-dnsop-svcb-https">[I-D.ietf-dnsop-svcb-https]</dt>
+      <dd>
+<span class="refAuthor">Schwartz, B. M.</span>, <span class="refAuthor">Bishop, M.</span>, and <span class="refAuthor">E. Nygren</span>, <span class="refTitle">"Service Binding and Parameter Specification via the DNS (SVCB and HTTPS Resource Records)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnsop-svcb-https-12</span>, <time datetime="2023-03-11" class="refDate">11 March 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-masque-connect-udp">[I-D.ietf-masque-connect-udp]</dt>
+      <dd>
+<span class="refAuthor">Schinazi, D.</span>, <span class="refTitle">"Proxying UDP in HTTP"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-masque-connect-udp-15</span>, <time datetime="2022-06-17" class="refDate">17 June 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-masque-connect-udp-15">https://datatracker.ietf.org/doc/html/draft-ietf-masque-connect-udp-15</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-tls-esni">[I-D.ietf-tls-esni]</dt>
+      <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refAuthor">Oku, K.</span>, <span class="refAuthor">Sullivan, N.</span>, and <span class="refAuthor">C. A. Wood</span>, <span class="refTitle">"TLS Encrypted Client Hello"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-tls-esni-17</span>, <time datetime="2023-10-09" class="refDate">9 October 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-tls-esni-17">https://datatracker.ietf.org/doc/html/draft-ietf-tls-esni-17</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC7230">[RFC7230]</dt>
+      <dd>
+<span class="refAuthor">Fielding, R., Ed.</span> and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing"</span>, <span class="seriesInfo">RFC 7230</span>, <span class="seriesInfo">DOI 10.17487/RFC7230</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7230">https://www.rfc-editor.org/rfc/rfc7230</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7231">[RFC7231]</dt>
+      <dd>
+<span class="refAuthor">Fielding, R., Ed.</span> and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content"</span>, <span class="seriesInfo">RFC 7231</span>, <span class="seriesInfo">DOI 10.17487/RFC7231</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7231">https://www.rfc-editor.org/rfc/rfc7231</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC8942">[RFC8942]</dt>
-        <dd>
-<span class="refAuthor">Grigorik, I.</span> and <span class="refAuthor">Y. Weiss</span>, <span class="refTitle">"HTTP Client Hints"</span>, <span class="seriesInfo">RFC 8942</span>, <span class="seriesInfo">DOI 10.17487/RFC8942</span>, <time datetime="2021-02" class="refDate">February 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8942">https://www.rfc-editor.org/rfc/rfc8942</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="STRUCTURED-FIELDS">[STRUCTURED-FIELDS]</dt>
-      <dd>
+<dt id="RFC8941">[RFC8941]</dt>
+    <dd>
 <span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Kamp</span>, <span class="refTitle">"Structured Field Values for HTTP"</span>, <span class="seriesInfo">RFC 8941</span>, <span class="seriesInfo">DOI 10.17487/RFC8941</span>, <time datetime="2021-02" class="refDate">February 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8941">https://www.rfc-editor.org/rfc/rfc8941</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
 </div>
-<div id="sec-informative-references">
-<section id="section-6.2">
-        <h3 id="name-informative-references">
-<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
-        </h3>
-<dl class="references">
-<dt id="RFC6891">[RFC6891]</dt>
-        <dd>
-<span class="refAuthor">Damas, J.</span>, <span class="refAuthor">Graff, M.</span>, and <span class="refAuthor">P. Vixie</span>, <span class="refTitle">"Extension Mechanisms for DNS (EDNS(0))"</span>, <span class="seriesInfo">STD 75</span>, <span class="seriesInfo">RFC 6891</span>, <span class="seriesInfo">DOI 10.17487/RFC6891</span>, <time datetime="2013-04" class="refDate">April 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6891">https://www.rfc-editor.org/rfc/rfc6891</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC7871">[RFC7871]</dt>
-        <dd>
-<span class="refAuthor">Contavalli, C.</span>, <span class="refAuthor">van der Gaast, W.</span>, <span class="refAuthor">Lawrence, D.</span>, and <span class="refAuthor">W. Kumari</span>, <span class="refTitle">"Client Subnet in DNS Queries"</span>, <span class="seriesInfo">RFC 7871</span>, <span class="seriesInfo">DOI 10.17487/RFC7871</span>, <time datetime="2016-05" class="refDate">May 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7871">https://www.rfc-editor.org/rfc/rfc7871</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC9092">[RFC9092]</dt>
-      <dd>
-<span class="refAuthor">Bush, R.</span>, <span class="refAuthor">Candela, M.</span>, <span class="refAuthor">Kumari, W.</span>, and <span class="refAuthor">R. Housley</span>, <span class="refTitle">"Finding and Using Geofeed Data"</span>, <span class="seriesInfo">RFC 9092</span>, <span class="seriesInfo">DOI 10.17487/RFC9092</span>, <time datetime="2021-07" class="refDate">July 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9092">https://www.rfc-editor.org/rfc/rfc9092</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-</dl>
-</section>
-</div>
-</section>
 <div id="authors-addresses">
 <section id="appendix-A">
-      <h2 id="name-authors-addresses">
-<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Tommy Pauly</span></div>
-<div dir="auto" class="left"><span class="org">Apple Inc.</span></div>
-<div dir="auto" class="left"><span class="street-address">One Apple Park Way</span></div>
-<div dir="auto" class="left">
-<span class="locality">Cupertino, California 95014</span>,  </div>
-<div dir="auto" class="left"><span class="country-name">United States of America</span></div>
+<div dir="auto" class="left"><span class="org">Apple, Inc.</span></div>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:tpauly@apple.com" class="email">tpauly@apple.com</a>
-</div>
-</address>
-<address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">David Schinazi</span></div>
-<div dir="auto" class="left"><span class="org">Google LLC</span></div>
-<div class="email">
-<span>Email:</span>
-<a href="mailto:dschinazi.ietf@gmail.com" class="email">dschinazi.ietf@gmail.com</a>
 </div>
 </address>
 </section>
