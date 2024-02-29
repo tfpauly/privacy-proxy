@@ -1280,7 +1280,7 @@ a proxy. This PvD describes the properties of the network accessible through the
 issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") <span>[<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
-that are identified by a URI.<a href="#section-2-2" class="pilcrow">¶</a></p>
+that are identified by a URI or URI template.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">For example, a client would issue the following request for the PvD associated
 with "https://proxy.example.org/masque{?target_host,target_port}":<a href="#section-2-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-2-4">
@@ -1368,9 +1368,9 @@ use the <code>:protocol</code> pseudo-header), the <code>protocol</code> value w
         </thead>
         <tbody>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">socks</td>
+            <td class="text-left" rowspan="1" colspan="1">socks5</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <span>[<a href="#SOCKS" class="cite xref">SOCKS</a>]</span>
+              <span>[<a href="#SOCKSv5" class="cite xref">SOCKSv5</a>]</span>
 </td>
           </tr>
           <tr>
@@ -1643,7 +1643,7 @@ Experts are requested to ensure that defined keys do not overlap in names or sem
         <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="SOCKS">[SOCKS]</dt>
+<dt id="SOCKSv5">[SOCKSv5]</dt>
         <dd>
 <span class="refAuthor">Leech, M.</span>, <span class="refAuthor">Ganis, M.</span>, <span class="refAuthor">Lee, Y.</span>, <span class="refAuthor">Kuris, R.</span>, <span class="refAuthor">Koblas, D.</span>, and <span class="refAuthor">L. Jones</span>, <span class="refTitle">"SOCKS Protocol Version 5"</span>, <span class="seriesInfo">RFC 1928</span>, <span class="seriesInfo">DOI 10.17487/RFC1928</span>, <time datetime="1996-03" class="refDate">March 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1928">https://www.rfc-editor.org/rfc/rfc1928</a>&gt;</span>. </dd>
 <dd class="break"></dd>

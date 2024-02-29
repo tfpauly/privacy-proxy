@@ -162,7 +162,7 @@ Table of Contents
    (".well-known/pvd") [PVDDATA] and the host authority of the proxy.
    This is applicable for both proxies that are identified by a host and
    port only (such as SOCKS proxies and HTTP CONNECT proxies) and
-   proxies that are identified by a URI.
+   proxies that are identified by a URI or URI template.
 
    For example, a client would issue the following request for the PvD
    associated with "https://proxy.example.org/
@@ -234,7 +234,7 @@ Table of Contents
                +================+=========================+
                | Proxy Protocol | Reference               |
                +================+=========================+
-               | socks          | [SOCKS]                 |
+               | socks5         | [SOCKSv5]               |
                +----------------+-------------------------+
                | connect        | Section 9.3.6 of [HTTP] |
                +----------------+-------------------------+
@@ -485,7 +485,7 @@ content-length = 222
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-   [SOCKS]    Leech, M., Ganis, M., Lee, Y., Kuris, R., Koblas, D., and
+   [SOCKSv5]  Leech, M., Ganis, M., Lee, Y., Kuris, R., Koblas, D., and
               L. Jones, "SOCKS Protocol Version 5", RFC 1928,
               DOI 10.17487/RFC1928, March 1996,
               <https://www.rfc-editor.org/rfc/rfc1928>.
