@@ -36,8 +36,8 @@ and a list of DNS zones that are accessible via a proxy.
 HTTP proxies that use the CONNECT method {{Section 9.3.6 of !HTTP=RFC9110}}
 (often referred to as "forward" proxies) allow clients to open connections to
 hosts via a proxy. These typically allow for TCP stream proxying, but can also support
-UDP proxying {{!CONNECTUDP=RFC9298}} and IP packet proxying
-{{!CONNECTIP=RFC9484}}. Such proxies are not just defined as
+UDP proxying {{!CONNECT-UDP=RFC9298}} and IP packet proxying
+{{!CONNECT-IP=RFC9484}}. Such proxies are not just defined as
 hostnames and ports, but can use URI templates {{!URITEMPLATE=RFC6570}}.
 
 In order to make use of multiple related proxies, clients need a way to understand
@@ -165,9 +165,9 @@ use the `:protocol` pseudo-header), the `protocol` value will match the Upgrade 
 | --- | --- |
 | socks5 | {{!SOCKSv5=RFC1928}} |
 | connect | {{Section 9.3.6 of HTTP}} |
-| connect-udp | {{CONNECTUDP}} |
-| connect-ip | {{CONNECTIP}} |
-| connect-tcp | {{!CONNECTTCP=I-D.ietf-httpbis-connect-tcp}} |
+| connect-udp | {{CONNECT-UDP}} |
+| connect-ip | {{CONNECT-IP}} |
+| connect-tcp | {{!CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} |
 
 The value of "uri" can be either a URI or a URI template, depending on the
 proxy protocol.
@@ -182,8 +182,8 @@ method, with the assumption that the client already is aware of one proxy.
 Many historical methods of configuring a proxy only allow configuring
 a single FQDN hostname for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
-URIs that support non-default protocols, such as {{CONNECTUDP}} and
-{{CONNECTIP}}.
+URIs that support non-default protocols, such as {{CONNECT-UDP}} and
+{{CONNECT-IP}}.
 
 ## Example
 
@@ -223,7 +223,7 @@ content-length = 222
 }
 ~~~
 
-The client would learn the URI template of the proxy that supports UDP using {{CONNECTUDP}},
+The client would learn the URI template of the proxy that supports UDP using {{CONNECT-UDP}},
 at "https://proxy.example.org/masque{?target_host,target_port}".
 
 # Split DNS information for proxies {#split-dns}
