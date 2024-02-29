@@ -400,8 +400,8 @@ content-length = 222
 
    Type: Array of dictionaries
 
-   Example: [ { "protocol": "connect", "uri":"https://proxy.example.com"
-   } ]
+   Example: [ { "protocol": "connect", "uri":
+   "https://proxy.example.com" } ]
 
 7.2.  New PvD Proxy Information Registry
 
