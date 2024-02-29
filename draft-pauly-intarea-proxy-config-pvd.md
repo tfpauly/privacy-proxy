@@ -37,7 +37,7 @@ HTTP proxies that use the CONNECT method {{Section 9.3.6 of !HTTP=RFC9110}}
 (often referred to as "forward" proxies) allow clients to open connections to
 hosts via a proxy. These typically allow for TCP stream proxying, but can also support
 UDP proxying {{!CONNECTUDP=RFC9298}} and IP packet proxying
-{{!CONNECTIP=I-D.ietf-masque-connect-ip}}. Such proxies are not just defined as
+{{!CONNECTIP=RFC9484}}. Such proxies are not just defined as
 hostnames and ports, but can use URI templates {{!URITEMPLATE=RFC6570}}.
 
 In order to make use of multiple related proxies, clients need a way to understand
@@ -102,7 +102,7 @@ In order to fetch PvD Additional Information associated with a proxy, a client
 issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") {{PVDDATA}}
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
-that are identified by a URL.
+that are identified by a URI.
 
 For example, a client would issue the following request for the PvD associated
 with "https://proxy.example.org/masque{?target_host,target_port}":
@@ -137,15 +137,40 @@ match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by de
 # Enumerating proxies within a PvD {#proxy-enumeration}
 
 This document defines a new PvD Additional Information key, `proxies`, that
-is an array of strings that is a list of proxy URIs (or URI templates
-{{!URITEMPLATE=RFC6570}}) that are available as part of a PvD. The new
-key is registered in {{iana}}.
+is an array of dictionaries, where each dictionary in the array defines
+a single proxy that is available as part of the PvD (see {{proxies-key-iana}}).
+Each proxy is defined by a proxy protocol, a proxy URI (or URI template
+{{!URITEMPLATE=RFC6570}}), along with potentially other keys.
 
-The kind of proxy is implied by the URI scheme and any template variables.
-For example, since UDP proxying {{CONNECTUDP}} has the URI template variables
-`target_host` and `target_port`, the URI
-"https://proxy.example.org:4443/masque{?target_host,target_port}" implies
-that the proxy supports UDP proxying.
+This document defines two mandatory keys for the sub-dictionaries in the
+`proxies` array, `protocol` and `uri`. These keys, defined below, are
+the initial contents of the proxy information key registry
+({{proxy-info-iana}}). Other optional keys can be added to the dictionary
+to further define or restrict the use of a proxy. Clients that do not
+recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
+proxy definition, since the proxy might be only applicable for particular
+uses.
+
+| JSON Key | Description | Type | Example |
+| --- | --- | --- | --- |
+| protocol | The protocol used to communicate with the proxy | String | "connect-udp" |
+| uri | URI or URI template of the proxy | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
+
+The values for the `protocol` key are defined in the proxy protocol
+registry ({{proxy-protocol-iana}}). For proxy types that use HTTP Upgrade Tokens (and
+use the `:protocol` pseudo-header), the `protocol` value will match the Upgrade Token
+/ `:protocol` value.
+
+| Proxy Protocol | Reference |
+| --- | --- |
+| socks | {{!SOCKS=RFC1928}} |
+| connect | {{Section 9.3.6 of HTTP}} |
+| connect-udp | {{CONNECTUDP}} |
+| connect-ip | {{CONNECTIP}} |
+| connect-tcp | {{!CONNECTTCP=I-D.ietf-httpbis-connect-tcp}} |
+
+The value of "uri" can be either a URI or a URI template, depending on the
+proxy protocol.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
@@ -185,7 +210,16 @@ content-length = 222
   "identifier": "proxy.example.org.",
   "expires": "2023-06-23T06:00:00Z",
   "prefixes": [],
-  "proxies": ["https://proxy.example.org","https://proxy.example.org/masque{?target_host,target_port}"]
+  "proxies": [
+    {
+      "protocol": "connect",
+      "uri": "https://proxy.example.org"
+    },
+    {
+      "protocol": "connect-udp",
+      "uri": "https://proxy.example.org/masque{?target_host,target_port}"
+    }
+  ]
 }
 ~~~
 
@@ -275,14 +309,37 @@ proxies, can only be safely used when fetched over a secure TLS-protected connec
 and the client has validated that that the hostname of the proxy, the identifier of
 the PvD, and the validated hostname identity on the certificate all match.
 
-# IANA Considerations {#iana}
+# IANA Considerations
+
+## New PvD Additional Information key {#proxies-key-iana}
 
 This document registers a new key in the "Additional Information PvD Keys" registry.
 
 JSON Key: proxies
 
-Description: Array of proxy URIs associated with this PvD
+Description: Array of proxy dictionaries associated with this PvD
 
-Type: Array of strings
+Type: Array of dictionaries
 
-Example: ["https://proxy.example.com", "https://proxy.example.com/masque{?target_host,target_port}"]
+Example: [ { "protocol": "connect", "uri":"https://proxy.example.com" } ]
+
+## New PvD Proxy Information Registry {#proxy-info-iana}
+
+IANA is requested to create a new registry "Proxy Information PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
+This new registry reserves JSON keys for use in sub-dictionaries under the `proxies` key.
+The initial contents of this registry are given in {{proxy-enumeration}}.
+
+The status of a key as mandatory or optional is intentionally not denoted in the table to allow for
+flexibility in future use cases. Any new assignments of keys will be considered as optional for the purpose of the mechanism described in this document.
+
+New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review {{!RFC8126}}. Experts are
+requested to ensure that defined keys do not overlap in names or semantics.
+
+## New PvD Proxy Protocol Registry {#proxy-protocol-iana}
+
+IANA is requested to create a new registry "Proxy Protocol PvD Values", within the "Provisioning Domains (PvDs)" registry page.
+This new registry reserves JSON values for the `protocol` key in `proxies` sub-dictionaries.
+The initial contents of this registry are given in {{proxy-enumeration}}.
+
+New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Specification Required {{!RFC8126}}.
+Experts are requested to ensure that defined keys do not overlap in names or semantics, and have a clear reference.
