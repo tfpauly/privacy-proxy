@@ -1028,11 +1028,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Proxy Configuration PvDs</td>
-<td class="right">February 2024</td>
+<td class="right">March 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly &amp; Damjanovic</td>
-<td class="center">Expires 1 September 2024</td>
+<td class="center">Expires 2 September 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1045,12 +1045,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-pauly-intarea-proxy-config-pvd-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-02-29" class="published">29 February 2024</time>
+<time datetime="2024-03-01" class="published">1 March 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-09-01">1 September 2024</time></dd>
+<dd class="expires"><time datetime="2024-09-02">2 September 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1098,7 +1098,7 @@ and a list of DNS zones that are accessible via a proxy.<a href="#section-abstra
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 September 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 2 September 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1322,7 +1322,7 @@ a single proxy that is available as part of the PvD (see <a href="#proxies-key-i
 Each proxy is defined by a proxy protocol, a proxy URI (or URI template
 <span>[<a href="#URITEMPLATE" class="cite xref">URITEMPLATE</a>]</span>), along with potentially other keys.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">This document defines two mandatory keys for the sub-dictionaries in the
-<code>proxies</code> array, <code>protocol</code> and <code>uri</code>. These keys, defined below, are
+<code>proxies</code> array, <code>protocol</code> and <code>proxy</code>. These keys, defined below, are
 the initial contents of the proxy information key registry
 (<a href="#proxy-info-iana" class="auto internal xref">Section 7.2</a>). Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
@@ -1347,60 +1347,80 @@ uses.<a href="#section-3-2" class="pilcrow">¶</a></p>
             <td class="text-left" rowspan="1" colspan="1">"connect-udp"</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">uri</td>
-            <td class="text-left" rowspan="1" colspan="1">URI or URI template of the proxy</td>
+            <td class="text-left" rowspan="1" colspan="1">proxy</td>
+            <td class="text-left" rowspan="1" colspan="1">String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol</td>
             <td class="text-left" rowspan="1" colspan="1">String</td>
             <td class="text-left" rowspan="1" colspan="1">"https://proxy.example.org:4443/masque{?target_host,target_port}"</td>
           </tr>
         </tbody>
       </table>
 <p id="section-3-4">The values for the <code>protocol</code> key are defined in the proxy protocol
-registry (<a href="#proxy-protocol-iana" class="auto internal xref">Section 7.3</a>). For proxy types that use HTTP Upgrade Tokens (and
-use the <code>:protocol</code> pseudo-header), the <code>protocol</code> value will match the Upgrade Token
-/ <code>:protocol</code> value.<a href="#section-3-4" class="pilcrow">¶</a></p>
+registry (<a href="#proxy-protocol-iana" class="auto internal xref">Section 7.3</a>). For consistency, any new proxy types
+that use HTTP Upgrade Tokens (and use the <code>:protocol</code> pseudo-header) SHOULD
+define the <code>protocol</code> value to match the Upgrade Token / <code>:protocol</code> value.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <table class="center" id="table-2">
         <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
 <thead>
           <tr>
             <th class="text-left" rowspan="1" colspan="1">Proxy Protocol</th>
+            <th class="text-left" rowspan="1" colspan="1">Proxy Location Format</th>
             <th class="text-left" rowspan="1" colspan="1">Reference</th>
+            <th class="text-left" rowspan="1" colspan="1">Notes</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">socks5</td>
+            <td class="text-left" rowspan="1" colspan="1">hostname:port</td>
             <td class="text-left" rowspan="1" colspan="1">
               <span>[<a href="#SOCKSv5" class="cite xref">SOCKSv5</a>]</span>
 </td>
+            <td class="text-left" rowspan="1" colspan="1"> </td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">connect</td>
+            <td class="text-left" rowspan="1" colspan="1">http-connect</td>
+            <td class="text-left" rowspan="1" colspan="1">hostname:port</td>
             <td class="text-left" rowspan="1" colspan="1">
               <span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>
 </td>
+            <td class="text-left" rowspan="1" colspan="1">Standard CONNECT method, using unencrypted HTTP to the proxy</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">https-connect</td>
+            <td class="text-left" rowspan="1" colspan="1">hostname:port</td>
+            <td class="text-left" rowspan="1" colspan="1">
+              <span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">Standard CONNECT method, using TLS-protected HTTP to the proxy</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">connect-udp</td>
+            <td class="text-left" rowspan="1" colspan="1">URI template</td>
             <td class="text-left" rowspan="1" colspan="1">
               <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span>
 </td>
+            <td class="text-left" rowspan="1" colspan="1"> </td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">connect-ip</td>
+            <td class="text-left" rowspan="1" colspan="1">URI template</td>
             <td class="text-left" rowspan="1" colspan="1">
               <span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>
 </td>
+            <td class="text-left" rowspan="1" colspan="1"> </td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">connect-tcp</td>
+            <td class="text-left" rowspan="1" colspan="1">URI template</td>
             <td class="text-left" rowspan="1" colspan="1">
               <span>[<a href="#CONNECT-TCP" class="cite xref">CONNECT-TCP</a>]</span>
 </td>
+            <td class="text-left" rowspan="1" colspan="1"> </td>
           </tr>
         </tbody>
       </table>
-<p id="section-3-6">The value of "uri" can be either a URI or a URI template, depending on the
-proxy protocol.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-6">The value of <code>proxy</code> depends on the Proxy Location Format defined by proxy protocol.
+The types defined here either use a hostname and port, or a full URI template.<a href="#section-3-6" class="pilcrow">¶</a></p>
 <p id="section-3-7">When a PvD that contains the <code>proxies</code> key is fetched from a known proxy
 using the method described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a> the proxies list describes
 equivalent proxies (potentially supporting other protocols) that can be used
@@ -1442,12 +1462,12 @@ content-length = 222
   "prefixes": [],
   "proxies": [
     {
-      "protocol": "connect",
-      "uri": "https://proxy.example.org"
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80"
     },
     {
       "protocol": "connect-udp",
-      "uri": "https://proxy.example.org/masque{?target_host,target_port}"
+      "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
     }
   ]
 }
@@ -1567,8 +1587,8 @@ the PvD, and the validated hostname identity on the certificate all match.<a hre
 <p id="section-7.1-3">Description: Array of proxy dictionaries associated with this PvD<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 <p id="section-7.1-4">Type: Array of dictionaries<a href="#section-7.1-4" class="pilcrow">¶</a></p>
 <p id="section-7.1-5">Example: [ {
-  "protocol": "connect",
-  "uri": "https://proxy.example.com"
+  "protocol": "connect-udp",
+  "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
 } ]<a href="#section-7.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1594,8 +1614,9 @@ requested to ensure that defined keys do not overlap in names or semantics.<a hr
 <p id="section-7.3-1">IANA is requested to create a new registry "Proxy Protocol PvD Values", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON values for the <code>protocol</code> key in <code>proxies</code> sub-dictionaries.
 The initial contents of this registry are given in <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-<p id="section-7.3-2">New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Specification Required <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.
-Experts are requested to ensure that defined keys do not overlap in names or semantics, and have a clear reference.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.
+Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
+The reference and notes fields MAY be empty.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
