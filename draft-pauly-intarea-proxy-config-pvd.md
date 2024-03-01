@@ -143,7 +143,7 @@ Each proxy is defined by a proxy protocol, a proxy URI (or URI template
 {{!URITEMPLATE=RFC6570}}), along with potentially other keys.
 
 This document defines two mandatory keys for the sub-dictionaries in the
-`proxies` array, `protocol` and `uri`. These keys, defined below, are
+`proxies` array, `protocol` and `proxy`. These keys, defined below, are
 the initial contents of the proxy information key registry
 ({{proxy-info-iana}}). Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
@@ -154,23 +154,24 @@ uses.
 | JSON Key | Description | Type | Example |
 | --- | --- | --- | --- |
 | protocol | The protocol used to communicate with the proxy | String | "connect-udp" |
-| uri | URI or URI template of the proxy | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
+| proxy | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 
 The values for the `protocol` key are defined in the proxy protocol
-registry ({{proxy-protocol-iana}}). For proxy types that use HTTP Upgrade Tokens (and
-use the `:protocol` pseudo-header), the `protocol` value will match the Upgrade Token
-/ `:protocol` value.
+registry ({{proxy-protocol-iana}}). For consistency, any new proxy types
+that use HTTP Upgrade Tokens (and use the `:protocol` pseudo-header) SHOULD
+define the `protocol` value to match the Upgrade Token / `:protocol` value.
 
-| Proxy Protocol | Reference |
-| --- | --- |
-| socks5 | {{!SOCKSv5=RFC1928}} |
-| connect | {{Section 9.3.6 of HTTP}} |
-| connect-udp | {{CONNECT-UDP}} |
-| connect-ip | {{CONNECT-IP}} |
-| connect-tcp | {{!CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} |
+| Proxy Protocol | Proxy Location Format | Reference | Notes |
+| --- | --- | --- |
+| socks5 | hostname:port | {{!SOCKSv5=RFC1928}} | |
+| http-connect | hostname:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |
+| https-connect | hostname:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |
+| connect-udp | URI template | {{CONNECT-UDP}} | |
+| connect-ip | URI template | {{CONNECT-IP}} | |
+| connect-tcp | URI template | {{!CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
 
-The value of "uri" can be either a URI or a URI template, depending on the
-proxy protocol.
+The value of `proxy` depends on the Proxy Location Format defined by proxy protocol.
+The types defined here either use a hostname and port, or a full URI template.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
@@ -212,12 +213,12 @@ content-length = 222
   "prefixes": [],
   "proxies": [
     {
-      "protocol": "connect",
-      "uri": "https://proxy.example.org"
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80"
     },
     {
       "protocol": "connect-udp",
-      "uri": "https://proxy.example.org/masque{?target_host,target_port}"
+      "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
     }
   ]
 }
@@ -322,8 +323,8 @@ Description: Array of proxy dictionaries associated with this PvD
 Type: Array of dictionaries
 
 Example: [ {
-  "protocol": "connect",
-  "uri": "https://proxy.example.com"
+  "protocol": "connect-udp",
+  "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
 } ]
 
 ## New PvD Proxy Information Registry {#proxy-info-iana}
@@ -344,5 +345,6 @@ IANA is requested to create a new registry "Proxy Protocol PvD Values", within t
 This new registry reserves JSON values for the `protocol` key in `proxies` sub-dictionaries.
 The initial contents of this registry are given in {{proxy-enumeration}}.
 
-New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Specification Required {{!RFC8126}}.
-Experts are requested to ensure that defined keys do not overlap in names or semantics, and have a clear reference.
+New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review {{!RFC8126}}.
+Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
+The reference and notes fields MAY be empty.
