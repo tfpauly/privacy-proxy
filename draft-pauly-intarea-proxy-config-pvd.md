@@ -139,7 +139,7 @@ match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by de
 This document defines a new PvD Additional Information key, `proxies`, that
 is an array of dictionaries, where each dictionary in the array defines
 a single proxy that is available as part of the PvD (see {{proxies-key-iana}}).
-Each proxy is defined by a proxy protocol, a proxy URI (or URI template
+Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname and port or a URI template
 {{!URITEMPLATE=RFC6570}}), along with potentially other keys.
 
 This document defines two mandatory keys for the sub-dictionaries in the
