@@ -227,14 +227,22 @@ content-length = 222
 The client would learn the URI template of the proxy that supports UDP using {{CONNECT-UDP}},
 at "https://proxy.example.org/masque{?target_host,target_port}".
 
+
 # Split DNS information for proxies {#split-dns}
 
-Split DNS configurations are cases where only a subset of domains is routed through
+PvD Additional Information can be used to indicate that a proxy PvD has a split DNS
+configuration.  Split DNS configurations can use _inclusion_ or _exclusion_ lists.  
+
+_inclusion_ lists specify a set of domains should be accessed through the proxy.
+_exclusion_ lists specify a set of domains that should not be accessed through the proxy
+
+An example of a Split DNS Inclusion list are cases where only a subset of domains is routed through
 a VPN tunnel or a proxy. For example, IKEv2 defines split DNS configuration in
 {{?IKEV2SPLIT=RFC8598}}.
 
-PvD Additional Information can be used to indicate that a proxy PvD has a split DNS
-configuration.
+An example of a Split DNS Exclusion list would be a proxy acting as a clients default proxy.  The proxy serves all domains, including external domains on the World Wide Web, with the exception of internal domains that are accessed through another means.
+
+## Split DNS Inclusion Lists
 
 {{Section 4.3 of PVDDATA}} defines the optional `dnsZones` key, which contains
 searchable and accessible DNS zones as an array of strings.
@@ -242,7 +250,7 @@ searchable and accessible DNS zones as an array of strings.
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
 as described in {{proxy-pvd}}, domains in the `dnsZones` array indicate specific zones
 that are accessible using the proxy. If a hostname is not included in the enumerated
-zones, then a client SHOULD assume that the hostname will not be accessible through the
+zones, then a client SHOULD assume that the hostname _will not_ be accessible through the
 proxy.
 
 Entries listed in `dnsZones` MUST NOT expand the set of domains that a client is
@@ -283,8 +291,48 @@ content-length = 135
 }
 ~~~
 
-The client could then choose to use this proxy only for accessing names that fall
-within the "internal.example.org" zone.
+## Split DNS Exclusion Lists
+
+{{Section 4.3 of PVDDATA}} defines the optional `dnsZoneExclusions` key, which contains
+searchable and accessible DNS zones as an array of strings.
+
+When present in a PvD Additional Information dictionary that is retrieved for a proxy
+as described in {{proxy-pvd}}, domains in the `dnsZoneExclusions` array indicate specific zones
+which are not accessible using the proxy. If a hostname is not included in the enumerated
+zones, then a client SHOULD assume that the hostname _will_ be accessible through the
+proxy.
+
+## Example
+
+Given a proxy URI template "https://proxy.example.org/masque{?target_host,target_port}",
+which in this case is for UDP proxying, the client could request PvD additional information
+with the following request:
+
+~~~
+:method = GET
+:scheme = https
+:authority = proxy.example.org
+:path = /.well-known/pvd
+accept = application/pvd+json
+~~~
+
+If the proxy has a PvD definition for this proxy, it could return the following
+response to indicate a PvD that all zones except those listed in `dnsZoneExclusions` are accessible through the proxy.
+
+~~~
+:status = 200
+content-type = application/pvd+json
+content-length = 135
+
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2023-06-23T06:00:00Z",
+  "prefixes": [],
+  "dnsZoneExclusions": ["internal.example.org", "skunkworks.example.org"]
+}
+~~~
+
+The client could then choose to use this proxy to access the external World Wide Web, but internal domains within example.org are accessed directly or through another proxy.
 
 # Discovering proxies from network PvDs {#network-proxies}
 
