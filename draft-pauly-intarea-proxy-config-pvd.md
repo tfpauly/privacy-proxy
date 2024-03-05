@@ -240,7 +240,7 @@ An example of a Split DNS Inclusion list are cases where only a subset of domain
 a VPN tunnel or a proxy. For example, IKEv2 defines split DNS configuration in
 {{?IKEV2SPLIT=RFC8598}}.
 
-An example of a Split DNS Exclusion list would be a proxy acting as a clients default proxy.  The proxy serves all domains, including external domains on the World Wide Web, with the exception of internal domains that are accessed through another means.
+An example of a Split DNS Exclusion list would be a proxy acting as a client's default proxy.  The proxy serves all domains, including external domains on the World Wide Web, with the exception of internal domains that are accessed through another means.
 
 ## Split DNS Inclusion Lists
 
