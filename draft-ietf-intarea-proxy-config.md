@@ -1,7 +1,7 @@
 ---
 title: Communicating Proxy Configurations in Provisioning Domains
 abbrev: Proxy Configuration PvDs
-docname: draft-pauly-intarea-proxy-config-pvd-latest
+docname: draft-ietf-intarea-proxy-config-latest
 date:
 category: std
 
