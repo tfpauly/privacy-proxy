@@ -4,7 +4,7 @@ This repository collects various specifications and Internet drafts that will be
 
 ## Communicating Proxy Configurations in Provisioning Domains
 
-* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-intarea-proxy-config-pvd.html)
+* [Editor's Copy](https://tfpauly.github.io/privacy-proxy/#go.draft-ietf-intarea-proxy-config.html)
 
 ## Geo IP HTTP Client Hint
 
