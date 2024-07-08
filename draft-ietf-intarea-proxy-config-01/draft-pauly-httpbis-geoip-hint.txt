@@ -1,0 +1,257 @@
+
+
+
+
+Network Working Group                                           T. Pauly
+Internet-Draft                                                Apple Inc.
+Intended status: Experimental                                D. Schinazi
+Expires: 9 January 2025                                       Google LLC
+                                                             8 July 2024
+
+
+                  The IP Geolocation HTTP Client Hint
+                 draft-pauly-httpbis-geoip-hint-latest
+
+Abstract
+
+   This documents defines an HTTP Client Hint that allows a client to
+   share information about its IP Geolocation.  This helps ensure that
+   servers have information about location that is consistent with what
+   a client expects and what other servers use.
+
+Discussion Venues
+
+   This note is to be removed before publishing as an RFC.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/tfpauly/privacy-proxy.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 9 January 2025.
+
+Copyright Notice
+
+   Copyright (c) 2024 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+     1.1.  Requirements
+   2.  IP Geo Header
+   3.  Server Behavior
+   4.  Security Considerations
+   5.  IANA Considerations
+     5.1.  HTTP Headers
+   6.  References
+     6.1.  Normative References
+     6.2.  Informative References
+   Authors' Addresses
+
+1.  Introduction
+
+   HTTP Client Hints [RFC8942] defines a convention for HTTP headers to
+   communicate optional information from clients to servers as hints.
+   This can be done conditionally based on if a server claims supports
+   for a particular hint.
+
+   This document defines a client hint that can be used to send a IP
+   geolocation entry that maps to the client's IP address.  This
+   location can be used to influence server behavior, such as by causing
+   the server to return responses relevant to the client's location.
+   The format of the IP geolocation entry is the same as that defined
+   for IP geolocation feeds in [GEOFEED].
+
+   This header is intended to be used to provide rough geolocation hints
+   to servers that do not already have accurate or authoritative
+   mappings for the IP addresses of clients.  This can be particularly
+   useful for cases where IP geolocation mappings have changed recently,
+   or a client is using a VPN or proxy that may not be commonly
+   recognized by servers.
+
+   The mechanism for how a client learns the IP geolocation mapping to
+   send is beyond the scope of this document.  [RFC9092] defines some
+   mechanisms for discovery, but clients can also have other mechanisms
+   (such as coordinating with a VPN or proxy that is assigning the
+   client a tunnelled or proxied address) to learn what hint to sent.
+
+1.1.  Requirements
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+2.  IP Geo Header
+
+   The "Sec-CH-IP-Geo" is an Item Structured Field [STRUCTURED-FIELDS].
+   The field's value is a String.  The string uses the format defined in
+   Section 2.1.1 of [GEOFEED], with the IP Prefix element removed.
+   Thus, this contains a comma-separated list of Alpha2code, Region, and
+   City.  The value SHOULD NOT contain a Postal Code.
+
+   For example, the header for an entry "192.0.2.5,US,US-AL,Alabaster"
+   would be:
+
+       Sec-CH-IP-Geo = "US,US-AL,Alabaster"
+
+   This field also defines a parameter, "feed", that contains the URI of
+   the IP geolocation feed that is authoritative for this entry.  For
+   example:
+
+    Sec-CH-IP-Geo = "SG,SG-01,Singapore"; feed="https://noc.ietf.org/geo/google.csv"
+
+   Servers that can provide different content based on Geohash hints
+   SHOULD include the headers in their "Accept-CH" list.
+
+       Accept-CH: Sec-CH-IP-Geo
+
+   Servers also SHOULD indicate for any cacheable content if the IP geo
+   hints will influence the cached content, using the "Vary" header.
+
+       Vary: Sec-CH-IP-Geo
+
+3.  Server Behavior
+
+   Upon receiving a IP Geolocation Client Hint, a server can use the
+   information to influence its behavior in various ways, such as
+   determining the content of HTTP responses.
+
+   Many servers have existing IP geolocation feeds that they use to
+   identify client locations.  Servers can choose to use the hint value
+   in one of several ways:
+
+   *  Use the client hint information instead of consulting another
+      geolocation feed.
+
+   *  Check the value of the "feed" parameter on the header and
+      determine if it is a trusted feed.  If this feed is trusted, but
+      is not the default feed used by the server, the server can choose
+      to prefer the feed indicated by the client.
+
+   *  Check the value of the "feed" parameter on the header and fetch a
+      copy of the feed to verify the mapping, if a copy of the feed has
+      not been fetched recently.
+
+   *  If the feed indicated in the "feed" parameter is unknown or
+      untrusted, but starts becoming common, the server can flag this
+      feed as one to be manually checked and added, if appropriate.
+      This allows servers to automatically discover when new feeds and
+      services are brought up..
+
+   If the server is acting as a forward proxy, such as a CONNECT proxy,
+   it can use the hint to determine an appropriate geo-mapped IP address
+   to use for outbound connections, or a client subnet to present in the
+   EDNS0 Client Subnet extension for DNS queries [RFC6891] [RFC7871].
+
+4.  Security Considerations
+
+   The use of the IP Geolocation Client Hint MUST use the Sec- header
+   prefix as recommended in [RFC8942].
+
+   Servers MUST NOT use IP Geolocation Client Hints for making security
+   or access-control decisions, as the value can be spoofed by a client.
+   The hint is intended only for use in optimizing behavior.
+
+   The value contained in this hint SHOULD be based only on a IP
+   Geolocation feed value for an IP address the client is already
+   presenting to a server.  In order to avoid disclosing any private
+   information, this value MUST not be based on geolocation of the
+   client determined by other means, such as physical latitude and
+   longitude coordinates.
+
+5.  IANA Considerations
+
+5.1.  HTTP Headers
+
+   This document registers the "Sec-CH-IP-Geo" header in the "Permanent
+   Message Header Field Names" registry
+   <https://www.iana.org/assignments/message-headers>.
+
+     +----------------------+----------+--------+---------------+
+     | Header Field Name    | Protocol | Status |   Reference   |
+     +----------------------+----------+--------+---------------+
+     | Sec-CH-IP-Geo        |   http   |  exp   | This document |
+     +----------------------+----------+--------+---------------+
+
+6.  References
+
+6.1.  Normative References
+
+   [GEOFEED]  Kline, E., Duleba, K., Szamonek, Z., Moser, S., and W.
+              Kumari, "A Format for Self-Published IP Geolocation
+              Feeds", RFC 8805, DOI 10.17487/RFC8805, August 2020,
+              <https://www.rfc-editor.org/rfc/rfc8805>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8942]  Grigorik, I. and Y. Weiss, "HTTP Client Hints", RFC 8942,
+              DOI 10.17487/RFC8942, February 2021,
+              <https://www.rfc-editor.org/rfc/rfc8942>.
+
+   [STRUCTURED-FIELDS]
+              Nottingham, M. and P. Kamp, "Structured Field Values for
+              HTTP", RFC 8941, DOI 10.17487/RFC8941, February 2021,
+              <https://www.rfc-editor.org/rfc/rfc8941>.
+
+6.2.  Informative References
+
+   [RFC6891]  Damas, J., Graff, M., and P. Vixie, "Extension Mechanisms
+              for DNS (EDNS(0))", STD 75, RFC 6891,
+              DOI 10.17487/RFC6891, April 2013,
+              <https://www.rfc-editor.org/rfc/rfc6891>.
+
+   [RFC7871]  Contavalli, C., van der Gaast, W., Lawrence, D., and W.
+              Kumari, "Client Subnet in DNS Queries", RFC 7871,
+              DOI 10.17487/RFC7871, May 2016,
+              <https://www.rfc-editor.org/rfc/rfc7871>.
+
+   [RFC9092]  Bush, R., Candela, M., Kumari, W., and R. Housley,
+              "Finding and Using Geofeed Data", RFC 9092,
+              DOI 10.17487/RFC9092, July 2021,
+              <https://www.rfc-editor.org/rfc/rfc9092>.
+
+Authors' Addresses
+
+   Tommy Pauly
+   Apple Inc.
+   One Apple Park Way
+   Cupertino, California 95014,
+   United States of America
+   Email: tpauly@apple.com
+
+
+   David Schinazi
+   Google LLC
+   Email: dschinazi.ietf@gmail.com

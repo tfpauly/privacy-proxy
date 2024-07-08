@@ -1,0 +1,1243 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2021-04-06T00:10:07.762043+00:00",
+  "repo": "tfpauly/privacy-proxy",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "MDU6SXNzdWU4MDY1NjM4MTQ=",
+      "title": "Allow privacy token to support either 2048 or 4096 RSA keys",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/1",
+      "state": "CLOSED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "We should support different versions here.",
+      "createdAt": "2021-02-11T16:47:52Z",
+      "updatedAt": "2021-02-23T20:33:12Z",
+      "closedAt": "2021-02-23T19:20:50Z",
+      "comments": [
+        {
+          "author": "FredericJacobs",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Our recommendation for RSA is to keep 4096-bit keys. We can take a look at how to address performance concerns but I don't think reducing the security parameter size is the best option.",
+          "createdAt": "2021-02-11T16:55:18Z",
+          "updatedAt": "2021-02-11T16:55:18Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I support this relaxation. The actual long-term threat here only applies in very unrealistic or improbable scenarios. That said, having the version determine the key length is nice. ",
+          "createdAt": "2021-02-18T23:15:58Z",
+          "updatedAt": "2021-02-18T23:15:58Z"
+        },
+        {
+          "author": "enygren",
+          "authorAssociation": "NONE",
+          "body": "Is it worth then defining both a v1 (4096-bit key) and a v2 (same but 2048-bit key) within this draft, with some security considerations talking about the trade-offs?  (Or swapping the ordering of v1/v2?)",
+          "createdAt": "2021-02-23T20:29:18Z",
+          "updatedAt": "2021-02-23T20:29:18Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Is it worth then defining both a v1 (4096-bit key) and a v2 (same but 2048-bit key) within this draft, with some security considerations talking about the trade-offs? (Or swapping the ordering of v1/v2?)\r\n\r\nIt probably wouldn't hurt, yeah. Clients that are willing to accept 2048-bit keys could choose to do so. ",
+          "createdAt": "2021-02-23T20:33:12Z",
+          "updatedAt": "2021-02-23T20:33:12Z"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "MDU6SXNzdWU4MTEzNjI2NDI=",
+      "title": "Expand key_id to 8 bytes",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/2",
+      "state": "CLOSED",
+      "author": "enygren",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "With key_id now being a hash of the public key, it would be preferable to switch the size of key_id to 8 bytes.  The chance of collisions with a  32-bit key_id with frequent rotations means that the key generation will need to track past keys to explicitly avoid collisions.  With a 64-bit key_id, accidental collisions is much more likely to be a non-issue.\r\n\r\n",
+      "createdAt": "2021-02-18T18:42:52Z",
+      "updatedAt": "2021-03-25T15:58:45Z",
+      "closedAt": "2021-03-25T15:58:45Z",
+      "comments": [
+        {
+          "author": "enygren",
+          "authorAssociation": "NONE",
+          "body": "(We should also define the encoding of the public key being hashed)",
+          "createdAt": "2021-02-18T18:54:05Z",
+          "updatedAt": "2021-02-18T18:54:05Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> We should also define the encoding of the public key being hashed\r\n\r\nThe public key is a DER-encoded SubjectPublicKeyInfo, which is fairly standard. 8 bytes seems fine here.",
+          "createdAt": "2021-02-18T23:14:22Z",
+          "updatedAt": "2021-02-18T23:14:22Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "I think this is done?",
+          "createdAt": "2021-03-25T15:58:45Z",
+          "updatedAt": "2021-03-25T15:58:45Z"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "MDU6SXNzdWU4MTM4MDM2MTc=",
+      "title": "Strongly reference RSA blind in the Privacy Token Structure section",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/4",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Add comment in section 2 highlighting that the message must be encoded as described in [RSASIG] for the creation of this signature; otherwise without the appropriate encoding this scheme is not robust",
+      "createdAt": "2021-02-22T19:39:55Z",
+      "updatedAt": "2021-02-22T19:39:55Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
+  "pulls": [
+    {
+      "number": 3,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTc2MDYxNDg5",
+      "title": "Expand KeyID, and clarify its format.",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/3",
+      "state": "MERGED",
+      "author": "chris-wood",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #1 and #2.",
+      "createdAt": "2021-02-18T23:18:30Z",
+      "updatedAt": "2021-02-23T19:20:50Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "e7ebedbd3c7a18189a95cde50eee85ceb9ce690a",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "caw/keyids",
+      "headRefOid": "c92380c26f5a2e2426282a7e427d9a78d9daa335",
+      "closedAt": "2021-02-23T19:20:50Z",
+      "mergedAt": "2021-02-23T19:20:50Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "0347212c78394d0e2f4bae48675f4e9cb899d862"
+      },
+      "comments": [
+        {
+          "author": "FredericJacobs",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Random thought, if we require a hash function H for the blinding scheme, do we want to use that same hash function for the KeyID (eg. SHA384). ",
+          "createdAt": "2021-02-19T15:32:04Z",
+          "updatedAt": "2021-02-19T15:32:04Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Random thought, if we require a hash function H for the blinding scheme, do we want to use that same hash function for the KeyID (eg. SHA384).\r\n\r\nWe could, yeah. But we might just consider changing things entirely so that the server specifies the KeyID and there is no client computation at all. (This is the direction we're going for ECH.) This is just a hint for servers anyway, and they know whether or not they will have collisions. ",
+          "createdAt": "2021-02-19T15:42:01Z",
+          "updatedAt": "2021-02-19T15:42:01Z"
+        },
+        {
+          "author": "plisiecki1",
+          "authorAssociation": "NONE",
+          "body": "8 or 16 bytes of hash should adequately reduce the odds of collisions to the extent that it should never happen. Letting the server pick the KeyID would also resolve the collision issue. There may be some (minor) convenience factor for servers to look up keys by a chosen KeyID (e.g., a counter) rather than a derived one (hash).\r\n\r\nRather than making Nk depend on the version, could the signature field for v1 be defined as the rest of the token?  Then no new version is needed for RSA2048 vs RSA4096 vs RSA8192, etc. As long as the client and proxy support the number of key bits, the signature can be encoded efficiently into a version 1 token.",
+          "createdAt": "2021-02-19T18:01:18Z",
+          "updatedAt": "2021-02-19T18:02:20Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Rather than making Nk depend on the version, could the signature field for v1 be defined as the rest of the token? Then no new version is needed for RSA2048 vs RSA4096 vs RSA8192, etc. As long as the client and proxy support the number of key bits, the signature can be encoded efficiently into a version 1 token.\r\n\r\nPerhaps -- I'd need to think about this some more.",
+          "createdAt": "2021-02-19T18:04:58Z",
+          "updatedAt": "2021-02-19T18:04:58Z"
+        },
+        {
+          "author": "FredericJacobs",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@chris-wood : Do we just take a SHA-256 hash and not truncate it?",
+          "createdAt": "2021-02-23T18:53:53Z",
+          "updatedAt": "2021-02-23T18:53:53Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> @chris-wood : Do we just take a SHA-256 hash and not truncate it?\r\n\r\nWhat's the rationale? This is just a hint. If security of the thing using this hint depends on lack of collision, that seems like a bigger problem. ",
+          "createdAt": "2021-02-23T18:55:32Z",
+          "updatedAt": "2021-02-23T18:55:32Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NTk2NzExMTk2",
+          "commit": {
+            "abbreviatedOid": "c92380c"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-02-23T19:20:39Z",
+          "updatedAt": "2021-02-23T19:20:39Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTg2NzU2Mjgx",
+      "title": "Fix the RSA Blind Signature reference.",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/5",
+      "state": "MERGED",
+      "author": "chris-wood",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The usual reference format ({{I-D.foo.bar}}) doesn't work probably because the draft is still new. But this at least points folks to the right place.",
+      "createdAt": "2021-03-08T13:05:18Z",
+      "updatedAt": "2021-03-08T14:03:26Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "0347212c78394d0e2f4bae48675f4e9cb899d862",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "caw/fix-ref",
+      "headRefOid": "6e45e5729058c577ce820e474c2d1d0028d49779",
+      "closedAt": "2021-03-08T14:03:26Z",
+      "mergedAt": "2021-03-08T14:03:26Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "455877dc692a66c6644bb8905b9e0a70756b9562"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjA2MzEzNzMy",
+          "commit": {
+            "abbreviatedOid": "6e45e57"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-03-08T14:03:22Z",
+          "updatedAt": "2021-03-08T14:03:22Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTk5MjQ3NTI0",
+      "title": "Significant changes for Proxy DNS and SVCB request/response handling",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/6",
+      "state": "MERGED",
+      "author": "enygren",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Significant changes and clarifications, renaming the existing headers and ending up with three headers:\r\n\r\n    * Proxy-DNS-Request\r\n    * Proxy-DNS-SVCB\r\n    * Proxy-DNS-Used\r\n   \r\nAlso specify client behavior to allow SVCB-optional clients to use proxies implementing these features while incorporating performance optimizations.",
+      "createdAt": "2021-03-23T23:05:01Z",
+      "updatedAt": "2021-03-30T16:44:58Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "455877dc692a66c6644bb8905b9e0a70756b9562",
+      "headRepository": "enygren/privacy-proxy",
+      "headRefName": "enygren-svcb-proxy",
+      "headRefOid": "bc5a2804452b098be4b179ee3da7dfedb6b0ad7d",
+      "closedAt": "2021-03-29T19:25:32Z",
+      "mergedAt": "2021-03-29T19:25:32Z",
+      "mergedBy": "chris-wood",
+      "mergeCommit": {
+        "oid": "bc5a2804452b098be4b179ee3da7dfedb6b0ad7d"
+      },
+      "comments": [
+        {
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Note that the build is broken due to some markdown issues:  I haven't been able to get even the original to build on my machine for some reason.",
+          "createdAt": "2021-03-23T23:29:13Z",
+          "updatedAt": "2021-03-23T23:29:13Z"
+        },
+        {
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm confused --- this doesn't seem to be showing up in  https://github.com/tfpauly/privacy-proxy/blob/main/draft-proxied-svcb-headers.md ?",
+          "createdAt": "2021-03-30T16:35:34Z",
+          "updatedAt": "2021-03-30T16:35:34Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Your other PR had commits from this PR, so GitHub probably got confused. You'll need to reopen this. :-(",
+          "createdAt": "2021-03-30T16:44:58Z",
+          "updatedAt": "2021-03-30T16:44:58Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjE5OTA2MTI5",
+          "commit": {
+            "abbreviatedOid": "6879d95"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T15:53:54Z",
+          "updatedAt": "2021-03-24T16:21:19Z",
+          "comments": [
+            {
+              "originalPosition": 35,
+              "body": "To clear the TODO below, maybe just not specify the authority form here?\r\n\r\n```suggestion\r\nClients specify the target in their CONNECT* requests by including the name or\r\n```",
+              "createdAt": "2021-03-24T15:53:55Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 45,
+              "body": "```suggestion\r\n```",
+              "createdAt": "2021-03-24T15:54:09Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 67,
+              "body": "```suggestion\r\nIt is not always optimal for client that want to use SVCB to perform a separate\r\nDNS resolution prior to using a CONNECT* proxy, for a couple reasons:\r\n\r\n1. The extra DNS lookup incurs a performance penalty in delaying the client's\r\nconnection establishment, which might be wasted if there aren't any SVCB records present.\r\n\r\n2. If the client is using the proxy for providing additional privacy, performing\r\nDNS lookups not through the proxy might disclose the client's destination\r\nto an additional party.\r\n```",
+              "createdAt": "2021-03-24T15:58:11Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 90,
+              "body": "```suggestion\r\n1. Clients provide additional information in HTTP request header fields,\r\n   allowing the proxy to perform appropriate SVCB lookups alongside\r\n   its AAAA and A lookups.\r\n\r\n2. Proxies return HTTP response header fields specified in this\r\n   document while opportunistically establishing connections.\r\n\r\n3. Services with no SVCB records will be indicated as such\r\n   by the proxy, allowing clients can proceed with the opportunistically\r\n   established connection.  For services with SVCB records,\r\n   the proxy will provide enough information to allow clients\r\n   to decide whether they can proceed with using the connection\r\n   or whether the client needs to establish a new connection\r\n   through the proxy to the alternative endpoint specified\r\n   in a SVCB record.\r\n\r\n4. For subsequent CONNECT* requests, clients provide information\r\n   about the service name.  The proxy uses this to provide\r\n   refreshed SVCB records, and the proxy also continues to\r\n   provide additional information to the client about how\r\n   it established any given connection.\r\n```",
+              "createdAt": "2021-03-24T15:59:03Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 106,
+              "body": "What terms are you thinking of here? Proxy/target type terms, or SVCB-specific terms?",
+              "createdAt": "2021-03-24T15:59:41Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 138,
+              "body": "I'm a bit ambivalent here. I assume that the proxy can always append the \".\" when doing the lookup.",
+              "createdAt": "2021-03-24T16:01:37Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 148,
+              "body": "What's the unit here? Milliseconds?",
+              "createdAt": "2021-03-24T16:03:29Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 168,
+              "body": "Why `u`?",
+              "createdAt": "2021-03-24T16:04:33Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 168,
+              "body": "Ah, it's to get the Used response. Maybe call this out.",
+              "createdAt": "2021-03-24T16:07:47Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 345,
+              "body": "I don't think so? Closest I could find was https://tools.ietf.org/html/draft-main-ipaddr-text-rep-02\r\n",
+              "createdAt": "2021-03-24T16:12:29Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 410,
+              "body": "Not sure, I don't know if we'd use it on our client",
+              "createdAt": "2021-03-24T16:15:01Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 415,
+              "body": "Probably, yes... could that be added into this schema of types?",
+              "createdAt": "2021-03-24T16:15:27Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 425,
+              "body": "Hm, why wouldn't they be able to do this? This does seem a bit restrictive.",
+              "createdAt": "2021-03-24T16:15:55Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 532,
+              "body": "I certainly think clients should be free to use the information to determine coalescing policy, but I don't know if we need to detail it, or just can put a reference off to H2 text for that.",
+              "createdAt": "2021-03-24T16:19:47Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            },
+            {
+              "originalPosition": 581,
+              "body": "Do we need so many, I wonder? We could always just specify one good default to use.",
+              "createdAt": "2021-03-24T16:21:09Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMDQxNTk1",
+          "commit": {
+            "abbreviatedOid": "6879d95"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T17:48:20Z",
+          "updatedAt": "2021-03-24T17:48:20Z",
+          "comments": [
+            {
+              "originalPosition": 35,
+              "body": "Perhaps we also add a Terminology section that gives names to a few of these things?  The \"connect target\" and \"connect target host\" are things we end up wanting to reference concretely in a bunch of places.",
+              "createdAt": "2021-03-24T17:48:20Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMDQ2NjEx",
+          "commit": {
+            "abbreviatedOid": "95666dc"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T17:53:27Z",
+          "updatedAt": "2021-03-24T17:53:28Z",
+          "comments": [
+            {
+              "originalPosition": 106,
+              "body": "Something like \"connect target\" and \"connect target host\" seem like good ones to include as mentioned above.  Perhaps it is a short section that only has one or two items for now but references Section 1.4 of {{SVCB}} for more Terminology?",
+              "createdAt": "2021-03-24T17:53:28Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMDQ4MDk4",
+          "commit": {
+            "abbreviatedOid": "95666dc"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T17:54:58Z",
+          "updatedAt": "2021-03-24T17:54:59Z",
+          "comments": [
+            {
+              "originalPosition": 138,
+              "body": "I'm also ambivalent here.  We should pick one and specify, though.  Or specify that if the trailing \".\" is missing that the consumer should assume its presence and add it.  (The same applies for all of these containing DNS names.)",
+              "createdAt": "2021-03-24T17:54:59Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMDQ4NTc5",
+          "commit": {
+            "abbreviatedOid": "95666dc"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T17:55:27Z",
+          "updatedAt": "2021-03-24T17:55:28Z",
+          "comments": [
+            {
+              "originalPosition": 148,
+              "body": "```suggestion\r\n* wait: The maximum time in milliseconds the proxy should wait before responding to\r\n```",
+              "createdAt": "2021-03-24T17:55:27Z",
+              "updatedAt": "2021-03-24T17:55:37Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMDQ5MDg2",
+          "commit": {
+            "abbreviatedOid": "8a35681"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T17:55:58Z",
+          "updatedAt": "2021-03-24T17:55:58Z",
+          "comments": [
+            {
+              "originalPosition": 148,
+              "body": "Yes.  Added clarification.",
+              "createdAt": "2021-03-24T17:55:58Z",
+              "updatedAt": "2021-03-24T17:55:58Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMDQ5Nzg0",
+          "commit": {
+            "abbreviatedOid": "8a35681"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T17:56:36Z",
+          "updatedAt": "2021-03-24T17:56:37Z",
+          "comments": [
+            {
+              "originalPosition": 168,
+              "body": "Should we just call it \"used\"?  (especially since it is boolean and default-true so not included most of the time?)",
+              "createdAt": "2021-03-24T17:56:36Z",
+              "updatedAt": "2021-03-24T17:56:37Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMDU1Mzc3",
+          "commit": {
+            "abbreviatedOid": "8a35681"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T17:59:05Z",
+          "updatedAt": "2021-03-24T17:59:05Z",
+          "comments": [
+            {
+              "originalPosition": 348,
+              "body": "```suggestion\r\ndestination of the CONNECT* from the proxy.  If this is an IPv6\r\naddress, it MUST follow the canonical string form from {{!RFC5952}}.\r\nIf this is an IPv4 address, it MUST be in dotted octet form (four decimal\r\nvalues with no leading zeros separated by \".\").\r\n```",
+              "createdAt": "2021-03-24T17:59:05Z",
+              "updatedAt": "2021-03-24T17:59:05Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMDU2NzI4",
+          "commit": {
+            "abbreviatedOid": "8a35681"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T17:59:39Z",
+          "updatedAt": "2021-03-24T17:59:40Z",
+          "comments": [
+            {
+              "originalPosition": 345,
+              "body": "Proposed some text above.  I couldn't find any either, and raising this \r\nto sunset4 doesn't seem like a good use of time.  ;)",
+              "createdAt": "2021-03-24T17:59:39Z",
+              "updatedAt": "2021-03-24T17:59:40Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMDU5MjY3",
+          "commit": {
+            "abbreviatedOid": "8a35681"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T18:00:52Z",
+          "updatedAt": "2021-03-24T18:00:52Z",
+          "comments": [
+            {
+              "originalPosition": 415,
+              "body": "Will need to think about this.  Perhaps we open an issue to think further on this after merging?",
+              "createdAt": "2021-03-24T18:00:52Z",
+              "updatedAt": "2021-03-24T18:00:52Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMTU1MTY4",
+          "commit": {
+            "abbreviatedOid": "8a35681"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T19:28:01Z",
+          "updatedAt": "2021-03-24T19:28:01Z",
+          "comments": [
+            {
+              "originalPosition": 425,
+              "body": "It's a topic for discussion.  Some reasons:\r\n- This does change proxy semantics in normative ways.  (ie, it is changing how the proxy is deciding on what to connect to).  There may be security risks/exposures here, for example.  \r\n- This could cause load-balancing issues as those may be smaller sets than A/AAAA and the TTLs may be longer.\r\nThis should probably get a first-class issue to discuss.  (I'm thinking a WG would also want to discuss this as a topic.)",
+              "createdAt": "2021-03-24T19:28:01Z",
+              "updatedAt": "2021-03-24T19:28:01Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMTU1OTYx",
+          "commit": {
+            "abbreviatedOid": "8a35681"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T19:28:56Z",
+          "updatedAt": "2021-03-24T19:28:57Z",
+          "comments": [
+            {
+              "originalPosition": 532,
+              "body": "Perhaps another issue-tracker item?  It's not core/critical here and we could drop or elaborate based on WG interest?",
+              "createdAt": "2021-03-24T19:28:56Z",
+              "updatedAt": "2021-03-24T19:28:57Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIwMTU3NTA3",
+          "commit": {
+            "abbreviatedOid": "8a35681"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-03-24T19:30:51Z",
+          "updatedAt": "2021-03-24T19:30:51Z",
+          "comments": [
+            {
+              "originalPosition": 581,
+              "body": "Maybe just pick 2-3?  Some will depend on the performance of the proxy to various DNS authorities.  SVCB-required clients may also may want a much higher value here than SVCB-optional.  I'd be happy reducing this set but we may need concrete data to propose a set.",
+              "createdAt": "2021-03-24T19:30:51Z",
+              "updatedAt": "2021-03-24T19:30:51Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjAwOTA2NDk2",
+      "title": "Support both rsa2048 and rsa4096",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/7",
+      "state": "CLOSED",
+      "author": "enygren",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #1 \r\n\r\nUse version to differentiate (with v1=rsa4096 and v2=rsa2048).  There may be cleaner ways to address this,\r\nbut doing this retains wire compatibility with version 1.",
+      "createdAt": "2021-03-25T16:56:51Z",
+      "updatedAt": "2021-03-25T18:06:10Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "455877dc692a66c6644bb8905b9e0a70756b9562",
+      "headRepository": "enygren/privacy-proxy",
+      "headRefName": "patch-1",
+      "headRefOid": "1b267f93167dae671d3665ce815ce2e08cec95ef",
+      "closedAt": "2021-03-25T18:06:10Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "@enygren I was chatting with @chris-wood , and we\u2019re thinking of just relaxing the version to not for the Nk length, actually. Do you see any issue with that? ",
+          "createdAt": "2021-03-25T17:00:26Z",
+          "updatedAt": "2021-03-25T17:00:26Z"
+        },
+        {
+          "author": "enygren",
+          "authorAssociation": "NONE",
+          "body": "So allowing Nk to be variable and the remainder of the token size for v1?  That would also be fine/better.",
+          "createdAt": "2021-03-25T17:03:28Z",
+          "updatedAt": "2021-03-25T17:03:28Z"
+        },
+        {
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks, @enygren :-)",
+          "createdAt": "2021-03-25T17:07:41Z",
+          "updatedAt": "2021-03-25T17:07:41Z"
+        },
+        {
+          "author": "enygren",
+          "authorAssociation": "NONE",
+          "body": "Abandoning in-favor of an alternate PR, coming shortly.",
+          "createdAt": "2021-03-25T18:06:10Z",
+          "updatedAt": "2021-03-25T18:06:10Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 8,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjAwOTUzMDU4",
+      "title": "Support alternate key lengths",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/8",
+      "state": "MERGED",
+      "author": "enygren",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #1 \r\n\r\n",
+      "createdAt": "2021-03-25T18:06:50Z",
+      "updatedAt": "2021-03-29T19:25:30Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "455877dc692a66c6644bb8905b9e0a70756b9562",
+      "headRepository": "enygren/privacy-proxy",
+      "headRefName": "token-alt-len",
+      "headRefOid": "716fad03fa41356b3bff6609f9b93294dee84da5",
+      "closedAt": "2021-03-29T19:25:30Z",
+      "mergedAt": "2021-03-29T19:25:30Z",
+      "mergedBy": "chris-wood",
+      "mergeCommit": {
+        "oid": "a65ac3ce44b0accd61ac73bb23a55495bedb70f2"
+      },
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Looks good!",
+          "createdAt": "2021-03-28T20:36:27Z",
+          "updatedAt": "2021-03-28T20:36:27Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjIzNTcyNzE2",
+          "commit": {
+            "abbreviatedOid": "716fad0"
+          },
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-03-29T19:25:21Z",
+          "updatedAt": "2021-03-29T19:25:21Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjA0MjM5NzAz",
+      "title": "Significant changes for Proxy DNS and SVCB request/response handling : try 2",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/9",
+      "state": "OPEN",
+      "author": "enygren",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-03-30T18:42:57Z",
+      "updatedAt": "2021-04-05T18:58:02Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "a65ac3ce44b0accd61ac73bb23a55495bedb70f2",
+      "headRepository": "enygren/privacy-proxy",
+      "headRefName": "enygren-svcb-proxy-pr3",
+      "headRefOid": "b5d1935e6804df806dc386abbd7e794126d968b0",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hopefully this should actually be able to be merged?",
+          "createdAt": "2021-03-30T18:48:32Z",
+          "updatedAt": "2021-03-30T18:48:32Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI1NjM0Njgx",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "MikeBishop",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "This is a good start, with mostly nits and comments on issues that can be deferred from this PR.\r\n\r\nI do feel like we don't have a good story (or perhaps merely a good example?) for cases which involve a mix of CNAMEs and AliasMode entries, though perhaps that's alleviated by the current design of telling the proxy not to consider SVCB records in performing the actual connection.",
+          "createdAt": "2021-03-31T19:15:11Z",
+          "updatedAt": "2021-03-31T20:52:01Z",
+          "comments": [
+            {
+              "originalPosition": 24,
+              "body": "```suggestion\r\nfields for passing DNS metadata in HTTP responses.\r\n```",
+              "createdAt": "2021-03-31T19:15:11Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 48,
+              "body": "```suggestion\r\nmight need to perform additional DNS resolutions prior to issuing a CONNECT* request, as clients\r\n```\r\nLet's at least make this conditional, since part of the point of this draft is not needing to do so.",
+              "createdAt": "2021-03-31T19:35:36Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 61,
+              "body": "```suggestion\r\nIt is not always optimal for a client that wants to use SVCB to perform a separate\r\n```\r\nI probably would have said \"clients,\" but your numbered points below reference a singular client.",
+              "createdAt": "2021-03-31T19:36:11Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 68,
+              "body": "```suggestion\r\nDNS lookups without going through the proxy might disclose the client's destination\r\n```",
+              "createdAt": "2021-03-31T19:37:38Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 70,
+              "body": "```suggestion\r\n\r\n3. If DNS responses vary based on the client's network location, DNS lookups performed by the\r\nclient might not be appropriate for a connection made via the proxy.\r\n\r\n```",
+              "createdAt": "2021-03-31T19:38:58Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 83,
+              "body": "```suggestion\r\n   by the proxy, allowing clients to proceed with the opportunistically\r\n```",
+              "createdAt": "2021-03-31T19:39:58Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 88,
+              "body": "```suggestion\r\n   through the proxy to an alternative endpoint specified\r\n```",
+              "createdAt": "2021-03-31T19:40:31Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 161,
+              "body": "```suggestion\r\n  to receive by specifying this parameter.  Its value MUST\r\n```",
+              "createdAt": "2021-03-31T19:46:41Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 165,
+              "body": "Hopefully covered in more detail later, but this doesn't specify behavior if it is present.  Does the proxy strip out other SVCB parameters, or does it return only SVCB entries that contain at least one of these parameters?",
+              "createdAt": "2021-03-31T19:48:19Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 169,
+              "body": "```suggestion\r\n  values.  This draft specifies version \"draft-01\".\r\n```\r\nAre you intending this to change automatically with draft versions, or increment manually when there's a breaking change?  If automatically, I suspect there are I-D Template ways to sub in the draft version during submission here.",
+              "createdAt": "2021-03-31T19:49:54Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 171,
+              "body": "Again, perhaps more detail later, but what does \"DNS information\" mean in this context?  Is this the CNAME chain?",
+              "createdAt": "2021-03-31T19:51:19Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 269,
+              "body": "```suggestion\r\n\r\nMultiple factors influence which records are returned in this header:\r\n```",
+              "createdAt": "2021-03-31T19:55:21Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 295,
+              "body": "I'm not sure these are the same thing.  How about simply....\r\n```suggestion\r\n  invalid record), the Proxy-SVCB-DNS header MUST NOT be returned.\r\n```",
+              "createdAt": "2021-03-31T20:05:50Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 322,
+              "body": "Given that the ellipsis is intended to represent longer content in the field, it might be better not to encode literal `...` in these binary examples.\r\n```suggestion\r\nproxy-dns-svcb = \"svc2.example.net.\";priority=1;ttl=1800;key1=:aDIsaDM=:;key5=:MTIz...:,\r\n                 \"svc.example.net.\";priority=2;ttl=1800;key1=:aDI=:;key5=:YWJj...:\r\n```",
+              "createdAt": "2021-03-31T20:12:51Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 360,
+              "body": "We might use `host` out of RFC 3986, since it specifies IPv4, IPv6, and hostname rendering. ",
+              "createdAt": "2021-03-31T20:18:40Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 362,
+              "body": "I understand the point, but I don't know that a hostname can be said to \"be\" a series of CNAMEs.  Perhaps...\r\n```suggestion\r\nIf the hostname provided by the client referred to one or more\r\nCNAMEs before resolving to an IP address,\r\n```",
+              "createdAt": "2021-03-31T20:21:26Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 378,
+              "body": "```suggestion\r\n  If this parameter is specified, its value MUST be an sf-string\r\n```",
+              "createdAt": "2021-03-31T20:22:29Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 421,
+              "body": "At first glance, it appears to be redundant. Is there a situation in which the owner is not simply the original hostname (for the first entry) or the preceding hostname (for subsequent entries)?\r\n\r\nHowever, if we want to be able to include additional information in the future, it might make sense to swap the format around; rather than including a list of CNAME(s) and/or IP(s) and giving an owner for each, list the owner first and an inner list of useful records for each.",
+              "createdAt": "2021-03-31T20:28:19Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 430,
+              "body": "I think this probably is too restrictive, especially in the case of SVCB-naive clients.  It means a high probability of the client having to open a new tunnel after processing the records, even though avoiding that is something this spec states as a goal.\r\n\r\nIt still seems reasonable for the proxy to chase AliasMode records, use hints, etc. to choose the target to connect to.  The flip side, I suppose, would be if the proxy chooses a host whose ALPN list doesn't reflect the client's support, but that could be solved by requiring the server to choose based on the transport protocol implied by the method, and then preferring the default ALPN within that.  Alternatively, the client could include an ALPN list in the request.\r\n\r\nHowever, it's also totally reasonable to save that for a separate PR if we decide to do it.",
+              "createdAt": "2021-03-31T20:37:16Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 437,
+              "body": "Given the problems of doing such a resolution noted above, how would they do that?  It might make more sense to say that a client which is SVCB-required must abandon the tunnel if it doesn't receive SVCB records from the proxy.",
+              "createdAt": "2021-03-31T20:40:17Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 537,
+              "body": "My vote is for removal.  Coalescing based on IP address is not a battle we've been winning, and I don't think this draft is the venue to continue fighting it.",
+              "createdAt": "2021-03-31T20:47:32Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            },
+            {
+              "originalPosition": 558,
+              "body": "HTTP-core is moving these registries and will likely be an RFC before this document.  Let's go ahead and point there.",
+              "createdAt": "2021-03-31T20:48:56Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDYwNjk1",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:35:16Z",
+          "updatedAt": "2021-04-05T18:35:17Z",
+          "comments": [
+            {
+              "originalPosition": 165,
+              "body": "Just strips out other parameters.  Is this not clear later?",
+              "createdAt": "2021-04-05T18:35:17Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDYxNDUx",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:36:19Z",
+          "updatedAt": "2021-04-05T18:36:19Z",
+          "comments": [
+            {
+              "originalPosition": 169,
+              "body": "Just when breaking changes.",
+              "createdAt": "2021-04-05T18:36:19Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDYyNjE3",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:37:58Z",
+          "updatedAt": "2021-04-05T18:37:58Z",
+          "comments": [
+            {
+              "originalPosition": 295,
+              "body": "In structured headers they are the same thing.  Would saying an empty sf-list be more clear?",
+              "createdAt": "2021-04-05T18:37:58Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDY0NDQy",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:40:37Z",
+          "updatedAt": "2021-04-05T18:40:38Z",
+          "comments": [
+            {
+              "originalPosition": 362,
+              "body": "```suggestion\r\nIf the hostname connected to by the proxy aliased to one or more CNAMEs,\r\n```",
+              "createdAt": "2021-04-05T18:40:37Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDY0Nzk2",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:41:08Z",
+          "updatedAt": "2021-04-05T18:41:08Z",
+          "comments": [
+            {
+              "originalPosition": 362,
+              "body": "(incorporating this but with \"aliased\" rather than \"referred\"",
+              "createdAt": "2021-04-05T18:41:08Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDY2MjA1",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:43:16Z",
+          "updatedAt": "2021-04-05T18:43:16Z",
+          "comments": [
+            {
+              "originalPosition": 421,
+              "body": "The redundancy is why I'm include to leave it optional or just get rid of it.  It could be helpful for cases such as DNSSEC in the future, or perhaps if we include NS records or other things,",
+              "createdAt": "2021-04-05T18:43:16Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDY3NjE4",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:45:19Z",
+          "updatedAt": "2021-04-05T18:45:19Z",
+          "comments": [
+            {
+              "originalPosition": 430,
+              "body": "Part of why I'm wary of this is that it changes the Proxy behavior and semantics substantially.  Rather than the proxy just returning additional information, here we start fundamentally changing behavior.  (Would doing this count as an \"Update\" to any of the RFCs defining CONNECT, for example?)",
+              "createdAt": "2021-04-05T18:45:19Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDY4NTk1",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:46:48Z",
+          "updatedAt": "2021-04-05T18:46:48Z",
+          "comments": [
+            {
+              "originalPosition": 437,
+              "body": "They could do DoH through the proxy, for example.  Or use ODoH.  Or do something else.  We could mention this in security considerations, but it seems like an implementation detail we don't want to get into?  This is already covered in the core SVCB draft in some detail.",
+              "createdAt": "2021-04-05T18:46:48Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDY4OTU4",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:47:20Z",
+          "updatedAt": "2021-04-05T18:47:21Z",
+          "comments": [
+            {
+              "originalPosition": 537,
+              "body": "```suggestion\r\n\r\n```",
+              "createdAt": "2021-04-05T18:47:20Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDY5ODIz",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:48:35Z",
+          "updatedAt": "2021-04-05T18:48:36Z",
+          "comments": [
+            {
+              "originalPosition": 556,
+              "body": "```suggestion\r\n*TODO*: Move the registries below to the new HTTP-core registry.\r\n\r\nThis document registers the \"Proxy-DNS-Request\" and \"Proxy-DNS-SVCB\",\r\n```",
+              "createdAt": "2021-04-05T18:48:35Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDY5OTk1",
+          "commit": {
+            "abbreviatedOid": "dc5ddd9"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:48:50Z",
+          "updatedAt": "2021-04-05T18:48:51Z",
+          "comments": [
+            {
+              "originalPosition": 558,
+              "body": "Added a todo",
+              "createdAt": "2021-04-05T18:48:50Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDc0MTg1",
+          "commit": {
+            "abbreviatedOid": "5cc3bbe"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:54:48Z",
+          "updatedAt": "2021-04-05T18:54:49Z",
+          "comments": [
+            {
+              "originalPosition": 604,
+              "body": "```suggestion\r\n\r\n# Acknowledgments\r\n\r\nThank you to Mike Bishop, Chris Wood, and others for their feedback and suggestions on this draft.\r\n```",
+              "createdAt": "2021-04-05T18:54:49Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDc0OTU5",
+          "commit": {
+            "abbreviatedOid": "3ab0b48"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:55:56Z",
+          "updatedAt": "2021-04-05T18:55:57Z",
+          "comments": [
+            {
+              "originalPosition": 609,
+              "body": "```suggestion\r\nThank you to Mike Bishop, Chris Wood, \r\nand others for their feedback and suggestions on this draft.\r\n\r\n# Appendix: Additional Examples {#examples}\r\n\r\n```",
+              "createdAt": "2021-04-05T18:55:56Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjI4MDc2MzI4",
+          "commit": {
+            "abbreviatedOid": "3ab0b48"
+          },
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-04-05T18:57:52Z",
+          "updatedAt": "2021-04-05T18:57:53Z",
+          "comments": [
+            {
+              "originalPosition": 171,
+              "body": "yes, A/AAAA/CNAME records\r\n```suggestion\r\n* u: Clients can indicate whether they want DNS information (A, AAAA,\r\n    and CNAME records) about\r\n```",
+              "createdAt": "2021-04-05T18:57:52Z",
+              "updatedAt": "2021-04-05T18:58:02Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
