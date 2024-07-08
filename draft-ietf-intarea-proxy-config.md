@@ -143,24 +143,25 @@ Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname an
 {{!URITEMPLATE=RFC6570}}), along with potentially other keys.
 
 This document defines two mandatory keys for the sub-dictionaries in the
-`proxies` array, `protocol` and `proxy`. These keys, defined below, are
-the initial contents of the proxy information key registry
-({{proxy-info-iana}}). There are also optional keys defined in {{split-dns}}.
+`proxies` array, `protocol` and `proxy`. There are also optional key, including
+`alpn`, and keys for split-DNS defined in {{split-dns}}.
 Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
 recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
 proxy definition, since the proxy might be only applicable for particular
-uses.
+uses. These keys are registered in an IANA registry, defined in {{proxy-info-iana}}.
 
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
 | protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
 | proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
+| alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 
 The values for the `protocol` key are defined in the proxy protocol
-registry ({{proxy-protocol-iana}}). For consistency, any new proxy types
-that use HTTP Upgrade Tokens (and use the `:protocol` pseudo-header) SHOULD
-define the `protocol` value to match the Upgrade Token / `:protocol` value.
+registry ({{proxy-protocol-iana}}), with the initial contents provided below.
+For consistency, any new proxy types that use HTTP Upgrade Tokens (and use
+the `:protocol` pseudo-header) SHOULD define the `protocol` value to match
+the Upgrade Token / `:protocol` value.
 
 | Proxy Protocol | Proxy Location Format | Reference | Notes |
 | --- | --- | --- |
@@ -173,6 +174,10 @@ define the `protocol` value to match the Upgrade Token / `:protocol` value.
 
 The value of `proxy` depends on the Proxy Location Format defined by proxy protocol.
 The types defined here either use a hostname and port, or a full URI template.
+
+If the `alpn` key is present, it provides a hint for the Application-Layer Protocol Negotiation
+(ALPN) {{!ALPN=RFC7301}} protocol identifiers associated with this server. For HTTP proxies,
+this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
