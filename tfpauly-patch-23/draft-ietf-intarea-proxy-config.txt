@@ -203,47 +203,52 @@ Table of Contents
    along with potentially other keys.
 
    This document defines two mandatory keys for the sub-dictionaries in
-   the proxies array, protocol and proxy.  These keys, defined below,
-   are the initial contents of the proxy information key registry
-   (Section 7.2).  There are also optional keys defined in Section 4.
-   Other optional keys can be added to the dictionary to further define
-   or restrict the use of a proxy.  Clients that do not recognize or
+   the proxies array, protocol and proxy.  There are also optional key,
+   including alpn, and keys for split-DNS defined in Section 4.  Other
+   optional keys can be added to the dictionary to further define or
+   restrict the use of a proxy.  Clients that do not recognize or
    understand a key in a proxy sub-dictionary MUST ignore the entire
    proxy definition, since the proxy might be only applicable for
-   particular uses.
+   particular uses.  These keys are registered in an IANA registry,
+   defined in Section 7.2.
 
-   +========+========+===========+======+=================================+
-   |JSON Key|Optional|Description|Type  |Example                          |
-   +========+========+===========+======+=================================+
-   |protocol|No      |The        |String|"connect-udp"                    |
-   |        |        |protocol   |      |                                 |
-   |        |        |used to    |      |                                 |
-   |        |        |communicate|      |                                 |
-   |        |        |with the   |      |                                 |
-   |        |        |proxy      |      |                                 |
-   +--------+--------+-----------+------+---------------------------------+
-   |proxy   |No      |String     |String|"https://proxy.example.org:4443/ |
-   |        |        |containing |      |masque{?target_host,target_port}"|
-   |        |        |the URI    |      |                                 |
-   |        |        |template or|      |                                 |
-   |        |        |hostname   |      |                                 |
-   |        |        |and port of|      |                                 |
-   |        |        |the proxy, |      |                                 |
-   |        |        |depending  |      |                                 |
-   |        |        |on the     |      |                                 |
-   |        |        |format     |      |                                 |
-   |        |        |defined by |      |                                 |
-   |        |        |the        |      |                                 |
-   |        |        |protocol   |      |                                 |
-   +--------+--------+-----------+------+---------------------------------+
+   +========+========+============+=======+=================================+
+   |JSON Key|Optional|Description |Type   |Example                          |
+   +========+========+============+=======+=================================+
+   |protocol|No      |The protocol|String |"connect-udp"                    |
+   |        |        |used to     |       |                                 |
+   |        |        |communicate |       |                                 |
+   |        |        |with the    |       |                                 |
+   |        |        |proxy       |       |                                 |
+   +--------+--------+------------+-------+---------------------------------+
+   |proxy   |No      |String      |String |"https://proxy.example.org:4443/ |
+   |        |        |containing  |       |masque{?target_host,target_port}"|
+   |        |        |the URI     |       |                                 |
+   |        |        |template or |       |                                 |
+   |        |        |hostname and|       |                                 |
+   |        |        |port of the |       |                                 |
+   |        |        |proxy,      |       |                                 |
+   |        |        |depending on|       |                                 |
+   |        |        |the format  |       |                                 |
+   |        |        |defined by  |       |                                 |
+   |        |        |the protocol|       |                                 |
+   +--------+--------+------------+-------+---------------------------------+
+   |alpn    |Yes     |An array of |Array  |["h3","h2"]                      |
+   |        |        |Application-|of     |                                 |
+   |        |        |Layer       |Strings|                                 |
+   |        |        |Protocol    |       |                                 |
+   |        |        |Negotiation |       |                                 |
+   |        |        |protocol    |       |                                 |
+   |        |        |identifiers |       |                                 |
+   +--------+--------+------------+-------+---------------------------------+
 
                                   Table 1
 
    The values for the protocol key are defined in the proxy protocol
-   registry (Section 7.3).  For consistency, any new proxy types that
-   use HTTP Upgrade Tokens (and use the :protocol pseudo-header) SHOULD
-   define the protocol value to match the Upgrade Token / :protocol
-   value.
+   registry (Section 7.3), with the initial contents provided below.
+   For consistency, any new proxy types that use HTTP Upgrade Tokens
+   (and use the :protocol pseudo-header) SHOULD define the protocol
+   value to match the Upgrade Token / :protocol value.
 
    +===============+===============+===============+===================+
    | Proxy         | Proxy         | Reference     | Notes             |
@@ -275,6 +280,11 @@ Table of Contents
    The value of proxy depends on the Proxy Location Format defined by
    proxy protocol.  The types defined here either use a hostname and
    port, or a full URI template.
+
+   If the alpn key is present, it provides a hint for the Application-
+   Layer Protocol Negotiation (ALPN) [ALPN] protocol identifiers
+   associated with this server.  For HTTP proxies, this can indicate if
+   the proxy supports HTTP/3, HTTP/2, etc.
 
    When a PvD that contains the proxies key is fetched from a known
    proxy using the method described in Section 2 the proxies list
@@ -500,6 +510,11 @@ content-length = 135
 8.  References
 
 8.1.  Normative References
+
+   [ALPN]     Friedl, S., Popov, A., Langley, A., and E. Stephan,
+              "Transport Layer Security (TLS) Application-Layer Protocol
+              Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
+              July 2014, <https://www.rfc-editor.org/rfc/rfc7301>.
 
    [CONNECT-IP]
               Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,

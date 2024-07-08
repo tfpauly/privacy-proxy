@@ -1321,14 +1321,13 @@ a single proxy that is available as part of the PvD (see <a href="#proxies-key-i
 Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname and port or a URI template
 <span>[<a href="#URITEMPLATE" class="cite xref">URITEMPLATE</a>]</span>), along with potentially other keys.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">This document defines two mandatory keys for the sub-dictionaries in the
-<code>proxies</code> array, <code>protocol</code> and <code>proxy</code>. These keys, defined below, are
-the initial contents of the proxy information key registry
-(<a href="#proxy-info-iana" class="auto internal xref">Section 7.2</a>). There are also optional keys defined in <a href="#split-dns" class="auto internal xref">Section 4</a>.
+<code>proxies</code> array, <code>protocol</code> and <code>proxy</code>. There are also optional key, including
+<code>alpn</code>, and keys for split-DNS defined in <a href="#split-dns" class="auto internal xref">Section 4</a>.
 Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
 recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
 proxy definition, since the proxy might be only applicable for particular
-uses.<a href="#section-3-2" class="pilcrow">¶</a></p>
+uses. These keys are registered in an IANA registry, defined in <a href="#proxy-info-iana" class="auto internal xref">Section 7.2</a>.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
         <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
@@ -1355,12 +1354,20 @@ uses.<a href="#section-3-2" class="pilcrow">¶</a></p>
             <td class="text-left" rowspan="1" colspan="1">String</td>
             <td class="text-left" rowspan="1" colspan="1">"https://proxy.example.org:4443/masque{?target_host,target_port}"</td>
           </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">alpn</td>
+            <td class="text-left" rowspan="1" colspan="1">Yes</td>
+            <td class="text-left" rowspan="1" colspan="1">An array of Application-Layer Protocol Negotiation protocol identifiers</td>
+            <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
+            <td class="text-left" rowspan="1" colspan="1">["h3","h2"]</td>
+          </tr>
         </tbody>
       </table>
 <p id="section-3-4">The values for the <code>protocol</code> key are defined in the proxy protocol
-registry (<a href="#proxy-protocol-iana" class="auto internal xref">Section 7.3</a>). For consistency, any new proxy types
-that use HTTP Upgrade Tokens (and use the <code>:protocol</code> pseudo-header) SHOULD
-define the <code>protocol</code> value to match the Upgrade Token / <code>:protocol</code> value.<a href="#section-3-4" class="pilcrow">¶</a></p>
+registry (<a href="#proxy-protocol-iana" class="auto internal xref">Section 7.3</a>), with the initial contents provided below.
+For consistency, any new proxy types that use HTTP Upgrade Tokens (and use
+the <code>:protocol</code> pseudo-header) SHOULD define the <code>protocol</code> value to match
+the Upgrade Token / <code>:protocol</code> value.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <table class="center" id="table-2">
         <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
 <thead>
@@ -1424,17 +1431,20 @@ define the <code>protocol</code> value to match the Upgrade Token / <code>:proto
       </table>
 <p id="section-3-6">The value of <code>proxy</code> depends on the Proxy Location Format defined by proxy protocol.
 The types defined here either use a hostname and port, or a full URI template.<a href="#section-3-6" class="pilcrow">¶</a></p>
-<p id="section-3-7">When a PvD that contains the <code>proxies</code> key is fetched from a known proxy
+<p id="section-3-7">If the <code>alpn</code> key is present, it provides a hint for the Application-Layer Protocol Negotiation
+(ALPN) <span>[<a href="#ALPN" class="cite xref">ALPN</a>]</span> protocol identifiers associated with this server. For HTTP proxies,
+this can indicate if the proxy supports HTTP/3, HTTP/2, etc.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">When a PvD that contains the <code>proxies</code> key is fetched from a known proxy
 using the method described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a> the proxies list describes
 equivalent proxies (potentially supporting other protocols) that can be used
-in addition to the known proxy.<a href="#section-3-7" class="pilcrow">¶</a></p>
-<p id="section-3-8">Such cases are useful for informing clients of related proxies as a discovery
+in addition to the known proxy.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-9">Such cases are useful for informing clients of related proxies as a discovery
 method, with the assumption that the client already is aware of one proxy.
 Many historical methods of configuring a proxy only allow configuring
 a single FQDN hostname for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
 URIs that support non-default protocols, such as <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span> and
-<span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.<a href="#section-3-9" class="pilcrow">¶</a></p>
 <div id="example">
 <section id="section-3.1">
         <h3 id="name-example">
@@ -1671,6 +1681,10 @@ The reference and notes fields MAY be empty.<a href="#section-7.3-2" class="pilc
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
+<dt id="ALPN">[ALPN]</dt>
+        <dd>
+<span class="refAuthor">Friedl, S.</span>, <span class="refAuthor">Popov, A.</span>, <span class="refAuthor">Langley, A.</span>, and <span class="refAuthor">E. Stephan</span>, <span class="refTitle">"Transport Layer Security (TLS) Application-Layer Protocol Negotiation Extension"</span>, <span class="seriesInfo">RFC 7301</span>, <span class="seriesInfo">DOI 10.17487/RFC7301</span>, <time datetime="2014-07" class="refDate">July 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7301">https://www.rfc-editor.org/rfc/rfc7301</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="CONNECT-IP">[CONNECT-IP]</dt>
         <dd>
 <span class="refAuthor">Pauly, T., Ed.</span>, <span class="refAuthor">Schinazi, D.</span>, <span class="refAuthor">Chernyakhovsky, A.</span>, <span class="refAuthor">Kühlewind, M.</span>, and <span class="refAuthor">M. Westerlund</span>, <span class="refTitle">"Proxying IP in HTTP"</span>, <span class="seriesInfo">RFC 9484</span>, <span class="seriesInfo">DOI 10.17487/RFC9484</span>, <time datetime="2023-10" class="refDate">October 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9484">https://www.rfc-editor.org/rfc/rfc9484</a>&gt;</span>. </dd>
