@@ -143,23 +143,25 @@ Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname an
 {{!URITEMPLATE=RFC6570}}), along with potentially other keys.
 
 This document defines two mandatory keys for the sub-dictionaries in the
-`proxies` array, `protocol` and `proxy`. These keys, defined below, are
-the initial contents of the proxy information key registry
-({{proxy-info-iana}}). Other optional keys can be added to the dictionary
+`proxies` array, `protocol` and `proxy`. There are also optional key, including
+`alpn`, and keys for split-DNS defined in {{split-dns}}.
+Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
 recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
 proxy definition, since the proxy might be only applicable for particular
-uses.
+uses. These keys are registered in an IANA registry, defined in {{proxy-info-iana}}.
 
-| JSON Key | Description | Type | Example |
-| --- | --- | --- | --- |
-| protocol | The protocol used to communicate with the proxy | String | "connect-udp" |
-| proxy | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
+| JSON Key | Optional | Description | Type | Example |
+| --- | --- | --- | --- | --- |
+| protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
+| proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
+| alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 
 The values for the `protocol` key are defined in the proxy protocol
-registry ({{proxy-protocol-iana}}). For consistency, any new proxy types
-that use HTTP Upgrade Tokens (and use the `:protocol` pseudo-header) SHOULD
-define the `protocol` value to match the Upgrade Token / `:protocol` value.
+registry ({{proxy-protocol-iana}}), with the initial contents provided below.
+For consistency, any new proxy types that use HTTP Upgrade Tokens (and use
+the `:protocol` pseudo-header) SHOULD define the `protocol` value to match
+the Upgrade Token / `:protocol` value.
 
 | Proxy Protocol | Proxy Location Format | Reference | Notes |
 | --- | --- | --- |
@@ -172,6 +174,10 @@ define the `protocol` value to match the Upgrade Token / `:protocol` value.
 
 The value of `proxy` depends on the Proxy Location Format defined by proxy protocol.
 The types defined here either use a hostname and port, or a full URI template.
+
+If the `alpn` key is present, it provides a hint for the Application-Layer Protocol Negotiation
+(ALPN) {{!ALPN=RFC7301}} protocol identifiers associated with this server. For HTTP proxies,
+this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
@@ -236,20 +242,26 @@ a VPN tunnel or a proxy. For example, IKEv2 defines split DNS configuration in
 PvD Additional Information can be used to indicate that a proxy PvD has a split DNS
 configuration.
 
-{{Section 4.3 of PVDDATA}} defines the optional `dnsZones` key, which contains
-searchable and accessible DNS zones as an array of strings.
+This document defines two optional keys that for subdictionaries in the `proxies`
+array that are used for split-DNS configuration.
+
+| JSON Key | Optional | Description | Type | Example |
+| --- | --- | --- | --- | --- |
+| matchDomains | Yes | An array of DNS zones or subdomains that can be accessed over this proxy | Array of Strings | [ "example.com" ] |
+| excludedDomains | Yes | An array of DNS zones or subdomains that cannot be accessed over this proxy, which should be more specific domains of entries in the matchDomains array | Array of Strings | [ "public.example.com" ] |
 
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
-as described in {{proxy-pvd}}, domains in the `dnsZones` array indicate specific zones
+as described in {{proxy-pvd}}, domains in the `matchDomains` array indicate specific zones
 that are accessible using the proxy. If a hostname is not included in the enumerated
 zones, then a client SHOULD assume that the hostname will not be accessible through the
-proxy.
+proxy. If a hostname is included in the `excludedDomains` array, then the client SHOULD NOT
+access it through the proxy.
 
-Entries listed in `dnsZones` MUST NOT expand the set of domains that a client is
+Entries listed in `matchDomains` MUST NOT expand the set of domains that a client is
 willing to send to a particular proxy. The list can only narrow the list of domains
 that the client is willing to send through the proxy. For example, if the client
 has a local policy to only send requests for "example.com" to a proxy
-"proxy.example.com", and the `dnsZones` array contains "internal.example.com" and
+"proxy.example.com", and the `matchDomains` array contains "internal.example.com" and
 "other.company.com", the client would end up only proxying "internal.example.com"
 through the proxy.
 
@@ -279,7 +291,17 @@ content-length = 135
   "identifier": "proxy.example.org.",
   "expires": "2023-06-23T06:00:00Z",
   "prefixes": [],
-  "dnsZones": ["internal.example.org"]
+  "proxies": [
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80"
+    },
+    {
+      "protocol": "connect-udp",
+      "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
+      "matchDomains": [ "internal.example.org" ]
+    }
+  ]
 }
 ~~~
 
@@ -331,10 +353,7 @@ Example: [ {
 
 IANA is requested to create a new registry "Proxy Information PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON keys for use in sub-dictionaries under the `proxies` key.
-The initial contents of this registry are given in {{proxy-enumeration}}.
-
-The status of a key as mandatory or optional is intentionally not denoted in the table to allow for
-flexibility in future use cases. Any new assignments of keys will be considered as optional for the purpose of the mechanism described in this document.
+The initial contents of this registry are given in {{proxy-enumeration}} and {{split-dns}}.
 
 New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review {{!RFC8126}}. Experts are
 requested to ensure that defined keys do not overlap in names or semantics.
