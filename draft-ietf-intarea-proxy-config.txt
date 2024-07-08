@@ -5,8 +5,8 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 24 November 2024                                      Microsoft
-                                                             23 May 2024
+Expires: 9 January 2025                                        Microsoft
+                                                             8 July 2024
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 November 2024.
+   This Internet-Draft will expire on 9 January 2025.
 
 Copyright Notice
 
@@ -203,43 +203,52 @@ Table of Contents
    along with potentially other keys.
 
    This document defines two mandatory keys for the sub-dictionaries in
-   the proxies array, protocol and proxy.  These keys, defined below,
-   are the initial contents of the proxy information key registry
-   (Section 7.2).  Other optional keys can be added to the dictionary to
-   further define or restrict the use of a proxy.  Clients that do not
-   recognize or understand a key in a proxy sub-dictionary MUST ignore
-   the entire proxy definition, since the proxy might be only applicable
-   for particular uses.
+   the proxies array, protocol and proxy.  There are also optional key,
+   including alpn, and keys for split-DNS defined in Section 4.  Other
+   optional keys can be added to the dictionary to further define or
+   restrict the use of a proxy.  Clients that do not recognize or
+   understand a key in a proxy sub-dictionary MUST ignore the entire
+   proxy definition, since the proxy might be only applicable for
+   particular uses.  These keys are registered in an IANA registry,
+   defined in Section 7.2.
 
-   +========+==============+======+===================================+
-   |JSON Key| Description  |Type  | Example                           |
-   +========+==============+======+===================================+
-   |protocol| The protocol |String| "connect-udp"                     |
-   |        | used to      |      |                                   |
-   |        | communicate  |      |                                   |
-   |        | with the     |      |                                   |
-   |        | proxy        |      |                                   |
-   +--------+--------------+------+-----------------------------------+
-   |proxy   | String       |String| "https://proxy.example.org:4443/  |
-   |        | containing   |      | masque{?target_host,target_port}" |
-   |        | the URI      |      |                                   |
-   |        | template or  |      |                                   |
-   |        | hostname and |      |                                   |
-   |        | port of the  |      |                                   |
-   |        | proxy,       |      |                                   |
-   |        | depending on |      |                                   |
-   |        | the format   |      |                                   |
-   |        | defined by   |      |                                   |
-   |        | the protocol |      |                                   |
-   +--------+--------------+------+-----------------------------------+
+   +========+========+============+=======+=================================+
+   |JSON Key|Optional|Description |Type   |Example                          |
+   +========+========+============+=======+=================================+
+   |protocol|No      |The protocol|String |"connect-udp"                    |
+   |        |        |used to     |       |                                 |
+   |        |        |communicate |       |                                 |
+   |        |        |with the    |       |                                 |
+   |        |        |proxy       |       |                                 |
+   +--------+--------+------------+-------+---------------------------------+
+   |proxy   |No      |String      |String |"https://proxy.example.org:4443/ |
+   |        |        |containing  |       |masque{?target_host,target_port}"|
+   |        |        |the URI     |       |                                 |
+   |        |        |template or |       |                                 |
+   |        |        |hostname and|       |                                 |
+   |        |        |port of the |       |                                 |
+   |        |        |proxy,      |       |                                 |
+   |        |        |depending on|       |                                 |
+   |        |        |the format  |       |                                 |
+   |        |        |defined by  |       |                                 |
+   |        |        |the protocol|       |                                 |
+   +--------+--------+------------+-------+---------------------------------+
+   |alpn    |Yes     |An array of |Array  |["h3","h2"]                      |
+   |        |        |Application-|of     |                                 |
+   |        |        |Layer       |Strings|                                 |
+   |        |        |Protocol    |       |                                 |
+   |        |        |Negotiation |       |                                 |
+   |        |        |protocol    |       |                                 |
+   |        |        |identifiers |       |                                 |
+   +--------+--------+------------+-------+---------------------------------+
 
-                                 Table 1
+                                  Table 1
 
    The values for the protocol key are defined in the proxy protocol
-   registry (Section 7.3).  For consistency, any new proxy types that
-   use HTTP Upgrade Tokens (and use the :protocol pseudo-header) SHOULD
-   define the protocol value to match the Upgrade Token / :protocol
-   value.
+   registry (Section 7.3), with the initial contents provided below.
+   For consistency, any new proxy types that use HTTP Upgrade Tokens
+   (and use the :protocol pseudo-header) SHOULD define the protocol
+   value to match the Upgrade Token / :protocol value.
 
    +===============+===============+===============+===================+
    | Proxy         | Proxy         | Reference     | Notes             |
@@ -271,6 +280,11 @@ Table of Contents
    The value of proxy depends on the Proxy Location Format defined by
    proxy protocol.  The types defined here either use a hostname and
    port, or a full URI template.
+
+   If the alpn key is present, it provides a hint for the Application-
+   Layer Protocol Negotiation (ALPN) [ALPN] protocol identifiers
+   associated with this server.  For HTTP proxies, this can indicate if
+   the proxy supports HTTP/3, HTTP/2, etc.
 
    When a PvD that contains the proxies key is fetched from a known
    proxy using the method described in Section 2 the proxies list
@@ -332,22 +346,53 @@ content-length = 222
    PvD Additional Information can be used to indicate that a proxy PvD
    has a split DNS configuration.
 
-   Section 4.3 of [PVDDATA] defines the optional dnsZones key, which
-   contains searchable and accessible DNS zones as an array of strings.
+   This document defines two optional keys that for subdictionaries in
+   the proxies array that are used for split-DNS configuration.
+
+   +===============+========+=============+=======+====================+
+   |JSON Key       |Optional|Description  |Type   |Example             |
+   +===============+========+=============+=======+====================+
+   |matchDomains   |Yes     |An array of  |Array  |[ "example.com" ]   |
+   |               |        |DNS zones or |of     |                    |
+   |               |        |subdomains   |Strings|                    |
+   |               |        |that can be  |       |                    |
+   |               |        |accessed     |       |                    |
+   |               |        |over this    |       |                    |
+   |               |        |proxy        |       |                    |
+   +---------------+--------+-------------+-------+--------------------+
+   |excludedDomains|Yes     |An array of  |Array  |[                   |
+   |               |        |DNS zones or |of     |"public.example.com"|
+   |               |        |subdomains   |Strings|]                   |
+   |               |        |that cannot  |       |                    |
+   |               |        |be accessed  |       |                    |
+   |               |        |over this    |       |                    |
+   |               |        |proxy, which |       |                    |
+   |               |        |should be    |       |                    |
+   |               |        |more         |       |                    |
+   |               |        |specific     |       |                    |
+   |               |        |domains of   |       |                    |
+   |               |        |entries in   |       |                    |
+   |               |        |the          |       |                    |
+   |               |        |matchDomains |       |                    |
+   |               |        |array        |       |                    |
+   +---------------+--------+-------------+-------+--------------------+
+
+                                  Table 3
 
    When present in a PvD Additional Information dictionary that is
    retrieved for a proxy as described in Section 2, domains in the
-   dnsZones array indicate specific zones that are accessible using the
-   proxy.  If a hostname is not included in the enumerated zones, then a
-   client SHOULD assume that the hostname will not be accessible through
-   the proxy.
+   matchDomains array indicate specific zones that are accessible using
+   the proxy.  If a hostname is not included in the enumerated zones,
+   then a client SHOULD assume that the hostname will not be accessible
+   through the proxy.  If a hostname is included in the excludedDomains
+   array, then the client SHOULD NOT access it through the proxy.
 
-   Entries listed in dnsZones MUST NOT expand the set of domains that a
-   client is willing to send to a particular proxy.  The list can only
-   narrow the list of domains that the client is willing to send through
-   the proxy.  For example, if the client has a local policy to only
-   send requests for "example.com" to a proxy "proxy.example.com", and
-   the dnsZones array contains "internal.example.com" and
+   Entries listed in matchDomains MUST NOT expand the set of domains
+   that a client is willing to send to a particular proxy.  The list can
+   only narrow the list of domains that the client is willing to send
+   through the proxy.  For example, if the client has a local policy to
+   only send requests for "example.com" to a proxy "proxy.example.com",
+   and the matchDomains array contains "internal.example.com" and
    "other.company.com", the client would end up only proxying
    "internal.example.com" through the proxy.
 
@@ -368,16 +413,26 @@ content-length = 222
    following response to indicate a PvD that has one accessible zone,
    "internal.example.org".
 
-   :status = 200
-   content-type = application/pvd+json
-   content-length = 135
+:status = 200
+content-type = application/pvd+json
+content-length = 135
 
-   {
-     "identifier": "proxy.example.org.",
-     "expires": "2023-06-23T06:00:00Z",
-     "prefixes": [],
-     "dnsZones": ["internal.example.org"]
-   }
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2023-06-23T06:00:00Z",
+  "prefixes": [],
+  "proxies": [
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80"
+    },
+    {
+      "protocol": "connect-udp",
+      "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
+      "matchDomains": [ "internal.example.org" ]
+    }
+  ]
+}
 
    The client could then choose to use this proxy only for accessing
    names that fall within the "internal.example.org" zone.
@@ -431,12 +486,7 @@ content-length = 222
    Keys", within the "Provisioning Domains (PvDs)" registry page.  This
    new registry reserves JSON keys for use in sub-dictionaries under the
    proxies key.  The initial contents of this registry are given in
-   Section 3.
-
-   The status of a key as mandatory or optional is intentionally not
-   denoted in the table to allow for flexibility in future use cases.
-   Any new assignments of keys will be considered as optional for the
-   purpose of the mechanism described in this document.
+   Section 3 and Section 4.
 
    New assignments in the "Proxy Information PvD Keys" registry will be
    administered by IANA through Expert Review [RFC8126].  Experts are
@@ -461,6 +511,11 @@ content-length = 222
 
 8.1.  Normative References
 
+   [ALPN]     Friedl, S., Popov, A., Langley, A., and E. Stephan,
+              "Transport Layer Security (TLS) Application-Layer Protocol
+              Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
+              July 2014, <https://www.rfc-editor.org/rfc/rfc7301>.
+
    [CONNECT-IP]
               Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,
               Kühlewind, M., and M. Westerlund, "Proxying IP in HTTP",
@@ -470,9 +525,9 @@ content-length = 222
    [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-02, 7 December 2023,
+              httpbis-connect-tcp-03, 1 July 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-02>.
+              connect-tcp-03>.
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
