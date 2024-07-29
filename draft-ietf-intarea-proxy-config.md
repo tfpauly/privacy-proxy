@@ -143,8 +143,8 @@ Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname an
 {{!URITEMPLATE=RFC6570}}), along with potentially other keys.
 
 This document defines two mandatory keys for the sub-dictionaries in the
-`proxies` array, `protocol` and `proxy`. There are also optional key, including
-`alpn`, and keys for split-DNS defined in {{split-dns}}.
+`proxies` array, `protocol` and `proxy`. There are also optional keys, including
+`endpoints`, and keys for split-DNS defined in {{split-dns}}.
 Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
 recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
@@ -155,7 +155,7 @@ uses. These keys are registered in an IANA registry, defined in {{proxy-info-ian
 | --- | --- | --- | --- | --- |
 | protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
 | proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
-| alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
+| endpoints | Yes | The Service Bindings for this origin, as formatted in {{!I-D.ietf-tls-wkech, Section 5}} | Array of Dictionaries | [{"params": {"alpn": ["h2", "h3"]}}] |
 
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
@@ -175,9 +175,9 @@ the Upgrade Token / `:protocol` value.
 The value of `proxy` depends on the Proxy Location Format defined by proxy protocol.
 The types defined here either use a hostname and port, or a full URI template.
 
-If the `alpn` key is present, it provides a hint for the Application-Layer Protocol Negotiation
-(ALPN) {{!ALPN=RFC7301}} protocol identifiers associated with this server. For HTTP proxies,
-this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
+If the `endpoints` key is present, it provides DNS Service Bindings associated with this server's
+origin {{!SVCB=RFC9460}}. For HTTP-based proxies, this can convey IP address hints,
+indicate if the proxy supports HTTP/3, HTTP/2, etc.  Clients MAY ignore this key and its contents.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
@@ -211,7 +211,7 @@ response to indicate a PvD that has two related proxy URIs.
 ~~~
 :status = 200
 content-type = application/pvd+json
-content-length = 222
+content-length = 375
 
 {
   "identifier": "proxy.example.org.",
@@ -224,14 +224,16 @@ content-length = 222
     },
     {
       "protocol": "connect-udp",
-      "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
+      "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
+      "endpoints": [ {"alias": "cdn1.example.com"} ]
     }
   ]
 }
 ~~~
 
 The client would learn the URI template of the proxy that supports UDP using {{CONNECT-UDP}},
-at "https://proxy.example.org/masque{?target_host,target_port}".
+at "https://proxy.example.org/masque{?target_host,target_port}", which can be reached by
+resolving the IP addresses and HTTPS records of cdn1.example.com.
 
 # Split DNS information for proxies {#split-dns}
 
@@ -285,7 +287,7 @@ response to indicate a PvD that has one accessible zone, "internal.example.org".
 ~~~
 :status = 200
 content-type = application/pvd+json
-content-length = 135
+content-length = 371
 
 {
   "identifier": "proxy.example.org.",
