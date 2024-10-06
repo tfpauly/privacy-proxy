@@ -144,7 +144,7 @@ Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname an
 
 This document defines two mandatory keys for the sub-dictionaries in the
 `proxies` array, `protocol` and `proxy`. There are also optional key, including
-`alpn`, and keys for split-DNS defined in {{split-dns}}.
+`alpn`, and destination keys defined in {{destinations}}.
 Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
 recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
