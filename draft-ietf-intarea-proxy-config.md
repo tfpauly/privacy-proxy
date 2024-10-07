@@ -87,7 +87,8 @@ hostname and port, and do not support configuring a full URI template
 
 The mechanisms defined in this document are intended to offer a standard
 alternative that works for URI-based proxies and avoids dependencies
-on executing Javascript scripts, which can open up security vulnerabilities.
+on executing Javascript scripts, which are prone to implementation-specific
+inconsistencies and can open up security vulnerabilities.
 
 ## Requirements
 
