@@ -144,7 +144,7 @@ Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname an
 
 This document defines two mandatory keys for the sub-dictionaries in the
 `proxies` array, `protocol` and `proxy`. There are also optional keys, including
-`alpn`, `ech`, and keys for split-DNS defined in {{split-dns}}.
+`alpn`, `ech`, `ipv4hint`, `ipv6hint`, and keys for split-DNS defined in {{split-dns}}.
 Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
 recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
@@ -157,6 +157,8 @@ uses. These keys are registered in an IANA registry, defined in {{proxy-info-ian
 | proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | ech | Yes | Base64-encoded ECHConfigList structure as defined in {{?ECH=I-D.ietf-tls-esni}} | String | "AD7+DQA65wAgAC..AA==" |
+| ipv4hint | Yes | IPv4 addresses of the proxy | Array of Strings | ["192.0.2.1","192.0.2.2"] |
+| ipv6hint | Yes | IPv6 addresses of the proxy | Array of Strings | ["2001:0DB8::1","2001:0DB8::2"] |
 
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
@@ -182,6 +184,12 @@ this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
 
 The value of `ech` provides information for constructing Encrypted Client Hello {{ECH}} when TLS
 encapsulation is used for proxy communication.
+
+`ipv4hint` and `ipv6hint` provide IP addresses that clients MAY use to reach proxy
+similarly to {{?SVCB=RFC9460}}. Clients SHOULD only use IP addresses from the hints
+only if DNS resolution of A and AAAA records did not succeed. These hints MUST NOT
+be provided if proxy hostname is defined by an IP address. When selecting between
+`ipv4hint` and `ipv6hint` client SHOULD use the Happy Eyeballs approach {{?HappyEyeballsV2=RFC8305}}.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
