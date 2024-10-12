@@ -144,8 +144,8 @@ Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname an
 {{!URITEMPLATE=RFC6570}}), along with potentially other keys.
 
 This document defines two mandatory keys for the sub-dictionaries in the
-`proxies` array, `protocol` and `proxy`. There are also optional key, including
-`alpn`, and keys for split-DNS defined in {{split-dns}}.
+`proxies` array, `protocol` and `proxy`. There are also optional keys, including
+`alpn`, `auth`, and keys for split-DNS defined in {{split-dns}}.
 Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
 recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
@@ -157,6 +157,7 @@ uses. These keys are registered in an IANA registry, defined in {{proxy-info-ian
 | protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
 | proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
+| auth | Yes | A dictionary describing proxy authentication requirements | Object | {"method":"tls-cert"} |
 
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
@@ -179,6 +180,35 @@ The types defined here either use a hostname and port, or a full URI template.
 If the `alpn` key is present, it provides a hint for the Application-Layer Protocol Negotiation
 (ALPN) {{!ALPN=RFC7301}} protocol identifiers associated with this server. For HTTP proxies,
 this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
+
+Optional `auth` key contains a dictionary with a hint for proxy authentication
+requirements. Client MAY use provided information to obtain relevant credentials
+before attempting to communicate with the proxy. In case of multiple proxies available
+to reach a given destination, client SHOULD prefer a proxy with acceptable
+authentication requirements.
+
+`auth` dictionary MUST contain `method` key. For `http-proxy` method it MUST also contain
+`http-schemes` key. For `socks5` method it MUST contain `socks-methods` key.
+
+The valid values for the `method` key of authentication hint are defined in the
+proxy authentication methods registry ({{proxy-auth-iana}}), with the initial contents
+provided below.
+
+| Authentication Method | Description | Reference | Applicable Proxy Protocols | Additional key in authentication dictionary |
+| --- | --- | --- | --- | --- |
+| socks5 | Integrated SOCKS5 authentication | {{Section 3 of SOCKSv5}} | socks5 | socks-methods |
+| tls-cert | TLS Client Certificate | {{Section 4.4.2 of ?TLSv1.3=RFC8446}} | https-connect, connect-udp, connect-ip, connect-tcp | |
+| tls-psk | Pre-shared key for TLS connection | {{Section 4.2.11 of TLSv1.3}} | https-connect, connect-udp, connect-ip, connect-tcp | |
+| http-proxy | Proxy-Authorization HTTP header in request to the proxy | {{Section 4.4 of ?HTTP-AUTH=RFC7235}} | http-connect, https-connect, connect-udp, connect-ip, connect-tcp | http-schemes |
+
+`socks-methods` MUST NOT be provided if authentication method is not set to `socks5`.
+`socks-methods` contains a list of decimal numbers corresponding to supported
+authentication methods by the SOCKS proxy. Valid values of methods are listed
+in corresponding IANA registry {{?SOCKS-METHODS=IANA.socks-methods}}.
+
+`http-schemes` MUST NOT be provided if authenticaiton method is not set to `http-proxy`.
+`http-schemes` contains a list of strings representing supported authentication
+scheme names from corresponding IANA registry {{?HTTP-SCHEMES=IANA.http-authschemes}}.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
@@ -366,5 +396,15 @@ This new registry reserves JSON values for the `protocol` key in `proxies` sub-d
 The initial contents of this registry are given in {{proxy-enumeration}}.
 
 New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review {{!RFC8126}}.
+Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
+The reference and notes fields MAY be empty.
+
+## New PvD Proxy Authentication Methods Registry {#proxy-auth-iana}
+
+IANA is requested to create a new registry "Proxy Authentication Methods PvD Values", within the "Provisioning Domains (PvDs)" registry page.
+This new registry reserves JSON values for the `method` key in `auth` sub-dictionary.
+The initial contents of this registry are given in {{proxy-enumeration}}.
+
+New assignments in the "Proxy Authentication Methods PvD Values" registry will be administered by IANA through Expert Review {{!RFC8126}}.
 Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
 The reference and notes fields MAY be empty.
