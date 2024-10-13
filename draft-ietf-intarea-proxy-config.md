@@ -206,7 +206,7 @@ provided below.
 authentication methods by the SOCKS proxy. Valid values of methods are listed
 in corresponding IANA registry {{?SOCKS-METHODS=IANA.socks-methods}}.
 
-`http-schemes` MUST NOT be provided if authenticaiton method is not set to `http-proxy`.
+`http-schemes` MUST NOT be provided if authentication method is not set to `http-proxy`.
 `http-schemes` contains a list of strings representing supported authentication
 scheme names from corresponding IANA registry {{?HTTP-SCHEMES=IANA.http-authschemes}}.
 
