@@ -242,17 +242,16 @@ DNS in IKEv2 {{?IKEV2SPLIT=RFC8598}}.
 PvD Additional Information can be used to indicate that a proxy PvD should be used for a limited
 set of destinations.
 
-This document defines two optional keys that for subdictionaries in the `proxies`
-array that are used for split-DNS configuration.
+This document defines five additional optional keys that for subdictionaries in the `proxies`
+array that are used to signal information about destinations available through the proxy.
 
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
 | matchDomains | Yes | An array of hostnames and wildcard FQDNs that can be accessed over this proxy | Array of Strings | [ "www.example.com", "*.local" ] |
 | excludedDomains | Yes | An array of hostnames and wildcard FQDNs that cannot be accessed over this proxy, which should be more specific domains of entries in the matchDomains array | Array of Strings | [ "exclude.local" ] |
 | matchIPs | Yes | An array of IP addresses and subnets that can be accessed over this proxy | Array of Strings | [ "2001:DB8::1", "192.168.1.0/24" ] |
-| excludeIPs | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy, which should be more specific addresses or subnets of entries in the matchIP array | Array of Strings | [ "192.168.1.0/25", "192.168.1.254" ] |
-| matchPorts | Yes | An array of TCP or UDP port ranges accessible over this proxy | Array of Strings | [ "80", "443", "1024-65535" ] |
-| excludePorts | Yes | An array of TCP or UDP port ranges that cannot be accessed over this proxy, which should be more specific than entries in the matchPorts array | Array of Strings | [ "3389", "8443" ] |
+| excludedIPs | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy, which should be more specific addresses or subnets of entries in the matchIP array | Array of Strings | [ "192.168.1.0/25", "192.168.1.254" ] |
+| ports | Yes | An array of TCP or UDP port ranges accessible over this proxy | Array of Strings | [ "80", "443", "1024-65535" ] |
 
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
 as described in {{proxy-pvd}}, entries in the `matchDomains` array indicate specific hosts
@@ -274,16 +273,22 @@ that it is used to match multiple levels of sub-domain. For example "*.example.c
 matches "internal.example.com" as well as "www.public.example.com".
 
 Entries in `matchIPs` correspond to IP addresses and subnets that are available through the
-proxy, while entries in `excludeIPs` define IP addresses and subnets that SHOULD NOT be used
+proxy, while entries in `excludedIPs` define IP addresses and subnets that SHOULD NOT be used
 with the proxy. IP address based destination information SHOULD only be used when
 communicating with destinations defined by an IP address and not a hostname.
 
-`matchPorts` and `excludePorts` can be used to restrict relevant transport ports from being
-accessible through the proxy. These lists may contain only specific port numbers (such as
-"80") or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024 to 2048
-including the boundaries. `matchPorts` provides a list of destination TCP or UDP ports that
-can be communicated through the proxy while `excludePorts` provides a list of ports that SHOULD
-NOT be communicated through the proxy.
+`ports` in a list of strings that can be used to instruct the client that only specific destination
+TCP or UDP ports are accessible through the proxy. The list may contain individual port numbers 
+(such as "80") or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024 
+to 2048 including the boundaries.
+
+Note that clients with limited resources MAY not be able to process and utilize all
+entries of an excessively long list. In the case if the provided list is too long for a given
+client, it SHOULD process as many records from the beginning of `matchDomains`, `matchIPs` and
+`ports` lists. These lists SHOULD be sorted with the most important elements placed at
+the start of the list. If a client cannot consume all the entries in `excludedDomains` or
+`excludedIPs` it SHOULD NOT use given proxy configuration to avoid sending traffic that the proxy
+cannot process.
 
 ## Example
 
