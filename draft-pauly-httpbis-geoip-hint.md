@@ -24,17 +24,28 @@ author:
     name: David Schinazi
     organization: Google LLC
     email: dschinazi.ietf@gmail.com
-
+ -
+    ins: C. McMullin
+    name: Ciara McMullin
+    organization: Google LLC
+    email: ciaramcmullin@google.com
+ -
+    ins: D. Mitchell
+    name: Dustin Mitchell
+    organization: Google LLC
+    email: djmitche@gmail.com
 --- abstract
 
-This document defines an HTTP Client Hint that allows the client to
-share information about its network geolocation, reducing the need for destination servers to map IP
-ranges to locations. By actively providing this hint, clients gain
-greater influence and transparency regarding their perceived geolocation.
-Specifically, when clients use IP-hiding technologies like VPNs or
-proxies, servers can still deliver geographically-relevant content
-without relying on large pools of IP addresses and geo-IP feeds that
-can be outdated and inaccurate.
+The rise of IP-hiding technologies like VPNs and proxies helps improve user
+privacy, but it also brings some drawbacks. Maintaining a geographically
+relevant user experience requires large pools of IP addresses, which can
+be costly. Additionally, users often receive inaccurate geolocation
+results because servers rely on geo-IP feeds that can be outdated. To
+address these challenges, we can allow clients to actively send their
+network geolocation directly to the origin server via an HTTP Client
+Hint. This approach will not only enhance geolocation accuracy and reduce IP
+costs, but it also gives clients more say and transparency regarding
+their perceived geolocation.
 
 --- middle
 
@@ -43,9 +54,8 @@ can be outdated and inaccurate.
 HTTP Client Hints {{!RFC8942}} defines a convention for HTTP headers to
 communicate optional information from clients to servers as hints. This
 can be done conditionally based on if a server claims to support a
-particular hint. A server requests hints by listing them in the
-Accept-CH response header, or via other methods such as ALPS or
-ACCEPT_CH frames.
+particular hint. A server can request hints by listing them in the
+Accept-CH response header.
 
 This document defines a client hint that can be used to send a
 geolocation entry based on the client's determined location. This
@@ -69,13 +79,15 @@ results. In addition, the hint reduces reliance on geo-IP
 feeds that often come with limitations such as outdated
 IP-to-location mappings and ongoing maintenance costs.
 
-The mechanism by which the client determines its geolocation is beyond
-the scope of this document. However, the geolocation should still be
-derived from the IP address.
+The client MUST determine geolocation via a cooperating server
+that performs a geo-IP database lookup of the client's IP address.
+Geolocation MUST NOT be derived from GPS or any method that
+provides more specificity than the information obtainable from the
+client's IP address.
 
-This draft doesn’t eliminate the need for IP Geolocation, but adds an
+This draft doesn’t eliminate the need for IP-based geolocation, but adds an
 additional source of information for many use cases. See {{sec-considerations}}
- for more discussion.
+for more discussion.
 
 ## Requirements
 
@@ -116,17 +128,18 @@ factor when choosing a response:
 ~~~
 
 # Client Behavior
+ 
+The client MUST determine geolocation using a cooperating server
+that looks up the client's IP address in a geo-IP database. The client
+MUST NOT use GPS. The client hint value MUST NOT be more precise
+or detailed than what can be inferred from the user’s IP address.
+If the client cannot determine how much information its external
+IP address may reveal, they SHOULD NOT include any value.
 
-If possible, the client SHOULD specify their geolocation. If location
-is not available, the client MAY send a default value or none at all.
-How the default value is determined is outside the scope of this
-document. However, the default value MUST NOT be more precise or
-detailed than what could be inferred from the user’s IP address.
-
-The client MAY include the client hint in requests to the server after
-the server has explicitly opted in to receiving the hint, or if the
-client knows of specific server configurations, such as proxy
-settings, that support including the hint.
+The client MAY append the client hint header in requests to the
+server after the server has explicitly opted in to receiving the
+hint, or if the client knows of specific server configurations,
+such as proxy settings, that support including the hint.
 
 # Server Behavior
 
@@ -142,19 +155,11 @@ geolocation feeds.
 - Serving content that corresponds to the client’s indicated location,
 including delivering region-specific news, weather forecasts, and
 relevant advertisements.
-- Determining service availability and feature access based on the
-client’s indicated location.
 
 The server MUST be able to handle situations where geolocation is
-not provided in a request. Since not all web clients, such as curl,
-will send a Geolocation Client, the server MAY defer to alternative
-methods such as IP-based geolocation feeds to provide said value.
-
-If the server is acting as a forward proxy, such as a CONNECT proxy,
-it can use the hint to determine an appropriate geo-mapped IP address
-to use for outbound connections, or a client subnet to present in the
-EDNS0 Client Subnet extension for DNS queries {{?RFC6891}}
-{{?RFC7871}}.
+not provided in a request. Since not all web clients will send a 
+Geolocation Client, the server MAY defer to alternative methods 
+such as IP-based geolocation feeds to provide said value.
 
 # Security Considerations {#sec-considerations}
 
@@ -163,8 +168,7 @@ prefix as recommended in {{!RFC8942}}.
 
 Servers MUST NOT use Geolocation Client Hints for making security or
 access-control decisions, as the value is provided by the client with
-no additional authentication. The hint is intended only to be used
-for greater user visibility and say over their geolocation.
+no additional authentication.
 
 # Privacy Considerations {#privacy}
 
@@ -176,8 +180,8 @@ MUST NOT reveal information about the user's location that would
 otherwise be hidden.
 
 To prevent disclosing private information, this value MUST NOT be
-based on other sources of geolocation data, such as physical latitude
-and longitude coordinates. Providing overly precise location
+based on other sources of geolocation data, such as GPS or physical 
+latitude and longitude coordinates. Providing overly precise location
 information could expose sensitive user information especially when
 combined with other identifiable signals. Furthermore, when a client
 designates a location different from that derived from their IP
