@@ -28,14 +28,13 @@ author:
 --- abstract
 
 This document defines an HTTP Client Hint that allows the client to
-share its location, reducing the need for destination servers to map IP
-ranges to locations. By actively providing their location, clients gain
-greater influence and transparency regarding their geolocation.
-Additionally, when IP-hiding technologies like VPNs or proxies are
-used, servers can still deliver geographically relevant experiences
-without relying on large IP address pools to cover regional areas or
-costly third-party GeoFeeds, which can be outdated and inaccurate at
-times.
+share information about its network geolocation, reducing the need for destination servers to map IP
+ranges to locations. By actively providing this hint, clients gain
+greater influence and transparency regarding their perceived geolocation.
+Specifically, when clients use IP-hiding technologies like VPNs or
+proxies, servers can still deliver geographically-relevant content
+without relying on large pools of IP addresses and geo-IP feeds that
+can be outdated and inaccurate.
 
 --- middle
 
@@ -52,22 +51,22 @@ This document defines a client hint that can be used to send a
 geolocation entry based on the client's determined location. This
 location can be used to influence server behavior, such as by causing
 the server to return responses relevant to the client's location. The
-format of the geolocation entry is the same as that defined for IP
+format of the geolocation hint is the same as that defined for IP
 geolocation feeds in {{!GEOFEED=RFC8805}}. It only allows for
 coarse-level location specification.
 
 This header aims to provide rough geolocation hints to servers based on
-the client’s determined location, shifting geolocation from a passive
+the client’s network location, shifting geolocation from a passive
 IP-based approach to an active client-controlled one. This not only
 allows the client to influence how their location is interpreted, but
 it also reduces the need for extensive IP address pools when clients
-mask their IP addresses through VPNs or proxies. Typically, VPN
+mask their IP addresses through VPNs or proxies. Typically, VPN or proxy
 providers need to purchase egress IPs for each region to maintain
-accurate geolocation. With client-determined location, the hint can
+accurate geolocation. With a client-provided location hint, the hint can
 minimize the number of IP addresses needed while still supporting
-location-based services such as weather, local news, and search
-results. In addition, the hint reduces reliance on third-party
-GeoFeeds which often come with limitations such as outdated
+location-specific content such as weather, local news, and search
+results. In addition, the hint reduces reliance on geo-IP
+feeds that often come with limitations such as outdated
 IP-to-location mappings and ongoing maintenance costs.
 
 The mechanism by which the client determines its geolocation is beyond
@@ -75,8 +74,8 @@ the scope of this document. However, the geolocation should still be
 derived from the IP address.
 
 This draft doesn’t eliminate the need for IP Geolocation, but adds an
-additional source of information for many use cases. See [Security
-Considerations] for more discussion.
+additional source of information for many use cases. See {{sec-considerations}}
+ for more discussion.
 
 ## Requirements
 
@@ -159,7 +158,7 @@ EDNS0 Client Subnet extension for DNS queries {{?RFC6891}}
 
 # Security Considerations {#sec-considerations}
 
-The use of the Geolocation Client Hint MUST use the Sec- header
+The use of the Geolocation Client Hint MUST use the `Sec-` header
 prefix as recommended in {{!RFC8942}}.
 
 Servers MUST NOT use Geolocation Client Hints for making security or
