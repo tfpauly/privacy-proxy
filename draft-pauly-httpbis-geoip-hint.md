@@ -110,7 +110,7 @@ For example, the header for an entry "192.0.2.5,US,US-AL,Alabaster" would be:
 Given that the Sec-CH-IP-Geo is a high-entropy client hint, meaning it is
 a client hint that is not in the low-entropy hint table, the server
 MUST explicitly opt-in to receive the Geo Client Hint as defined in
-{{?RFC8942}}. It will not be sent by default and the server MAY
+{{RFC8942}}. It will not be sent by default and the server MAY
 indicate support for this hint via the Accept-CH header in the
 initial response:
 
