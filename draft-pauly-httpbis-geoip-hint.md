@@ -96,7 +96,7 @@ For example, the header for an entry "192.0.2.5,US,US-AL,Alabaster" would be:
     Sec-CH-IP-Geo = "US,US-AL,Alabaster"
 ~~~
 
-Given that the Sec-CH-Geo is a high-entropy client hint, meaning it is
+Given that the Sec-CH-IP-Geo is a high-entropy client hint, meaning it is
 a client hint that is not in the low-entropy hint table, the server
 MUST explicitly opt-in to receive the Geo Client Hint as defined in
 {{?RFC8942}}. It will not be sent by default and the server MAY
