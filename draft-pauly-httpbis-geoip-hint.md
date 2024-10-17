@@ -158,7 +158,7 @@ relevant advertisements.
 
 The server MUST be able to handle situations where geolocation is
 not provided in a request. Since not all web clients will send a 
-Geolocation Client, the server MAY defer to alternative methods 
+Geolocation Client Hint, the server MAY defer to alternative methods 
 such as IP-based geolocation feeds to provide said value.
 
 # Security Considerations {#sec-considerations}
