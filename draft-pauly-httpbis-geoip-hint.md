@@ -44,8 +44,8 @@ results because servers rely on geo-IP feeds that can be outdated. To
 address these challenges, we can allow clients to actively send their
 network geolocation directly to the origin server via an HTTP Client
 Hint. This approach will not only enhance geolocation accuracy and reduce IP
-costs, but it also gives clients more say and transparency regarding
-their perceived geolocation.
+costs, but it also gives clients more transparency regarding their perceived
+geolocation.
 
 --- middle
 
@@ -126,8 +126,6 @@ The client MUST determine geolocation using a cooperating server
 that looks up the client's IP address in a geo-IP database. The client
 MUST NOT use GPS. The client hint value MUST NOT be more precise
 or detailed than what can be inferred from the user’s IP address.
-If the client cannot determine how much information its external
-IP address may reveal, they SHOULD NOT include any value.
 
 The client MAY include the client hint header in requests to the
 server after the server has explicitly opted in to receiving the
@@ -155,9 +153,6 @@ Geolocation Client Hint, the server MAY defer to alternative methods
 such as IP-based geolocation feeds to provide said value.
 
 # Security Considerations {#sec-considerations}
-
-The use of the Geolocation Client Hint MUST use the `Sec-` header
-prefix as recommended in {{!RFC8942}}.
 
 Servers MUST NOT use Geolocation Client Hints for security or
 access-control decisions, as the value is provided by the client
