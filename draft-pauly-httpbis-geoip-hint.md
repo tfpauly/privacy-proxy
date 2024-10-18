@@ -82,10 +82,6 @@ IP-to-location mappings and ongoing maintenance costs.
 The client determines geolocation via a cooperating server
 that performs a geo-IP database lookup of the client's IP address.
 
-This draft doesn’t eliminate the need for IP-based geolocation, but adds an
-additional source of information for many use cases. See {{sec-considerations}}
-for more discussion.
-
 ## Requirements
 
 {::boilerplate bcp14}
@@ -163,17 +159,23 @@ such as IP-based geolocation feeds to provide said value.
 The use of the Geolocation Client Hint MUST use the `Sec-` header
 prefix as recommended in {{!RFC8942}}.
 
-Servers MUST NOT use Geolocation Client Hints for making security or
-access-control decisions, as the value is provided by the client with
-no additional authentication.
+Servers MUST NOT use Geolocation Client Hints for security or
+access-control decisions, as the value is provided by the client
+without additional authentication or verification. Servers that
+offer services restricted to clients in a specific country or
+administrative region must rely on geoIP databases to
+determine the client's location for access control purposes.
+However, the Geolocation Client Hint can be used to customize
+responses based on where the client claims to be within that
+restricted region.
 
 # Privacy Considerations {#privacy}
 
-Any default value provided in this hint MUST NOT be more specific than
-the information that could be obtained from the client's IP address
-and a well-maintained map of IP ranges to locations. In particular,
-when a privacy technology such as a VPN is in use, the default value
-MUST NOT reveal information about the user's location that would
+Any value provided in this hint MUST NOT be more specific than the
+information that could be obtained from the client's IP address and
+a well-maintained map of IP ranges to locations. In particular,
+when a privacy technology such as a VPN is in use, the value MUST
+NOT reveal information about the user's location that would
 otherwise be hidden.
 
 To prevent disclosing private information, this value cannot be
