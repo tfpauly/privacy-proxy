@@ -36,7 +36,7 @@ author:
     email: djmitche@gmail.com
 --- abstract
 
-The rise of IP-hiding technologies like VPNs and proxies helps improve user
+The rise of IP-hiding technologies such as VPNs and proxies helps improve user
 privacy, but it also brings some drawbacks. Maintaining a geographically
 relevant user experience requires large pools of IP addresses, which can
 be costly. Additionally, users often receive inaccurate geolocation
@@ -53,7 +53,7 @@ their perceived geolocation.
 
 HTTP Client Hints {{!RFC8942}} defines a convention for HTTP headers to
 communicate optional information from clients to servers as hints. This
-can be done conditionally based on if a server claims to support a
+can be done conditionally based on whether a server claims to support a
 particular hint. A server can request hints by listing them in the
 Accept-CH response header.
 
@@ -75,15 +75,12 @@ providers need to purchase egress IPs for each region to maintain
 accurate geolocation. With a client-provided location hint, the hint can
 minimize the number of IP addresses needed while still supporting
 location-specific content such as weather, local news, and search
-results. In addition, the hint reduces reliance on geo-IP
+results. In addition, the hint reduces most servers' reliance on geo-IP
 feeds that often come with limitations such as outdated
 IP-to-location mappings and ongoing maintenance costs.
 
-The client MUST determine geolocation via a cooperating server
+The client determines geolocation via a cooperating server
 that performs a geo-IP database lookup of the client's IP address.
-Geolocation MUST NOT be derived from GPS or any method that
-provides more specificity than the information obtainable from the
-client's IP address.
 
 This draft doesn’t eliminate the need for IP-based geolocation, but adds an
 additional source of information for many use cases. See {{sec-considerations}}
@@ -107,9 +104,9 @@ For example, the header for an entry "192.0.2.5,US,US-AL,Alabaster" would be:
     Sec-CH-IP-Geo = "US,US-AL,Alabaster"
 ~~~
 
-Given that the Sec-CH-IP-Geo is a high-entropy client hint, meaning it is
-a client hint that is not in the low-entropy hint table, the server
-MUST explicitly opt-in to receive the Geo Client Hint as defined in
+Given that the Sec-CH-IP-Geo is a high-entropy client hint (i.e.,
+a client hint that is not in the low-entropy hint table), the server
+needs to explicitly opt-in in order to receive the Geo Client Hint as defined in
 {{RFC8942}}. It will not be sent by default and the server MAY
 indicate support for this hint via the Accept-CH header in the
 initial response:
@@ -136,7 +133,7 @@ or detailed than what can be inferred from the user’s IP address.
 If the client cannot determine how much information its external
 IP address may reveal, they SHOULD NOT include any value.
 
-The client MAY append the client hint header in requests to the
+The client MAY include the client hint header in requests to the
 server after the server has explicitly opted in to receiving the
 hint, or if the client knows of specific server configurations,
 such as proxy settings, that support including the hint.
@@ -179,7 +176,7 @@ when a privacy technology such as a VPN is in use, the default value
 MUST NOT reveal information about the user's location that would
 otherwise be hidden.
 
-To prevent disclosing private information, this value MUST NOT be
+To prevent disclosing private information, this value cannot be
 based on other sources of geolocation data, such as GPS or physical 
 latitude and longitude coordinates. Providing overly precise location
 information could expose sensitive user information especially when
