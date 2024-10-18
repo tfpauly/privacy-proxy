@@ -5,8 +5,8 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 9 January 2025                                        Microsoft
-                                                             8 July 2024
+Expires: 21 April 2025                                         Microsoft
+                                                         18 October 2024
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 January 2025.
+   This Internet-Draft will expire on 21 April 2025.
 
 Copyright Notice
 
@@ -140,8 +140,9 @@ Table of Contents
 
    The mechanisms defined in this document are intended to offer a
    standard alternative that works for URI-based proxies and avoids
-   dependencies on executing Javascript scripts, which can open up
-   security vulnerabilities.
+   dependencies on executing Javascript scripts, which are prone to
+   implementation-specific inconsistencies and can open up security
+   vulnerabilities.
 
 1.2.  Requirements
 
@@ -525,9 +526,9 @@ content-length = 135
    [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-03, 1 July 2024,
+              httpbis-connect-tcp-05, 2 August 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-03>.
+              connect-tcp-05>.
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
