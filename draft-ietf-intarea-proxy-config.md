@@ -249,15 +249,15 @@ array that are used for split-DNS configuration.
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
 | matchDomains | Yes | An array of DNS zones or subdomains that can be accessed over this proxy | Array of Strings | [ "example.com" ] |
-| excludeDomains | Yes | An array of DNS zones or subdomains that cannot be accessed over this proxy. If matchDomains is specfied excludeDomains should be more specific domains of entries in the matchDomains array | Array of Strings | [ "public.example.com" ] |
+| excludeDomains | Yes | An array of DNS zones or subdomains that cannot be accessed over this proxy. If matchDomains is specfied, excludeDomains should list more specific domains within entries in the matchDomains array | Array of Strings | [ "public.example.com" ] |
 
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
 as described in {{proxy-pvd}}, domains in the `matchDomains` array indicate specific zones
 that are accessible using the proxy. If a hostname is not included in the enumerated
 zones, then a client SHOULD assume that the hostname will not be accessible through the
 proxy. If a hostname is included in the `excludeDomains` array, then the client SHOULD NOT
-access it through the proxy. The excludeDomains parameter can be present even if matchDomains
-is omitted. That means the client should assume that all domains except the domains
+access it through the proxy. The `excludeDomains` parameter can be present even if `matchDomains`
+is omitted. When this is the case, the client assumes that all domains except the domains
 listed in the `excludeDomains` array are accessible through the proxy.
 
 Entries listed in `matchDomains` MUST NOT expand the set of domains that a client is
