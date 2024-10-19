@@ -174,7 +174,7 @@ Servers MUST NOT use Geolocation Client Hints for security or
 access-control decisions, as the value is provided by the client
 without additional authentication or verification. Servers that
 offer services restricted to clients in a specific country or
-administrative region must rely on geoIP databases to
+administrative region might already rely on geoIP databases to
 determine the client's location for access control purposes.
 However, the Geolocation Client Hint can be used to customize
 responses based on where the client claims to be within that
