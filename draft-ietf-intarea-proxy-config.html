@@ -1528,9 +1528,9 @@ array that are used for split-DNS configuration.<a href="#section-4-3" class="pi
             <td class="text-left" rowspan="1" colspan="1">[ "example.com" ]</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">excludedDomains</td>
+            <td class="text-left" rowspan="1" colspan="1">excludeDomains</td>
             <td class="text-left" rowspan="1" colspan="1">Yes</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of DNS zones or subdomains that cannot be accessed over this proxy, which should be more specific domains of entries in the matchDomains array</td>
+            <td class="text-left" rowspan="1" colspan="1">An array of DNS zones or subdomains that cannot be accessed over this proxy. If matchDomains is specfied, excludeDomains should list more specific domains within entries in the matchDomains array</td>
             <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
             <td class="text-left" rowspan="1" colspan="1">[ "public.example.com" ]</td>
           </tr>
@@ -1540,8 +1540,10 @@ array that are used for split-DNS configuration.<a href="#section-4-3" class="pi
 as described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a>, domains in the <code>matchDomains</code> array indicate specific zones
 that are accessible using the proxy. If a hostname is not included in the enumerated
 zones, then a client SHOULD assume that the hostname will not be accessible through the
-proxy. If a hostname is included in the <code>excludedDomains</code> array, then the client SHOULD NOT
-access it through the proxy.<a href="#section-4-5" class="pilcrow">¶</a></p>
+proxy. If a hostname is included in the <code>excludeDomains</code> array, then the client SHOULD NOT
+access it through the proxy. The <code>excludeDomains</code> parameter can be present even if <code>matchDomains</code>
+is omitted. When this is the case, the client assumes that all domains except the domains
+listed in the <code>excludeDomains</code> array are accessible through the proxy.<a href="#section-4-5" class="pilcrow">¶</a></p>
 <p id="section-4-6">Entries listed in <code>matchDomains</code> MUST NOT expand the set of domains that a client is
 willing to send to a particular proxy. The list can only narrow the list of domains
 that the client is willing to send through the proxy. For example, if the client

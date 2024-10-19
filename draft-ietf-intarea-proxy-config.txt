@@ -355,33 +355,33 @@ content-length = 222
    This document defines two optional keys that for subdictionaries in
    the proxies array that are used for split-DNS configuration.
 
-   +===============+========+=============+=======+====================+
-   |JSON Key       |Optional|Description  |Type   |Example             |
-   +===============+========+=============+=======+====================+
-   |matchDomains   |Yes     |An array of  |Array  |[ "example.com" ]   |
-   |               |        |DNS zones or |of     |                    |
-   |               |        |subdomains   |Strings|                    |
-   |               |        |that can be  |       |                    |
-   |               |        |accessed     |       |                    |
-   |               |        |over this    |       |                    |
-   |               |        |proxy        |       |                    |
-   +---------------+--------+-------------+-------+--------------------+
-   |excludedDomains|Yes     |An array of  |Array  |[                   |
-   |               |        |DNS zones or |of     |"public.example.com"|
-   |               |        |subdomains   |Strings|]                   |
-   |               |        |that cannot  |       |                    |
-   |               |        |be accessed  |       |                    |
-   |               |        |over this    |       |                    |
-   |               |        |proxy, which |       |                    |
-   |               |        |should be    |       |                    |
-   |               |        |more         |       |                    |
-   |               |        |specific     |       |                    |
-   |               |        |domains of   |       |                    |
-   |               |        |entries in   |       |                    |
-   |               |        |the          |       |                    |
-   |               |        |matchDomains |       |                    |
-   |               |        |array        |       |                    |
-   +---------------+--------+-------------+-------+--------------------+
+   +==============+========+==============+=======+====================+
+   |JSON Key      |Optional|Description   |Type   |Example             |
+   +==============+========+==============+=======+====================+
+   |matchDomains  |Yes     |An array of   |Array  |[ "example.com" ]   |
+   |              |        |DNS zones or  |of     |                    |
+   |              |        |subdomains    |Strings|                    |
+   |              |        |that can be   |       |                    |
+   |              |        |accessed over |       |                    |
+   |              |        |this proxy    |       |                    |
+   +--------------+--------+--------------+-------+--------------------+
+   |excludeDomains|Yes     |An array of   |Array  |[                   |
+   |              |        |DNS zones or  |of     |"public.example.com"|
+   |              |        |subdomains    |Strings|]                   |
+   |              |        |that cannot be|       |                    |
+   |              |        |accessed over |       |                    |
+   |              |        |this proxy.   |       |                    |
+   |              |        |If            |       |                    |
+   |              |        |matchDomains  |       |                    |
+   |              |        |is specfied,  |       |                    |
+   |              |        |excludeDomains|       |                    |
+   |              |        |should list   |       |                    |
+   |              |        |more specific |       |                    |
+   |              |        |domains within|       |                    |
+   |              |        |entries in the|       |                    |
+   |              |        |matchDomains  |       |                    |
+   |              |        |array         |       |                    |
+   +--------------+--------+--------------+-------+--------------------+
 
                                   Table 3
 
@@ -390,8 +390,12 @@ content-length = 222
    matchDomains array indicate specific zones that are accessible using
    the proxy.  If a hostname is not included in the enumerated zones,
    then a client SHOULD assume that the hostname will not be accessible
-   through the proxy.  If a hostname is included in the excludedDomains
-   array, then the client SHOULD NOT access it through the proxy.
+   through the proxy.  If a hostname is included in the excludeDomains
+   array, then the client SHOULD NOT access it through the proxy.  The
+   excludeDomains parameter can be present even if matchDomains is
+   omitted.  When this is the case, the client assumes that all domains
+   except the domains listed in the excludeDomains array are accessible
+   through the proxy.
 
    Entries listed in matchDomains MUST NOT expand the set of domains
    that a client is willing to send to a particular proxy.  The list can
