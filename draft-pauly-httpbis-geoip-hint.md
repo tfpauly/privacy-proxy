@@ -195,7 +195,7 @@ latitude and longitude coordinates. Providing overly precise location
 information could expose sensitive user information especially when
 combined with other identifiable signals. Furthermore, when a client
 designates a location different from that derived from their IP
-address, the combination of designated location and IP may create a
+address, the combination of designated location and IP can create a
 unique identifier, increasing the risk of cross-site tracking.
 
 The hint MUST NOT be sent by default or in an always-on manner. It
