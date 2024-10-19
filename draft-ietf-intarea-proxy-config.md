@@ -68,6 +68,10 @@ proxy ({{split-dns}}).
 Additionally, this document partly describes how these mechanisms might be used
 to discover proxies associated with a network ({{network-proxies}}).
 
+Using this mechanism a client can learn that a legacy insecure HTTP proxy that
+the client is configured with is also accessible using HTTPS. In this way,
+clients can upgrade to a more secure connection to the proxy.
+
 ## Background
 
 Other non-standard mechanisms for proxy configuration and discovery have been
