@@ -36,8 +36,9 @@ author:
     email: djmitche@gmail.com
 --- abstract
 
-The rise of IP-hiding technologies such as VPNs and proxies helps improve user
-privacy, but it also brings some drawbacks. Maintaining a geographically
+Techniques that improve user privacy by hiding original client IP addresses,
+such as VPNs and proxies, have faced challenges with server that rely on
+IP addresses to determine client location. Maintaining a geographically
 relevant user experience requires large pools of IP addresses, which can
 be costly. Additionally, users often receive inaccurate geolocation
 results because servers rely on geo-IP feeds that can be outdated. To
