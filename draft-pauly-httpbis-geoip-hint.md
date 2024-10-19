@@ -127,6 +127,16 @@ The client MUST determine geolocation using a cooperating server
 that looks up the client's IP address in a geo-IP database. The client
 MUST NOT use GPS. The client hint value MUST NOT be more precise
 or detailed than what can be inferred from the user’s IP address.
+When the client is routing traffic through a proxy or a VPN, the
+IP address used to generate this geolocation hint MUST be an
+address that is presented upstream beyond the proxy or VPN
+(in other words, the "egress IP address"). The proxy or VPN's
+selection of this egress IP address MAY have been based on
+the client's original un-proxied IP address, but any hints that
+the client presents to servers beyond a proxy or VPN MUST NOT
+reveal more geolocation information that would be possible to
+determine from looking up information about the egress IP address
+itself.
 
 The client MAY include the client hint header in requests to the
 server after the server has explicitly opted in to receiving the
