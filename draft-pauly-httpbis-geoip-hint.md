@@ -72,7 +72,7 @@ IP-based approach to an active client-controlled one. This not only
 allows the client to influence how their location is interpreted, but
 it also reduces the need for extensive IP address pools when clients
 mask their IP addresses through VPNs or proxies. Typically, VPN or proxy
-providers need to purchase egress IPs for each region to maintain
+providers need to manage egress IPs for each region to maintain
 accurate geolocation. With a client-provided location hint, the hint can
 minimize the number of IP addresses needed while still supporting
 location-specific content such as weather, local news, and search
