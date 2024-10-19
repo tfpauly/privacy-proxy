@@ -122,7 +122,7 @@ factor when choosing a response:
 ~~~
 
 # Client Behavior
- 
+
 The client MUST determine geolocation using a cooperating server
 that looks up the client's IP address in a geo-IP database. The client
 MUST NOT use GPS. The client hint value MUST NOT be more precise
@@ -164,8 +164,8 @@ including delivering region-specific news, weather forecasts, and
 relevant advertisements.
 
 The server MUST be able to handle situations where geolocation is
-not provided in a request. Since not all web clients will send a 
-Geolocation Client Hint, the server MAY defer to alternative methods 
+not provided in a request. Since not all web clients will send a
+Geolocation Client Hint, the server MAY defer to alternative methods
 such as IP-based geolocation feeds to provide said value.
 
 # Security Considerations {#sec-considerations}
@@ -190,7 +190,7 @@ NOT reveal information about the user's location that would
 otherwise be hidden.
 
 To prevent disclosing private information, this value cannot be
-based on other sources of geolocation data, such as GPS or physical 
+based on other sources of geolocation data, such as GPS or physical
 latitude and longitude coordinates. Providing overly precise location
 information could expose sensitive user information especially when
 combined with other identifiable signals. Furthermore, when a client
