@@ -154,6 +154,11 @@ including:
 
 - Using the client hint information instead of consulting IP-based
 geolocation feeds.
+- Recognizing a mismatch between the client hint information and the server's
+current result from its IP-based geolocation feed as a reason to schedule an
+automatic refresh of its geolocation feed information. This can help ensure that
+changes to feeds are adopted quickly, improving results for clients that don't
+send the client hint.
 - Serving content that corresponds to the client’s indicated location,
 including delivering region-specific news, weather forecasts, and
 relevant advertisements.
