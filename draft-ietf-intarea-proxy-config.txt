@@ -5,8 +5,8 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 21 April 2025                                         Microsoft
-                                                         18 October 2024
+Expires: 22 April 2025                                         Microsoft
+                                                         19 October 2024
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 April 2025.
+   This Internet-Draft will expire on 22 April 2025.
 
 Copyright Notice
 
@@ -119,6 +119,11 @@ Table of Contents
    Additionally, this document partly describes how these mechanisms
    might be used to discover proxies associated with a network
    (Section 5).
+
+   Using this mechanism a client can learn that a legacy insecure HTTP
+   proxy that the client is configured with is also accessible using
+   HTTPS.  In this way, clients can upgrade to a more secure connection
+   to the proxy.
 
 1.1.  Background
 
