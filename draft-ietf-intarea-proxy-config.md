@@ -257,7 +257,7 @@ When present in a PvD Additional Information dictionary that is retrieved for a 
 as described in {{proxy-pvd}}, entries in the `matchDomains` array indicate specific hosts
 and zones that are accessible using the proxy. If a hostname is neither matching an specific
 entry nor included in the enumerated zones, then a client SHOULD assume that the hostname
-will not be accessible through the proxy. If a hostname is included in the `excludedDomains`
+will not be accessible through the proxy. If a hostname is included in the `excludeDomains`
 array, then the client SHOULD NOT access it through the proxy.
 
 Entries listed in `matchDomains` MUST NOT expand the set of domains that a client is
