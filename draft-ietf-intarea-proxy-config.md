@@ -282,14 +282,6 @@ TCP or UDP ports are accessible through the proxy. The list may contain individu
 (such as "80") or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024 
 to 2048, including the 1024 and 1028.
 
-Note that clients with limited resources MAY not be able to process and utilize all
-entries of an excessively long list. In the case if the provided list is too long for a given
-client, it SHOULD process as many records from the beginning of `matchDomains`, `matchSubnets` and
-`matchPorts` lists. These lists SHOULD be sorted with the most important elements placed at
-the start of the list. If a client cannot consume all the entries in `excludedDomains` or
-`excludedIPs` it SHOULD NOT use given proxy configuration to avoid sending traffic that the proxy
-cannot process.
-
 ## Example
 
 Given a proxy URI template "https://proxy.example.org/masque{?target_host,target_port}",
