@@ -271,6 +271,12 @@ through the proxy.
 A wildcard prefix (`*.`) is used to indicate matching entire domains or subdomains instead of specific hostnames. Note
 that this can be used to match multiple levels of subdomains. For example "*.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
+Entries that include the wildcard prefix also SHOULD be treated as if they match
+an FQDN that only contains the string after the prefix, with no subdomain. So,
+an entry in `matchDomains` of "*.example.com" would match the FQDN "example.com",
+unless "example.com" were specifically included in `excludeDomains`. This is
+done to prevent commonly needing to include both "*.example.com" and "example.com"
+in the `matchDomains` list.
 
 Entries in `matchSubnets` correspond to IP addresses and subnets that are available through the
 proxy, while entries in `excludeSubnets` define IP addresses and subnets that SHOULD NOT be used
