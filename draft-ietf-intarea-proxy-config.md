@@ -143,8 +143,8 @@ Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname an
 {{!URITEMPLATE=RFC6570}}), along with potentially other keys.
 
 This document defines two mandatory keys for the sub-dictionaries in the
-`proxies` array, `protocol` and `proxy`. There are also optional key, including
-`alpn`, and destination keys defined in {{destinations}}.
+`proxies` array, `protocol` and `proxy`. There are also optional keys, including
+`alpn`, and destination accessibility keys defined in {{destinations}}.
 Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
 recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
@@ -233,25 +233,25 @@ content-length = 222
 The client would learn the URI template of the proxy that supports UDP using {{CONNECT-UDP}},
 at "https://proxy.example.org/masque{?target_host,target_port}".
 
-# Destination information for proxies {#destinations}
+# Destination accessibility information for proxies {#destinations}
 
-Destination configuration is used when only a subset of destinations is reachable through
+Destination accessibility information is used when only a subset of destinations is reachable through
 a proxy. Destination restrictions are often used in VPN tunnel configurations such as split
 DNS in IKEv2 {{?IKEV2SPLIT=RFC8598}}.
 
-PvD Additional Information can be used to indicate that a proxy PvD should be used for a limited
+PvD Additional Information can be used to indicate that a proxy PvD only allows access to a limited
 set of destinations.
 
-This document defines five additional optional keys that for subdictionaries in the `proxies`
+This document defines five optional keys for subdictionaries in the `proxies`
 array that are used to signal information about destinations available through the proxy.
 
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
-| matchDomains | Yes | An array of hostnames and wildcard FQDNs that can be accessed over this proxy | Array of Strings | [ "www.example.com", "*.local" ] |
-| excludedDomains | Yes | An array of hostnames and wildcard FQDNs that cannot be accessed over this proxy, which should be more specific domains of entries in the matchDomains array | Array of Strings | [ "exclude.local" ] |
-| matchIPs | Yes | An array of IP addresses and subnets that can be accessed over this proxy | Array of Strings | [ "2001:DB8::1", "192.168.1.0/24" ] |
-| excludedIPs | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy, which should be more specific addresses or subnets of entries in the matchIP array | Array of Strings | [ "192.168.1.0/25", "192.168.1.254" ] |
-| ports | Yes | An array of TCP or UDP port ranges accessible over this proxy | Array of Strings | [ "80", "443", "1024-65535" ] |
+| matchDomains | Yes | An array of FQDNs and wildcard DNS domains that can be accessed over this proxy | Array of Strings | [ "www.example.com", "*.local" ] |
+| excludeDomains | Yes | An array of FQDNs and wildcard DNS domains that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array | Array of Strings | [ "exclude.local" ] |
+| matchSubnets | Yes | An array of IP addresses and subnets that can be accessed over this proxy | Array of Strings | [ "2001:DB8::1", "192.168.1.0/24" ] |
+| excludeSubnets | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array | Array of Strings | [ "192.168.1.0/25", "192.168.1.254" ] |
+| matchPorts | Yes | An array of TCP or UDP port ranges accessible over this proxy | Array of Strings | [ "80", "443", "1024-65535" ] |
 
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
 as described in {{proxy-pvd}}, entries in the `matchDomains` array indicate specific hosts
@@ -268,24 +268,24 @@ has a local policy to only send requests for "*.example.com" to a proxy
 "other.company.com", the client would end up only proxying "internal.example.com"
 through the proxy.
 
-Wildcard prefix (`*.`) is used to differentiate between specific hostnames and zones. Note
-that it is used to match multiple levels of sub-domain. For example "*.example.com"
+A wildcard prefix (`*.`) is used to indicate matching entire domains or subdomains instead of specific hostnames. Note
+that this can be used to match multiple levels of subdomains. For example "*.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
 
-Entries in `matchIPs` correspond to IP addresses and subnets that are available through the
-proxy, while entries in `excludedIPs` define IP addresses and subnets that SHOULD NOT be used
-with the proxy. IP address based destination information SHOULD only be used when
-communicating with destinations defined by an IP address and not a hostname.
+Entries in `matchSubnets` correspond to IP addresses and subnets that are available through the
+proxy, while entries in `excludeSubnets` define IP addresses and subnets that SHOULD NOT be used
+with the proxy. Subnet-based destination information SHOULD only be used when
+applications are communicating with destinations identified by only an IP address and not a hostname.
 
-`ports` in a list of strings that can be used to instruct the client that only specific destination
+`matchPorts` in a list of strings that can be used to instruct the client that only specific destination
 TCP or UDP ports are accessible through the proxy. The list may contain individual port numbers 
 (such as "80") or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024 
-to 2048 including the boundaries.
+to 2048, including the 1024 and 1028.
 
 Note that clients with limited resources MAY not be able to process and utilize all
 entries of an excessively long list. In the case if the provided list is too long for a given
-client, it SHOULD process as many records from the beginning of `matchDomains`, `matchIPs` and
-`ports` lists. These lists SHOULD be sorted with the most important elements placed at
+client, it SHOULD process as many records from the beginning of `matchDomains`, `matchSubnets` and
+`matchPorts` lists. These lists SHOULD be sorted with the most important elements placed at
 the start of the list. If a client cannot consume all the entries in `excludedDomains` or
 `excludedIPs` it SHOULD NOT use given proxy configuration to avoid sending traffic that the proxy
 cannot process.
