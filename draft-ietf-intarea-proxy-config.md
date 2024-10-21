@@ -68,6 +68,10 @@ proxy ({{destinations}}).
 Additionally, this document partly describes how these mechanisms might be used
 to discover proxies associated with a network ({{network-proxies}}).
 
+Using this mechanism a client can learn that a legacy insecure HTTP proxy that
+the client is configured with is also accessible using HTTPS. In this way,
+clients can upgrade to a more secure connection to the proxy.
+
 ## Background
 
 Other non-standard mechanisms for proxy configuration and discovery have been
@@ -87,7 +91,8 @@ hostname and port, and do not support configuring a full URI template
 
 The mechanisms defined in this document are intended to offer a standard
 alternative that works for URI-based proxies and avoids dependencies
-on executing Javascript scripts, which can open up security vulnerabilities.
+on executing Javascript scripts, which are prone to implementation-specific
+inconsistencies and can open up security vulnerabilities.
 
 ## Requirements
 
@@ -247,18 +252,20 @@ array that are used to signal information about destinations available through t
 
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
-| matchDomains | Yes | An array of FQDNs and wildcard DNS domains that can be accessed over this proxy | Array of Strings | [ "www.example.com", "*.local" ] |
-| excludeDomains | Yes | An array of FQDNs and wildcard DNS domains that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array | Array of Strings | [ "exclude.local" ] |
+| matchDomains | Yes | An array of FQDNs and wildcard DNS domains that can be accessed over this proxy | Array of Strings | [ "www.example.com", "*.internal.example.com" ] |
+| excludeDomains | Yes | An array of FQDNs and wildcard DNS domains that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array | Array of Strings | [ "public.example.com" ] |
 | matchSubnets | Yes | An array of IP addresses and subnets that can be accessed over this proxy | Array of Strings | [ "2001:DB8::1", "192.168.1.0/24" ] |
-| excludeSubnets | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array | Array of Strings | [ "192.168.1.0/25", "192.168.1.254" ] |
+| excludeSubnets | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array | Array of Strings | [ "192.0.2.0/16", "192.51.100.1" ] |
 | matchPorts | Yes | An array of TCP or UDP port ranges accessible over this proxy | Array of Strings | [ "80", "443", "1024-65535" ] |
 
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
-as described in {{proxy-pvd}}, entries in the `matchDomains` array indicate specific hosts
-and zones that are accessible using the proxy. If a hostname is neither matching an specific
-entry nor included in the enumerated zones, then a client SHOULD assume that the hostname
-will not be accessible through the proxy. If a hostname is included in the `excludeDomains`
-array, then the client SHOULD NOT access it through the proxy.
+as described in {{proxy-pvd}}, entries in the `matchDomains` array indicate specific FQDNs
+and zones that are accessible using the proxy. If a hostname does match any entry,
+then a client SHOULD assume that the hostname will not be accessible through the proxy.
+If a hostname is included in the `excludeDomains` array, then the client SHOULD NOT
+access it through the proxy. The `excludeDomains` parameter can be present even if `matchDomains`
+is omitted. When this is the case, the client assumes that all domains except the domains
+listed in the `excludeDomains` array are accessible through the proxy.
 
 Entries listed in `matchDomains` MUST NOT expand the set of domains that a client is
 willing to send to a particular proxy. The list can only narrow the list of domains
