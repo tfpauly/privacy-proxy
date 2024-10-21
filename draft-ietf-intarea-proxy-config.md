@@ -291,8 +291,8 @@ with the proxy. Subnet-based destination information SHOULD only be used when
 applications are communicating with destinations identified by only an IP address and not a hostname.
 
 `matchPorts` in a list of strings that can be used to instruct the client that only specific destination
-TCP or UDP ports are accessible through the proxy. The list may contain individual port numbers 
-(such as "80") or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024 
+TCP or UDP ports are accessible through the proxy. The list may contain individual port numbers
+(such as "80") or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024
 to 2048, including the 1024 and 1028.
 
 ## Example
