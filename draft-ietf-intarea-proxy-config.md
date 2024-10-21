@@ -45,7 +45,7 @@ which proxies are associated with one another.
 
 Client can also benefit from learning about additional information associated with
 the proxy to optimize their proxy usage, such knowing that a proxy is configured
-to only allow access to a limited set of next hops.
+to only allow access to a limited set of destinations.
 
 These improvements to client behavior can be achieved through the use of
 Provisioning Domains. Provisioning Domains (PvDs) are defined in {{?PVD=RFC7556}}
@@ -62,8 +62,8 @@ to use proxies:
 1. A way to list one or more proxy URIs in a PvD, allowing clients to
 learn about other proxy options given a known proxy ({{proxy-enumeration}}).
 
-1. A way to define a limited set of DNS zones that are accessible through the
-proxy ({{split-dns}}).
+1. A way to define a limited set of destinations that are accessible through the
+proxy ({{destinations}}).
 
 Additionally, this document partly describes how these mechanisms might be used
 to discover proxies associated with a network ({{network-proxies}}).
@@ -148,8 +148,8 @@ Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname an
 {{!URITEMPLATE=RFC6570}}), along with potentially other keys.
 
 This document defines two mandatory keys for the sub-dictionaries in the
-`proxies` array, `protocol` and `proxy`. There are also optional key, including
-`alpn`, and keys for split-DNS defined in {{split-dns}}.
+`proxies` array, `protocol` and `proxy`. There are also optional keys, including
+`alpn`, and destination accessibility keys defined in {{destinations}}.
 Other optional keys can be added to the dictionary
 to further define or restrict the use of a proxy. Clients that do not
 recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
@@ -238,28 +238,31 @@ content-length = 222
 The client would learn the URI template of the proxy that supports UDP using {{CONNECT-UDP}},
 at "https://proxy.example.org/masque{?target_host,target_port}".
 
-# Split DNS information for proxies {#split-dns}
+# Destination accessibility information for proxies {#destinations}
 
-Split DNS configurations are cases where only a subset of domains is routed through
-a VPN tunnel or a proxy. For example, IKEv2 defines split DNS configuration in
-{{?IKEV2SPLIT=RFC8598}}.
+Destination accessibility information is used when only a subset of destinations is reachable through
+a proxy. Destination restrictions are often used in VPN tunnel configurations such as split
+DNS in IKEv2 {{?IKEV2SPLIT=RFC8598}}.
 
-PvD Additional Information can be used to indicate that a proxy PvD has a split DNS
-configuration.
+PvD Additional Information can be used to indicate that a proxy PvD only allows access to a limited
+set of destinations.
 
-This document defines two optional keys that for subdictionaries in the `proxies`
-array that are used for split-DNS configuration.
+This document defines five optional keys for subdictionaries in the `proxies`
+array that are used to signal information about destinations available through the proxy.
 
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
-| matchDomains | Yes | An array of DNS zones or subdomains that can be accessed over this proxy | Array of Strings | [ "example.com" ] |
-| excludeDomains | Yes | An array of DNS zones or subdomains that cannot be accessed over this proxy. If matchDomains is specfied, excludeDomains should list more specific domains within entries in the matchDomains array | Array of Strings | [ "public.example.com" ] |
+| matchDomains | Yes | An array of FQDNs and wildcard DNS domains that can be accessed over this proxy | Array of Strings | [ "www.example.com", "*.internal.example.com" ] |
+| excludeDomains | Yes | An array of FQDNs and wildcard DNS domains that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array | Array of Strings | [ "public.example.com" ] |
+| matchSubnets | Yes | An array of IP addresses and subnets that can be accessed over this proxy | Array of Strings | [ "2001:DB8::1", "192.168.1.0/24" ] |
+| excludeSubnets | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array | Array of Strings | [ "192.0.2.0/16", "192.51.100.1" ] |
+| matchPorts | Yes | An array of TCP or UDP port ranges accessible over this proxy | Array of Strings | [ "80", "443", "1024-65535" ] |
 
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
-as described in {{proxy-pvd}}, domains in the `matchDomains` array indicate specific zones
-that are accessible using the proxy. If a hostname is not included in the enumerated
-zones, then a client SHOULD assume that the hostname will not be accessible through the
-proxy. If a hostname is included in the `excludeDomains` array, then the client SHOULD NOT
+as described in {{proxy-pvd}}, entries in the `matchDomains` array indicate specific FQDNs
+and zones that are accessible using the proxy. If a hostname does match any entry,
+then a client SHOULD assume that the hostname will not be accessible through the proxy.
+If a hostname is included in the `excludeDomains` array, then the client SHOULD NOT
 access it through the proxy. The `excludeDomains` parameter can be present even if `matchDomains`
 is omitted. When this is the case, the client assumes that all domains except the domains
 listed in the `excludeDomains` array are accessible through the proxy.
@@ -267,10 +270,30 @@ listed in the `excludeDomains` array are accessible through the proxy.
 Entries listed in `matchDomains` MUST NOT expand the set of domains that a client is
 willing to send to a particular proxy. The list can only narrow the list of domains
 that the client is willing to send through the proxy. For example, if the client
-has a local policy to only send requests for "example.com" to a proxy
+has a local policy to only send requests for "*.example.com" to a proxy
 "proxy.example.com", and the `matchDomains` array contains "internal.example.com" and
 "other.company.com", the client would end up only proxying "internal.example.com"
 through the proxy.
+
+A wildcard prefix (`*.`) is used to indicate matching entire domains or subdomains instead of specific hostnames. Note
+that this can be used to match multiple levels of subdomains. For example "*.example.com"
+matches "internal.example.com" as well as "www.public.example.com".
+Entries that include the wildcard prefix also SHOULD be treated as if they match
+an FQDN that only contains the string after the prefix, with no subdomain. So,
+an entry in `matchDomains` of "*.example.com" would match the FQDN "example.com",
+unless "example.com" were specifically included in `excludeDomains`. This is
+done to prevent commonly needing to include both "*.example.com" and "example.com"
+in the `matchDomains` list.
+
+Entries in `matchSubnets` correspond to IP addresses and subnets that are available through the
+proxy, while entries in `excludeSubnets` define IP addresses and subnets that SHOULD NOT be used
+with the proxy. Subnet-based destination information SHOULD only be used when
+applications are communicating with destinations identified by only an IP address and not a hostname.
+
+`matchPorts` in a list of strings that can be used to instruct the client that only specific destination
+TCP or UDP ports are accessible through the proxy. The list may contain individual port numbers
+(such as "80") or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024
+to 2048, including the 1024 and 1028.
 
 ## Example
 
@@ -287,7 +310,7 @@ accept = application/pvd+json
 ~~~
 
 If the proxy has a PvD definition for this proxy, it could return the following
-response to indicate a PvD that has one accessible zone, "internal.example.org".
+response to indicate a PvD that has one accessible zone, "*.internal.example.org".
 
 ~~~
 :status = 200
@@ -306,14 +329,14 @@ content-length = 135
     {
       "protocol": "connect-udp",
       "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
-      "matchDomains": [ "internal.example.org" ]
+      "matchDomains": [ "*.internal.example.org" ]
     }
   ]
 }
 ~~~
 
 The client could then choose to use this proxy only for accessing names that fall
-within the "internal.example.org" zone.
+within the "*.internal.example.org" zone.
 
 # Discovering proxies from network PvDs {#network-proxies}
 
@@ -360,7 +383,7 @@ Example: [ {
 
 IANA is requested to create a new registry "Proxy Information PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON keys for use in sub-dictionaries under the `proxies` key.
-The initial contents of this registry are given in {{proxy-enumeration}} and {{split-dns}}.
+The initial contents of this registry are given in {{proxy-enumeration}} and {{destinations}}.
 
 New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review {{!RFC8126}}. Experts are
 requested to ensure that defined keys do not overlap in names or semantics.
