@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-20T00:20:05.246765+00:00",
+  "timestamp": "2024-10-22T00:18:26.219021+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -3976,7 +3976,7 @@
       "id": "I_kwDOEwrMS86QwUib",
       "title": "Handle match/exclude IP subnets",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/253",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [],
@@ -3985,8 +3985,8 @@
       ],
       "body": "",
       "createdAt": "2024-07-24T22:44:04Z",
-      "updatedAt": "2024-07-24T22:44:04Z",
-      "closedAt": null,
+      "updatedAt": "2024-10-21T03:17:38Z",
+      "closedAt": "2024-10-21T03:17:38Z",
       "comments": []
     },
     {
@@ -4012,7 +4012,7 @@
       "id": "I_kwDOEwrMS86QwVF0",
       "title": "Rethink names matchDomains / excludedDomains",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/255",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [],
@@ -4021,16 +4021,24 @@
       ],
       "body": "match - exclude\r\nmatched - excluded\r\netc.",
       "createdAt": "2024-07-24T22:46:30Z",
-      "updatedAt": "2024-07-24T22:46:36Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2024-10-21T02:53:01Z",
+      "closedAt": "2024-10-21T02:53:01Z",
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Closed by #264",
+          "createdAt": "2024-10-21T02:53:01Z",
+          "updatedAt": "2024-10-21T02:53:01Z"
+        }
+      ]
     },
     {
       "number": 260,
       "id": "I_kwDOEwrMS86ZQOBz",
       "title": "Clarify that configuration learned from a PvD can only constrain on-device configuration",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/260",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [],
@@ -4039,8 +4047,8 @@
       ],
       "body": "Clarify that configuration learned from a PvD can only constrain on-device configuration; if a device is only willing to proxy `example.com` traffic, a PvD can usefully constrain to only proxy `foo.example.com`, but cannot expand to also make clients proxy `bar.com`.",
       "createdAt": "2024-10-07T18:33:24Z",
-      "updatedAt": "2024-10-18T21:15:30Z",
-      "closedAt": null,
+      "updatedAt": "2024-10-21T03:18:54Z",
+      "closedAt": "2024-10-21T03:18:53Z",
       "comments": [
         {
           "author": "ddragana",
@@ -4048,6 +4056,13 @@
           "body": "The last paragraph of section 4. already explains this. I think we do not need more, or am I misunderstanding this issue?",
           "createdAt": "2024-10-18T21:15:29Z",
           "updatedAt": "2024-10-18T21:15:29Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Yes, you're right. I think this is OK to close.",
+          "createdAt": "2024-10-21T03:18:53Z",
+          "updatedAt": "2024-10-21T03:18:53Z"
         }
       ]
     },
@@ -4061,11 +4076,12 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "Proxy PvDs"
+        "Proxy PvDs",
+        "Discuss"
       ],
       "body": "Result of proxy lookup in PAC files may include multiple proxies to fallback to aka `PROXY proxy1.example.com; PROXY proxy2.example.com` which instructs the client to try proxy1 first, fallback to proxy2 if that one is not available and does not allow direct communication with the destination if both proxies are down. Or it can tell client to go direct if proxies are not available aka `PROXY proxy1.example.com; PROXY proxy2.example.com; DIRECT`.\r\n\r\nPotentially proxy fallback can be achieved with PvD if multiple proxies are happy to take a given destination (though question of priorities is unclear), however it does not instruct client whether or not it may try direct communication.\r\n\r\nIt feels to me that this should be in scope so that PvD would be able to replace all reasonable use cases of PAC files.\r\n",
       "createdAt": "2024-10-13T11:39:25Z",
-      "updatedAt": "2024-10-18T21:31:24Z",
+      "updatedAt": "2024-10-21T09:59:11Z",
       "closedAt": null,
       "comments": [
         {
@@ -4088,8 +4104,34 @@
           "body": "Could there be a key for \"default\" meaning \"if all else fails...\", which could have a value of either a proxy, or a token like \"DIRECT\"?",
           "createdAt": "2024-10-18T21:31:23Z",
           "updatedAt": "2024-10-18T21:31:23Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "There are multiple scenarios when enterprise wants to signal preferences to the client from the network:\r\n\r\n- Geographic proximity of proxies on a global network (suggest client to go to the closest one from network point of view for performance and content localisation)\r\n- Regulatory reasons (need to egress from a certain location and use backup option if everything else fails)\r\n- Load balancing across proxies (order of proxies is shuffled for clients)\r\n- Capabilities available on proxies\r\n- Test/pilot scenarios for a subset of users with a somewhat seamless way for them to fallback if the primary proxy fails or is no longer available\r\n\r\nIn my experience strict order of proxy preferences is widely relied on in enterprise setups.\r\n\r\nPerhaps worth discussing at IETF121.",
+          "createdAt": "2024-10-21T09:59:10Z",
+          "updatedAt": "2024-10-21T09:59:10Z"
         }
       ]
+    },
+    {
+      "number": 266,
+      "id": "I_kwDOEwrMS86bCpSv",
+      "title": "Do limited clients need special guidance?",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/266",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs",
+        "Discuss"
+      ],
+      "body": "From #259, there was a section I wanted to not add immediately but discuss more first:\r\n\r\n> Note that clients with limited resources MAY not be able to process and utilize all\r\n>  entries of an excessively long list. In the case if the provided list is too long for a given\r\n>  client, it SHOULD process as many records from the beginning of `matchDomains`, `matchSubnets` and\r\n>  `matchPorts` lists. These lists SHOULD be sorted with the most important elements placed at\r\n>  the start of the list. If a client cannot consume all the entries in `excludedDomains` or\r\n>  `excludedIPs` it SHOULD NOT use given proxy configuration to avoid sending traffic that the proxy\r\n>  cannot process.",
+      "createdAt": "2024-10-21T03:06:41Z",
+      "updatedAt": "2024-10-21T03:17:51Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -16501,7 +16543,7 @@
       "id": "PR_kwDOEwrMS859u-Rr",
       "title": "Domain, IP and port based destinations instead of split-DNS",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/259",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -16510,17 +16552,19 @@
       ],
       "body": "Proxies are often selected not only based on zones, but also based on:\r\n- specific hostnames\r\n- IP addresses or subnets\r\n- destination ports\r\n\r\nThis proposed change replaces zone based split-DNS with more traditional hostname/wildcard based matching and adds IP and port based selection criteria.\r\n\r\nWhile this won't bring full parity with PAC files, this should cover vast majority of practical use cases.",
       "createdAt": "2024-10-06T15:36:16Z",
-      "updatedAt": "2024-10-14T09:52:24Z",
+      "updatedAt": "2024-10-21T03:17:38Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
-      "baseRefOid": "cc89d6c5d6bcba25a86d60b746695591cbd81ac2",
+      "baseRefOid": "4c876b20358e3b1ea0b690aace66d8e7082b2d7a",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "destinations",
-      "headRefOid": "68c964d2923981de31e5f36f6af6176f7021f401",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "2a02c2cb55f2b70d35a674d18aa6227352504e23",
+      "closedAt": "2024-10-21T03:17:38Z",
+      "mergedAt": "2024-10-21T03:17:38Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "ac502ec989fa1de41054bd73c27df747e42590d5"
+      },
       "comments": [
         {
           "author": "yaroslavros",
@@ -16628,6 +16672,239 @@
               "body": "Absolutely! PR amended.",
               "createdAt": "2024-10-14T09:52:24Z",
               "updatedAt": "2024-10-14T09:52:24Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86N6BlW",
+          "commit": {
+            "abbreviatedOid": "68c964d"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-21T02:49:20Z",
+          "updatedAt": "2024-10-21T03:04:13Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "```suggestion\r\n`proxies` array, `protocol` and `proxy`. There are also optional keys, including\r\n```",
+              "createdAt": "2024-10-21T02:49:20Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 25,
+              "body": "```suggestion\r\n`alpn`, and destination accessibility keys defined in {{destinations}}.\r\n```",
+              "createdAt": "2024-10-21T02:49:37Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 34,
+              "body": "```suggestion\r\n# Destination accessibility information for proxies {#destinations}\r\n```",
+              "createdAt": "2024-10-21T02:50:06Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 39,
+              "body": "```suggestion\r\nDestination accessibility information is used when only a subset of destinations is reachable through\r\n```",
+              "createdAt": "2024-10-21T02:50:25Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 45,
+              "body": "```suggestion\r\nPvD Additional Information can be used to indicate that a proxy PvD only allows access to a limited\r\n```",
+              "createdAt": "2024-10-21T02:50:49Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 50,
+              "body": "```suggestion\r\nThis document defines five optional keys for subdictionaries in the `proxies`\r\n```",
+              "createdAt": "2024-10-21T02:51:30Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 57,
+              "body": "```suggestion\r\n| matchDomains | Yes | An array of FQDNs and wildcard DNS domains that can be accessed over this proxy | Array of Strings | [ \"www.example.com\", \"*.local\" ] |\r\n```",
+              "createdAt": "2024-10-21T02:56:31Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 58,
+              "body": "```suggestion\r\n| excludeDomains | Yes | An array of FQDNs and wildcard DNS domains that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array | Array of Strings | [ \"exclude.local\" ] |\r\n```",
+              "createdAt": "2024-10-21T02:57:39Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 59,
+              "body": "```suggestion\r\n| matchSubnets | Yes | An array of IP addresses and subnets that can be accessed over this proxy | Array of Strings | [ \"2001:DB8::1\", \"192.168.1.0/24\" ] |\r\n```",
+              "createdAt": "2024-10-21T02:58:21Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 60,
+              "body": "```suggestion\r\n| excludeSubnets | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array | Array of Strings | [ \"192.168.1.0/25\", \"192.168.1.254\" ] |\r\n```",
+              "createdAt": "2024-10-21T02:59:26Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 61,
+              "body": "```suggestion\r\n| matchPorts | Yes | An array of TCP or UDP port ranges accessible over this proxy | Array of Strings | [ \"80\", \"443\", \"1024-65535\" ] |\r\n```",
+              "createdAt": "2024-10-21T02:59:57Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 84,
+              "body": "```suggestion\r\nA wildcard prefix (`*.`) is used to indicate matching entire domains or subdomains instead of specific hostnames. Note\r\n```",
+              "createdAt": "2024-10-21T03:01:13Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 85,
+              "body": "```suggestion\r\nthat this can be used to match multiple levels of subdomains. For example \"*.example.com\"\r\n```",
+              "createdAt": "2024-10-21T03:01:33Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 88,
+              "body": "```suggestion\r\nEntries in `matchSubnets` correspond to IP addresses and subnets that are available through the\r\n```",
+              "createdAt": "2024-10-21T03:01:44Z",
+              "updatedAt": "2024-10-21T03:04:13Z"
+            },
+            {
+              "originalPosition": 89,
+              "body": "```suggestion\r\nproxy, while entries in `excludeSubnets` define IP addresses and subnets that SHOULD NOT be used\r\n```",
+              "createdAt": "2024-10-21T03:01:55Z",
+              "updatedAt": "2024-10-21T03:04:14Z"
+            },
+            {
+              "originalPosition": 90,
+              "body": "```suggestion\r\nwith the proxy. Subnet-based destination information SHOULD only be used when\r\n```",
+              "createdAt": "2024-10-21T03:02:15Z",
+              "updatedAt": "2024-10-21T03:04:14Z"
+            },
+            {
+              "originalPosition": 91,
+              "body": "```suggestion\r\napplications are communicating with destinations identified by only an IP address and not a hostname.\r\n```",
+              "createdAt": "2024-10-21T03:02:42Z",
+              "updatedAt": "2024-10-21T03:04:14Z"
+            },
+            {
+              "originalPosition": 93,
+              "body": "```suggestion\r\n`matchPorts` in a list of strings that can be used to instruct the client that only specific destination\r\n```",
+              "createdAt": "2024-10-21T03:02:53Z",
+              "updatedAt": "2024-10-21T03:04:14Z"
+            },
+            {
+              "originalPosition": 96,
+              "body": "```suggestion\r\nto 2048, including the 1024 and 1028.\r\n```",
+              "createdAt": "2024-10-21T03:03:12Z",
+              "updatedAt": "2024-10-21T03:04:14Z"
+            },
+            {
+              "originalPosition": 100,
+              "body": "```suggestion\r\nclient, it SHOULD process as many records from the beginning of `matchDomains`, `matchSubnets` and\r\n```",
+              "createdAt": "2024-10-21T03:03:31Z",
+              "updatedAt": "2024-10-21T03:04:14Z"
+            },
+            {
+              "originalPosition": 101,
+              "body": "```suggestion\r\n`matchPorts` lists. These lists SHOULD be sorted with the most important elements placed at\r\n```",
+              "createdAt": "2024-10-21T03:03:40Z",
+              "updatedAt": "2024-10-21T03:04:14Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86N6Eby",
+          "commit": {
+            "abbreviatedOid": "48cb237"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-21T03:05:53Z",
+          "updatedAt": "2024-10-21T03:05:53Z",
+          "comments": [
+            {
+              "originalPosition": 107,
+              "body": "I'm a bit concerned about this section so would prefer to remove it from the first cut of adding this support \u2014 let's discuss limited clients more!\r\n```suggestion\r\n```",
+              "createdAt": "2024-10-21T03:05:53Z",
+              "updatedAt": "2024-10-21T03:05:53Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86N6FJ7",
+          "commit": {
+            "abbreviatedOid": "bca90b7"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-21T03:10:40Z",
+          "updatedAt": "2024-10-21T03:10:40Z",
+          "comments": [
+            {
+              "originalPosition": 88,
+              "body": "```suggestion\r\nmatches \"internal.example.com\" as well as \"www.public.example.com\".\r\nEntries that include the wildcard prefix also SHOULD be treated as if they match\r\nan FQDN that only contains the string after the prefix, with no subdomain. So,\r\nan entry in `matchDomains` of \"*.example.com\" would match the FQDN \"example.com\",\r\nunless \"example.com\" were specifically included in `excludeDomains`. This is\r\ndone to prevent commonly needing to include both \"*.example.com\" and \"example.com\"\r\nin the `matchDomains` list.\r\n```",
+              "createdAt": "2024-10-21T03:10:40Z",
+              "updatedAt": "2024-10-21T03:10:40Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86N6FOE",
+          "commit": {
+            "abbreviatedOid": "ef2cbc9"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-21T03:11:07Z",
+          "updatedAt": "2024-10-21T03:11:07Z",
+          "comments": [
+            {
+              "originalPosition": 74,
+              "body": "```suggestion\r\nwill not be accessible through the proxy. If a hostname is included in the `excludeDomains`\r\n```",
+              "createdAt": "2024-10-21T03:11:07Z",
+              "updatedAt": "2024-10-21T03:11:07Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86N6F74",
+          "commit": {
+            "abbreviatedOid": "ad9c86a"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-10-21T03:15:35Z",
+          "updatedAt": "2024-10-21T03:15:35Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS86N6GEJ",
+          "commit": {
+            "abbreviatedOid": "ad9c86a"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-10-21T03:16:27Z",
+          "updatedAt": "2024-10-21T03:16:27Z",
+          "comments": [
+            {
+              "originalPosition": 105,
+              "body": "```suggestion\r\n`matchPorts` in a list of strings that can be used to instruct the client that only specific destination\r\nTCP or UDP ports are accessible through the proxy. The list may contain individual port numbers\r\n(such as \"80\") or inclusive ranges of ports. For example \"1024-2048\" matches all ports from 1024\r\nto 2048, including the 1024 and 1028.\r\n```",
+              "createdAt": "2024-10-21T03:16:27Z",
+              "updatedAt": "2024-10-21T03:16:27Z"
             }
           ]
         }
