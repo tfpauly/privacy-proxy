@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-22T00:18:26.219021+00:00",
+  "timestamp": "2024-10-24T00:18:31.784498+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4081,7 +4081,7 @@
       ],
       "body": "Result of proxy lookup in PAC files may include multiple proxies to fallback to aka `PROXY proxy1.example.com; PROXY proxy2.example.com` which instructs the client to try proxy1 first, fallback to proxy2 if that one is not available and does not allow direct communication with the destination if both proxies are down. Or it can tell client to go direct if proxies are not available aka `PROXY proxy1.example.com; PROXY proxy2.example.com; DIRECT`.\r\n\r\nPotentially proxy fallback can be achieved with PvD if multiple proxies are happy to take a given destination (though question of priorities is unclear), however it does not instruct client whether or not it may try direct communication.\r\n\r\nIt feels to me that this should be in scope so that PvD would be able to replace all reasonable use cases of PAC files.\r\n",
       "createdAt": "2024-10-13T11:39:25Z",
-      "updatedAt": "2024-10-21T09:59:11Z",
+      "updatedAt": "2024-10-23T10:26:02Z",
       "closedAt": null,
       "comments": [
         {
@@ -4111,6 +4111,41 @@
           "body": "There are multiple scenarios when enterprise wants to signal preferences to the client from the network:\r\n\r\n- Geographic proximity of proxies on a global network (suggest client to go to the closest one from network point of view for performance and content localisation)\r\n- Regulatory reasons (need to egress from a certain location and use backup option if everything else fails)\r\n- Load balancing across proxies (order of proxies is shuffled for clients)\r\n- Capabilities available on proxies\r\n- Test/pilot scenarios for a subset of users with a somewhat seamless way for them to fallback if the primary proxy fails or is no longer available\r\n\r\nIn my experience strict order of proxy preferences is widely relied on in enterprise setups.\r\n\r\nPerhaps worth discussing at IETF121.",
           "createdAt": "2024-10-21T09:59:10Z",
           "updatedAt": "2024-10-21T09:59:10Z"
+        },
+        {
+          "author": "joshco",
+          "authorAssociation": "NONE",
+          "body": "Looks like our future is going to look like this:\r\n\r\n```\r\n{\r\n  \"proxies\": [\r\n    {\r\n      \"protocol\": \"http-connect\",\r\n      \"proxy\": \"proxy.example.org:80\",\r\n      \"priority\": 10\r\n    },\r\n    {\r\n      \"protocol\": \"connect-udp\",\r\n      \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\",\r\n      \"priority\": 20\r\n    }\r\n  ]\r\n}\r\n```\r\n\r\nDevelopers will have to sort based on the priority key.",
+          "createdAt": "2024-10-22T02:52:07Z",
+          "updatedAt": "2024-10-22T02:52:07Z"
+        },
+        {
+          "author": "DavidSchinazi",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Can't we rely on the fact that JSON lists are ordered, and just say that the proxies are listed in decreasing priority?",
+          "createdAt": "2024-10-22T18:47:50Z",
+          "updatedAt": "2024-10-22T18:47:50Z"
+        },
+        {
+          "author": "joshco",
+          "authorAssociation": "NONE",
+          "body": "That's a good point. However, does it need to support round robin for load balancing?\n\nThat could be specified with priority keys with the same value. \n\nPerhaps the priority keys could be optional.  If absent then just use the array order.  In more complex cases the priority key can be used. \n\n",
+          "createdAt": "2024-10-22T19:16:51Z",
+          "updatedAt": "2024-10-22T19:16:51Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think for network provisioned proxy list it would make more sense to provide destination-centric proxy priority lists. Along the lines of:\r\n```\r\n{\r\n  \"proxies\": [\r\n    {\r\n      \"identifier\": \"legacy\",\r\n      \"protocol\": \"http-connect\",\r\n      \"proxy\": \"proxy.example.org:80\"\r\n    },\r\n    {\r\n      \"identifier\": \"masque\",\r\n      \"protocol\": \"connect-ip\",\r\n      \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\"\r\n    }\r\n  ],\r\n  \"proxy_destinations\": [\r\n    {\r\n      \"matchPorts\": [80, 443],\r\n      \"proxies\": [\"legacy\", \"DIRECT\"]\r\n    },\r\n    {\r\n      \"matchDomains\": [\"*.internal\", \"*.intranet\"],\r\n      \"proxies\": [\"masque\", \"legacy\"]\r\n    }\r\n ]\r\n}\r\n```\r\n\r\nIt's not uncommon for enterprise PAC files to carry thousands of match items and duplicating them across multiple proxy definitions feels to be unnecessary bloat, makes processing more complex and whole structure more error-prone.\r\n\r\nTraditionally proxy load balancing with PAC files is accomplished with DNS round robin or separate sets of PAC files randomly distributed to clients.\r\nSome people also do hierarchical proxies for load balancing purpose...",
+          "createdAt": "2024-10-23T10:24:06Z",
+          "updatedAt": "2024-10-23T10:24:20Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Or use `null` instead of `\"DIRECT\"` to avoid error-prone reserved identifiers.",
+          "createdAt": "2024-10-23T10:26:01Z",
+          "updatedAt": "2024-10-23T10:26:01Z"
         }
       ]
     },
