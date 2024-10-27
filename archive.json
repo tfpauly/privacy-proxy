@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-24T00:18:31.784498+00:00",
+  "timestamp": "2024-10-27T00:19:49.949660+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4081,7 +4081,7 @@
       ],
       "body": "Result of proxy lookup in PAC files may include multiple proxies to fallback to aka `PROXY proxy1.example.com; PROXY proxy2.example.com` which instructs the client to try proxy1 first, fallback to proxy2 if that one is not available and does not allow direct communication with the destination if both proxies are down. Or it can tell client to go direct if proxies are not available aka `PROXY proxy1.example.com; PROXY proxy2.example.com; DIRECT`.\r\n\r\nPotentially proxy fallback can be achieved with PvD if multiple proxies are happy to take a given destination (though question of priorities is unclear), however it does not instruct client whether or not it may try direct communication.\r\n\r\nIt feels to me that this should be in scope so that PvD would be able to replace all reasonable use cases of PAC files.\r\n",
       "createdAt": "2024-10-13T11:39:25Z",
-      "updatedAt": "2024-10-23T10:26:02Z",
+      "updatedAt": "2024-10-24T21:51:48Z",
       "closedAt": null,
       "comments": [
         {
@@ -4146,6 +4146,13 @@
           "body": "Or use `null` instead of `\"DIRECT\"` to avoid error-prone reserved identifiers.",
           "createdAt": "2024-10-23T10:26:01Z",
           "updatedAt": "2024-10-23T10:26:01Z"
+        },
+        {
+          "author": "joshco",
+          "authorAssociation": "NONE",
+          "body": "Am I getting this right?\r\nSo then \"proxy_destinations\" is a set of rules.  A rules engine will take a given URL and run it through the rules and get an identifier for a given proxy.  That's similar to a case statement or if/then else chain used in JS PAC.\r\n\r\nHowever, what about protocol?  who really decides which protocol should be used?  Is that decided based on the destination URL? Or is it the App/Browser, perhaps being hinted by the server.  ",
+          "createdAt": "2024-10-24T21:51:47Z",
+          "updatedAt": "2024-10-24T21:51:47Z"
         }
       ]
     },
