@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-12T00:17:46.650191+00:00",
+  "timestamp": "2024-11-14T00:17:59.989865+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4081,7 +4081,7 @@
       ],
       "body": "Result of proxy lookup in PAC files may include multiple proxies to fallback to aka `PROXY proxy1.example.com; PROXY proxy2.example.com` which instructs the client to try proxy1 first, fallback to proxy2 if that one is not available and does not allow direct communication with the destination if both proxies are down. Or it can tell client to go direct if proxies are not available aka `PROXY proxy1.example.com; PROXY proxy2.example.com; DIRECT`.\r\n\r\nPotentially proxy fallback can be achieved with PvD if multiple proxies are happy to take a given destination (though question of priorities is unclear), however it does not instruct client whether or not it may try direct communication.\r\n\r\nIt feels to me that this should be in scope so that PvD would be able to replace all reasonable use cases of PAC files.\r\n",
       "createdAt": "2024-10-13T11:39:25Z",
-      "updatedAt": "2024-10-24T21:51:48Z",
+      "updatedAt": "2024-11-12T16:48:48Z",
       "closedAt": null,
       "comments": [
         {
@@ -4153,6 +4153,20 @@
           "body": "Am I getting this right?\r\nSo then \"proxy_destinations\" is a set of rules.  A rules engine will take a given URL and run it through the rules and get an identifier for a given proxy.  That's similar to a case statement or if/then else chain used in JS PAC.\r\n\r\nHowever, what about protocol?  who really decides which protocol should be used?  Is that decided based on the destination URL? Or is it the App/Browser, perhaps being hinted by the server.  ",
           "createdAt": "2024-10-24T21:51:47Z",
           "updatedAt": "2024-10-24T21:51:47Z"
+        },
+        {
+          "author": "JamesTaft",
+          "authorAssociation": "NONE",
+          "body": "> Looks like our future is going to look like this:\r\n> \r\n> ```\r\n> {\r\n>   \"proxies\": [\r\n>     {\r\n>       \"protocol\": \"http-connect\",\r\n>       \"proxy\": \"proxy.example.org:80\",\r\n>       \"priority\": 10\r\n>     },\r\n>     {\r\n>       \"protocol\": \"connect-udp\",\r\n>       \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\",\r\n>       \"priority\": 20\r\n>     }\r\n>   ]\r\n> }\r\n> ```\r\n> \r\n> Developers will have to sort based on the priority key.\r\n\r\nMay I add one more layer of complexity to this idea?  Many enterprises will use the client's IP to determine which group of proxies to prefer, then set fail over proxies if the primaries are unavailable. \r\n\r\nCould we add source subnets to the priority, giving a proxy config a higher priority if coming from those subnets, then a default priority for all other sources.  This would allow the client to know which to prefer based on location and still be able to create a fail over list.",
+          "createdAt": "2024-11-12T16:13:26Z",
+          "updatedAt": "2024-11-12T16:13:26Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think proxy-specific priority is too crude as priority might differ depending on the destination. Also it does not allow us to communicate possibility for client to do direct fallback.\r\nI plan to submit a PR by the end of this week describing my previous suggestion with list of proxies per destination group.\r\n\r\nI am not a big fan of encoding client IP restrictions in the PvD for a number of reasons:\r\n\r\n- Client could be behind NAT and does not know its IP\r\n- Client could have multiple interfaces some of which could have overlapping IPs\r\n- There are potential privacy and security risks associated with specific client IP hints\r\n\r\nIf client-specific configuration is needed, PvD contents should be provided depending on client IP from PvD hosting service perspective - similarly to how it is done today for PAC files. I'll submit a corresponding text in a PR to clarify this.",
+          "createdAt": "2024-11-12T16:48:31Z",
+          "updatedAt": "2024-11-12T16:48:48Z"
         }
       ]
     },
