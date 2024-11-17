@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-14T00:17:59.989865+00:00",
+  "timestamp": "2024-11-17T00:20:46.792484+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4081,7 +4081,7 @@
       ],
       "body": "Result of proxy lookup in PAC files may include multiple proxies to fallback to aka `PROXY proxy1.example.com; PROXY proxy2.example.com` which instructs the client to try proxy1 first, fallback to proxy2 if that one is not available and does not allow direct communication with the destination if both proxies are down. Or it can tell client to go direct if proxies are not available aka `PROXY proxy1.example.com; PROXY proxy2.example.com; DIRECT`.\r\n\r\nPotentially proxy fallback can be achieved with PvD if multiple proxies are happy to take a given destination (though question of priorities is unclear), however it does not instruct client whether or not it may try direct communication.\r\n\r\nIt feels to me that this should be in scope so that PvD would be able to replace all reasonable use cases of PAC files.\r\n",
       "createdAt": "2024-10-13T11:39:25Z",
-      "updatedAt": "2024-11-12T16:48:48Z",
+      "updatedAt": "2024-11-14T22:45:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -4167,6 +4167,13 @@
           "body": "I think proxy-specific priority is too crude as priority might differ depending on the destination. Also it does not allow us to communicate possibility for client to do direct fallback.\r\nI plan to submit a PR by the end of this week describing my previous suggestion with list of proxies per destination group.\r\n\r\nI am not a big fan of encoding client IP restrictions in the PvD for a number of reasons:\r\n\r\n- Client could be behind NAT and does not know its IP\r\n- Client could have multiple interfaces some of which could have overlapping IPs\r\n- There are potential privacy and security risks associated with specific client IP hints\r\n\r\nIf client-specific configuration is needed, PvD contents should be provided depending on client IP from PvD hosting service perspective - similarly to how it is done today for PAC files. I'll submit a corresponding text in a PR to clarify this.",
           "createdAt": "2024-11-12T16:48:31Z",
           "updatedAt": "2024-11-12T16:48:48Z"
+        },
+        {
+          "author": "JamesTaft",
+          "authorAssociation": "NONE",
+          "body": "Opened a new issue to discuss ClientIPs to stay on topic.  I agree on the priorities.\r\n\r\nHow about some kind of specific syntax to allow round-robin or load balancing if needed, like:\r\n\r\n\"proxies\": [\"proxy1\" OR \"proxy2\", \"proxy3\"]\r\nThe browser or OS should randomly choose one of the two before the comma in order to promote session reuse. If the chosen proxy is unavailable, the other is attempted before moving on to proxy3.\r\n\r\n\"proxies\": [\"proxy1\" AND \"proxy2\", \"proxy3\"]\r\nThe browser or OS should round robin between proxy1 and proxy2, use the remaining proxy if one is unavailable, then move to proxy3 if both are unavailable.",
+          "createdAt": "2024-11-14T22:42:06Z",
+          "updatedAt": "2024-11-14T22:45:20Z"
         }
       ]
     },
@@ -4204,6 +4211,22 @@
       "body": "From IANA:\r\n\r\n> Because Sections 7.2 and 7.3 both point to Section 3, it would be helpful to identify the table numbers in addition to (or instead of) the section numbers.\r\n",
       "createdAt": "2024-11-03T14:16:38Z",
       "updatedAt": "2024-11-03T14:16:38Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 268,
+      "id": "I_kwDOEwrMS86ej3-p",
+      "title": "Proxy PvDs: Client IPs as a matching rule",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/268",
+      "state": "OPEN",
+      "author": "JamesTaft",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "              I think proxy-specific priority is too crude as priority might differ depending on the destination. Also it does not allow us to communicate possibility for client to do direct fallback.\r\nI plan to submit a PR by the end of this week describing my previous suggestion with list of proxies per destination group.\r\n\r\nI am not a big fan of encoding client IP restrictions in the PvD for a number of reasons:\r\n\r\n- Client could be behind NAT and does not know its IP\r\n- Client could have multiple interfaces some of which could have overlapping IPs\r\n- There are potential privacy and security risks associated with specific client IP hints\r\n\r\nIf client-specific configuration is needed, PvD contents should be provided depending on client IP from PvD hosting service perspective - similarly to how it is done today for PAC files. I'll submit a corresponding text in a PR to clarify this.\r\n\r\n_Originally posted by @yaroslavros in https://github.com/tfpauly/privacy-proxy/issues/262#issuecomment-2471052000_\r\n            \r\nIn my experience, ClientIP is frequently used to direct specific types or locations of clients to their own set of proxies or incoming port. \r\nUse cases: \r\nUnauthenticated server traffic that uses a different proxy port and is assigned a very restrictive policy.  \r\nDirecting to the nearest proxy cluster based on known internal IP ranges.\r\n\r\nWhile I agree that this _should_ be handled by the PvD hosting service, it is still a deprecation of functionality. There is no guarantee their PvD hosting service has the ability or visibility to modify the PvD on a per client basis.  Some orgs use internal NATing to work around overlapping IP space, for example.\r\n\r\n\"matchClientIP\" could be added as a key.\r\n\r\nThe multi-interface IP issue already exists with PAC files so it's not a new complexity. It's actually an improvement because this isn't freeform javascript so the security concerns are lowered and more controllable by the OS/Browser.",
+      "createdAt": "2024-11-14T22:19:56Z",
+      "updatedAt": "2024-11-14T22:19:56Z",
       "closedAt": null,
       "comments": []
     }
