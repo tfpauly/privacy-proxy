@@ -252,11 +252,10 @@ array that are used to signal information about destinations available through t
 
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
-| matchDomains | Yes | An array of FQDNs and wildcard DNS domains that can be accessed over this proxy | Array of Strings | [ "www.example.com", "*.internal.example.com" ] |
-| excludeDomains | Yes | An array of FQDNs and wildcard DNS domains that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array | Array of Strings | [ "public.example.com" ] |
-| matchSubnets | Yes | An array of IP addresses and subnets that can be accessed over this proxy | Array of Strings | [ "2001:DB8::1", "192.168.1.0/24" ] |
-| excludeSubnets | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array | Array of Strings | [ "192.0.2.0/16", "192.51.100.1" ] |
-| matchPorts | Yes | An array of TCP or UDP port ranges accessible over this proxy | Array of Strings | [ "80", "443", "1024-65535" ] |
+| matchDomains | Yes | An array of FQDNs and wildcard DNS domains (optionally with port specifications) accessible over this proxy | Array of Strings | [ "www.example.com:80,443", "*.internal.example.com" ] |
+| excludeDomains | Yes | An array of FQDNs and wildcard DNS domains (optionally with port specifications) that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array | Array of Strings | [ "public.example.com:80" ] |
+| matchSubnets | Yes | An array of IP addresses and subnets (optionally with port specifications) accessible over this proxy | Array of Strings | [ "[2001:DB8::1]:443,1024-65535", "192.168.1.0/24" ] |
+| excludeSubnets | Yes | An array of IP addresses and subnets (optionally with port specifications) that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array | Array of Strings | [ "192.0.2.0/16:80", "192.51.100.1:1024-2048" ] |
 
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
 as described in {{proxy-pvd}}, entries in the `matchDomains` array indicate specific FQDNs
@@ -290,10 +289,15 @@ proxy, while entries in `excludeSubnets` define IP addresses and subnets that SH
 with the proxy. Subnet-based destination information SHOULD only be used when
 applications are communicating with destinations identified by only an IP address and not a hostname.
 
-`matchPorts` in a list of strings that can be used to instruct the client that only specific destination
-TCP or UDP ports are accessible through the proxy. The list may contain individual port numbers
-(such as "80") or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024
-to 2048, including the 1024 and 1028.
+Port specifications, if provided, refine the criteria for domain or subnet matching.
+For example, `matchDomains` entry "www.example.com:80,443" specifies that only ports 80 and 443 of "www.example.com"
+domain are accessible through the proxy. Entries in excludeDomains or excludeSubnets with port specifications narrow
+the list of destinations further. If no port is specified, all ports are assumed to match.
+Comma-separated port list may contain individual port numbers (such as "80") or inclusive ranges of ports.
+For example "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+IPv6 addresses and subnets in `matchSubnets` and `excludeSubnets` MUST be enclosed within
+square brackets ("[" and "]") if used in combination with port specification. For example
+"[2001:DB8::1]:443" matches IPv6 address "2001:DB8::1" destination for port 443.
 
 ## Example
 
