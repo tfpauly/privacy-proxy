@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-12-01T00:23:45.130574+00:00",
+  "timestamp": "2024-12-03T00:20:51.556297+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -18147,6 +18147,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 269,
+      "id": "PR_kwDOEwrMS86DrOC8",
+      "title": "Port matching rework",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/269",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As discussed at IETF121 I merged matchPorts into other matching criteria. Adjusted examples and wording accordingly.",
+      "createdAt": "2024-12-01T21:22:50Z",
+      "updatedAt": "2024-12-01T21:22:50Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "ac502ec989fa1de41054bd73c27df747e42590d5",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "destination-port-rework",
+      "headRefOid": "69d16e00d8eda548bb5259398e5a0e5cb0fc9216",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
