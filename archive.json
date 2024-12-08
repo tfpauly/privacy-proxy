@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-12-05T00:19:59.186897+00:00",
+  "timestamp": "2024-12-08T00:21:40.992748+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -3934,7 +3934,7 @@
       ],
       "body": "It could be helpful to add the ability to convey what modes of authentication the proxy supports. I'd assume the actual auth secrets would be exchanged out of band but perhaps mentioning which auth mechanism to use would help.",
       "createdAt": "2024-04-03T16:37:33Z",
-      "updatedAt": "2024-10-12T00:23:30Z",
+      "updatedAt": "2024-12-06T19:28:23Z",
       "closedAt": null,
       "comments": [
         {
@@ -3950,6 +3950,13 @@
           "body": "I like that. It's extensible with support for things like realms and whatnot",
           "createdAt": "2024-10-12T00:23:30Z",
           "updatedAt": "2024-10-12T00:23:30Z"
+        },
+        {
+          "author": "JamesTaft",
+          "authorAssociation": "NONE",
+          "body": "+1 on the auth hints.  It could save an entire connection that ends in a 407 for NTLM (gasp!) and Kerberos if the browsers use the hint.",
+          "createdAt": "2024-12-06T19:19:44Z",
+          "updatedAt": "2024-12-06T19:28:23Z"
         }
       ]
     },
