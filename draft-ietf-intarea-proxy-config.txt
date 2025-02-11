@@ -5,8 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 24 April 2025                                         Microsoft
-                                                         21 October 2024
+Expires: 15 August 2025                                        Microsoft
+                                                            Y. Rosomakho
+                                                                 Zscaler
+                                                        11 February 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -41,11 +43,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 April 2025.
+   This Internet-Draft will expire on 15 August 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -595,9 +597,9 @@ content-length = 135
    [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-05, 2 August 2024,
+              httpbis-connect-tcp-06, 21 October 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-05>.
+              connect-tcp-06>.
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
@@ -676,3 +678,8 @@ Authors' Addresses
    Dragana Damjanovic
    Microsoft
    Email: ddamjanovic@microsoft.com
+
+
+   Yaroslav Rosomakho
+   Zscaler
+   Email: yrosomakho@zscaler.com
