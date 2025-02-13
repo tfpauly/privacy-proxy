@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-11T00:18:17.138776+00:00",
+  "timestamp": "2025-02-13T00:18:34.837437+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -18180,6 +18180,48 @@
       "mergeCommit": null,
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 270,
+      "id": "PR_kwDOEwrMS86K06y_",
+      "title": "Added co-author as discussed",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/270",
+      "state": "MERGED",
+      "author": "yaroslavros",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-02-11T16:05:55Z",
+      "updatedAt": "2025-02-11T16:47:21Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "ac502ec989fa1de41054bd73c27df747e42590d5",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "coauthor",
+      "headRefOid": "892a03e75ed96b4e66462cd2c878ae940e1b306b",
+      "closedAt": "2025-02-11T16:47:21Z",
+      "mergedAt": "2025-02-11T16:47:21Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "ae5082f349f9c6341fe81329df854b06c0467534"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86bh-fD",
+          "commit": {
+            "abbreviatedOid": "892a03e"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-02-11T16:47:15Z",
+          "updatedAt": "2025-02-11T16:47:15Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
