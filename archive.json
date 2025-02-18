@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-16T00:20:13.248195+00:00",
+  "timestamp": "2025-02-18T00:18:18.159399+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4230,10 +4230,30 @@
       "author": "JamesTaft",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "              I think proxy-specific priority is too crude as priority might differ depending on the destination. Also it does not allow us to communicate possibility for client to do direct fallback.\r\nI plan to submit a PR by the end of this week describing my previous suggestion with list of proxies per destination group.\r\n\r\nI am not a big fan of encoding client IP restrictions in the PvD for a number of reasons:\r\n\r\n- Client could be behind NAT and does not know its IP\r\n- Client could have multiple interfaces some of which could have overlapping IPs\r\n- There are potential privacy and security risks associated with specific client IP hints\r\n\r\nIf client-specific configuration is needed, PvD contents should be provided depending on client IP from PvD hosting service perspective - similarly to how it is done today for PAC files. I'll submit a corresponding text in a PR to clarify this.\r\n\r\n_Originally posted by @yaroslavros in https://github.com/tfpauly/privacy-proxy/issues/262#issuecomment-2471052000_\r\n            \r\nIn my experience, ClientIP is frequently used to direct specific types or locations of clients to their own set of proxies or incoming port. \r\nUse cases: \r\nUnauthenticated server traffic that uses a different proxy port and is assigned a very restrictive policy.  \r\nDirecting to the nearest proxy cluster based on known internal IP ranges.\r\n\r\nWhile I agree that this _should_ be handled by the PvD hosting service, it is still a deprecation of functionality. There is no guarantee their PvD hosting service has the ability or visibility to modify the PvD on a per client basis.  Some orgs use internal NATing to work around overlapping IP space, for example.\r\n\r\n\"matchClientIP\" could be added as a key.\r\n\r\nThe multi-interface IP issue already exists with PAC files so it's not a new complexity. It's actually an improvement because this isn't freeform javascript so the security concerns are lowered and more controllable by the OS/Browser.",
       "createdAt": "2024-11-14T22:19:56Z",
-      "updatedAt": "2024-11-14T22:19:56Z",
+      "updatedAt": "2025-02-17T18:45:33Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 271,
+      "id": "I_kwDOEwrMS86qYo7U",
+      "title": "Describe handling proprietary / custom keys",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/271",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "We should explain the recommended ways to have custom / proprietary keys in the proxy dictionary\n- Prefix keys with some vendor name \"corpExampleKey\" to avoid overlap with registered keys\n- Handling mandatory vs optional",
+      "createdAt": "2025-02-17T18:47:49Z",
+      "updatedAt": "2025-02-17T18:47:49Z",
       "closedAt": null,
       "comments": []
     }
