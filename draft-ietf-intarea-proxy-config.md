@@ -158,19 +158,19 @@ This document defines two mandatory keys for the sub-dictionaries in the
 Other optional keys can be added to the dictionary to further define or restrict the
 use of a proxy.
 
-Optional keys included in this or future specifications MAY be included
-in the `mandatory` list. Clients that do not recognize a key from the `mandatory`
-list or cannot fully process the corresponding sub-dictionary entry MUST ignore the entire proxy
-definition, since the proxy might be only applicable for particular uses. These keys are
-registered in an IANA registry, defined in {{proxy-info-iana}}. `mandatory` list MUST NOT
-include any entries that do not correspond to optional keys in the sub-dictionary.
-
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
 | protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
 | proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["matchDomains"] |
+
+Optional keys included in this or future specifications MAY be included
+in the `mandatory` list. Clients that do not recognize a key from the `mandatory`
+list or cannot fully process the corresponding sub-dictionary entry MUST ignore the entire proxy
+definition, since the proxy might be only applicable for particular uses. These keys are
+registered in an IANA registry, defined in {{proxy-info-iana}}. `mandatory` list MUST NOT
+include any entries that do not correspond to optional keys in the sub-dictionary.
 
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
