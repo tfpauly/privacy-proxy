@@ -165,10 +165,10 @@ use of a proxy.
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["matchDomains"] |
 
-The value of the `mandatory` key is a list of keys that the client must understand and process to be 
-able to use the proxy. A client that does not understand a key from the list or cannot fully process 
-the value of a key from the list MUST ignore the entire proxy definition. The list can contain 
-only keys that are registered in an IANA registry, defined in {{proxy-info-iana}} and that are marked 
+The value of the `mandatory` key is a list of keys that the client must understand and process to be
+able to use the proxy. A client that does not understand a key from the list or cannot fully process
+the value of a key from the list MUST ignore the entire proxy definition. The list can contain
+only keys that are registered in an IANA registry, defined in {{proxy-info-iana}} and that are marked
 as optional.  The `mandatory` list MUST NOT include any entries that are not present in the sub-dictionary.
 
 The values for the `protocol` key are defined in the proxy protocol
