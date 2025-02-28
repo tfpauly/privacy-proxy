@@ -160,7 +160,7 @@ use of a proxy.
 
 Optional keys included in this or future specifications MAY be included
 in the `mandatory` list. Clients that do not recognize a key from the `mandatory`
-list or fully process corresponding sub-dictionary entry MUST ignore the entire proxy
+list or cannot fully process the corresponding sub-dictionary entry MUST ignore the entire proxy
 definition, since the proxy might be only applicable for particular uses. These keys are
 registered in an IANA registry, defined in {{proxy-info-iana}}. `mandatory` list MUST NOT
 include any entries that do not correspond to optional keys in the sub-dictionary.
