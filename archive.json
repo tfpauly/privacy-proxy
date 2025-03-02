@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-27T00:18:52.989384+00:00",
+  "timestamp": "2025-03-02T00:20:34.725182+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4199,9 +4199,24 @@
       ],
       "body": "From #259, there was a section I wanted to not add immediately but discuss more first:\r\n\r\n> Note that clients with limited resources MAY not be able to process and utilize all\r\n>  entries of an excessively long list. In the case if the provided list is too long for a given\r\n>  client, it SHOULD process as many records from the beginning of `matchDomains`, `matchSubnets` and\r\n>  `matchPorts` lists. These lists SHOULD be sorted with the most important elements placed at\r\n>  the start of the list. If a client cannot consume all the entries in `excludedDomains` or\r\n>  `excludedIPs` it SHOULD NOT use given proxy configuration to avoid sending traffic that the proxy\r\n>  cannot process.",
       "createdAt": "2024-10-21T03:06:41Z",
-      "updatedAt": "2024-10-21T03:17:51Z",
+      "updatedAt": "2025-02-28T18:41:07Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Maybe something along the lines of : \"If clients with limited resources and are not able to process the complete PvD file  they SHOULD use only the proxy configurates that they are able to process completely.\"\n\n",
+          "createdAt": "2025-02-27T15:42:08Z",
+          "updatedAt": "2025-02-27T15:42:08Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think we could suggest including `matchDomain` and friends into `mandatory` list (https://github.com/tfpauly/privacy-proxy/pull/272) if matching criteria is critical for correct proxy operation and the list must be parsed in full.",
+          "createdAt": "2025-02-28T18:41:06Z",
+          "updatedAt": "2025-02-28T18:41:06Z"
+        }
+      ]
     },
     {
       "number": 267,
@@ -4253,9 +4268,31 @@
       ],
       "body": "We should explain the recommended ways to have custom / proprietary keys in the proxy dictionary\n- Prefix keys with some vendor name \"corpExampleKey\" to avoid overlap with registered keys\n- Handling mandatory vs optional",
       "createdAt": "2025-02-17T18:47:49Z",
-      "updatedAt": "2025-02-17T18:47:49Z",
+      "updatedAt": "2025-03-01T00:06:27Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think it is partially addressed by https://github.com/tfpauly/privacy-proxy/pull/272\n\nFor vendor-specific proprietary naming keys we could suggest namespaces aka \"specialkey@acme.com\". What do you think?",
+          "createdAt": "2025-02-28T18:38:57Z",
+          "updatedAt": "2025-02-28T18:38:57Z"
+        },
+        {
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The issue #246 suggest to limit the character set. One of the reason was that some implementation may want to turn keys into methods, I do not know details this is from the original comment ([see this](https://github.com/tfpauly/privacy-proxy/pull/244#discussion_r1508311150)).  \"@\" will not work well.",
+          "createdAt": "2025-02-28T21:19:22Z",
+          "updatedAt": "2025-02-28T21:19:22Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "\"@\" is working well in SSH protocol namespaces, I was hoping we could follow that.\nIf \"@\" is problematic would `_` (underscore) be safe enough? I am not aware of any language that would not like `_` - even Lua is okay with it.",
+          "createdAt": "2025-03-01T00:06:07Z",
+          "updatedAt": "2025-03-01T00:06:27Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -16465,7 +16502,7 @@
       "id": "PR_kwDOEwrMS859u9nM",
       "title": "ECHConfigList, IPv4 and IPv6 hints for reaching proxies without DNS",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/257",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "yaroslavros",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -16475,14 +16512,14 @@
       ],
       "body": "Signalling ECHConfigList would allow clients to use Encrypted Client Hello when establishing TLS-based transport with the proxy.\r\nSince spec already suggests passing ALPN hint it makes sense to add `ech` key similarly to HTTPS DNS record.",
       "createdAt": "2024-10-06T15:27:59Z",
-      "updatedAt": "2024-10-13T02:39:38Z",
+      "updatedAt": "2025-02-28T23:50:11Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "cc89d6c5d6bcba25a86d60b746695591cbd81ac2",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "ech",
       "headRefOid": "3396248c9ac80ba505316574cb6735334c662e66",
-      "closedAt": null,
+      "closedAt": "2025-02-28T23:50:11Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -16493,6 +16530,13 @@
           "body": "Added ipv4hint and ipv6hint to complete the use case when client cannot or does not want to use DNS.\r\n\r\nAgain, this is not uncommon in enterprise environments to not allow end devices to perform DNS resolution and requesting everything through proxy by hostname. Providing IP address hints as well as ECH for the proxy would allow getting full benefits of TLS channel to the proxy in such setups.",
           "createdAt": "2024-10-12T11:50:33Z",
           "updatedAt": "2024-10-12T11:50:33Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closing based on WG consensus.",
+          "createdAt": "2025-02-28T23:50:11Z",
+          "updatedAt": "2025-02-28T23:50:11Z"
         }
       ],
       "reviews": [
@@ -17039,7 +17083,7 @@
       "id": "PR_kwDOEwrMS85-bjr3",
       "title": "First take on proxy auth hint",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/261",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "yaroslavros",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -17049,18 +17093,26 @@
       ],
       "body": "Here is my first stab at authentication hints.\r\n\r\nKey use case is to allow client proxy selection based on supported authentication methods.\r\n\r\nFor example, enterprise environment could have an IoT device that is only capable of TLS PSK, a workload that would like to do non-interactive mTLS authentication and an end user device that is happy to do an interactive authentication flow using HTTP methods. All these endpoints could obtain the same information about available proxies and select a proxy that is best suited to their capabilities and preferences.",
       "createdAt": "2024-10-12T21:44:21Z",
-      "updatedAt": "2024-10-13T02:39:19Z",
+      "updatedAt": "2025-02-28T23:50:01Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "b50d110abf7af9ecf9e6b388561fef9c69bbd6ae",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "auth",
       "headRefOid": "51fe78e6dc11931012183a01a7559324dec0125f",
-      "closedAt": null,
+      "closedAt": "2025-02-28T23:50:01Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closing based on WG consensus.",
+          "createdAt": "2025-02-28T23:50:01Z",
+          "updatedAt": "2025-02-28T23:50:01Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOEwrMS86M89ic",
@@ -18187,7 +18239,7 @@
       "labels": [],
       "body": "As discussed at IETF121 I merged matchPorts into other matching criteria. Adjusted examples and wording accordingly.",
       "createdAt": "2024-12-01T21:22:50Z",
-      "updatedAt": "2024-12-01T21:22:50Z",
+      "updatedAt": "2025-02-28T23:58:51Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "ac502ec989fa1de41054bd73c27df747e42590d5",
@@ -18199,7 +18251,108 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86eDXRB",
+          "commit": {
+            "abbreviatedOid": "69d16e0"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T20:07:12Z",
+          "updatedAt": "2025-02-28T20:08:30Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "I think we need to define \"optionally with port specification\" before this.\r\n\r\nAlso FQDNs is not completely correct, because it can have a port specification. Probably we need to define matching algorithm, with and without port specification first. ",
+              "createdAt": "2025-02-28T20:07:12Z",
+              "updatedAt": "2025-02-28T20:08:30Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eDZrX",
+          "commit": {
+            "abbreviatedOid": "69d16e0"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T20:13:10Z",
+          "updatedAt": "2025-02-28T20:13:10Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "> \"www.example.com:80,443\"\r\n\r\nI am not sure about the syntax.\r\n\r\nWhat do you thing to change to array of pairs, e.g:\r\n[[\"www.example.com\", \"80,443\"], [\"public.example.com\"]]\r\n\r\n",
+              "createdAt": "2025-02-28T20:13:10Z",
+              "updatedAt": "2025-02-28T20:13:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eDq3q",
+          "commit": {
+            "abbreviatedOid": "69d16e0"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T20:58:42Z",
+          "updatedAt": "2025-02-28T20:58:42Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "Frankly I'm a bit torn. Proprietary steering configurations that I worked with previously always used a simple string with an optional colon to separate ports section. Also mandating nested lists for those who don't need ports feels like an over-engineering and likely to be error-prone. On another hand structure is almost always a good thing.",
+              "createdAt": "2025-02-28T20:58:42Z",
+              "updatedAt": "2025-02-28T20:58:42Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eD1-7",
+          "commit": {
+            "abbreviatedOid": "69d16e0"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T21:30:47Z",
+          "updatedAt": "2025-02-28T21:30:47Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "I was look from perspective of parsing. More structure is easier to parse.",
+              "createdAt": "2025-02-28T21:30:47Z",
+              "updatedAt": "2025-02-28T21:30:47Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eEe_H",
+          "commit": {
+            "abbreviatedOid": "69d16e0"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T23:58:51Z",
+          "updatedAt": "2025-02-28T23:58:51Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "List of lists with one or two elements seem quite ugly and unintuitive to me.\r\nHow about merging matchDomains and matchSubnets into a single \"match\" list made of dictionaries? Each dictionary may have a destination key matching criteria, which could be \"ipv4\", \"ipv6\" or \"domain\" and optionally \"ports\". IP address matching would cover specific addresses as well as subnets.\r\nSimilar logic could apply to \"exclude\".",
+              "createdAt": "2025-02-28T23:58:51Z",
+              "updatedAt": "2025-02-28T23:58:51Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 270,
@@ -18240,6 +18393,181 @@
           "createdAt": "2025-02-11T16:47:15Z",
           "updatedAt": "2025-02-11T16:47:15Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 272,
+      "id": "PR_kwDOEwrMS86M-cxr",
+      "title": "Added mandatory key",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/272",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This makes format extensible in the future and allows proprietary extensions.\r\nOn top of that it addresses the question of what clients should do if they cannot fully process proxy destination restrictions. If corresponding key is in `mandatory` list, they must ignore the proxy, otherwise they may proceed even without full processing of the destination restriction list.",
+      "createdAt": "2025-02-28T18:37:14Z",
+      "updatedAt": "2025-02-28T23:49:44Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "ae5082f349f9c6341fe81329df854b06c0467534",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "mandatory-key",
+      "headRefOid": "22a915125254b218061d6c35da00e99d6ca244aa",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@ddragana I believe I resolved all the issues you raised. You okay to merge this?",
+          "createdAt": "2025-02-28T23:49:43Z",
+          "updatedAt": "2025-02-28T23:49:43Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86eDmUo",
+          "commit": {
+            "abbreviatedOid": "38ec613"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T20:45:55Z",
+          "updatedAt": "2025-02-28T20:45:55Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "```suggestion\r\nlist or cannot fully process the corresponding sub-dictionary entry MUST ignore the entire proxy\r\n```",
+              "createdAt": "2025-02-28T20:45:55Z",
+              "updatedAt": "2025-02-28T20:45:55Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eDoDb",
+          "commit": {
+            "abbreviatedOid": "38ec613"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T20:50:45Z",
+          "updatedAt": "2025-02-28T20:50:45Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "what about proprietary keys? I think mandatory list can contain any key except the one that define as mandatory in IANA registry.",
+              "createdAt": "2025-02-28T20:50:45Z",
+              "updatedAt": "2025-02-28T20:50:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eDpzK",
+          "commit": {
+            "abbreviatedOid": "38ec613"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T20:55:38Z",
+          "updatedAt": "2025-02-28T20:55:38Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "I'm planning to propose proprietary keys (as well as ssh-like key namespaces) in a separate PR.\r\nIs that okay with you?",
+              "createdAt": "2025-02-28T20:55:38Z",
+              "updatedAt": "2025-02-28T20:55:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eDqck",
+          "commit": {
+            "abbreviatedOid": "f910eb8"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T20:57:31Z",
+          "updatedAt": "2025-02-28T20:57:31Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "we should move this below the table. The keys in the table are all define below.",
+              "createdAt": "2025-02-28T20:57:31Z",
+              "updatedAt": "2025-02-28T20:57:31Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eDsKW",
+          "commit": {
+            "abbreviatedOid": "f910eb8"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T21:02:14Z",
+          "updatedAt": "2025-02-28T21:02:14Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "Done",
+              "createdAt": "2025-02-28T21:02:14Z",
+              "updatedAt": "2025-02-28T21:02:14Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eD08b",
+          "commit": {
+            "abbreviatedOid": "0b019b7"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T21:27:50Z",
+          "updatedAt": "2025-02-28T21:27:51Z",
+          "comments": [
+            {
+              "originalPosition": 26,
+              "body": "```suggestion\r\nThe value of the \"mandatory\" key is a list of key that the client must understand and process to be \r\nable to use the proxy. A client that does not understand a key from the list or cannot fully process \r\nthe value of a key from the list MUST ignore the entire proxy definition. The list can contain \r\nonly keys that are registered in an IANA registry, defined in {{proxy-info-iana}} and that are marked \r\nas optional.  The `mandatory` list MUST NOT include any entries that are not present in the sub-dictionary.\r\n```",
+              "createdAt": "2025-02-28T21:27:50Z",
+              "updatedAt": "2025-02-28T21:27:51Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eEcT7",
+          "commit": {
+            "abbreviatedOid": "0b019b7"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-02-28T23:47:42Z",
+          "updatedAt": "2025-02-28T23:47:43Z",
+          "comments": [
+            {
+              "originalPosition": 26,
+              "body": "Rephrased as requested. Corrected few minor mistakes in the suggestion.",
+              "createdAt": "2025-02-28T23:47:43Z",
+              "updatedAt": "2025-02-28T23:47:43Z"
+            }
+          ]
         }
       ]
     }
