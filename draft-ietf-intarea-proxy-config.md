@@ -265,46 +265,46 @@ be empty and MUST contain at least one valid key. Each provided key MUST corresp
 | ports | An array of TCP and UDP port ranges | Array of Strings | ["80", "443", "1024-65535"] |
 
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
-as described in {{proxy-pvd}}, entries in the `domains` array of `match` object indicate
+as described in {{proxy-pvd}}, entries in the `domains` array of a `match` object indicate
 specific FQDNs and zones that are accessible using the proxy. If a hostname does not match any entry,
 then a client SHOULD assume that the hostname will not be accessible through the proxy.
-If a hostname is included in the `domains` array of `exclude` object, then the client SHOULD NOT
-access it through the proxy. The `domains` array can be present in `exclude` object even if `domains`
-is omitted from `match` object or `match` key is not present in the `proxies` array subdictionary.
+If a hostname is included in the `domains` array of an `exclude` object, then the client SHOULD NOT
+access it through the proxy. The `domains` array can be present in an `exclude` object even if `domains`
+is omitted from all `match` objects or `match` key is not present in the `proxies` array subdictionary.
 When this is the case, the client assumes that all domains except the domains
-listed in the `domains` from `exclude` object are accessible through the proxy. If `domains` arrays are
-specified in both `match` and `exclude` objects, the `domains` array from `exclude` object SHOULD
-list more specific domains within entries in the `domains` array from `match` object.
+listed in the `domains` from `exclude` objects are accessible through the proxy. If `domains` arrays are
+specified in `match` and `exclude` objects, `domains` arrays from `exclude` objects SHOULD
+list more specific domains within entries in `domains` arrays from `match` objects.
 
 A wildcard prefix (`*.`) is used to indicate matching entire domains or subdomains instead of specific hostnames. Note
 that this can be used to match multiple levels of subdomains. For example "*.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
 Entries that include the wildcard prefix also SHOULD be treated as if they match
 an FQDN that only contains the string after the prefix, with no subdomain. So,
-an entry "*.example.com" in the `domains` array of `match` object would match the FQDN "example.com",
-unless "example.com" was specifically included in the `domains` array of `exclude` object. This is
+an entry "*.example.com" in the `domains` array of a `match` object would match the FQDN "example.com",
+unless "example.com" was specifically included in the `domains` array of an `exclude` object. This is
 done to prevent commonly needing to include both "*.example.com" and "example.com"
-in the `domains` array of `match` object.
+in the `domains` array of a `match` object.
 
-Entries in `subnets` array of `match` object correspond to IP addresses and subnets that are available through the
-proxy, while entries in `subnets` array of `exclude` object define IP addresses and subnets that SHOULD NOT be used
+Entries in `subnets` array of a `match` object correspond to IP addresses and subnets that are available through the
+proxy, while entries in `subnets` array of an `exclude` object define IP addresses and subnets that SHOULD NOT be used
 with the proxy. Subnet-based destination information SHOULD only be used when
 applications are communicating with destinations identified by only an IP address and not a hostname.
-If `subnets` arrays are specified in both `match` and `exclude` objects, the `subnets` array from `exclude` object SHOULD
-list more specific subnets within entries in the `subnets` array from `match` object.
+If `subnets` arrays are specified in `match` and `exclude` objects, `subnets` arrays from `exclude` objects SHOULD
+list more specific subnets within entries in `subnets` arrays from `match` objects.
 
 Port specification, if provided, refines the criteria for domain or subnet matching.
 For example, `ports` array of ["80", "443"] together with `domains` array of ["www.example.com"]
-in `match` object specifies that only ports 80 and 443 of "www.example.com"
-domain are accessible through the proxy. If `ports` keys is not present in destinations object, all ports are assumed to match.
-Comma-separated port list may contain individual port numbers (such as "80") or inclusive ranges of ports.
-For example "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+in a `match` object specifies that only ports 80 and 443 of "www.example.com"
+domain are accessible through the proxy. If `ports` key is not present in a `match` or `exclude` object,
+all ports are assumed to match. Comma-separated port list may contain individual port numbers (such as "80")
+or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
 
-Entries listed in the `match` object MUST NOT expand the set of destinations that a client is
+Entries listed in a `match` object MUST NOT expand the set of destinations that a client is
 willing to send to a particular proxy. The list can only narrow the list of destinations
 that the client is willing to send through the proxy. For example, if the client
 has a local policy to only send requests for "*.example.com" to a proxy
-"proxy.example.com", and the `domains` array of `match` object contains "internal.example.com" and
+"proxy.example.com", and `domains` array of a `match` object contains "internal.example.com" and
 "other.company.com", the client would end up only proxying "internal.example.com"
 through the proxy.
 
@@ -342,9 +342,9 @@ content-length = 135
     {
       "protocol": "connect-udp",
       "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
-      "match": {
+      "match": [{
         domains: [ "*.internal.example.org" ]
-      }
+      }]
     }
   ]
 }
