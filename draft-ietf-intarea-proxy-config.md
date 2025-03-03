@@ -247,15 +247,15 @@ DNS in IKEv2 {{?IKEV2SPLIT=RFC8598}}.
 PvD Additional Information can be used to indicate that a proxy PvD only allows access to a limited
 set of destinations.
 
-This document defines five optional keys for subdictionaries in the `proxies`
+This document defines four optional keys for subdictionaries in the `proxies`
 array that are used to signal information about destinations available through the proxy.
 
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
-| matchDomains | Yes | An array of FQDNs and wildcard DNS domains (optionally with port specifications) accessible over this proxy | Array of Strings | [ "www.example.com:80,443", "*.internal.example.com" ] |
-| excludeDomains | Yes | An array of FQDNs and wildcard DNS domains (optionally with port specifications) that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array | Array of Strings | [ "public.example.com:80" ] |
-| matchSubnets | Yes | An array of IP addresses and subnets (optionally with port specifications) accessible over this proxy | Array of Strings | [ "[2001:DB8::1]:443,1024-65535", "192.168.1.0/24" ] |
-| excludeSubnets | Yes | An array of IP addresses and subnets (optionally with port specifications) that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array | Array of Strings | [ "192.0.2.0/16:80", "192.51.100.1:1024-2048" ] |
+| matchDomains | Yes | An array of FQDNs and wildcard DNS domains accessible over this proxy. May include port specification. | Array of Strings | [ "www.example.com:80,443", "*.internal.example.com" ] |
+| excludeDomains | Yes | An array of FQDNs and wildcard DNS domains that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array. May include port specification. | Array of Strings | [ "public.example.com:80" ] |
+| matchSubnets | Yes | An array of IP addresses and subnets accessible over this proxy. May include port specification. | Array of Strings | [ "[2001:DB8::1]:443,1024-65535", "192.168.1.0/24" ] |
+| excludeSubnets | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array. May include port specification. | Array of Strings | [ "192.0.2.0/16:80", "192.51.100.1:1024-2048" ] |
 
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
 as described in {{proxy-pvd}}, entries in the `matchDomains` array indicate specific FQDNs
