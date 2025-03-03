@@ -1540,7 +1540,7 @@ a proxy. Destination restrictions are often used in VPN tunnel configurations su
 DNS in IKEv2 <span>[<a href="#IKEV2SPLIT" class="cite xref">IKEV2SPLIT</a>]</span>.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">PvD Additional Information can be used to indicate that a proxy PvD only allows access to a limited
 set of destinations.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">This document defines five optional keys for subdictionaries in the <code>proxies</code>
+<p id="section-4-3">This document defines two optional keys for subdictionaries in the <code>proxies</code>
 array that are used to signal information about destinations available through the proxy.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <table class="center" id="table-3">
         <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
@@ -1550,79 +1550,95 @@ array that are used to signal information about destinations available through t
             <th class="text-left" rowspan="1" colspan="1">Optional</th>
             <th class="text-left" rowspan="1" colspan="1">Description</th>
             <th class="text-left" rowspan="1" colspan="1">Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">match</td>
+            <td class="text-left" rowspan="1" colspan="1">Yes</td>
+            <td class="text-left" rowspan="1" colspan="1">An array of destination objects defining targets accessible over this proxy</td>
+            <td class="text-left" rowspan="1" colspan="1">Array of Objects</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">exclude</td>
+            <td class="text-left" rowspan="1" colspan="1">Yes</td>
+            <td class="text-left" rowspan="1" colspan="1">An array of destination objects defining targets that cannot be accessed over this proxy</td>
+            <td class="text-left" rowspan="1" colspan="1">Array of Objects</td>
+          </tr>
+        </tbody>
+      </table>
+<p id="section-4-5">This document defined three keys for destination objects. A destination object cannot
+be empty and MUST contain at least one valid key. Each provided key MUST correspond to an array with at least one entry.<a href="#section-4-5" class="pilcrow">¶</a></p>
+<table class="center" id="table-4">
+        <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">JSON Key</th>
+            <th class="text-left" rowspan="1" colspan="1">Description</th>
+            <th class="text-left" rowspan="1" colspan="1">Type</th>
             <th class="text-left" rowspan="1" colspan="1">Example</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">matchDomains</td>
-            <td class="text-left" rowspan="1" colspan="1">Yes</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of FQDNs and wildcard DNS domains that can be accessed over this proxy</td>
+            <td class="text-left" rowspan="1" colspan="1">domains</td>
+            <td class="text-left" rowspan="1" colspan="1">An array of FQDNs and wildcard DNS domains</td>
             <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
-            <td class="text-left" rowspan="1" colspan="1">[ "www.example.com", "*.internal.example.com" ]</td>
+            <td class="text-left" rowspan="1" colspan="1">["www.example.com", "*.internal.example.com"]</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">excludeDomains</td>
-            <td class="text-left" rowspan="1" colspan="1">Yes</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of FQDNs and wildcard DNS domains that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array</td>
+            <td class="text-left" rowspan="1" colspan="1">subnets</td>
+            <td class="text-left" rowspan="1" colspan="1">An array of IPv4 and IPv6 addresses and subnets</td>
             <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
-            <td class="text-left" rowspan="1" colspan="1">[ "public.example.com" ]</td>
+            <td class="text-left" rowspan="1" colspan="1">["2001:DB8::1", "192.168.1.0/24"]</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">matchSubnets</td>
-            <td class="text-left" rowspan="1" colspan="1">Yes</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of IP addresses and subnets that can be accessed over this proxy</td>
+            <td class="text-left" rowspan="1" colspan="1">ports</td>
+            <td class="text-left" rowspan="1" colspan="1">An array of TCP and UDP port ranges</td>
             <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
-            <td class="text-left" rowspan="1" colspan="1">[ "2001:DB8::1", "192.168.1.0/24" ]</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">excludeSubnets</td>
-            <td class="text-left" rowspan="1" colspan="1">Yes</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of IP addresses and subnets that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array</td>
-            <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
-            <td class="text-left" rowspan="1" colspan="1">[ "192.0.2.0/16", "192.51.100.1" ]</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">matchPorts</td>
-            <td class="text-left" rowspan="1" colspan="1">Yes</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of TCP or UDP port ranges accessible over this proxy</td>
-            <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
-            <td class="text-left" rowspan="1" colspan="1">[ "80", "443", "1024-65535" ]</td>
+            <td class="text-left" rowspan="1" colspan="1">["80", "443", "1024-65535"]</td>
           </tr>
         </tbody>
       </table>
-<p id="section-4-5">When present in a PvD Additional Information dictionary that is retrieved for a proxy
-as described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a>, entries in the <code>matchDomains</code> array indicate specific FQDNs
-and zones that are accessible using the proxy. If a hostname does match any entry,
+<p id="section-4-7">When present in a PvD Additional Information dictionary that is retrieved for a proxy
+as described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a>, entries in the <code>domains</code> array of a <code>match</code> object indicate
+specific FQDNs and zones that are accessible using the proxy. If a hostname does not match any entry,
 then a client SHOULD assume that the hostname will not be accessible through the proxy.
-If a hostname is included in the <code>excludeDomains</code> array, then the client SHOULD NOT
-access it through the proxy. The <code>excludeDomains</code> parameter can be present even if <code>matchDomains</code>
-is omitted. When this is the case, the client assumes that all domains except the domains
-listed in the <code>excludeDomains</code> array are accessible through the proxy.<a href="#section-4-5" class="pilcrow">¶</a></p>
-<p id="section-4-6">Entries listed in <code>matchDomains</code> MUST NOT expand the set of domains that a client is
-willing to send to a particular proxy. The list can only narrow the list of domains
-that the client is willing to send through the proxy. For example, if the client
-has a local policy to only send requests for "*.example.com" to a proxy
-"proxy.example.com", and the <code>matchDomains</code> array contains "internal.example.com" and
-"other.company.com", the client would end up only proxying "internal.example.com"
-through the proxy.<a href="#section-4-6" class="pilcrow">¶</a></p>
-<p id="section-4-7">A wildcard prefix (<code>*.</code>) is used to indicate matching entire domains or subdomains instead of specific hostnames. Note
+If a hostname is included in the <code>domains</code> array of an <code>exclude</code> object, then the client SHOULD NOT
+access it through the proxy. The <code>domains</code> array can be present in an <code>exclude</code> object even if <code>domains</code>
+is omitted from all <code>match</code> objects or <code>match</code> key is not present in the <code>proxies</code> array subdictionary.
+When this is the case, the client assumes that all domains except the domains
+listed in the <code>domains</code> from <code>exclude</code> objects are accessible through the proxy. If <code>domains</code> arrays are
+specified in <code>match</code> and <code>exclude</code> objects, <code>domains</code> arrays from <code>exclude</code> objects SHOULD
+list more specific domains within entries in <code>domains</code> arrays from <code>match</code> objects.<a href="#section-4-7" class="pilcrow">¶</a></p>
+<p id="section-4-8">A wildcard prefix (<code>*.</code>) is used to indicate matching entire domains or subdomains instead of specific hostnames. Note
 that this can be used to match multiple levels of subdomains. For example "<em>.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
 Entries that include the wildcard prefix also SHOULD be treated as if they match
 an FQDN that only contains the string after the prefix, with no subdomain. So,
-an entry in <code>matchDomains</code> of "</em>.example.com" would match the FQDN "example.com",
-unless "example.com" were specifically included in <code>excludeDomains</code>. This is
+an entry "</em>.example.com" in the <code>domains</code> array of a <code>match</code> object would match the FQDN "example.com",
+unless "example.com" was specifically included in the <code>domains</code> array of an <code>exclude</code> object. This is
 done to prevent commonly needing to include both "*.example.com" and "example.com"
-in the <code>matchDomains</code> list.<a href="#section-4-7" class="pilcrow">¶</a></p>
-<p id="section-4-8">Entries in <code>matchSubnets</code> correspond to IP addresses and subnets that are available through the
-proxy, while entries in <code>excludeSubnets</code> define IP addresses and subnets that SHOULD NOT be used
+in the <code>domains</code> array of a <code>match</code> object.<a href="#section-4-8" class="pilcrow">¶</a></p>
+<p id="section-4-9">Entries in <code>subnets</code> array of a <code>match</code> object correspond to IP addresses and subnets that are available through the
+proxy, while entries in <code>subnets</code> array of an <code>exclude</code> object define IP addresses and subnets that SHOULD NOT be used
 with the proxy. Subnet-based destination information SHOULD only be used when
-applications are communicating with destinations identified by only an IP address and not a hostname.<a href="#section-4-8" class="pilcrow">¶</a></p>
-<p id="section-4-9"><code>matchPorts</code> in a list of strings that can be used to instruct the client that only specific destination
-TCP or UDP ports are accessible through the proxy. The list may contain individual port numbers
-(such as "80") or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024
-to 2048, including the 1024 and 1028.<a href="#section-4-9" class="pilcrow">¶</a></p>
+applications are communicating with destinations identified by only an IP address and not a hostname.
+If <code>subnets</code> arrays are specified in <code>match</code> and <code>exclude</code> objects, <code>subnets</code> arrays from <code>exclude</code> objects SHOULD
+list more specific subnets within entries in <code>subnets</code> arrays from <code>match</code> objects.<a href="#section-4-9" class="pilcrow">¶</a></p>
+<p id="section-4-10">Port specification, if provided, refines the criteria for domain or subnet matching.
+For example, <code>ports</code> array of ["80", "443"] together with <code>domains</code> array of ["www.example.com"]
+in a <code>match</code> object specifies that only ports 80 and 443 of "www.example.com"
+domain are accessible through the proxy. If <code>ports</code> key is not present in a <code>match</code> or <code>exclude</code> object,
+all ports are assumed to match. Comma-separated port list may contain individual port numbers (such as "80")
+or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.<a href="#section-4-10" class="pilcrow">¶</a></p>
+<p id="section-4-11">Entries listed in a <code>match</code> object MUST NOT expand the set of destinations that a client is
+willing to send to a particular proxy. The list can only narrow the list of destinations
+that the client is willing to send through the proxy. For example, if the client
+has a local policy to only send requests for "*.example.com" to a proxy
+"proxy.example.com", and <code>domains</code> array of a <code>match</code> object contains "internal.example.com" and
+"other.company.com", the client would end up only proxying "internal.example.com"
+through the proxy.<a href="#section-4-11" class="pilcrow">¶</a></p>
 <div id="example-1">
 <section id="section-4.1">
         <h3 id="name-example-2">
@@ -1660,7 +1676,9 @@ content-length = 135
     {
       "protocol": "connect-udp",
       "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
-      "matchDomains": [ "*.internal.example.org" ]
+      "match": [{
+        domains: [ "*.internal.example.org" ]
+      }]
     }
   ]
 }
