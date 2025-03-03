@@ -247,57 +247,66 @@ DNS in IKEv2 {{?IKEV2SPLIT=RFC8598}}.
 PvD Additional Information can be used to indicate that a proxy PvD only allows access to a limited
 set of destinations.
 
-This document defines four optional keys for subdictionaries in the `proxies`
+This document defines two optional keys for subdictionaries in the `proxies`
 array that are used to signal information about destinations available through the proxy.
 
-| JSON Key | Optional | Description | Type | Example |
-| --- | --- | --- | --- | --- |
-| matchDomains | Yes | An array of FQDNs and wildcard DNS domains accessible over this proxy. May include port specification. | Array of Strings | [ "www.example.com:80,443", "*.internal.example.com" ] |
-| excludeDomains | Yes | An array of FQDNs and wildcard DNS domains that cannot be accessed over this proxy. If matchDomains is specified, excludeDomains should list more specific domains within entries in the matchDomains array. May include port specification. | Array of Strings | [ "public.example.com:80" ] |
-| matchSubnets | Yes | An array of IP addresses and subnets accessible over this proxy. May include port specification. | Array of Strings | [ "[2001:DB8::1]:443,1024-65535", "192.168.1.0/24" ] |
-| excludeSubnets | Yes | An array of IP addresses and subnets that cannot be accessed over this proxy. If matchSubnets is specified, excludeDomains should list more specific subnets within entries in the matchSubnets array. May include port specification. | Array of Strings | [ "192.0.2.0/16:80", "192.51.100.1:1024-2048" ] |
+| JSON Key | Optional | Description | Type |
+| --- | --- | --- | --- |
+| match | Yes | An array of destination objects defining targets accessible over this proxy | Array of Objects |
+| exclude | Yes | An array of destination objects defining targets that cannot be accessed over this proxy | Array of Objects |
+
+This document defined three keys for destination objects. A destination object cannot
+be empty and MUST contain at least one valid key. Each provided key MUST correspond to an array with at least one entry.
+
+| JSON Key | Description | Type | Example |
+| --- | --- | --- | --- |
+| domains | An array of FQDNs and wildcard DNS domains | Array of Strings | ["www.example.com", "*.internal.example.com"] |
+| subnets | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.168.1.0/24"] |
+| ports | An array of TCP and UDP port ranges | Array of Strings | ["80", "443", "1024-65535"] |
 
 When present in a PvD Additional Information dictionary that is retrieved for a proxy
-as described in {{proxy-pvd}}, entries in the `matchDomains` array indicate specific FQDNs
-and zones that are accessible using the proxy. If a hostname does match any entry,
+as described in {{proxy-pvd}}, entries in the `domains` array of `match` object indicate
+specific FQDNs and zones that are accessible using the proxy. If a hostname does not match any entry,
 then a client SHOULD assume that the hostname will not be accessible through the proxy.
-If a hostname is included in the `excludeDomains` array, then the client SHOULD NOT
-access it through the proxy. The `excludeDomains` parameter can be present even if `matchDomains`
-is omitted. When this is the case, the client assumes that all domains except the domains
-listed in the `excludeDomains` array are accessible through the proxy.
-
-Entries listed in `matchDomains` MUST NOT expand the set of domains that a client is
-willing to send to a particular proxy. The list can only narrow the list of domains
-that the client is willing to send through the proxy. For example, if the client
-has a local policy to only send requests for "*.example.com" to a proxy
-"proxy.example.com", and the `matchDomains` array contains "internal.example.com" and
-"other.company.com", the client would end up only proxying "internal.example.com"
-through the proxy.
+If a hostname is included in the `domains` array of `exclude` object, then the client SHOULD NOT
+access it through the proxy. The `domains` array can be present in `exclude` object even if `domains`
+is omitted from `match` object or `match` key is not present in the `proxies` array subdictionary.
+When this is the case, the client assumes that all domains except the domains
+listed in the `domains` from `exclude` object are accessible through the proxy. If `domains` arrays are
+specified in both `match` and `exclude` objects, the `domains` array from `exclude` object SHOULD
+list more specific domains within entries in the `domains` array from `match` object.
 
 A wildcard prefix (`*.`) is used to indicate matching entire domains or subdomains instead of specific hostnames. Note
 that this can be used to match multiple levels of subdomains. For example "*.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
 Entries that include the wildcard prefix also SHOULD be treated as if they match
 an FQDN that only contains the string after the prefix, with no subdomain. So,
-an entry in `matchDomains` of "*.example.com" would match the FQDN "example.com",
-unless "example.com" were specifically included in `excludeDomains`. This is
+an entry "*.example.com" in the `domains` array of `match` object would match the FQDN "example.com",
+unless "example.com" was specifically included in the `domains` array of `exclude` object. This is
 done to prevent commonly needing to include both "*.example.com" and "example.com"
-in the `matchDomains` list.
+in the `domains` array of `match` object.
 
-Entries in `matchSubnets` correspond to IP addresses and subnets that are available through the
-proxy, while entries in `excludeSubnets` define IP addresses and subnets that SHOULD NOT be used
+Entries in `subnets` array of `match` object correspond to IP addresses and subnets that are available through the
+proxy, while entries in `subnets` array of `exclude` object define IP addresses and subnets that SHOULD NOT be used
 with the proxy. Subnet-based destination information SHOULD only be used when
 applications are communicating with destinations identified by only an IP address and not a hostname.
+If `subnets` arrays are specified in both `match` and `exclude` objects, the `subnets` array from `exclude` object SHOULD
+list more specific subnets within entries in the `subnets` array from `match` object.
 
-Port specifications, if provided, refine the criteria for domain or subnet matching.
-For example, `matchDomains` entry "www.example.com:80,443" specifies that only ports 80 and 443 of "www.example.com"
-domain are accessible through the proxy. Entries in excludeDomains or excludeSubnets with port specifications narrow
-the list of destinations further. If no port is specified, all ports are assumed to match.
+Port specification, if provided, refines the criteria for domain or subnet matching.
+For example, `ports` array of ["80", "443"] together with `domains` array of ["www.example.com"]
+in `match` object specifies that only ports 80 and 443 of "www.example.com"
+domain are accessible through the proxy. If `ports` keys is not present in destinations object, all ports are assumed to match.
 Comma-separated port list may contain individual port numbers (such as "80") or inclusive ranges of ports.
 For example "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
-IPv6 addresses and subnets in `matchSubnets` and `excludeSubnets` MUST be enclosed within
-square brackets ("[" and "]") if used in combination with port specification. For example
-"[2001:DB8::1]:443" matches IPv6 address "2001:DB8::1" destination for port 443.
+
+Entries listed in the `match` object MUST NOT expand the set of destinations that a client is
+willing to send to a particular proxy. The list can only narrow the list of destinations
+that the client is willing to send through the proxy. For example, if the client
+has a local policy to only send requests for "*.example.com" to a proxy
+"proxy.example.com", and the `domains` array of `match` object contains "internal.example.com" and
+"other.company.com", the client would end up only proxying "internal.example.com"
+through the proxy.
 
 ## Example
 
@@ -333,7 +342,9 @@ content-length = 135
     {
       "protocol": "connect-udp",
       "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
-      "matchDomains": [ "*.internal.example.org" ]
+      "match": {
+        domains: [ "*.internal.example.org" ]
+      }
     }
   ]
 }
