@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 15 August 2025                                        Microsoft
+Expires: 4 September 2025                                      Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                        11 February 2025
+                                                            3 March 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 August 2025.
+   This Internet-Draft will expire on 4 September 2025.
 
 Copyright Notice
 
@@ -212,43 +212,48 @@ Table of Contents
 
    This document defines two mandatory keys for the sub-dictionaries in
    the proxies array, protocol and proxy.  There are also optional keys,
-   including alpn, and destination accessibility keys defined in
-   Section 4.  Other optional keys can be added to the dictionary to
-   further define or restrict the use of a proxy.  Clients that do not
-   recognize or understand a key in a proxy sub-dictionary MUST ignore
-   the entire proxy definition, since the proxy might be only applicable
-   for particular uses.  These keys are registered in an IANA registry,
-   defined in Section 7.2.
+   including alpn, mandatory, and destination accessibility keys defined
+   in Section 4.  Other optional keys can be added to the dictionary to
+   further define or restrict the use of a proxy.
 
-   +========+========+============+=======+=================================+
-   |JSON Key|Optional|Description |Type   |Example                          |
-   +========+========+============+=======+=================================+
-   |protocol|No      |The protocol|String |"connect-udp"                    |
-   |        |        |used to     |       |                                 |
-   |        |        |communicate |       |                                 |
-   |        |        |with the    |       |                                 |
-   |        |        |proxy       |       |                                 |
-   +--------+--------+------------+-------+---------------------------------+
-   |proxy   |No      |String      |String |"https://proxy.example.org:4443/ |
-   |        |        |containing  |       |masque{?target_host,target_port}"|
-   |        |        |the URI     |       |                                 |
-   |        |        |template or |       |                                 |
-   |        |        |hostname and|       |                                 |
-   |        |        |port of the |       |                                 |
-   |        |        |proxy,      |       |                                 |
-   |        |        |depending on|       |                                 |
-   |        |        |the format  |       |                                 |
-   |        |        |defined by  |       |                                 |
-   |        |        |the protocol|       |                                 |
-   +--------+--------+------------+-------+---------------------------------+
-   |alpn    |Yes     |An array of |Array  |["h3","h2"]                      |
-   |        |        |Application-|of     |                                 |
-   |        |        |Layer       |Strings|                                 |
-   |        |        |Protocol    |       |                                 |
-   |        |        |Negotiation |       |                                 |
-   |        |        |protocol    |       |                                 |
-   |        |        |identifiers |       |                                 |
-   +--------+--------+------------+-------+---------------------------------+
+   +=========+========+============+=======+=================================+
+   |JSON Key |Optional|Description |Type   |Example                          |
+   +=========+========+============+=======+=================================+
+   |protocol |No      |The protocol|String |"connect-udp"                    |
+   |         |        |used to     |       |                                 |
+   |         |        |communicate |       |                                 |
+   |         |        |with the    |       |                                 |
+   |         |        |proxy       |       |                                 |
+   +---------+--------+------------+-------+---------------------------------+
+   |proxy    |No      |String      |String |"https://proxy.example.org:4443/ |
+   |         |        |containing  |       |masque{?target_host,target_port}"|
+   |         |        |the URI     |       |                                 |
+   |         |        |template or |       |                                 |
+   |         |        |hostname and|       |                                 |
+   |         |        |port of the |       |                                 |
+   |         |        |proxy,      |       |                                 |
+   |         |        |depending on|       |                                 |
+   |         |        |the format  |       |                                 |
+   |         |        |defined by  |       |                                 |
+   |         |        |the protocol|       |                                 |
+   +---------+--------+------------+-------+---------------------------------+
+   |alpn     |Yes     |An array of |Array  |["h3","h2"]                      |
+   |         |        |Application-|of     |                                 |
+   |         |        |Layer       |Strings|                                 |
+   |         |        |Protocol    |       |                                 |
+   |         |        |Negotiation |       |                                 |
+   |         |        |protocol    |       |                                 |
+   |         |        |identifiers |       |                                 |
+   +---------+--------+------------+-------+---------------------------------+
+   |mandatory|Yes     |An array of |Array  |["matchDomains"]                 |
+   |         |        |optional    |of     |                                 |
+   |         |        |keys that   |Strings|                                 |
+   |         |        |client must |       |                                 |
+   |         |        |understand  |       |                                 |
+   |         |        |and process |       |                                 |
+   |         |        |to use this |       |                                 |
+   |         |        |proxy       |       |                                 |
+   +---------+--------+------------+-------+---------------------------------+
 
                                   Table 1
 
@@ -293,6 +298,15 @@ Table of Contents
    Layer Protocol Negotiation (ALPN) [ALPN] protocol identifiers
    associated with this server.  For HTTP proxies, this can indicate if
    the proxy supports HTTP/3, HTTP/2, etc.
+
+   The value of the mandatory key is a list of keys that the client must
+   understand and process to be able to use the proxy.  A client that
+   does not understand a key from the list or cannot fully process the
+   value of a key from the list MUST ignore the entire proxy definition.
+   The list can contain only keys that are registered in an IANA
+   registry, defined in Section 7.2 and that are marked as optional.
+   The mandatory list MUST NOT include any entries that are not present
+   in the sub-dictionary.
 
    When a PvD that contains the proxies key is fetched from a known
    proxy using the method described in Section 2 the proxies list

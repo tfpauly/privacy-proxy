@@ -13,12 +13,12 @@
 associated with a proxy, such as other proxy URIs that support different protocols
 and a list of DNS zones that are accessible via a proxy. 
     " name="description">
-<meta content="xml2rfc 3.26.0" name="generator">
+<meta content="xml2rfc 3.28.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-intarea-proxy-config-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.26.0
-    Python 3.12.8
+  xml2rfc 3.28.0
+    Python 3.12.9
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
@@ -439,7 +439,7 @@ dl {
     margin-bottom: 0;
   }
 }
-dl > dt {
+dl:not(.dlNewline) > dt {
   float: left;
   margin-right: 2ch;
   min-width: 8ch;
@@ -1048,11 +1048,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Proxy Configuration PvDs</td>
-<td class="right">February 2025</td>
+<td class="right">March 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 15 August 2025</td>
+<td class="center">Expires 4 September 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-11" class="published">11 February 2025</time>
+<time datetime="2025-03-03" class="published">3 March 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-08-15">15 August 2025</time></dd>
+<dd class="expires"><time datetime="2025-09-04">4 September 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ and a list of DNS zones that are accessible via a proxy.<a href="#section-abstra
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1351,12 +1351,9 @@ Each proxy is defined by a proxy protocol, a proxy location (i.e., a hostname an
 <span>[<a href="#URITEMPLATE" class="cite xref">URITEMPLATE</a>]</span>), along with potentially other keys.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">This document defines two mandatory keys for the sub-dictionaries in the
 <code>proxies</code> array, <code>protocol</code> and <code>proxy</code>. There are also optional keys, including
-<code>alpn</code>, and destination accessibility keys defined in <a href="#destinations" class="auto internal xref">Section 4</a>.
-Other optional keys can be added to the dictionary
-to further define or restrict the use of a proxy. Clients that do not
-recognize or understand a key in a proxy sub-dictionary MUST ignore the entire
-proxy definition, since the proxy might be only applicable for particular
-uses. These keys are registered in an IANA registry, defined in <a href="#proxy-info-iana" class="auto internal xref">Section 7.2</a>.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<code>alpn</code>, <code>mandatory</code>, and destination accessibility keys defined in <a href="#destinations" class="auto internal xref">Section 4</a>.
+Other optional keys can be added to the dictionary to further define or restrict the
+use of a proxy.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
         <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
@@ -1389,6 +1386,13 @@ uses. These keys are registered in an IANA registry, defined in <a href="#proxy-
             <td class="text-left" rowspan="1" colspan="1">An array of Application-Layer Protocol Negotiation protocol identifiers</td>
             <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
             <td class="text-left" rowspan="1" colspan="1">["h3","h2"]</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">mandatory</td>
+            <td class="text-left" rowspan="1" colspan="1">Yes</td>
+            <td class="text-left" rowspan="1" colspan="1">An array of optional keys that client must understand and process to use this proxy</td>
+            <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
+            <td class="text-left" rowspan="1" colspan="1">["matchDomains"]</td>
           </tr>
         </tbody>
       </table>
@@ -1463,17 +1467,22 @@ The types defined here either use a hostname and port, or a full URI template.<a
 <p id="section-3-7">If the <code>alpn</code> key is present, it provides a hint for the Application-Layer Protocol Negotiation
 (ALPN) <span>[<a href="#ALPN" class="cite xref">ALPN</a>]</span> protocol identifiers associated with this server. For HTTP proxies,
 this can indicate if the proxy supports HTTP/3, HTTP/2, etc.<a href="#section-3-7" class="pilcrow">¶</a></p>
-<p id="section-3-8">When a PvD that contains the <code>proxies</code> key is fetched from a known proxy
+<p id="section-3-8">The value of the <code>mandatory</code> key is a list of keys that the client must understand and process to be
+able to use the proxy. A client that does not understand a key from the list or cannot fully process
+the value of a key from the list MUST ignore the entire proxy definition. The list can contain
+only keys that are registered in an IANA registry, defined in <a href="#proxy-info-iana" class="auto internal xref">Section 7.2</a> and that are marked
+as optional.  The <code>mandatory</code> list MUST NOT include any entries that are not present in the sub-dictionary.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-9">When a PvD that contains the <code>proxies</code> key is fetched from a known proxy
 using the method described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a> the proxies list describes
 equivalent proxies (potentially supporting other protocols) that can be used
-in addition to the known proxy.<a href="#section-3-8" class="pilcrow">¶</a></p>
-<p id="section-3-9">Such cases are useful for informing clients of related proxies as a discovery
+in addition to the known proxy.<a href="#section-3-9" class="pilcrow">¶</a></p>
+<p id="section-3-10">Such cases are useful for informing clients of related proxies as a discovery
 method, with the assumption that the client already is aware of one proxy.
 Many historical methods of configuring a proxy only allow configuring
 a single FQDN hostname for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
 URIs that support non-default protocols, such as <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span> and
-<span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.<a href="#section-3-9" class="pilcrow">¶</a></p>
+<span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.<a href="#section-3-10" class="pilcrow">¶</a></p>
 <div id="example">
 <section id="section-3.1">
         <h3 id="name-example">
