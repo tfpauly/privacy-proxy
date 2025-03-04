@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-02T00:20:34.725182+00:00",
+  "timestamp": "2025-03-04T00:19:02.247600+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -3925,7 +3925,7 @@
       "id": "I_kwDOEwrMS86Ehmcj",
       "title": "Proxy PvDs: authentication",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/249",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "DavidSchinazi",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -3934,8 +3934,8 @@
       ],
       "body": "It could be helpful to add the ability to convey what modes of authentication the proxy supports. I'd assume the actual auth secrets would be exchanged out of band but perhaps mentioning which auth mechanism to use would help.",
       "createdAt": "2024-04-03T16:37:33Z",
-      "updatedAt": "2024-12-06T19:28:23Z",
-      "closedAt": null,
+      "updatedAt": "2025-03-03T18:00:17Z",
+      "closedAt": "2025-03-03T18:00:16Z",
       "comments": [
         {
           "author": "tfpauly",
@@ -3957,6 +3957,13 @@
           "body": "+1 on the auth hints.  It could save an entire connection that ends in a 407 for NTLM (gasp!) and Kerberos if the browsers use the hint.",
           "createdAt": "2024-12-06T19:19:44Z",
           "updatedAt": "2024-12-06T19:28:23Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Discussion at IETF 121 seemed to settle on not including auth in this document",
+          "createdAt": "2025-03-03T18:00:16Z",
+          "updatedAt": "2025-03-03T18:00:16Z"
         }
       ]
     },
@@ -4268,7 +4275,7 @@
       ],
       "body": "We should explain the recommended ways to have custom / proprietary keys in the proxy dictionary\n- Prefix keys with some vendor name \"corpExampleKey\" to avoid overlap with registered keys\n- Handling mandatory vs optional",
       "createdAt": "2025-02-17T18:47:49Z",
-      "updatedAt": "2025-03-01T00:06:27Z",
+      "updatedAt": "2025-03-03T13:48:30Z",
       "closedAt": null,
       "comments": [
         {
@@ -4291,6 +4298,20 @@
           "body": "\"@\" is working well in SSH protocol namespaces, I was hoping we could follow that.\nIf \"@\" is problematic would `_` (underscore) be safe enough? I am not aware of any language that would not like `_` - even Lua is okay with it.",
           "createdAt": "2025-03-01T00:06:07Z",
           "updatedAt": "2025-03-01T00:06:27Z"
+        },
+        {
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "body": "For simplicity I tent to the Tommy`s suggestion, i.e.  \"corpExampleKey\" . I think that is enough. \nBut I do not have a too strong opinion.",
+          "createdAt": "2025-03-03T13:19:39Z",
+          "updatedAt": "2025-03-03T13:19:39Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Presence of divider makes it easy to differentiate between proprietary keys and standard keys not known to a given implementation as well as get proprietary keys attribution. I think that's valuable.",
+          "createdAt": "2025-03-03T13:48:29Z",
+          "updatedAt": "2025-03-03T13:48:29Z"
         }
       ]
     }
@@ -16465,10 +16486,12 @@
       "author": "bemasc",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "This is more flexible and consistent.",
       "createdAt": "2024-07-26T16:00:52Z",
-      "updatedAt": "2024-07-29T16:02:10Z",
+      "updatedAt": "2025-03-03T17:56:45Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "cc89d6c5d6bcba25a86d60b746695591cbd81ac2",
@@ -18232,25 +18255,44 @@
       "id": "PR_kwDOEwrMS86DrOC8",
       "title": "Port matching rework",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/269",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "As discussed at IETF121 I merged matchPorts into other matching criteria. Adjusted examples and wording accordingly.",
       "createdAt": "2024-12-01T21:22:50Z",
-      "updatedAt": "2025-02-28T23:58:51Z",
+      "updatedAt": "2025-03-03T18:27:46Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "ac502ec989fa1de41054bd73c27df747e42590d5",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "destination-port-rework",
-      "headRefOid": "69d16e00d8eda548bb5259398e5a0e5cb0fc9216",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "0bb3c4a2d31fda8b33b1c063c280ed15b00bf64a",
+      "closedAt": "2025-03-03T18:27:45Z",
+      "mergedAt": "2025-03-03T18:27:45Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "ac6b8f0668865ea62cf5731c4411073e5fbe6dcc"
+      },
+      "comments": [
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@ddragana, I updated the PR to reflect our previous discussion on object based formatting for matching and exclusion criteria. Please review. Thank you!",
+          "createdAt": "2025-03-03T14:37:24Z",
+          "updatedAt": "2025-03-03T14:37:24Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Another correction to clarify the possibility of multiple match and exclude objects. Also fixed the example.",
+          "createdAt": "2025-03-03T15:00:14Z",
+          "updatedAt": "2025-03-03T15:00:14Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOEwrMS86eDXRB",
@@ -18351,6 +18393,79 @@
               "updatedAt": "2025-02-28T23:58:51Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eMdq8",
+          "commit": {
+            "abbreviatedOid": "69d16e0"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-03T12:59:41Z",
+          "updatedAt": "2025-03-03T12:59:41Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "You are right that list of lists are not great.\r\n\r\nI like your proposal.",
+              "createdAt": "2025-03-03T12:59:41Z",
+              "updatedAt": "2025-03-03T12:59:42Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eMe9S",
+          "commit": {
+            "abbreviatedOid": "69d16e0"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-03T13:02:04Z",
+          "updatedAt": "2025-03-03T13:02:04Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "Thank you, @ddragana\r\n\r\n@tfpauly do you agree with the proposed format?",
+              "createdAt": "2025-03-03T13:02:04Z",
+              "updatedAt": "2025-03-03T13:02:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eMj3R",
+          "commit": {
+            "abbreviatedOid": "69d16e0"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-03T13:11:14Z",
+          "updatedAt": "2025-03-03T13:11:14Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "I have updated description the text in description column and changed \"(optionally with port specifications)\" to \"May include port specification\" at the end of each description.\r\nPort specification is defined under the table after all the keys.\r\n\r\nWhat do you think?",
+              "createdAt": "2025-03-03T13:11:14Z",
+              "updatedAt": "2025-03-03T13:11:14Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86ePsl8",
+          "commit": {
+            "abbreviatedOid": "0bb3c4a"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-03-03T18:27:36Z",
+          "updatedAt": "2025-03-03T18:27:36Z",
+          "comments": []
         }
       ]
     },
@@ -18401,24 +18516,28 @@
       "id": "PR_kwDOEwrMS86M-cxr",
       "title": "Added mandatory key",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/272",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "This makes format extensible in the future and allows proprietary extensions.\r\nOn top of that it addresses the question of what clients should do if they cannot fully process proxy destination restrictions. If corresponding key is in `mandatory` list, they must ignore the proxy, otherwise they may proceed even without full processing of the destination restriction list.",
       "createdAt": "2025-02-28T18:37:14Z",
-      "updatedAt": "2025-02-28T23:49:44Z",
+      "updatedAt": "2025-03-03T18:01:31Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "ae5082f349f9c6341fe81329df854b06c0467534",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "mandatory-key",
-      "headRefOid": "22a915125254b218061d6c35da00e99d6ca244aa",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "c895db4290b7ba18c147659081bb989f0d63668b",
+      "closedAt": "2025-03-03T18:01:31Z",
+      "mergedAt": "2025-03-03T18:01:31Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "346a4509ac665eeb0384fe134428c6143ecfe66b"
+      },
       "comments": [
         {
           "author": "yaroslavros",
@@ -18568,6 +18687,99 @@
               "updatedAt": "2025-02-28T23:47:43Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eMOus",
+          "commit": {
+            "abbreviatedOid": "22a9151"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-03T12:33:57Z",
+          "updatedAt": "2025-03-03T12:33:58Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "Sorry, this is on me. I was not precise enough.\r\n\r\nCan you move this below alpn, so that the keys are discussed in the same order as in the table.\r\nThanks!",
+              "createdAt": "2025-03-03T12:33:57Z",
+              "updatedAt": "2025-03-03T12:33:58Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eMP6U",
+          "commit": {
+            "abbreviatedOid": "22a9151"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-03T12:36:08Z",
+          "updatedAt": "2025-03-03T12:36:08Z",
+          "comments": [
+            {
+              "originalPosition": 24,
+              "body": "you are going to change this in the pr for proprietary keys?\r\nI  am wondering if we should change it in this pr because the other may not be ready before the deadline today.",
+              "createdAt": "2025-03-03T12:36:08Z",
+              "updatedAt": "2025-03-03T12:36:08Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eMQwg",
+          "commit": {
+            "abbreviatedOid": "22a9151"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-03T12:37:41Z",
+          "updatedAt": "2025-03-03T12:37:41Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "Makes perfect sense for the flow. Done.",
+              "createdAt": "2025-03-03T12:37:41Z",
+              "updatedAt": "2025-03-03T12:37:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86eMShq",
+          "commit": {
+            "abbreviatedOid": "22a9151"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-03T12:39:39Z",
+          "updatedAt": "2025-03-03T12:39:39Z",
+          "comments": [
+            {
+              "originalPosition": 24,
+              "body": "I would merge this one as it is and add proprietary keys in a separate PR that we don't need to rush prior to the deadline tonight.\r\nProprietary keys format will depend on allowed characters in the JSON keys and I don't think we have full consensus on that.",
+              "createdAt": "2025-03-03T12:39:39Z",
+              "updatedAt": "2025-03-03T12:39:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86ePepE",
+          "commit": {
+            "abbreviatedOid": "c895db4"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-03-03T18:01:25Z",
+          "updatedAt": "2025-03-03T18:01:25Z",
+          "comments": []
         }
       ]
     }
