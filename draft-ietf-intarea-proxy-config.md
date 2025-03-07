@@ -163,7 +163,7 @@ use of a proxy.
 | protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
 | proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
-| mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["matchDomains"] |
+| mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["match"] |
 
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
