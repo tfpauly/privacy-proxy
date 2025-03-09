@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-06T00:19:19.081345+00:00",
+  "timestamp": "2025-03-09T00:17:17.789255+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4087,7 +4087,7 @@
       "url": "https://github.com/tfpauly/privacy-proxy/issues/262",
       "state": "OPEN",
       "author": "yaroslavros",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
         "Proxy PvDs",
@@ -4121,7 +4121,7 @@
         },
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "There are multiple scenarios when enterprise wants to signal preferences to the client from the network:\r\n\r\n- Geographic proximity of proxies on a global network (suggest client to go to the closest one from network point of view for performance and content localisation)\r\n- Regulatory reasons (need to egress from a certain location and use backup option if everything else fails)\r\n- Load balancing across proxies (order of proxies is shuffled for clients)\r\n- Capabilities available on proxies\r\n- Test/pilot scenarios for a subset of users with a somewhat seamless way for them to fallback if the primary proxy fails or is no longer available\r\n\r\nIn my experience strict order of proxy preferences is widely relied on in enterprise setups.\r\n\r\nPerhaps worth discussing at IETF121.",
           "createdAt": "2024-10-21T09:59:10Z",
           "updatedAt": "2024-10-21T09:59:10Z"
@@ -4149,14 +4149,14 @@
         },
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "I think for network provisioned proxy list it would make more sense to provide destination-centric proxy priority lists. Along the lines of:\r\n```\r\n{\r\n  \"proxies\": [\r\n    {\r\n      \"identifier\": \"legacy\",\r\n      \"protocol\": \"http-connect\",\r\n      \"proxy\": \"proxy.example.org:80\"\r\n    },\r\n    {\r\n      \"identifier\": \"masque\",\r\n      \"protocol\": \"connect-ip\",\r\n      \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\"\r\n    }\r\n  ],\r\n  \"proxy_destinations\": [\r\n    {\r\n      \"matchPorts\": [80, 443],\r\n      \"proxies\": [\"legacy\", \"DIRECT\"]\r\n    },\r\n    {\r\n      \"matchDomains\": [\"*.internal\", \"*.intranet\"],\r\n      \"proxies\": [\"masque\", \"legacy\"]\r\n    }\r\n ]\r\n}\r\n```\r\n\r\nIt's not uncommon for enterprise PAC files to carry thousands of match items and duplicating them across multiple proxy definitions feels to be unnecessary bloat, makes processing more complex and whole structure more error-prone.\r\n\r\nTraditionally proxy load balancing with PAC files is accomplished with DNS round robin or separate sets of PAC files randomly distributed to clients.\r\nSome people also do hierarchical proxies for load balancing purpose...",
           "createdAt": "2024-10-23T10:24:06Z",
           "updatedAt": "2024-10-23T10:24:20Z"
         },
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "Or use `null` instead of `\"DIRECT\"` to avoid error-prone reserved identifiers.",
           "createdAt": "2024-10-23T10:26:01Z",
           "updatedAt": "2024-10-23T10:26:01Z"
@@ -4177,7 +4177,7 @@
         },
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "I think proxy-specific priority is too crude as priority might differ depending on the destination. Also it does not allow us to communicate possibility for client to do direct fallback.\r\nI plan to submit a PR by the end of this week describing my previous suggestion with list of proxies per destination group.\r\n\r\nI am not a big fan of encoding client IP restrictions in the PvD for a number of reasons:\r\n\r\n- Client could be behind NAT and does not know its IP\r\n- Client could have multiple interfaces some of which could have overlapping IPs\r\n- There are potential privacy and security risks associated with specific client IP hints\r\n\r\nIf client-specific configuration is needed, PvD contents should be provided depending on client IP from PvD hosting service perspective - similarly to how it is done today for PAC files. I'll submit a corresponding text in a PR to clarify this.",
           "createdAt": "2024-11-12T16:48:31Z",
           "updatedAt": "2024-11-12T16:48:48Z"
@@ -4218,7 +4218,7 @@
         },
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "I think we could suggest including `matchDomain` and friends into `mandatory` list (https://github.com/tfpauly/privacy-proxy/pull/272) if matching criteria is critical for correct proxy operation and the list must be parsed in full.",
           "createdAt": "2025-02-28T18:41:06Z",
           "updatedAt": "2025-02-28T18:41:06Z"
@@ -4275,12 +4275,12 @@
       ],
       "body": "We should explain the recommended ways to have custom / proprietary keys in the proxy dictionary\n- Prefix keys with some vendor name \"corpExampleKey\" to avoid overlap with registered keys\n- Handling mandatory vs optional",
       "createdAt": "2025-02-17T18:47:49Z",
-      "updatedAt": "2025-03-03T13:48:30Z",
+      "updatedAt": "2025-03-08T00:41:58Z",
       "closedAt": null,
       "comments": [
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "I think it is partially addressed by https://github.com/tfpauly/privacy-proxy/pull/272\n\nFor vendor-specific proprietary naming keys we could suggest namespaces aka \"specialkey@acme.com\". What do you think?",
           "createdAt": "2025-02-28T18:38:57Z",
           "updatedAt": "2025-02-28T18:38:57Z"
@@ -4294,7 +4294,7 @@
         },
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "\"@\" is working well in SSH protocol namespaces, I was hoping we could follow that.\nIf \"@\" is problematic would `_` (underscore) be safe enough? I am not aware of any language that would not like `_` - even Lua is okay with it.",
           "createdAt": "2025-03-01T00:06:07Z",
           "updatedAt": "2025-03-01T00:06:27Z"
@@ -4308,12 +4308,86 @@
         },
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "Presence of divider makes it easy to differentiate between proprietary keys and standard keys not known to a given implementation as well as get proprietary keys attribution. I think that's valuable.",
           "createdAt": "2025-03-03T13:48:29Z",
           "updatedAt": "2025-03-03T13:48:29Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "I'm OK with `_` as a recommended convention",
+          "createdAt": "2025-03-07T16:45:11Z",
+          "updatedAt": "2025-03-07T16:45:11Z"
+        },
+        {
+          "author": "DavidSchinazi",
+          "authorAssociation": "COLLABORATOR",
+          "body": "`_` sounds good, though if we create a notion of proprietary suffixes we should clarify the guidance for IANA designated experts. For example, \"A request for `specialkey@acme.com` needs to come from an email address under `@acme.com`\" or something like that",
+          "createdAt": "2025-03-08T00:41:57Z",
+          "updatedAt": "2025-03-08T00:41:57Z"
         }
       ]
+    },
+    {
+      "number": 273,
+      "id": "I_kwDOEwrMS86tDkPt",
+      "title": "Provide more examples of matching criteria",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/273",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "yaroslavros"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "To help explain common patterns, give examples of how to use the match and exclude criteria",
+      "createdAt": "2025-03-07T16:07:02Z",
+      "updatedAt": "2025-03-07T16:08:11Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 274,
+      "id": "I_kwDOEwrMS86tDoks",
+      "title": "Explain OR and AND logic for matching",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/274",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "yaroslavros"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "We need to explain how match/exclude dictionaries interact with each other.\n\n- within a match dictionary, the various rules are ANDed together (all rules must match)\n- different dictionaries are ORed together (they match separately)\n\nIt probably doesn't make sense to include both domains and subnets since we can usually proxy by name",
+      "createdAt": "2025-03-07T16:15:13Z",
+      "updatedAt": "2025-03-07T16:15:13Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 275,
+      "id": "I_kwDOEwrMS86tD1iy",
+      "title": "How do we handle multiple proxies with the same match rules?",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/275",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "We currently have this:\n~~~\n:status = 200\ncontent-type = application/pvd+json\ncontent-length = 135\n\n{\n  \"identifier\": \"proxy.example.org.\",\n  \"expires\": \"2023-06-23T06:00:00Z\",\n  \"prefixes\": [],\n  \"proxies\": [\n    {\n      \"protocol\": \"http-connect\",\n      \"proxy\": \"proxy.example.org:80\"\n    },\n    {\n      \"protocol\": \"connect-udp\",\n      \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\",\n      \"match\": [{\n        domains: [ \"*.internal.example.org\" ]\n      }]\n    }\n  ]\n}\n~~~\n\nThat isn't easy to make both proxies have the same match domains.\n\nOne option we discussed and liked is having the match list be separate from proxy list; add some identifier to the proxy dictionary; and have the match rules refer to which proxies they apply to.\n\n~~~\n:status = 200\ncontent-type = application/pvd+json\ncontent-length = 135\n\n{\n  \"identifier\": \"proxy.example.org.\",\n  \"expires\": \"2023-06-23T06:00:00Z\",\n  \"prefixes\": [],\n  \"proxies\": [\n    {\n      \"identifier\": \"All Proxy\",\n      \"protocol\": \"http-connect\",\n      \"proxy\": \"all-proxy.example.org:80\",\n    },\n    {\n      \"identifier\": \"TCP Proxy\"\n      \"protocol\": \"http-connect\",\n      \"proxy\": \"proxy.example.org:80\",\n      \"mandatory\": [ \"auth\" ],\n      \"auth\": \"basic\"\n    },\n    {\n      \"identifier\": \"UDP Proxy\"\n      \"protocol\": \"connect-udp\",\n      \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\",\n    }\n  ]\n  \"matchProxies\": [ {\n      \"proxies\": [ \"All Proxy\" ]\n  },{\n      \"proxies\": [ \"TCP Proxy\", \"UDP Proxy\" ],\n      \"domains\": [ \"*.internal.example.org\" ],\n      \"ports\": [ 80, 443 ]\n  }, {\n      \"proxies\": [ \"TCP Proxy\" ],\n      \"domains\": [ \"*.internal.example.org\" ],\n      \"ports\": [ 22 ],\n      \"proprietaryKey\": \"foobar\" // Match rule only applies if you understand \"proprietaryKey\"\n  }]\n  \"excludeProxies\": [{\n      \"proxies\": [ \"TCP Proxy\", \"UDP Proxy\" ],\n      \"domains\": [ \"foo.internal.example.org\" ]\n  }]\n}\n~~~\n\nOther alternatives below:\n~~~\n:status = 200\ncontent-type = application/pvd+json\ncontent-length = 135\n\n{\n  \"identifier\": \"proxy.example.org.\",\n  \"expires\": \"2023-06-23T06:00:00Z\",\n  \"prefixes\": [],\n  \"proxyGroups\": [\n    {\n      \"proxies\": [{\n         \"protocol\": \"http-connect\",\n         \"proxy\": \"proxy.example.org:80\"\n        },\n        {\n         \"protocol\": \"connect-udp\",\n         \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\"\n      }],\n      \"match\": [{\n        domains: [ \"*.internal.example.org\" ]\n      }]\n    }\n    {\n      \"proxies\": [{\n         \"protocol\": \"http-connect\",\n         \"proxy\": \"proxy2.example.org:80\"\n        },\n        {\n         \"protocol\": \"connect-udp\",\n         \"proxy\": \"https://proxy2.example.org/masque{?target_host,target_port}\"\n      }],\n      \"match\": [{\n        domains: [ \"*.internal2.example.org\" ]\n      }]\n    }\n  ]\n}\n~~~\n\n~~~\n:status = 200\ncontent-type = application/pvd+json\ncontent-length = 135\n\n{\n  \"identifier\": \"proxy.example.org.\",\n  \"expires\": \"2023-06-23T06:00:00Z\",\n  \"prefixes\": [],\n  \"proxies\": [\n    {\n      \"protocol\": \"http-connect\",\n      \"proxy\": \"all-proxy.example.org:80\",\n    },\n    {\n      \"protocol\": \"http-connect\",\n      \"proxy\": \"proxy.example.org:80\",\n      \"match-identifiers\": [ \"Internal-HTTP\", \"Internal-SSH\" ]\n    },\n    {\n      \"protocol\": \"connect-udp\",\n      \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\",\n      \"match-identifiers\": [ \"Internal-HTTP\" ]\n    }\n  ]\n  \"match\": [{\n      identifier: \"Internal-HTTP\",\n      domains: [ \"*.internal.example.org\" ],\n      ports: [ 80, 443 ]\n  }, {\n      identifier: \"Internal-SSH\",\n      domains: [ \"*.internal.example.org\" ],\n      ports: [ 22 ]\n  }]\n}\n~~~\n\n",
+      "createdAt": "2025-03-07T16:41:34Z",
+      "updatedAt": "2025-03-07T16:41:34Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -16527,7 +16601,7 @@
       "url": "https://github.com/tfpauly/privacy-proxy/pull/257",
       "state": "CLOSED",
       "author": "yaroslavros",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
         "Proxy PvDs",
@@ -16549,14 +16623,14 @@
       "comments": [
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "Added ipv4hint and ipv6hint to complete the use case when client cannot or does not want to use DNS.\r\n\r\nAgain, this is not uncommon in enterprise environments to not allow end devices to perform DNS resolution and requesting everything through proxy by hostname. Providing IP address hints as well as ECH for the proxy would allow getting full benefits of TLS channel to the proxy in such setups.",
           "createdAt": "2024-10-12T11:50:33Z",
           "updatedAt": "2024-10-12T11:50:33Z"
         },
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "Closing based on WG consensus.",
           "createdAt": "2025-02-28T23:50:11Z",
           "updatedAt": "2025-02-28T23:50:11Z"
@@ -16589,7 +16663,7 @@
             "abbreviatedOid": "1fea994"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-10-07T21:54:26Z",
@@ -16649,7 +16723,7 @@
             "abbreviatedOid": "1fea994"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-10-11T20:32:53Z",
@@ -16672,7 +16746,7 @@
       "url": "https://github.com/tfpauly/privacy-proxy/pull/258",
       "state": "MERGED",
       "author": "yaroslavros",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
         "Proxy PvDs"
@@ -16736,7 +16810,7 @@
       "url": "https://github.com/tfpauly/privacy-proxy/pull/259",
       "state": "MERGED",
       "author": "yaroslavros",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
         "Proxy PvDs"
@@ -16759,7 +16833,7 @@
       "comments": [
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "I think matching both subnets and individual IPs is more user-friendly and will make it easier to migrate from PAC files. I've seen PAC files with thousands (yes, really) individual IPs in proxy steering configurations...\r\nDistinguishing between subnets and IPs is trivial and does not create ambiguity for parsers.\r\n\r\nHowever I don't have an overwhelmingly strong opinion on this, so happy to change this to just subnets if you believe that consistency benefits overweight simplicity for users.",
           "createdAt": "2024-10-07T21:13:55Z",
           "updatedAt": "2024-10-07T21:13:55Z"
@@ -16812,7 +16886,7 @@
             "abbreviatedOid": "f752954"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-10-13T23:34:19Z",
@@ -16852,7 +16926,7 @@
             "abbreviatedOid": "f752954"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-10-14T09:52:24Z",
@@ -17108,7 +17182,7 @@
       "url": "https://github.com/tfpauly/privacy-proxy/pull/261",
       "state": "CLOSED",
       "author": "yaroslavros",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
         "Proxy PvDs",
@@ -17130,7 +17204,7 @@
       "comments": [
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "Closing based on WG consensus.",
           "createdAt": "2025-02-28T23:50:01Z",
           "updatedAt": "2025-02-28T23:50:01Z"
@@ -18257,7 +18331,7 @@
       "url": "https://github.com/tfpauly/privacy-proxy/pull/269",
       "state": "MERGED",
       "author": "yaroslavros",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
         "Proxy PvDs"
@@ -18280,14 +18354,14 @@
       "comments": [
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "@ddragana, I updated the PR to reflect our previous discussion on object based formatting for matching and exclusion criteria. Please review. Thank you!",
           "createdAt": "2025-03-03T14:37:24Z",
           "updatedAt": "2025-03-03T14:37:24Z"
         },
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "Another correction to clarify the possibility of multiple match and exclude objects. Also fixed the example.",
           "createdAt": "2025-03-03T15:00:14Z",
           "updatedAt": "2025-03-03T15:00:14Z"
@@ -18340,7 +18414,7 @@
             "abbreviatedOid": "69d16e0"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-02-28T20:58:42Z",
@@ -18380,7 +18454,7 @@
             "abbreviatedOid": "69d16e0"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-02-28T23:58:51Z",
@@ -18420,7 +18494,7 @@
             "abbreviatedOid": "69d16e0"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-03-03T13:02:04Z",
@@ -18440,7 +18514,7 @@
             "abbreviatedOid": "69d16e0"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-03-03T13:11:14Z",
@@ -18476,7 +18550,7 @@
       "url": "https://github.com/tfpauly/privacy-proxy/pull/270",
       "state": "MERGED",
       "author": "yaroslavros",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
@@ -18518,7 +18592,7 @@
       "url": "https://github.com/tfpauly/privacy-proxy/pull/272",
       "state": "MERGED",
       "author": "yaroslavros",
-      "authorAssociation": "CONTRIBUTOR",
+      "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
         "Proxy PvDs"
@@ -18541,7 +18615,7 @@
       "comments": [
         {
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "body": "@ddragana I believe I resolved all the issues you raised. You okay to merge this?",
           "createdAt": "2025-02-28T23:49:43Z",
           "updatedAt": "2025-02-28T23:49:43Z"
@@ -18594,7 +18668,7 @@
             "abbreviatedOid": "38ec613"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-02-28T20:55:38Z",
@@ -18634,7 +18708,7 @@
             "abbreviatedOid": "f910eb8"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-02-28T21:02:14Z",
@@ -18674,7 +18748,7 @@
             "abbreviatedOid": "0b019b7"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-02-28T23:47:42Z",
@@ -18734,7 +18808,7 @@
             "abbreviatedOid": "22a9151"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-03-03T12:37:41Z",
@@ -18754,7 +18828,7 @@
             "abbreviatedOid": "22a9151"
           },
           "author": "yaroslavros",
-          "authorAssociation": "CONTRIBUTOR",
+          "authorAssociation": "COLLABORATOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-03-03T12:39:39Z",
