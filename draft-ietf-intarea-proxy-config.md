@@ -164,6 +164,7 @@ use of a proxy.
 | proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["match"] |
+| identifier | No | A string used to refer to the proxy, which can be referenced by other dictionaries | String | "udp-proxy" |
 
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
@@ -192,6 +193,13 @@ able to use the proxy. A client that does not understand a key from the list or 
 the value of a key from the list MUST ignore the entire proxy definition. The list can contain
 only keys that are registered in an IANA registry, defined in {{proxy-info-iana}} and that are marked
 as optional.  The `mandatory` list MUST NOT include any entries that are not present in the sub-dictionary.
+
+The value of `identifier` key is an optional string that can be used to refer to the
+proxy from other dictionaries, specifically those defined in {{destinations}}. The
+string value is an arbitrary JSON string. Identifier values MAY be duplicated
+across different proxy dictionaries in the `proxies` array, which would indicate
+that all references from other dictionaries to a particular identifier value applies
+to all matching proxies.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
@@ -234,11 +242,13 @@ content-length = 222
   "proxies": [
     {
       "protocol": "http-connect",
-      "proxy": "proxy.example.org:80"
+      "proxy": "proxy.example.org:80",
+      "identifier": "tcp-proxy"
     },
     {
       "protocol": "connect-udp",
       "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
+      "identifier": "udp-proxy"
     }
   ]
 }
