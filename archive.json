@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-20T00:19:19.218311+00:00",
+  "timestamp": "2025-03-23T00:21:15.544191+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -18856,6 +18856,36 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 276,
+      "id": "PR_kwDOEwrMS86Pvha7",
+      "title": "Match/exclude destination rules",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/276",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Closes #275\r\n\r\nWork on adding the identifier keys and separate arrays of match/exclude destination rules described in #275 \r\n\r\nStill needs more examples filled in",
+      "createdAt": "2025-03-22T22:44:07Z",
+      "updatedAt": "2025-03-22T22:44:07Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfp/matching-rules",
+      "headRefOid": "bcd6ed167b6b99b4e89eb77044d4deddee5ab8f2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
