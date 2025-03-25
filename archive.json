@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-23T00:21:15.544191+00:00",
+  "timestamp": "2025-03-25T00:20:06.363404+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -18873,7 +18873,7 @@
       ],
       "body": "Closes #275\r\n\r\nWork on adding the identifier keys and separate arrays of match/exclude destination rules described in #275 \r\n\r\nStill needs more examples filled in",
       "createdAt": "2025-03-22T22:44:07Z",
-      "updatedAt": "2025-03-22T22:44:07Z",
+      "updatedAt": "2025-03-24T11:23:53Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
@@ -18885,7 +18885,72 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86hhx4e",
+          "commit": {
+            "abbreviatedOid": "bcd6ed1"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Awesome work!\r\nFew minor suggestions added.\r\n\r\nOnce this is merged, I'm happy to add more examples and some text around proprietary keys and valid characters in the keys as discussed previously.",
+          "createdAt": "2025-03-24T11:02:53Z",
+          "updatedAt": "2025-03-24T11:17:39Z",
+          "comments": [
+            {
+              "originalPosition": 17,
+              "body": "I think it's worth spelling out here that a proxy without `identifier` is expected to accept any request since it cannot appear in `proxy-match` or `proxy-exclude` dictionaries.",
+              "createdAt": "2025-03-24T11:02:53Z",
+              "updatedAt": "2025-03-24T11:17:09Z"
+            },
+            {
+              "originalPosition": 27,
+              "body": "Extra comma. Were you planning to add `identifier`?",
+              "createdAt": "2025-03-24T11:03:32Z",
+              "updatedAt": "2025-03-24T11:17:09Z"
+            },
+            {
+              "originalPosition": 61,
+              "body": "```suggestion\r\nMUST contain the `proxies` key with at least one proxy `identifier`. Any destination rule in the\r\n```",
+              "createdAt": "2025-03-24T11:06:19Z",
+              "updatedAt": "2025-03-24T11:17:09Z"
+            },
+            {
+              "originalPosition": 145,
+              "body": "Is there a reason for a SHOULD here? SHOULD normally requires an explanation for the exception logic. I suggest going with a \"MUST\"",
+              "createdAt": "2025-03-24T11:10:14Z",
+              "updatedAt": "2025-03-24T11:17:09Z"
+            },
+            {
+              "originalPosition": 231,
+              "body": "```suggestion\r\nhostnames \"internal.example.org\", \"foo.internal.example.org\", \"www.bar.internal.example.org\" and all other hosts within \"internal.example.org\".\r\n```\r\n\r\nCorrected zone of the first hostname and added \"deeper\" FQDN to confirm that matching is not limited in depth.",
+              "createdAt": "2025-03-24T11:15:11Z",
+              "updatedAt": "2025-03-24T11:17:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86hh99x",
+          "commit": {
+            "abbreviatedOid": "bcd6ed1"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-03-24T11:23:53Z",
+          "updatedAt": "2025-03-24T11:23:53Z",
+          "comments": [
+            {
+              "originalPosition": 91,
+              "body": "```suggestion\r\nThe `domains` array includes specific FQDNs and zones that are either accessible (for `proxy-match`\r\n```\r\n\r\nTrailing whitespace",
+              "createdAt": "2025-03-24T11:23:53Z",
+              "updatedAt": "2025-03-24T11:23:54Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
