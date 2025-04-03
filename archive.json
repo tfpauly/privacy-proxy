@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-01T00:22:52.849778+00:00",
+  "timestamp": "2025-04-03T00:19:31.316688+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -18873,7 +18873,7 @@
       ],
       "body": "Closes #275\r\n\r\nWork on adding the identifier keys and separate arrays of match/exclude destination rules described in #275 \r\n\r\nStill needs more examples filled in",
       "createdAt": "2025-03-22T22:44:07Z",
-      "updatedAt": "2025-03-24T11:23:53Z",
+      "updatedAt": "2025-04-02T16:30:57Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
@@ -18947,6 +18947,26 @@
               "body": "```suggestion\r\nThe `domains` array includes specific FQDNs and zones that are either accessible (for `proxy-match`\r\n```\r\n\r\nTrailing whitespace",
               "createdAt": "2025-03-24T11:23:53Z",
               "updatedAt": "2025-03-24T11:23:54Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86jIgdp",
+          "commit": {
+            "abbreviatedOid": "bcd6ed1"
+          },
+          "author": "ryanglobus",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-02T16:30:57Z",
+          "updatedAt": "2025-04-02T16:30:57Z",
+          "comments": [
+            {
+              "originalPosition": 162,
+              "body": "This means that certain allows/excludes will be impossible to express. For example, if you want to allow 10.0.0.0/8, exclude 10.0.0.0/16, but allow 10.0.0.0/24, that's impossible.\r\n\r\nYou could say that more specific rules take priority (e.g., more specific subdomain or more specific subnet), and a tie breaks in favor of exclude.",
+              "createdAt": "2025-04-02T16:30:57Z",
+              "updatedAt": "2025-04-02T16:30:57Z"
             }
           ]
         }
