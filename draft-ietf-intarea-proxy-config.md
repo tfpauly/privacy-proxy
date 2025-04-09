@@ -279,7 +279,7 @@ for a particular proxy.
 ## Destination rule keys
 
 This document defined three keys for destination rules. Any destination rule in the `proxy-match` array
-MUST contain the contain the `proxies` key with at least one proxy `identifier`. Any destination rule in the
+MUST contain the `proxies` key with at least one proxy `identifier`. Any destination rule in the
 `proxy-exclude` array MAY contain the `proxies` key, which if present MUST contain at least one proxy `identifier`.
 All destination rules MUST also contain at least one other key use to describe the destination properties.
 Each key MUST correspond to an array with at least one entry.
