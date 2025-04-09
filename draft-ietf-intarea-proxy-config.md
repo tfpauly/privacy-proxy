@@ -294,7 +294,7 @@ rules that include keys not known to the client, or values that cannot be parsed
 | subnets | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.168.1.0/24"] |
 | ports | An array of TCP and UDP port ranges | Array of Strings | ["80", "443", "1024-65535"] |
 
-The `domains` array includes specific FQDNs and zones that are either accessible (for `proxy-match` 
+The `domains` array includes specific FQDNs and zones that are either accessible (for `proxy-match`
 destination rules) or non-accessible (for `proxy-exclude` rules) using the proxy.
 A wildcard prefix (`*.`) is used to indicate matching entire domains or subdomains instead of
 specific hostnames. Note that this can be used to match multiple levels of subdomains. For example "*.example.com"
