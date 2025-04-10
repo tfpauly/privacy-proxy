@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-08T00:19:38.247603+00:00",
+  "timestamp": "2025-04-10T00:19:47.727486+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -18873,13 +18873,13 @@
       ],
       "body": "Closes #275\r\n\r\nWork on adding the identifier keys and separate arrays of match/exclude destination rules described in #275 \r\n\r\nStill needs more examples filled in",
       "createdAt": "2025-03-22T22:44:07Z",
-      "updatedAt": "2025-04-07T07:24:41Z",
+      "updatedAt": "2025-04-09T20:01:12Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "tfp/matching-rules",
-      "headRefOid": "bcd6ed167b6b99b4e89eb77044d4deddee5ab8f2",
+      "headRefOid": "f94c4d269486823a3efae4b519377b6006ad1b8a",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -18987,6 +18987,46 @@
               "body": "This is a very good point. Thank you for bringing this up.",
               "createdAt": "2025-04-07T07:24:40Z",
               "updatedAt": "2025-04-07T07:24:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86kL8S9",
+          "commit": {
+            "abbreviatedOid": "bcd6ed1"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-09T19:35:25Z",
+          "updatedAt": "2025-04-09T19:35:25Z",
+          "comments": [
+            {
+              "originalPosition": 145,
+              "body": "Conversely, if this is a MUST it is nice to make sure it can be enforced in some way... but yeah, it could be made a MUST, or the language could be tweaked.",
+              "createdAt": "2025-04-09T19:35:25Z",
+              "updatedAt": "2025-04-09T19:35:25Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86kML5x",
+          "commit": {
+            "abbreviatedOid": "bcd6ed1"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-09T20:01:12Z",
+          "updatedAt": "2025-04-09T20:01:12Z",
+          "comments": [
+            {
+              "originalPosition": 162,
+              "body": "Options:\r\n- Make more specific rules take priority to break ties\r\n- Have a unified list where some rules say \"no proxy\", and the entire list is in priority order",
+              "createdAt": "2025-04-09T20:01:12Z",
+              "updatedAt": "2025-04-09T20:01:12Z"
             }
           ]
         }
