@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-13T00:45:15.523430+00:00",
+  "timestamp": "2025-04-27T00:22:06.367052+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -18889,7 +18889,7 @@
       ],
       "body": "Closes #275\r\n\r\nWork on adding the identifier keys and separate arrays of match/exclude destination rules described in #275 \r\n\r\nStill needs more examples filled in",
       "createdAt": "2025-03-22T22:44:07Z",
-      "updatedAt": "2025-04-09T20:01:12Z",
+      "updatedAt": "2025-04-24T11:35:40Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
@@ -19043,6 +19043,26 @@
               "body": "Options:\r\n- Make more specific rules take priority to break ties\r\n- Have a unified list where some rules say \"no proxy\", and the entire list is in priority order",
               "createdAt": "2025-04-09T20:01:12Z",
               "updatedAt": "2025-04-09T20:01:12Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86mV7a8",
+          "commit": {
+            "abbreviatedOid": "f94c4d2"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-24T11:35:40Z",
+          "updatedAt": "2025-04-24T11:35:40Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "is the \"identifier\" key optional or not? Here it is marked as not optional, but the description says it is optional.",
+              "createdAt": "2025-04-24T11:35:40Z",
+              "updatedAt": "2025-04-24T11:35:40Z"
             }
           ]
         }
