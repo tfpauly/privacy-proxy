@@ -41,8 +41,8 @@ and a list of DNS zones that are accessible via a proxy.
 HTTP proxies that use the CONNECT method {{Section 9.3.6 of !HTTP=RFC9110}}
 (often referred to as "forward" proxies) allow clients to open connections to
 hosts via a proxy. These typically allow for TCP stream proxying, but can also support
-UDP proxying {{!CONNECT-UDP=RFC9298}} and IP packet proxying
-{{!CONNECT-IP=RFC9484}}. Such proxies are not just defined as
+UDP proxying {{?CONNECT-UDP=RFC9298}} and IP packet proxying
+{{?CONNECT-IP=RFC9484}}. Such proxies are not just defined as
 hostnames and ports, but can use URI templates {{!URITEMPLATE=RFC6570}}.
 
 In order to make use of multiple related proxies, clients need a way to understand
@@ -173,12 +173,12 @@ the Upgrade Token / `:protocol` value.
 
 | Proxy Protocol | Proxy Location Format | Reference | Notes |
 | --- | --- | --- |
-| socks5 | hostname:port | {{!SOCKSv5=RFC1928}} | |
+| socks5 | hostname:port | {{?SOCKSv5=RFC1928}} | |
 | http-connect | hostname:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |
 | https-connect | hostname:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |
 | connect-udp | URI template | {{CONNECT-UDP}} | |
 | connect-ip | URI template | {{CONNECT-IP}} | |
-| connect-tcp | URI template | {{!CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
+| connect-tcp | URI template | {{?CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
 
 The value of `proxy` depends on the Proxy Location Format defined by proxy protocol.
 The types defined here either use a hostname and port, or a full URI template.
