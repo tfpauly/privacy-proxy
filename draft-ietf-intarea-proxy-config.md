@@ -206,6 +206,22 @@ PvD information from the well-known URI to learn the list of complete
 URIs that support non-default protocols, such as {{CONNECT-UDP}} and
 {{CONNECT-IP}}.
 
+## Proprietary Keys in Proxy Definitions {#proxy-proprietary-keys}
+
+Implementations MAY include proprietary or vendor-specific keys in the sub-dictionaries of the `proxies`
+array to convey additional proxy configuration information not defined in this specification.
+
+A proprietary key MUST contain exactly one underscore character ("_"). This character serves as a
+separator between the key name and a vendor-specific namespace. For example, "authmode_acme" could
+be a proprietary key indicating an authentication mode defined by vendor acme.
+
+Clients that encounter a proprietary key they do not recognise MUST apply the following logic:
+
+- If the key appears in the `mandatory` array of the proxy definition, the client MUST ignore the entire proxy entry.
+- If the key is not listed in the `mandatory` array, the client MUST ignore the unrecognised proprietary key and proceed with processing the proxy definition as usual.
+
+This mechanism allows implementations to extend proxy metadata while maintaining interoperability and ensuring safe fallback behaviour for clients that do not support a given extension.
+
 ## Example
 
 Given a known HTTP CONNECT proxy FQDN, "proxy.example.org", a client could
@@ -316,6 +332,19 @@ has a local policy to only send requests for "*.example.com" to a proxy
 "proxy.example.com", and `domains` array of a `match` object contains "internal.example.com" and
 "other.company.com", the client would end up only proxying "internal.example.com"
 through the proxy.
+
+## Proprietary Keys in Destination Rules
+
+Implementations MAY include proprietary or vendor-specific keys in destination rules to define custom matching logic
+not specified in this document.
+
+Similarly to {proxy-proprietary-keys}, a proprietary key in destination rule MUST contain exactly one underscore
+character ("_"), which separates the key name from a vendor-specific namespace. For example, "processid_acme" could
+be a key used to apply rules only to traffic of a specific process identifier as defined by vendor acme.
+
+Clients that encounter a proprietary key they do not recognise MUST ignore the entire destination rule in which the
+key appears. This ensures that unknown or unsupported matching logic does not inadvertently influence proxy selection
+or bypass security controls. This handling applies uniformly across all match rules, including fallback rules.
 
 ## Example
 
