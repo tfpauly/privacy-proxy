@@ -189,9 +189,14 @@ this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
 
 The value of the `mandatory` key is a list of keys that the client must understand and process to be
 able to use the proxy. A client that does not understand a key from the list or cannot fully process
-the value of a key from the list MUST ignore the entire proxy definition. The list can contain
-only keys that are registered in an IANA registry, defined in {{proxy-info-iana}} and that are marked
-as optional.  The `mandatory` list MUST NOT include any entries that are not present in the sub-dictionary.
+the value of a key from the list MUST ignore the entire proxy definition.
+
+The list can contain keys that are:
+
+- registered in an IANA registry, defined in {{proxy-info-iana}} and marked as optional.
+- proprietary as defined in {{proxy-proprietary-keys}}
+
+The `mandatory` list MUST NOT include any entries that are not present in the sub-dictionary.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
@@ -215,12 +220,9 @@ A proprietary key MUST contain exactly one underscore character ("_"). This char
 separator between the key name and a vendor-specific namespace. For example, "authmode_acme" could
 be a proprietary key indicating an authentication mode defined by vendor acme.
 
-Clients that encounter a proprietary key they do not recognise MUST apply the following logic:
-
-- If the key appears in the `mandatory` array of the proxy definition, the client MUST ignore the entire proxy entry.
-- If the key is not listed in the `mandatory` array, the client MUST ignore the unrecognised proprietary key and proceed with processing the proxy definition as usual.
-
-This mechanism allows implementations to extend proxy metadata while maintaining interoperability and ensuring safe fallback behaviour for clients that do not support a given extension.
+When combined with `mandatory` list this mechanism allows implementations to extend proxy metadata while
+maintaining interoperability and ensuring safe fallback behaviour for clients that do not support a given
+extension.
 
 ## Example
 
