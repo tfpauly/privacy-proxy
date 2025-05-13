@@ -164,7 +164,7 @@ use of a proxy.
 | proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["match"] |
-| identifier | No | A string used to refer to the proxy, which can be referenced by other dictionaries | String | "udp-proxy" |
+| identifier | No | A string used to refer to the proxy, which can be referenced by other dictionaries, such as `proxy-match`  | String | "udp-proxy" |
 
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
@@ -242,7 +242,7 @@ content-length = 222
   "proxies": [
     {
       "protocol": "http-connect",
-      "proxy": "proxy.example.org:80",
+      "proxy": "proxy.example.org:80"
     },
     {
       "protocol": "connect-udp",
@@ -392,7 +392,7 @@ there is a single match rule for "*.internal.example.org".
 
 The client could then choose to use either proxy associated with the "default_proxy" identifier
 for accessing names that fall within the "*.internal.example.org" zone. This would include the
-hostnames "internal.example.com", "foo.internal.example.org", etc.
+hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and all other hosts within "internal.example.org".
 
 # Discovering proxies from network PvDs {#network-proxies}
 
@@ -456,19 +456,6 @@ Example: [ {
 
 } ]
 
-### proxy-exclude Key
-
-JSON Key: proxy-exclude
-
-Description: Array of proxy exclude rules, as dictionaries, associated with
-entries in the `proxies` list.
-
-Type: Array of dictionaries
-
-Example: [ {
-
-} ]
-
 
 ## New PvD Proxy Information Registry {#proxy-info-iana}
 
@@ -492,7 +479,7 @@ The reference and notes fields MAY be empty.
 ## New PvD Proxy Destination Rule Registry {#proxy-info-iana}
 
 IANA is requested to create a new registry "Proxy Destination Rule PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
-This new registry reserves JSON keys for use in sub-dictionaries under the `proxy-match` and `proxy-exclude` key.
+This new registry reserves JSON keys for use in sub-dictionaries under the `proxy-match` key.
 The initial contents of this registry are given in {{destinations}}.
 
 New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review {{!RFC8126}}. Experts are
