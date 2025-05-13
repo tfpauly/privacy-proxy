@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-27T00:22:06.367052+00:00",
+  "timestamp": "2025-05-13T00:21:19.565803+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -18889,7 +18889,7 @@
       ],
       "body": "Closes #275\r\n\r\nWork on adding the identifier keys and separate arrays of match/exclude destination rules described in #275 \r\n\r\nStill needs more examples filled in",
       "createdAt": "2025-03-22T22:44:07Z",
-      "updatedAt": "2025-04-24T11:35:40Z",
+      "updatedAt": "2025-05-12T09:12:13Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
@@ -18930,12 +18930,6 @@
               "originalPosition": 61,
               "body": "```suggestion\r\nMUST contain the `proxies` key with at least one proxy `identifier`. Any destination rule in the\r\n```",
               "createdAt": "2025-03-24T11:06:19Z",
-              "updatedAt": "2025-03-24T11:17:09Z"
-            },
-            {
-              "originalPosition": 145,
-              "body": "Is there a reason for a SHOULD here? SHOULD normally requires an explanation for the exception logic. I suggest going with a \"MUST\"",
-              "createdAt": "2025-03-24T11:10:14Z",
               "updatedAt": "2025-03-24T11:17:09Z"
             },
             {
@@ -19007,26 +19001,6 @@
           ]
         },
         {
-          "id": "PRR_kwDOEwrMS86kL8S9",
-          "commit": {
-            "abbreviatedOid": "bcd6ed1"
-          },
-          "author": "tfpauly",
-          "authorAssociation": "OWNER",
-          "state": "COMMENTED",
-          "body": "",
-          "createdAt": "2025-04-09T19:35:25Z",
-          "updatedAt": "2025-04-09T19:35:25Z",
-          "comments": [
-            {
-              "originalPosition": 145,
-              "body": "Conversely, if this is a MUST it is nice to make sure it can be enforced in some way... but yeah, it could be made a MUST, or the language could be tweaked.",
-              "createdAt": "2025-04-09T19:35:25Z",
-              "updatedAt": "2025-04-09T19:35:25Z"
-            }
-          ]
-        },
-        {
           "id": "PRR_kwDOEwrMS86kML5x",
           "commit": {
             "abbreviatedOid": "bcd6ed1"
@@ -19065,6 +19039,224 @@
               "updatedAt": "2025-04-24T11:35:40Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86oxUPS",
+          "commit": {
+            "abbreviatedOid": "f94c4d2"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "As discussed, butchered this PR to move from `proxy-match` and `proxy-exclude` to a single `proxy-match` list with the match based on most specific criteria. Absence of `proxies` in `proxy match` makes an exclude destination rule.",
+          "createdAt": "2025-05-11T20:43:08Z",
+          "updatedAt": "2025-05-11T21:21:23Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "```suggestion\r\n| identifier | Yes | A string used to refer to the proxy, which can be referenced by other dictionaries | String | \"udp-proxy\" |\r\n```",
+              "createdAt": "2025-05-11T20:43:08Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 47,
+              "body": "```suggestion\r\nTo support determining which traffic is supported by different proxies, this document defines\r\na new PvD Additional Information key `proxy-match`. This key have value that is arrays of\r\ndictionaries, where each subdictionary describes a rule for matching traffic to one or more\r\nproxies or excluding the traffic from all proxies. These subdictionaries are referred\r\nto as \"destination rules\", since they define rules about which destinations can be accessed\r\nfor a particular proxy.\r\n```",
+              "createdAt": "2025-05-11T20:45:20Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 50,
+              "body": "```suggestion\r\n```",
+              "createdAt": "2025-05-11T20:46:08Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 56,
+              "body": "```suggestion\r\n## Destination rule keys\r\n```",
+              "createdAt": "2025-05-11T20:46:29Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 92,
+              "body": "```suggestion\r\nThe `domains` array includes specific FQDNs and zones that are either accessible using specific proxy (for\r\nrules with `proxies` key) or non-accessible through any proxies (for rules without `proxies` key).\r\n```",
+              "createdAt": "2025-05-11T20:52:41Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 96,
+              "body": "```suggestion\r\nEntries that include the wildcard prefix also MUST be treated as if they match\r\n```",
+              "createdAt": "2025-05-11T20:54:28Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 101,
+              "body": "```suggestion\r\nan entry \"*.example.com\" in the `domains` array of a `proxy-match` rule would match the FQDN \"example.com\". This is\r\n```",
+              "createdAt": "2025-05-11T20:55:02Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 140,
+              "body": "```suggestion\r\nThe destination rules can be used\r\n```",
+              "createdAt": "2025-05-11T20:56:30Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 143,
+              "body": "```suggestion\r\nuse for any particular connection.\r\n```",
+              "createdAt": "2025-05-11T20:57:05Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 149,
+              "body": "```suggestion\r\nRules in the `proxy-match` array define destination-specific proxy selection logic. When determining which proxy or proxies to use for a given destination, the client MUST select the most specific applicable rule. Specificity is determined based on the type and granularity of the match criteria, according to the following precedence rules:\r\n\r\n- Rules containing a `domains` key take precedence over rules containing only `subnets`.\r\n- Within `domains`-based rules, more specific domain suffixes (i.e., longer matching suffixes) take precedence.\r\n- Within `subnets`-based rules, more specific prefixes (i.e., longer prefix lengths) take precedence.\r\n- Among rules with equal domain or subnet specificity, rules that include matching `ports` key take precedence over those that do not.\r\n- Among rules that include a matching `ports` key, a rule matching an exact port number is preferred over a rule matching a broader port range.\r\n\r\nIf no rule with a matching `domains`, `subnets`, or `ports` key applies, the client SHOULD fall back to a rule with no such keys (i.e., an empty match criteria object), which acts as a default rule.\r\n```",
+              "createdAt": "2025-05-11T21:14:02Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 162,
+              "body": "```suggestion\r\nDestination rules that do not contain `proxies` key define properties of destinations that\r\ncannot be proxied by any proxy associated with this PvD. Clients SHOULD NOT send matching\r\ntraffic to any proxy associated with this PvD unless more specific matching destination rule with\r\n`proxies` key exists.\r\n```",
+              "createdAt": "2025-05-11T21:17:56Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 163,
+              "body": "```suggestion\r\n```",
+              "createdAt": "2025-05-11T21:18:15Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 285,
+              "body": "```suggestion\r\n```",
+              "createdAt": "2025-05-11T21:19:38Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            },
+            {
+              "originalPosition": 304,
+              "body": "```suggestion\r\nThis new registry reserves JSON keys for use in sub-dictionaries under the `proxy-match` key.\r\n```",
+              "createdAt": "2025-05-11T21:20:09Z",
+              "updatedAt": "2025-05-11T21:21:23Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86o1AqT",
+          "commit": {
+            "abbreviatedOid": "f94c4d2"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-12T09:12:13Z",
+          "updatedAt": "2025-05-12T09:12:13Z",
+          "comments": [
+            {
+              "originalPosition": 17,
+              "body": "I agree with this.",
+              "createdAt": "2025-05-12T09:12:13Z",
+              "updatedAt": "2025-05-12T09:12:13Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 278,
+      "id": "PR_kwDOEwrMS86Vv1fx",
+      "title": "Proprietary keys",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/278",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Added a definition of proprietary keys for `proxies` and destination rules",
+      "createdAt": "2025-05-11T22:12:15Z",
+      "updatedAt": "2025-05-11T22:14:40Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "proprietary",
+      "headRefOid": "6211d3db99ff49d03e64cf51cc45545f1acd649b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 279,
+      "id": "PR_kwDOEwrMS86Vv49W",
+      "title": "Versioning support",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/279",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Also introduces a simple mechanism for client to discover new configuration version from proxy responses",
+      "createdAt": "2025-05-11T22:47:02Z",
+      "updatedAt": "2025-05-11T22:47:02Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "versions",
+      "headRefOid": "3959fc434ef9afa3a903e2649216110ae55548cc",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 280,
+      "id": "PR_kwDOEwrMS86Vv788",
+      "title": "Moved individual proxy protocols to informative references",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/280",
+      "state": "CLOSED",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I don't think implementers of this spec need to know intimate details of CONNECT-IP, CONNECT-UDP, CONNECT-TCP or SOCKSv5.",
+      "createdAt": "2025-05-11T23:22:03Z",
+      "updatedAt": "2025-05-12T20:16:53Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "informative",
+      "headRefOid": "7885635cf5175265a28b67de13c55fd956f5af8d",
+      "closedAt": "2025-05-12T20:16:53Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I don't have a strong opinion on this one, but thought it would be a good idea not to be blocked by templated CONNECT-TCP.\r\nLet's leave it as it is for now.",
+          "createdAt": "2025-05-12T20:16:53Z",
+          "updatedAt": "2025-05-12T20:16:53Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86o8O6O",
+          "commit": {
+            "abbreviatedOid": "7885635"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "I'm not sure I agree with this \u2014 while you don't need to read those documents to be able to implement this spec, those documents do define the URI templates they use normatively...",
+          "createdAt": "2025-05-12T20:14:10Z",
+          "updatedAt": "2025-05-12T20:14:10Z",
+          "comments": []
         }
       ]
     }
