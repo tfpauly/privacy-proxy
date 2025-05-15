@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-13T00:21:19.565803+00:00",
+  "timestamp": "2025-05-15T00:19:49.168361+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -18889,13 +18889,13 @@
       ],
       "body": "Closes #275\r\n\r\nWork on adding the identifier keys and separate arrays of match/exclude destination rules described in #275 \r\n\r\nStill needs more examples filled in",
       "createdAt": "2025-03-22T22:44:07Z",
-      "updatedAt": "2025-05-12T09:12:13Z",
+      "updatedAt": "2025-05-13T16:27:45Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "tfp/matching-rules",
-      "headRefOid": "f94c4d269486823a3efae4b519377b6006ad1b8a",
+      "headRefOid": "786d1382780f861c02f4fd709f156cadca416774",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -19157,6 +19157,66 @@
               "updatedAt": "2025-05-12T09:12:13Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86pH37_",
+          "commit": {
+            "abbreviatedOid": "f94c4d2"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-13T16:22:47Z",
+          "updatedAt": "2025-05-13T16:22:47Z",
+          "comments": [
+            {
+              "originalPosition": 92,
+              "body": "Let's have this be an empty array",
+              "createdAt": "2025-05-13T16:22:47Z",
+              "updatedAt": "2025-05-13T16:22:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86pH6ZM",
+          "commit": {
+            "abbreviatedOid": "f94c4d2"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-13T16:26:10Z",
+          "updatedAt": "2025-05-13T16:26:11Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "```suggestion\r\n| identifier | No | A string used to refer to the proxy, which can be referenced by other dictionaries, such as `proxy-match`  | String | \"udp-proxy\" |\r\n```",
+              "createdAt": "2025-05-13T16:26:10Z",
+              "updatedAt": "2025-05-13T16:26:11Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86pH7JT",
+          "commit": {
+            "abbreviatedOid": "f94c4d2"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-13T16:26:56Z",
+          "updatedAt": "2025-05-13T16:26:56Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "```suggestion\r\n      \"proxy\": \"proxy.example.org:80\"\r\n```",
+              "createdAt": "2025-05-13T16:26:56Z",
+              "updatedAt": "2025-05-13T16:26:56Z"
+            }
+          ]
         }
       ]
     },
@@ -19172,19 +19232,113 @@
       "labels": [],
       "body": "Added a definition of proprietary keys for `proxies` and destination rules",
       "createdAt": "2025-05-11T22:12:15Z",
-      "updatedAt": "2025-05-11T22:14:40Z",
+      "updatedAt": "2025-05-13T16:06:23Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "proprietary",
-      "headRefOid": "6211d3db99ff49d03e64cf51cc45545f1acd649b",
+      "headRefOid": "a75880222b083d1a795a03da3c64c0b27a523ff2",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86pDKqK",
+          "commit": {
+            "abbreviatedOid": "6211d3d"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-13T10:31:54Z",
+          "updatedAt": "2025-05-13T10:31:55Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "We need to update text around mandatory keys:\r\n\r\n>  The list can contain\r\nonly keys that are registered in an IANA registry, defined in {{proxy-info-iana}} and that are marked\r\nas optional.",
+              "createdAt": "2025-05-13T10:31:54Z",
+              "updatedAt": "2025-05-13T10:32:25Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86pDNcu",
+          "commit": {
+            "abbreviatedOid": "6211d3d"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-13T10:35:55Z",
+          "updatedAt": "2025-05-13T10:35:55Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "The definition of 'mandatory' key already describes this. We should probably just refer to it.\r\nsomething like:\r\nThe proprietary keys may be listed in the 'mandatory' key array. The same rules regarding handling of records apply for them as well.",
+              "createdAt": "2025-05-13T10:35:55Z",
+              "updatedAt": "2025-05-13T10:35:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86pGLTq",
+          "commit": {
+            "abbreviatedOid": "6211d3d"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-13T14:14:08Z",
+          "updatedAt": "2025-05-13T14:14:09Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "Should be resolved now. Please check updated text.",
+              "createdAt": "2025-05-13T14:14:08Z",
+              "updatedAt": "2025-05-13T14:14:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86pGLYC",
+          "commit": {
+            "abbreviatedOid": "6211d3d"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-13T14:14:13Z",
+          "updatedAt": "2025-05-13T14:14:13Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "Should be resolved now. Please check updated text.",
+              "createdAt": "2025-05-13T14:14:13Z",
+              "updatedAt": "2025-05-13T14:14:13Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86pHtWF",
+          "commit": {
+            "abbreviatedOid": "a758802"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "CHANGES_REQUESTED",
+          "body": "Preference to have the proprietary organization be a prefix with an underscore, and then allow any number of underscores.\r\n\r\nMUST have at least one underscore\r\nacme_key",
+          "createdAt": "2025-05-13T16:06:23Z",
+          "updatedAt": "2025-05-13T16:06:23Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 279,
@@ -19198,7 +19352,7 @@
       "labels": [],
       "body": "Also introduces a simple mechanism for client to discover new configuration version from proxy responses",
       "createdAt": "2025-05-11T22:47:02Z",
-      "updatedAt": "2025-05-11T22:47:02Z",
+      "updatedAt": "2025-05-13T16:35:16Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
@@ -19209,7 +19363,36 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "A couple notes here:\r\n- \"version\" in the name is confusing, since it can sound like a protocol version or configuration structure version. Naming would be good to fix.\r\n- There could be other spellings, like the client providing the `etag` of the PvD it had used, and the proxy telling the client that its PvD is out of date",
+          "createdAt": "2025-05-13T15:57:24Z",
+          "updatedAt": "2025-05-13T15:57:24Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "This may also be something we could split out into a different document",
+          "createdAt": "2025-05-13T16:00:25Z",
+          "updatedAt": "2025-05-13T16:32:21Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "There is also a problem of a proxy being used by multiple configurations, and it wouldn't know which one the client was using to talk to it. ",
+          "createdAt": "2025-05-13T16:33:57Z",
+          "updatedAt": "2025-05-13T16:33:57Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Cases:\r\n- This proxy no longer supports this target (hard failure)\r\n- This proxy will accept this for now, but the config seems old (soft failure)\r\n- There are new targets that the client may not be proxying, needs to expand and update",
+          "createdAt": "2025-05-13T16:35:15Z",
+          "updatedAt": "2025-05-13T16:35:15Z"
+        }
+      ],
       "reviews": []
     },
     {
