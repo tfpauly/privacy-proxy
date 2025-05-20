@@ -343,7 +343,7 @@ not specified in this document.
 Similar to proprietary keys in proxy definitions ({{proxy-proprietary-keys}}), a proprietary key in destination
 rule MUST contain at least one underscore character ("_"), which separates a vendor-specific namespace from the key name.
 For example, "acme_processid" could be a key used to apply rules only to traffic of a specific process identifier as
-defined by vendor acme.
+defined by a vendor named "acme".
 
 Clients that encounter a proprietary key they do not recognize MUST ignore the entire destination rule in which the
 key appears. This ensures that unknown or unsupported matching logic does not inadvertently influence proxy selection
