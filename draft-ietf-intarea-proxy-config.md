@@ -220,7 +220,7 @@ A proprietary key MUST contain at least one underscore character ("_"). This cha
 separator between a vendor-specific namespace and the key name. For example, "acme_authmode" could
 be a proprietary key indicating an authentication mode defined by a vendor named "acme".
 
-When combined with `mandatory` list this mechanism allows implementations to extend proxy metadata while
+When combined with `mandatory` list, this mechanism allows implementations to extend proxy metadata while
 maintaining interoperability and ensuring safe fallback behaviour for clients that do not support a given
 extension.
 
