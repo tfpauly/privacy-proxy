@@ -345,7 +345,7 @@ rule MUST contain at least one underscore character ("_"), which separates a ven
 For example, "acme_processid" could be a key used to apply rules only to traffic of a specific process identifier as
 defined by vendor acme.
 
-Clients that encounter a proprietary key they do not recognise MUST ignore the entire destination rule in which the
+Clients that encounter a proprietary key they do not recognize MUST ignore the entire destination rule in which the
 key appears. This ensures that unknown or unsupported matching logic does not inadvertently influence proxy selection
 or bypass security controls. This handling applies uniformly across all match rules, including fallback rules.
 
