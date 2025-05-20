@@ -340,7 +340,7 @@ through the proxy.
 Implementations MAY include proprietary or vendor-specific keys in destination rules to define custom matching logic
 not specified in this document.
 
-Similarly to proprietary keys in proxy definitions ({{proxy-proprietary-keys}}), a proprietary key in destination
+Similar to proprietary keys in proxy definitions ({{proxy-proprietary-keys}}), a proprietary key in destination
 rule MUST contain at least one underscore character ("_"), which separates a vendor-specific namespace from the key name.
 For example, "acme_processid" could be a key used to apply rules only to traffic of a specific process identifier as
 defined by vendor acme.
