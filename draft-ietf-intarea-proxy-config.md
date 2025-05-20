@@ -191,7 +191,7 @@ The value of the `mandatory` key is a list of keys that the client must understa
 able to use the proxy. A client that does not understand a key from the list or cannot fully process
 the value of a key from the list MUST ignore the entire proxy definition.
 
-The list can contain keys that are:
+The list can contain keys that are either:
 
 - registered in an IANA registry, defined in {{proxy-info-iana}} and marked as optional.
 - proprietary as defined in {{proxy-proprietary-keys}}
