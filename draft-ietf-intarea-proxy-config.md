@@ -211,7 +211,7 @@ PvD information from the well-known URI to learn the list of complete
 URIs that support non-default protocols, such as {{CONNECT-UDP}} and
 {{CONNECT-IP}}.
 
-## Proprietary Keys in Proxy Definitions {#proxy-proprietary-keys}
+## Proprietary Keys in Proxy Configurations {#proxy-proprietary-keys}
 
 Implementations MAY include proprietary or vendor-specific keys in the sub-dictionaries of the `proxies`
 array to convey additional proxy configuration information not defined in this specification.
