@@ -362,20 +362,20 @@ content-length = 135
 The client could then choose to use this proxy only for accessing names that fall
 within the "*.internal.example.org" zone.
 
-# Configuration Versioning {#config-versioning}
+# Configuration Identifiers {#config-ids}
 
 To allow clients to track updates to proxy configuration data without relying solely on the expiration timestamp,
-this document defines an optional `version` key in the top-level PvD Additional Information object.
-The value of this key is an integer representing the version of the proxy configuration.
+this document defines an optional `configid` key in the top-level PvD Additional Information object.
+The value of this key is an integer representing the identifier of the proxy configuration.
 
-Proxies MAY include a `Proxy-Config-Version` HTTP response header in responses to proxy requests. This header indicates
-the current version of the configuration known to the proxy.
+Proxies MAY include a `Proxy-Config-Id` HTTP response header in responses to proxy requests. This header indicates
+the current identifier of the configuration known to the proxy.
 
-When a client receives a `Proxy-Config-Version` header with a value greater than the version stored in the most recently
+When a client receives a `Proxy-Config-Id` header with a value greater than the identifier stored in the most recently
 retrieved PvD Additional Information, the client SHOULD initiate a new fetch of the PvD data from the corresponding
 `/.well-known/pvd` resource.
 
-The `version` key and the `Proxy-Config-Version` header MUST contain a non-negative integer. Version numbers are intended to increase monotonically.
+The `configid` key and the `Proxy-Config-Id` header MUST contain a non-negative integer. Identifier numbers are intended to increase monotonically.
 
 ## Example
 
@@ -383,11 +383,11 @@ A proxy returns the following response to a `CONNECT` request:
 
 ~~~
 :status = 200
-Proxy-Config-Version: 11
+Proxy-Config-Id: 11
 ...
 ~~~
 
-If the client previously fetched PvD data that included `"version": 10`, it will recognise that a newer configuration is available
+If the client previously fetched PvD data that included `"configid": 10`, it will recognise that a newer configuration is available
 and SHOULD refresh the PvD Additional Information from `/.well-known/pvd`.
 
 # Discovering proxies from network PvDs {#network-proxies}
@@ -454,6 +454,6 @@ The reference and notes fields MAY be empty.
 
 IANA is requested to add the following entry in the "Hypertext Transfer Protocol (HTTP) Field Name Registry" defined by "HTTP Semantics" {{HTTP}}:
 
-- Field Name: Proxy-Config-Version
+- Field Name: Proxy-Config-Id
 - Status: permanent
-- Reference: This document, {{config-versioning}}
+- Reference: This document, {{config-ids}}
