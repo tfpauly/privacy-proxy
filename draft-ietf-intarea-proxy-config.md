@@ -193,7 +193,7 @@ the value of a key from the list MUST ignore the entire proxy definition.
 
 The list can contain keys that are either:
 
-- registered in an IANA registry, defined in {{proxy-info-iana}} and marked as optional.
+- registered in an IANA registry, defined in {{proxy-info-iana}} and marked as optional;
 - proprietary as defined in {{proxy-proprietary-keys}}
 
 The `mandatory` list MUST NOT include any entries that are not present in the sub-dictionary.
