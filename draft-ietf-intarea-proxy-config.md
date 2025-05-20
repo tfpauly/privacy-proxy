@@ -216,8 +216,8 @@ URIs that support non-default protocols, such as {{CONNECT-UDP}} and
 Implementations MAY include proprietary or vendor-specific keys in the sub-dictionaries of the `proxies`
 array to convey additional proxy configuration information not defined in this specification.
 
-A proprietary key MUST contain exactly one underscore character ("_"). This character serves as a
-separator between the key name and a vendor-specific namespace. For example, "authmode_acme" could
+A proprietary key MUST contain at least one underscore character ("_"). This character serves as a
+separator between a vendor-specific namespace and the key name. For example, "acme_authmode" could
 be a proprietary key indicating an authentication mode defined by vendor acme.
 
 When combined with `mandatory` list this mechanism allows implementations to extend proxy metadata while
@@ -341,8 +341,8 @@ Implementations MAY include proprietary or vendor-specific keys in destination r
 not specified in this document.
 
 Similarly to proprietary keys in proxy definitions ({{proxy-proprietary-keys}}), a proprietary key in destination
-rule MUST contain exactly one underscore character ("_"), which separates the key name from a vendor-specific namespace.
-For example, "processid_acme" could be a key used to apply rules only to traffic of a specific process identifier as
+rule MUST contain at least one underscore character ("_"), which separates a vendor-specific namespace from the key name.
+For example, "acme_processid" could be a key used to apply rules only to traffic of a specific process identifier as
 defined by vendor acme.
 
 Clients that encounter a proprietary key they do not recognise MUST ignore the entire destination rule in which the
