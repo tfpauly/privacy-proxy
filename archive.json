@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-15T00:19:49.168361+00:00",
+  "timestamp": "2025-05-22T00:21:03.253338+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -18889,7 +18889,7 @@
       ],
       "body": "Closes #275\r\n\r\nWork on adding the identifier keys and separate arrays of match/exclude destination rules described in #275 \r\n\r\nStill needs more examples filled in",
       "createdAt": "2025-03-22T22:44:07Z",
-      "updatedAt": "2025-05-13T16:27:45Z",
+      "updatedAt": "2025-05-20T17:49:20Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
@@ -19078,9 +19078,9 @@
             },
             {
               "originalPosition": 92,
-              "body": "```suggestion\r\nThe `domains` array includes specific FQDNs and zones that are either accessible using specific proxy (for\r\nrules with `proxies` key) or non-accessible through any proxies (for rules without `proxies` key).\r\n```",
+              "body": "```suggestion\r\nThe `domains` array includes specific FQDNs and zones that are either accessible using specific proxy (for\r\nrules with non-empty `proxies` array) or non-accessible through any proxies (for rules with empty `proxies` array).\r\n```",
               "createdAt": "2025-05-11T20:52:41Z",
-              "updatedAt": "2025-05-11T21:21:23Z"
+              "updatedAt": "2025-05-20T17:34:07Z"
             },
             {
               "originalPosition": 96,
@@ -19098,30 +19098,6 @@
               "originalPosition": 140,
               "body": "```suggestion\r\nThe destination rules can be used\r\n```",
               "createdAt": "2025-05-11T20:56:30Z",
-              "updatedAt": "2025-05-11T21:21:23Z"
-            },
-            {
-              "originalPosition": 143,
-              "body": "```suggestion\r\nuse for any particular connection.\r\n```",
-              "createdAt": "2025-05-11T20:57:05Z",
-              "updatedAt": "2025-05-11T21:21:23Z"
-            },
-            {
-              "originalPosition": 149,
-              "body": "```suggestion\r\nRules in the `proxy-match` array define destination-specific proxy selection logic. When determining which proxy or proxies to use for a given destination, the client MUST select the most specific applicable rule. Specificity is determined based on the type and granularity of the match criteria, according to the following precedence rules:\r\n\r\n- Rules containing a `domains` key take precedence over rules containing only `subnets`.\r\n- Within `domains`-based rules, more specific domain suffixes (i.e., longer matching suffixes) take precedence.\r\n- Within `subnets`-based rules, more specific prefixes (i.e., longer prefix lengths) take precedence.\r\n- Among rules with equal domain or subnet specificity, rules that include matching `ports` key take precedence over those that do not.\r\n- Among rules that include a matching `ports` key, a rule matching an exact port number is preferred over a rule matching a broader port range.\r\n\r\nIf no rule with a matching `domains`, `subnets`, or `ports` key applies, the client SHOULD fall back to a rule with no such keys (i.e., an empty match criteria object), which acts as a default rule.\r\n```",
-              "createdAt": "2025-05-11T21:14:02Z",
-              "updatedAt": "2025-05-11T21:21:23Z"
-            },
-            {
-              "originalPosition": 162,
-              "body": "```suggestion\r\nDestination rules that do not contain `proxies` key define properties of destinations that\r\ncannot be proxied by any proxy associated with this PvD. Clients SHOULD NOT send matching\r\ntraffic to any proxy associated with this PvD unless more specific matching destination rule with\r\n`proxies` key exists.\r\n```",
-              "createdAt": "2025-05-11T21:17:56Z",
-              "updatedAt": "2025-05-11T21:21:23Z"
-            },
-            {
-              "originalPosition": 163,
-              "body": "```suggestion\r\n```",
-              "createdAt": "2025-05-11T21:18:15Z",
               "updatedAt": "2025-05-11T21:21:23Z"
             },
             {
@@ -19217,6 +19193,74 @@
               "updatedAt": "2025-05-13T16:26:56Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86qK_uM",
+          "commit": {
+            "abbreviatedOid": "786d138"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-20T17:16:54Z",
+          "updatedAt": "2025-05-20T17:49:20Z",
+          "comments": [
+            {
+              "originalPosition": 17,
+              "body": "```suggestion\r\nto all matching proxies. Proxies without `identifier` key are expected to accept any traffic since their destinations\r\ncannot be contained in `proxy-match` array defined in {{destinations}}.\r\n```",
+              "createdAt": "2025-05-20T17:16:54Z",
+              "updatedAt": "2025-05-20T17:49:20Z"
+            },
+            {
+              "originalPosition": 51,
+              "body": "```suggestion\r\nThis document defines four keys for destination rules. Any destination rule  MUST contain the `proxies` key. \r\nValue corresponding to the `proxies` key may be either an empty array which implies that no proxy defined in this\r\nPvD can process matching traffic or an array with at least one proxy `identifier`. \r\n```",
+              "createdAt": "2025-05-20T17:32:07Z",
+              "updatedAt": "2025-05-20T17:49:20Z"
+            },
+            {
+              "originalPosition": 66,
+              "body": "```suggestion\r\n| --- | --- | --- | --- | --- |\r\n| proxies | No | An array of strings that match `identifier` values from the top-level `proxies` array | Array of Strings | [\"tcp-proxy\", \"udp-proxy\"] |\r\n| domains | Yes | An array of FQDNs and wildcard DNS domains | Array of Strings | [\"www.example.com\", \"*.internal.example.com\"] |\r\n| subnets | Yes | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | [\"2001:DB8::1\", \"192.168.1.0/24\"] |\r\n| ports | Yes | An array of TCP and UDP port ranges | Array of Strings | [\"80\", \"443\", \"1024-65535\"] |\r\n```",
+              "createdAt": "2025-05-20T17:33:14Z",
+              "updatedAt": "2025-05-20T17:49:20Z"
+            },
+            {
+              "originalPosition": 138,
+              "body": "```suggestion\r\ncan evaluate the list of rules from the first in the array to the last in the array, and attempt\r\nusing the matching proxy or proxies from the earliest matching rule first. If earliest matching\r\nrule has empty list of `proxies` client SHOULD NOT send matching traffic to any proxy defined\r\nin this PvD. Multiple rules can\r\n```",
+              "createdAt": "2025-05-20T17:42:08Z",
+              "updatedAt": "2025-05-20T17:49:20Z"
+            },
+            {
+              "originalPosition": 144,
+              "body": "```suggestion\r\nA matched rule will then either point to one or more proxy `identifier` values, which correspond\r\nto proxies defined in the list from {{proxy-enumeration}}, or instructs the client to not send the\r\nmatching traffic to any proxy.\r\n```",
+              "createdAt": "2025-05-20T17:43:19Z",
+              "updatedAt": "2025-05-20T17:49:20Z"
+            },
+            {
+              "originalPosition": 153,
+              "body": "```suggestion\r\n```",
+              "createdAt": "2025-05-20T17:44:10Z",
+              "updatedAt": "2025-05-20T17:49:20Z"
+            },
+            {
+              "originalPosition": 154,
+              "body": "```suggestion\r\n```",
+              "createdAt": "2025-05-20T17:44:28Z",
+              "updatedAt": "2025-05-20T17:49:20Z"
+            },
+            {
+              "originalPosition": 113,
+              "body": "```suggestion\r\nwritten using CIDR notation. Subnet-based destination\r\n```",
+              "createdAt": "2025-05-20T17:48:13Z",
+              "updatedAt": "2025-05-20T17:49:20Z"
+            },
+            {
+              "originalPosition": 124,
+              "body": "```suggestion\r\nIf `ports` key is not present, all ports are assumed to match.\r\n```",
+              "createdAt": "2025-05-20T17:48:45Z",
+              "updatedAt": "2025-05-20T17:49:20Z"
+            }
+          ]
         }
       ]
     },
@@ -19232,18 +19276,26 @@
       "labels": [],
       "body": "Added a definition of proprietary keys for `proxies` and destination rules",
       "createdAt": "2025-05-11T22:12:15Z",
-      "updatedAt": "2025-05-13T16:06:23Z",
+      "updatedAt": "2025-05-20T23:35:59Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "proprietary",
-      "headRefOid": "a75880222b083d1a795a03da3c64c0b27a523ff2",
+      "headRefOid": "cafce8ed4c9fba14c2cd4dd37c479f7c53752347",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks for the review, @tfpauly \r\nAll suggestions applied.",
+          "createdAt": "2025-05-20T23:35:52Z",
+          "updatedAt": "2025-05-20T23:35:52Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOEwrMS86pDKqK",
@@ -19337,6 +19389,93 @@
           "createdAt": "2025-05-13T16:06:23Z",
           "updatedAt": "2025-05-13T16:06:23Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS86qNAuq",
+          "commit": {
+            "abbreviatedOid": "ecce022"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "CHANGES_REQUESTED",
+          "body": "Looks good! Mainly nits here",
+          "createdAt": "2025-05-20T20:39:37Z",
+          "updatedAt": "2025-05-20T20:43:59Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "```suggestion\r\nThe list can contain keys that are either:\r\n```",
+              "createdAt": "2025-05-20T20:39:38Z",
+              "updatedAt": "2025-05-20T20:43:59Z"
+            },
+            {
+              "originalPosition": 11,
+              "body": "```suggestion\r\n- registered in an IANA registry, defined in {{proxy-info-iana}} and marked as optional;\r\n```",
+              "createdAt": "2025-05-20T20:40:03Z",
+              "updatedAt": "2025-05-20T20:43:59Z"
+            },
+            {
+              "originalPosition": 12,
+              "body": "```suggestion\r\n- or proprietary, as defined in {{proxy-proprietary-keys}}\r\n```",
+              "createdAt": "2025-05-20T20:40:21Z",
+              "updatedAt": "2025-05-20T20:43:59Z"
+            },
+            {
+              "originalPosition": 22,
+              "body": "```suggestion\r\n## Proprietary Keys in Proxy Configurations {#proxy-proprietary-keys}\r\n```",
+              "createdAt": "2025-05-20T20:41:22Z",
+              "updatedAt": "2025-05-20T20:43:59Z"
+            },
+            {
+              "originalPosition": 29,
+              "body": "```suggestion\r\nbe a proprietary key indicating an authentication mode defined by a vendor named \"acme\".\r\n```",
+              "createdAt": "2025-05-20T20:41:52Z",
+              "updatedAt": "2025-05-20T20:43:59Z"
+            },
+            {
+              "originalPosition": 31,
+              "body": "```suggestion\r\nWhen combined with `mandatory` list, this mechanism allows implementations to extend proxy metadata while\r\n```",
+              "createdAt": "2025-05-20T20:42:07Z",
+              "updatedAt": "2025-05-20T20:43:59Z"
+            },
+            {
+              "originalPosition": 32,
+              "body": "```suggestion\r\nmaintaining interoperability and ensuring safe fallback behavior for clients that do not support a given\r\n```",
+              "createdAt": "2025-05-20T20:42:23Z",
+              "updatedAt": "2025-05-20T20:43:59Z"
+            },
+            {
+              "originalPosition": 47,
+              "body": "```suggestion\r\nSimilar to proprietary keys in proxy definitions ({{proxy-proprietary-keys}}), a proprietary key in destination\r\n```",
+              "createdAt": "2025-05-20T20:43:03Z",
+              "updatedAt": "2025-05-20T20:43:59Z"
+            },
+            {
+              "originalPosition": 50,
+              "body": "```suggestion\r\ndefined by a vendor named \"acme\".\r\n```",
+              "createdAt": "2025-05-20T20:43:20Z",
+              "updatedAt": "2025-05-20T20:43:59Z"
+            },
+            {
+              "originalPosition": 52,
+              "body": "```suggestion\r\nClients that encounter a proprietary key they do not recognize MUST ignore the entire destination rule in which the\r\n```",
+              "createdAt": "2025-05-20T20:43:30Z",
+              "updatedAt": "2025-05-20T20:43:59Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86qOFSD",
+          "commit": {
+            "abbreviatedOid": "cafce8e"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-05-20T23:35:59Z",
+          "updatedAt": "2025-05-20T23:35:59Z",
+          "comments": []
         }
       ]
     },
@@ -19352,13 +19491,13 @@
       "labels": [],
       "body": "Also introduces a simple mechanism for client to discover new configuration version from proxy responses",
       "createdAt": "2025-05-11T22:47:02Z",
-      "updatedAt": "2025-05-13T16:35:16Z",
+      "updatedAt": "2025-05-20T18:38:24Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "versions",
-      "headRefOid": "3959fc434ef9afa3a903e2649216110ae55548cc",
+      "headRefOid": "ea214d2e14847bd1cd653226b3a7fb838ca430fd",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -19442,6 +19581,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 281,
+      "id": "PR_kwDOEwrMS86W8UrC",
+      "title": "Match/exclude destination rules (flattened)",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/281",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I have collapsed all my suggestions from https://github.com/tfpauly/privacy-proxy/pull/276 into a fresh PR so it could be readable.",
+      "createdAt": "2025-05-20T19:03:42Z",
+      "updatedAt": "2025-05-20T19:03:42Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "main",
+      "headRefOid": "849f5c4f27451159edc3bd13135a4013df396eb0",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
