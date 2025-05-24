@@ -276,7 +276,7 @@ for a particular proxy.
 ## Destination Rule Keys
 
 This document defines four keys for destination rules. Any destination rule MUST contain
-the `proxies` key. Value corresponding to the `proxies` key may be either an empty array
+the `proxies` key. Values corresponding to the `proxies` key may be either an empty array,
 which implies that no proxy defined in this PvD can process matching traffic or an array
 with at least one proxy `identifier`. All destination rules MUST also contain at least one
 other key use to describe the destination properties. Each key MUST correspond to an array
