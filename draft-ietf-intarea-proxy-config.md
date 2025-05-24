@@ -319,7 +319,7 @@ If `ports` key is not present, all ports are assumed to match. Comma-separated p
 contain individual port numbers (such as "80") or inclusive ranges of ports. For example
 "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
 
-##  Using destination rules
+##  Using Destination Rules
 
 The destination rules can be used to determine which traffic can be sent through proxies, and
 which specific set of proxies to use for any particular connection. By evaluating the rules in
