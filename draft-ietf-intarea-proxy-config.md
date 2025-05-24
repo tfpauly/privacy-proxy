@@ -189,9 +189,14 @@ this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
 
 The value of the `mandatory` key is a list of keys that the client must understand and process to be
 able to use the proxy. A client that does not understand a key from the list or cannot fully process
-the value of a key from the list MUST ignore the entire proxy definition. The list can contain
-only keys that are registered in an IANA registry, defined in {{proxy-info-iana}} and that are marked
-as optional.  The `mandatory` list MUST NOT include any entries that are not present in the sub-dictionary.
+the value of a key from the list MUST ignore the entire proxy definition.
+
+The list can contain keys that are either:
+
+- registered in an IANA registry, defined in {{proxy-info-iana}} and marked as optional;
+- or proprietary, as defined in {{proxy-proprietary-keys}}
+
+The `mandatory` list MUST NOT include any entries that are not present in the sub-dictionary.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
@@ -205,6 +210,19 @@ a single FQDN hostname for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
 URIs that support non-default protocols, such as {{CONNECT-UDP}} and
 {{CONNECT-IP}}.
+
+## Proprietary Keys in Proxy Configurations {#proxy-proprietary-keys}
+
+Implementations MAY include proprietary or vendor-specific keys in the sub-dictionaries of the `proxies`
+array to convey additional proxy configuration information not defined in this specification.
+
+A proprietary key MUST contain at least one underscore character ("_"). This character serves as a
+separator between a vendor-specific namespace and the key name. For example, "acme_authmode" could
+be a proprietary key indicating an authentication mode defined by a vendor named "acme".
+
+When combined with `mandatory` list, this mechanism allows implementations to extend proxy metadata while
+maintaining interoperability and ensuring safe fallback behavior for clients that do not support a given
+extension.
 
 ## Example
 
@@ -316,6 +334,20 @@ has a local policy to only send requests for "*.example.com" to a proxy
 "proxy.example.com", and `domains` array of a `match` object contains "internal.example.com" and
 "other.company.com", the client would end up only proxying "internal.example.com"
 through the proxy.
+
+## Proprietary Keys in Destination Rules
+
+Implementations MAY include proprietary or vendor-specific keys in destination rules to define custom matching logic
+not specified in this document.
+
+Similar to proprietary keys in proxy definitions ({{proxy-proprietary-keys}}), a proprietary key in destination
+rule MUST contain at least one underscore character ("_"), which separates a vendor-specific namespace from the key name.
+For example, "acme_processid" could be a key used to apply rules only to traffic of a specific process identifier as
+defined by a vendor named "acme".
+
+Clients that encounter a proprietary key they do not recognize MUST ignore the entire destination rule in which the
+key appears. This ensures that unknown or unsupported matching logic does not inadvertently influence proxy selection
+or bypass security controls. This handling applies uniformly across all match rules, including fallback rules.
 
 ## Example
 
