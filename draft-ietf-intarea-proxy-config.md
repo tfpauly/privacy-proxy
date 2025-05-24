@@ -194,7 +194,7 @@ the value of a key from the list MUST ignore the entire proxy definition. The li
 only keys that are registered in an IANA registry, defined in {{proxy-info-iana}} and that are marked
 as optional.  The `mandatory` list MUST NOT include any entries that are not present in the sub-dictionary.
 
-The value of `identifier` key is an optional string that can be used to refer to the
+The value of `identifier` key is an optional string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in {{destinations}}. The
 string value is an arbitrary JSON string. Identifier values MAY be duplicated
 across different proxy dictionaries in the `proxies` array, which would indicate
