@@ -418,7 +418,7 @@ traffic, but MUST NOT send traffic that would go beyond what is allowed by local
 
 This document registers two new keys in the "Additional Information PvD Keys" registry.
 
-### proxies Key
+### `proxies` Key
 
 JSON Key: proxies
 
