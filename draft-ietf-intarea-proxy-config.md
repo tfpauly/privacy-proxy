@@ -267,7 +267,7 @@ PvD Additional Information can be used to indicate that a set of proxies only al
 a limited set of destinations.
 
 To support determining which traffic is supported by different proxies, this document defines
-a new PvD Additional Information key `proxy-match`. This key has value that is arrays of
+a new PvD Additional Information key `proxy-match`. This key has a value that is an array of
 dictionaries, where each subdictionary describes a rule for matching traffic to one or more
 proxies or excluding the traffic from all proxies. These subdictionaries are referred
 to as "destination rules", since they define rules about which destinations can be accessed
