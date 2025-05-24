@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 8 September 2025                                      Microsoft
+Expires: 25 November 2025                                      Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                            7 March 2025
+                                                             24 May 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 September 2025.
+   This Internet-Draft will expire on 25 November 2025.
 
 Copyright Notice
 
@@ -66,9 +66,11 @@ Table of Contents
      1.2.  Requirements
    2.  Fetching PvD Additional Information for proxies
    3.  Enumerating proxies within a PvD
-     3.1.  Example
+     3.1.  Proprietary Keys in Proxy Configurations
+     3.2.  Example
    4.  Destination accessibility information for proxies
-     4.1.  Example
+     4.1.  Proprietary Keys in Destination Rules
+     4.2.  Example
    5.  Discovering proxies from network PvDs
    6.  Security Considerations
    7.  IANA Considerations
@@ -303,8 +305,14 @@ Table of Contents
    understand and process to be able to use the proxy.  A client that
    does not understand a key from the list or cannot fully process the
    value of a key from the list MUST ignore the entire proxy definition.
-   The list can contain only keys that are registered in an IANA
-   registry, defined in Section 7.2 and that are marked as optional.
+
+   The list can contain keys that are either:
+
+   *  registered in an IANA registry, defined in Section 7.2 and marked
+      as optional;
+
+   *  or proprietary, as defined in Section 3.1
+
    The mandatory list MUST NOT include any entries that are not present
    in the sub-dictionary.
 
@@ -321,7 +329,24 @@ Table of Contents
    URI to learn the list of complete URIs that support non-default
    protocols, such as [CONNECT-UDP] and [CONNECT-IP].
 
-3.1.  Example
+3.1.  Proprietary Keys in Proxy Configurations
+
+   Implementations MAY include proprietary or vendor-specific keys in
+   the sub-dictionaries of the proxies array to convey additional proxy
+   configuration information not defined in this specification.
+
+   A proprietary key MUST contain at least one underscore character
+   ("_").  This character serves as a separator between a vendor-
+   specific namespace and the key name.  For example, "acme_authmode"
+   could be a proprietary key indicating an authentication mode defined
+   by a vendor named "acme".
+
+   When combined with mandatory list, this mechanism allows
+   implementations to extend proxy metadata while maintaining
+   interoperability and ensuring safe fallback behavior for clients that
+   do not support a given extension.
+
+3.2.  Example
 
    Given a known HTTP CONNECT proxy FQDN, "proxy.example.org", a client
    could request PvD Additional Information with the following request:
@@ -472,7 +497,27 @@ content-length = 222
    "internal.example.com" and "other.company.com", the client would end
    up only proxying "internal.example.com" through the proxy.
 
-4.1.  Example
+4.1.  Proprietary Keys in Destination Rules
+
+   Implementations MAY include proprietary or vendor-specific keys in
+   destination rules to define custom matching logic not specified in
+   this document.
+
+   Similar to proprietary keys in proxy definitions (Section 3.1), a
+   proprietary key in destination rule MUST contain at least one
+   underscore character ("_"), which separates a vendor-specific
+   namespace from the key name.  For example, "acme_processid" could be
+   a key used to apply rules only to traffic of a specific process
+   identifier as defined by a vendor named "acme".
+
+   Clients that encounter a proprietary key they do not recognize MUST
+   ignore the entire destination rule in which the key appears.  This
+   ensures that unknown or unsupported matching logic does not
+   inadvertently influence proxy selection or bypass security controls.
+   This handling applies uniformly across all match rules, including
+   fallback rules.
+
+4.2.  Example
 
    Given a proxy URI template "https://proxy.example.org/
    masque{?target_host,target_port}", which in this case is for UDP
@@ -603,9 +648,9 @@ content-length = 135
    [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-06, 21 October 2024,
+              httpbis-connect-tcp-07, 17 March 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-06>.
+              connect-tcp-07>.
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
