@@ -431,7 +431,7 @@ Example: [ {
   "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
 } ]
 
-### proxy-match Key
+### `proxy-match` Key
 
 JSON Key: proxy-match
 
