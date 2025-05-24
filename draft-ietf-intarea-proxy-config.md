@@ -273,7 +273,7 @@ proxies, or excluding the traffic from all proxies described in the PvD. These s
 to as "destination rules", since they define rules about which destinations can be accessed
 for a particular proxy.
 
-## Destination rule keys
+## Destination Rule Keys
 
 This document defines four keys for destination rules. Any destination rule MUST contain
 the `proxies` key. Value corresponding to the `proxies` key may be either an empty array
