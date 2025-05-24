@@ -197,7 +197,7 @@ as optional.  The `mandatory` list MUST NOT include any entries that are not pre
 The value of `identifier` key is an optional string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in {{destinations}}. The
 string value is an arbitrary JSON string. Identifier values MAY be duplicated
-across different proxy dictionaries in the `proxies` array, which would indicate
+across different proxy dictionaries in the `proxies` array, which indicates
 that all references from other dictionaries to a particular identifier value applies
 to all matching proxies. Proxies without `identifier` key are expected to accept any
 traffic since their destinations cannot be contained in `proxy-match` array defined
