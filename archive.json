@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-22T00:21:03.253338+00:00",
+  "timestamp": "2025-05-25T00:23:47.469523+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4266,7 +4266,7 @@
       "id": "I_kwDOEwrMS86qYo7U",
       "title": "Describe handling proprietary / custom keys",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/271",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [],
@@ -4275,8 +4275,8 @@
       ],
       "body": "We should explain the recommended ways to have custom / proprietary keys in the proxy dictionary\n- Prefix keys with some vendor name \"corpExampleKey\" to avoid overlap with registered keys\n- Handling mandatory vs optional",
       "createdAt": "2025-02-17T18:47:49Z",
-      "updatedAt": "2025-03-08T00:41:58Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-24T13:25:24Z",
+      "closedAt": "2025-05-24T13:25:23Z",
       "comments": [
         {
           "author": "yaroslavros",
@@ -4326,6 +4326,13 @@
           "body": "`_` sounds good, though if we create a notion of proprietary suffixes we should clarify the guidance for IANA designated experts. For example, \"A request for `specialkey@acme.com` needs to come from an email address under `@acme.com`\" or something like that",
           "createdAt": "2025-03-08T00:41:57Z",
           "updatedAt": "2025-03-08T00:41:57Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Resolved via https://github.com/tfpauly/privacy-proxy/pull/278",
+          "createdAt": "2025-05-24T13:25:23Z",
+          "updatedAt": "2025-05-24T13:25:23Z"
         }
       ]
     },
@@ -19269,24 +19276,26 @@
       "id": "PR_kwDOEwrMS86Vv1fx",
       "title": "Proprietary keys",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/278",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Added a definition of proprietary keys for `proxies` and destination rules",
       "createdAt": "2025-05-11T22:12:15Z",
-      "updatedAt": "2025-05-20T23:35:59Z",
+      "updatedAt": "2025-05-24T00:22:49Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "proprietary",
       "headRefOid": "cafce8ed4c9fba14c2cd4dd37c479f7c53752347",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-05-24T00:22:49Z",
+      "mergedAt": "2025-05-24T00:22:49Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "1686c86057d0d6bb5cef1c9a50feafa0a3b5c381"
+      },
       "comments": [
         {
           "author": "yaroslavros",
@@ -19476,6 +19485,19 @@
           "createdAt": "2025-05-20T23:35:59Z",
           "updatedAt": "2025-05-20T23:35:59Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS86qzg-V",
+          "commit": {
+            "abbreviatedOid": "cafce8e"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-05-23T20:24:52Z",
+          "updatedAt": "2025-05-23T20:24:52Z",
+          "comments": []
         }
       ]
     },
@@ -19594,19 +19616,134 @@
       "labels": [],
       "body": "I have collapsed all my suggestions from https://github.com/tfpauly/privacy-proxy/pull/276 into a fresh PR so it could be readable.",
       "createdAt": "2025-05-20T19:03:42Z",
-      "updatedAt": "2025-05-20T19:03:42Z",
+      "updatedAt": "2025-05-24T18:10:09Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
-      "baseRefOid": "e0aafddd7ce696febdd33d6ab8a2c5ae83989b13",
+      "baseRefOid": "1686c86057d0d6bb5cef1c9a50feafa0a3b5c381",
       "headRepository": "yaroslavros/privacy-proxy",
-      "headRefName": "main",
-      "headRefOid": "849f5c4f27451159edc3bd13135a4013df396eb0",
+      "headRefName": "conflict-resolved",
+      "headRefOid": "276574f43b6d75e4c7432e2a40aef994b9b04db7",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Looks good! After we merge, I may do another editorial pass.",
+          "createdAt": "2025-05-24T15:38:41Z",
+          "updatedAt": "2025-05-24T15:38:41Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Sounds good. I'll be happy to add few more examples once this is merged.",
+          "createdAt": "2025-05-24T18:10:08Z",
+          "updatedAt": "2025-05-24T18:10:08Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86q0krL",
+          "commit": {
+            "abbreviatedOid": "849f5c4"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-24T00:24:08Z",
+          "updatedAt": "2025-05-24T00:29:46Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "```suggestion\r\nThe value of `identifier` key is an optional string that can be used to refer to a particular\r\n```",
+              "createdAt": "2025-05-24T00:24:08Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 15,
+              "body": "```suggestion\r\nacross different proxy dictionaries in the `proxies` array, which indicates\r\n```",
+              "createdAt": "2025-05-24T00:25:35Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 16,
+              "body": "```suggestion\r\nthat all references from other dictionaries to a particular identifier value apply\r\n```",
+              "createdAt": "2025-05-24T00:25:53Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 66,
+              "body": "```suggestion\r\na new PvD Additional Information key `proxy-match`. This key has a value that is an array of\r\n```",
+              "createdAt": "2025-05-24T00:26:39Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 68,
+              "body": "```suggestion\r\nproxies, or excluding the traffic from all proxies described in the PvD. These subdictionaries are referred\r\n```",
+              "createdAt": "2025-05-24T00:27:00Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 72,
+              "body": "```suggestion\r\n## Destination Rule Keys\r\n```",
+              "createdAt": "2025-05-24T00:27:10Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 75,
+              "body": "```suggestion\r\nthe `proxies` key. Values corresponding to the `proxies` key may be either an empty array,\r\n```",
+              "createdAt": "2025-05-24T00:27:34Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 76,
+              "body": "```suggestion\r\nwhich implies that no proxy defined in this PvD can process matching traffic, or an array of strings\r\n```",
+              "createdAt": "2025-05-24T00:27:45Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 77,
+              "body": "```suggestion\r\nwith at least one proxy `identifier` string. All destination rules MUST also contain at least one\r\n```",
+              "createdAt": "2025-05-24T00:27:54Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 139,
+              "body": "```suggestion\r\n##  Using Destination Rules\r\n```",
+              "createdAt": "2025-05-24T00:29:13Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 246,
+              "body": "```suggestion\r\n### `proxies` Key\r\n```",
+              "createdAt": "2025-05-24T00:29:28Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            },
+            {
+              "originalPosition": 254,
+              "body": "```suggestion\r\n### `proxy-match` Key\r\n```",
+              "createdAt": "2025-05-24T00:29:35Z",
+              "updatedAt": "2025-05-24T00:29:46Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86q2UmM",
+          "commit": {
+            "abbreviatedOid": "276574f"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-05-24T15:38:18Z",
+          "updatedAt": "2025-05-24T15:38:18Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
