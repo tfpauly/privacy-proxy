@@ -394,6 +394,34 @@ content-length = 135
 The client could then choose to use this proxy only for accessing names that fall
 within the "*.internal.example.org" zone.
 
+# Configuration Identifiers {#config-ids}
+
+To allow clients to track updates to proxy configuration data without relying solely on the expiration timestamp,
+this document defines an optional `configid` key in the top-level PvD Additional Information object.
+The value of this key is an integer representing the identifier of the proxy configuration.
+
+Proxies MAY include a `Proxy-Config-Id` HTTP response header in responses to proxy requests. This header indicates
+the current identifier of the configuration known to the proxy.
+
+When a client receives a `Proxy-Config-Id` header with a value greater than the identifier stored in the most recently
+retrieved PvD Additional Information, the client SHOULD initiate a new fetch of the PvD data from the corresponding
+`/.well-known/pvd` resource.
+
+The `configid` key and the `Proxy-Config-Id` header MUST contain a non-negative integer. Identifier numbers are intended to increase monotonically.
+
+## Example
+
+A proxy returns the following response to a `CONNECT` request:
+
+~~~
+:status = 200
+Proxy-Config-Id: 11
+...
+~~~
+
+If the client previously fetched PvD data that included `"configid": 10`, it will recognise that a newer configuration is available
+and SHOULD refresh the PvD Additional Information from `/.well-known/pvd`.
+
 # Discovering proxies from network PvDs {#network-proxies}
 
 {{PVDDATA}} defines how PvD Additional Information is discovered based
@@ -453,3 +481,11 @@ The initial contents of this registry are given in {{proxy-enumeration}}.
 New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review {{!RFC8126}}.
 Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
 The reference and notes fields MAY be empty.
+
+## HTTP Field Name Registrations
+
+IANA is requested to add the following entry in the "Hypertext Transfer Protocol (HTTP) Field Name Registry" defined by "HTTP Semantics" {{HTTP}}:
+
+- Field Name: Proxy-Config-Id
+- Status: permanent
+- Reference: This document, {{config-ids}}
