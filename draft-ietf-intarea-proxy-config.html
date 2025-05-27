@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 25 November 2025</td>
+<td class="center">Expires 28 November 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-05-24" class="published">24 May 2025</time>
+<time datetime="2025-05-27" class="published">27 May 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-11-25">25 November 2025</time></dd>
+<dd class="expires"><time datetime="2025-11-28">28 November 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ and a list of DNS zones that are accessible via a proxy.<a href="#section-abstra
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1180,10 +1180,16 @@ and a list of DNS zones that are accessible via a proxy.<a href="#section-abstra
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-destination-accessibility-i" class="internal xref">Destination accessibility information for proxies</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
-                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-proprietary-keys-in-destina" class="internal xref">Proprietary Keys in Destination Rules</a></p>
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-destination-rule-keys" class="internal xref">Destination Rule Keys</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
-                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-example-2" class="internal xref">Example</a></p>
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-using-destination-rules" class="internal xref">Using Destination Rules</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-proprietary-keys-in-destina" class="internal xref">Proprietary Keys in Destination Rules</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-example-2" class="internal xref">Example</a></p>
 </li>
             </ul>
 </li>
@@ -1198,12 +1204,23 @@ and a list of DNS zones that are accessible via a proxy.<a href="#section-abstra
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
                 <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-new-pvd-additional-informat" class="internal xref">New PvD Additional Information key</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.1">
+                    <p id="section-toc.1-1.7.2.1.2.1.1"><a href="#section-7.1.1" class="auto internal xref">7.1.1</a>.  <a href="#name-proxies-key" class="internal xref"><code>proxies</code> Key</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.2">
+                    <p id="section-toc.1-1.7.2.1.2.2.1"><a href="#section-7.1.2" class="auto internal xref">7.1.2</a>.  <a href="#name-proxy-match-key" class="internal xref"><code>proxy-match</code> Key</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
                 <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-new-pvd-proxy-information-r" class="internal xref">New PvD Proxy Information Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
                 <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-new-pvd-proxy-protocol-regi" class="internal xref">New PvD Proxy Protocol Registry</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-new-pvd-proxy-destination-r" class="internal xref">New PvD Proxy Destination Rule Registry</a></p>
 </li>
             </ul>
 </li>
@@ -1400,6 +1417,14 @@ use of a proxy.<a href="#section-3-2" class="pilcrow">¶</a></p>
             <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
             <td class="text-left" rowspan="1" colspan="1">["match"]</td>
           </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">identifier</td>
+            <td class="text-left" rowspan="1" colspan="1">Yes</td>
+            <td class="text-left" rowspan="1" colspan="1">A string used to refer to the proxy, which can be referenced by other dictionaries, such as <code>proxy-match</code>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">String</td>
+            <td class="text-left" rowspan="1" colspan="1">"udp-proxy"</td>
+          </tr>
         </tbody>
       </table>
 <p id="section-3-4">The values for the <code>protocol</code> key are defined in the proxy protocol
@@ -1486,17 +1511,25 @@ the value of a key from the list MUST ignore the entire proxy definition.<a href
 </li>
       </ul>
 <p id="section-3-11">The <code>mandatory</code> list MUST NOT include any entries that are not present in the sub-dictionary.<a href="#section-3-11" class="pilcrow">¶</a></p>
-<p id="section-3-12">When a PvD that contains the <code>proxies</code> key is fetched from a known proxy
+<p id="section-3-12">The value of <code>identifier</code> key is an optional string that can be used to refer to a particular
+proxy from other dictionaries, specifically those defined in <a href="#destinations" class="auto internal xref">Section 4</a>. The
+string value is an arbitrary JSON string. Identifier values MAY be duplicated
+across different proxy dictionaries in the <code>proxies</code> array, which indicates
+that all references from other dictionaries to a particular identifier value apply
+to all matching proxies. Proxies without <code>identifier</code> key are expected to accept any
+traffic since their destinations cannot be contained in <code>proxy-match</code> array defined
+in <a href="#destinations" class="auto internal xref">Section 4</a>.<a href="#section-3-12" class="pilcrow">¶</a></p>
+<p id="section-3-13">When a PvD that contains the <code>proxies</code> key is fetched from a known proxy
 using the method described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a> the proxies list describes
 equivalent proxies (potentially supporting other protocols) that can be used
-in addition to the known proxy.<a href="#section-3-12" class="pilcrow">¶</a></p>
-<p id="section-3-13">Such cases are useful for informing clients of related proxies as a discovery
+in addition to the known proxy.<a href="#section-3-13" class="pilcrow">¶</a></p>
+<p id="section-3-14">Such cases are useful for informing clients of related proxies as a discovery
 method, with the assumption that the client already is aware of one proxy.
 Many historical methods of configuring a proxy only allow configuring
 a single FQDN hostname for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
 URIs that support non-default protocols, such as <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span> and
-<span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.<a href="#section-3-13" class="pilcrow">¶</a></p>
+<span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.<a href="#section-3-14" class="pilcrow">¶</a></p>
 <div id="proxy-proprietary-keys">
 <section id="section-3.1">
         <h3 id="name-proprietary-keys-in-proxy-c">
@@ -1567,148 +1600,146 @@ at "https://proxy.example.org/masque{?target_host,target_port}".<a href="#sectio
 <p id="section-4-1">Destination accessibility information is used when only a subset of destinations is reachable through
 a proxy. Destination restrictions are often used in VPN tunnel configurations such as split
 DNS in IKEv2 <span>[<a href="#IKEV2SPLIT" class="cite xref">IKEV2SPLIT</a>]</span>.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">PvD Additional Information can be used to indicate that a proxy PvD only allows access to a limited
-set of destinations.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">This document defines two optional keys for subdictionaries in the <code>proxies</code>
-array that are used to signal information about destinations available through the proxy.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-2">PvD Additional Information can be used to indicate that a set of proxies only allows access to
+a limited set of destinations.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-3">To support determining which traffic is supported by different proxies, this document defines
+a new PvD Additional Information key <code>proxy-match</code>. This key has a value that is an array of
+dictionaries, where each subdictionary describes a rule for matching traffic to one or more
+proxies, or excluding the traffic from all proxies described in the PvD. These subdictionaries are referred
+to as "destination rules", since they define rules about which destinations can be accessed
+for a particular proxy.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<div id="destination-rule-keys">
+<section id="section-4.1">
+        <h3 id="name-destination-rule-keys">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-destination-rule-keys" class="section-name selfRef">Destination Rule Keys</a>
+        </h3>
+<p id="section-4.1-1">This document defines four keys for destination rules. Any destination rule MUST contain
+the <code>proxies</code> key. Values corresponding to the <code>proxies</code> key may be either an empty array,
+which implies that no proxy defined in this PvD can process matching traffic, or an array of strings
+with at least one proxy <code>identifier</code> string. All destination rules MUST also contain at least one
+other key use to describe the destination properties. Each key MUST correspond to an array
+with at least one entry.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">Extensions or proprietary deployments can define new keys to describe destination properties.
+Any destination rules that include keys not known to the client, or values that cannot be
+parsed, MUST be ignored in their entirety.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <table class="center" id="table-3">
-        <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
+          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
 <thead>
-          <tr>
-            <th class="text-left" rowspan="1" colspan="1">JSON Key</th>
-            <th class="text-left" rowspan="1" colspan="1">Optional</th>
-            <th class="text-left" rowspan="1" colspan="1">Description</th>
-            <th class="text-left" rowspan="1" colspan="1">Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">match</td>
-            <td class="text-left" rowspan="1" colspan="1">Yes</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of destination objects defining targets accessible over this proxy</td>
-            <td class="text-left" rowspan="1" colspan="1">Array of Objects</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">exclude</td>
-            <td class="text-left" rowspan="1" colspan="1">Yes</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of destination objects defining targets that cannot be accessed over this proxy</td>
-            <td class="text-left" rowspan="1" colspan="1">Array of Objects</td>
-          </tr>
-        </tbody>
-      </table>
-<p id="section-4-5">This document defined three keys for destination objects. A destination object cannot
-be empty and MUST contain at least one valid key. Each provided key MUST correspond to an array with at least one entry.<a href="#section-4-5" class="pilcrow">¶</a></p>
-<table class="center" id="table-4">
-        <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
-<thead>
-          <tr>
-            <th class="text-left" rowspan="1" colspan="1">JSON Key</th>
-            <th class="text-left" rowspan="1" colspan="1">Description</th>
-            <th class="text-left" rowspan="1" colspan="1">Type</th>
-            <th class="text-left" rowspan="1" colspan="1">Example</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">domains</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of FQDNs and wildcard DNS domains</td>
-            <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
-            <td class="text-left" rowspan="1" colspan="1">["www.example.com", "*.internal.example.com"]</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">subnets</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of IPv4 and IPv6 addresses and subnets</td>
-            <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
-            <td class="text-left" rowspan="1" colspan="1">["2001:DB8::1", "192.168.1.0/24"]</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">ports</td>
-            <td class="text-left" rowspan="1" colspan="1">An array of TCP and UDP port ranges</td>
-            <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
-            <td class="text-left" rowspan="1" colspan="1">["80", "443", "1024-65535"]</td>
-          </tr>
-        </tbody>
-      </table>
-<p id="section-4-7">When present in a PvD Additional Information dictionary that is retrieved for a proxy
-as described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a>, entries in the <code>domains</code> array of a <code>match</code> object indicate
-specific FQDNs and zones that are accessible using the proxy. If a hostname does not match any entry,
-then a client SHOULD assume that the hostname will not be accessible through the proxy.
-If a hostname is included in the <code>domains</code> array of an <code>exclude</code> object, then the client SHOULD NOT
-access it through the proxy. The <code>domains</code> array can be present in an <code>exclude</code> object even if <code>domains</code>
-is omitted from all <code>match</code> objects or <code>match</code> key is not present in the <code>proxies</code> array subdictionary.
-When this is the case, the client assumes that all domains except the domains
-listed in the <code>domains</code> from <code>exclude</code> objects are accessible through the proxy. If <code>domains</code> arrays are
-specified in <code>match</code> and <code>exclude</code> objects, <code>domains</code> arrays from <code>exclude</code> objects SHOULD
-list more specific domains within entries in <code>domains</code> arrays from <code>match</code> objects.<a href="#section-4-7" class="pilcrow">¶</a></p>
-<p id="section-4-8">A wildcard prefix (<code>*.</code>) is used to indicate matching entire domains or subdomains instead of specific hostnames. Note
-that this can be used to match multiple levels of subdomains. For example "<em>.example.com"
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">JSON Key</th>
+              <th class="text-left" rowspan="1" colspan="1">Optional</th>
+              <th class="text-left" rowspan="1" colspan="1">Description</th>
+              <th class="text-left" rowspan="1" colspan="1">Type</th>
+              <th class="text-left" rowspan="1" colspan="1">Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">proxies</td>
+              <td class="text-left" rowspan="1" colspan="1">No</td>
+              <td class="text-left" rowspan="1" colspan="1">An array of strings that match <code>identifier</code> values from the top-level <code>proxies</code> array</td>
+              <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
+              <td class="text-left" rowspan="1" colspan="1">["tcp-proxy", "udp-proxy"]</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">domains</td>
+              <td class="text-left" rowspan="1" colspan="1">Yes</td>
+              <td class="text-left" rowspan="1" colspan="1">An array of FQDNs and wildcard DNS domains</td>
+              <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
+              <td class="text-left" rowspan="1" colspan="1">["www.example.com", "*.internal.example.com"]</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">subnets</td>
+              <td class="text-left" rowspan="1" colspan="1">Yes</td>
+              <td class="text-left" rowspan="1" colspan="1">An array of IPv4 and IPv6 addresses and subnets</td>
+              <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
+              <td class="text-left" rowspan="1" colspan="1">["2001:DB8::1", "192.168.1.0/24"]</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">ports</td>
+              <td class="text-left" rowspan="1" colspan="1">Yes</td>
+              <td class="text-left" rowspan="1" colspan="1">An array of TCP and UDP port ranges</td>
+              <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
+              <td class="text-left" rowspan="1" colspan="1">["80", "443", "1024-65535"]</td>
+            </tr>
+          </tbody>
+        </table>
+<p id="section-4.1-4">The <code>domains</code> array includes specific FQDNs and zones that are either accessible using specific proxy (for
+rules with non-empty <code>proxies</code> array) or non-accessible through any proxies (for rules with empty <code>proxies</code> array).
+A wildcard prefix (<code>*.</code>) is used to indicate matching entire domains or subdomains instead of
+specific hostnames. Note that this can be used to match multiple levels of subdomains. For example "<em>.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
-Entries that include the wildcard prefix also SHOULD be treated as if they match
+Entries that include the wildcard prefix also MUST be treated as if they match
 an FQDN that only contains the string after the prefix, with no subdomain. So,
-an entry "</em>.example.com" in the <code>domains</code> array of a <code>match</code> object would match the FQDN "example.com",
-unless "example.com" was specifically included in the <code>domains</code> array of an <code>exclude</code> object. This is
-done to prevent commonly needing to include both "*.example.com" and "example.com"
-in the <code>domains</code> array of a <code>match</code> object.<a href="#section-4-8" class="pilcrow">¶</a></p>
-<p id="section-4-9">Entries in <code>subnets</code> array of a <code>match</code> object correspond to IP addresses and subnets that are available through the
-proxy, while entries in <code>subnets</code> array of an <code>exclude</code> object define IP addresses and subnets that SHOULD NOT be used
-with the proxy. Subnet-based destination information SHOULD only be used when
-applications are communicating with destinations identified by only an IP address and not a hostname.
-If <code>subnets</code> arrays are specified in <code>match</code> and <code>exclude</code> objects, <code>subnets</code> arrays from <code>exclude</code> objects SHOULD
-list more specific subnets within entries in <code>subnets</code> arrays from <code>match</code> objects.<a href="#section-4-9" class="pilcrow">¶</a></p>
-<p id="section-4-10">Port specification, if provided, refines the criteria for domain or subnet matching.
-For example, <code>ports</code> array of ["80", "443"] together with <code>domains</code> array of ["www.example.com"]
-in a <code>match</code> object specifies that only ports 80 and 443 of "www.example.com"
-domain are accessible through the proxy. If <code>ports</code> key is not present in a <code>match</code> or <code>exclude</code> object,
-all ports are assumed to match. Comma-separated port list may contain individual port numbers (such as "80")
-or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.<a href="#section-4-10" class="pilcrow">¶</a></p>
-<p id="section-4-11">Entries listed in a <code>match</code> object MUST NOT expand the set of destinations that a client is
+an entry "</em>.example.com" in the <code>domains</code> array of a <code>proxy-match</code> rule would match the FQDN "example.com".
+This is done to prevent commonly needing to include both "*.example.com" and "example.com"
+in the <code>domains</code> array of a <code>proxy-match</code> rule.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-5">The <code>subnets</code> array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
+written using CIDR notation. Subnet-based destination information are only meant be used when applications
+are communicating with destinations identified by only an IP address, and not a hostname.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+<p id="section-4.1-6">Destination rules SHOULD NOT contain both the <code>domains</code> key and the <code>subnets</code> key. Many
+clients will not resolve a domain being accessed through the proxy to an IP address before using
+a proxy, so the subnet information may not be available.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
+<p id="section-4.1-7">The <code>ports</code> array includes specific ports (used for matching TCP and/or UDP ports), as well as
+ranges of ports written with a low port value and a high port value, with a <code>-</code> in between.
+For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+If <code>ports</code> key is not present, all ports are assumed to match. Comma-separated port list may
+contain individual port numbers (such as "80") or inclusive ranges of ports. For example
+"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="using-destination-rules">
+<section id="section-4.2">
+        <h3 id="name-using-destination-rules">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-using-destination-rules" class="section-name selfRef">Using Destination Rules</a>
+        </h3>
+<p id="section-4.2-1">The destination rules can be used to determine which traffic can be sent through proxies, and
+which specific set of proxies to use for any particular connection. By evaluating the rules in
+order, a consistent behavior for usage can be achieved.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">Rules in the <code>proxy-match</code> list SHOULD be provided in order of priority, such that a client
+can evaluate the list of rules from the first in the array to the last in the array, and attempt
+using the matching proxy or proxies from the earliest matching rule first. If earliest matching
+rule has empty list of <code>proxies</code> client SHOULD NOT send matching traffic to any proxy defined
+in this PvD. Multiple rules can match for the same destination, in which case all are considered
+to be accessible through the matching proxies in case the sets of proxies are different.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">In order to match a destination rule in the <code>proxy-match</code> list, all properties MUST apply.
+A matched rule will then either point to one or more proxy <code>identifier</code> values, which correspond
+to proxies defined in the list from <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>, or instructs the client to not send the
+matching traffic to any proxy.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-4">Entries listed in a <code>proxy-match</code> object MUST NOT expand the set of destinations that a client is
 willing to send to a particular proxy. The list can only narrow the list of destinations
 that the client is willing to send through the proxy. For example, if the client
 has a local policy to only send requests for "*.example.com" to a proxy
 "proxy.example.com", and <code>domains</code> array of a <code>match</code> object contains "internal.example.com" and
 "other.company.com", the client would end up only proxying "internal.example.com"
-through the proxy.<a href="#section-4-11" class="pilcrow">¶</a></p>
+through the proxy.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
 <div id="proprietary-keys-in-destination-rules">
-<section id="section-4.1">
+<section id="section-4.3">
         <h3 id="name-proprietary-keys-in-destina">
-<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-proprietary-keys-in-destina" class="section-name selfRef">Proprietary Keys in Destination Rules</a>
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-proprietary-keys-in-destina" class="section-name selfRef">Proprietary Keys in Destination Rules</a>
         </h3>
-<p id="section-4.1-1">Implementations MAY include proprietary or vendor-specific keys in destination rules to define custom matching logic
-not specified in this document.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">Similar to proprietary keys in proxy definitions (<a href="#proxy-proprietary-keys" class="auto internal xref">Section 3.1</a>), a proprietary key in destination
+<p id="section-4.3-1">Implementations MAY include proprietary or vendor-specific keys in destination rules to define custom matching logic
+not specified in this document.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">Similar to proprietary keys in proxy definitions (<a href="#proxy-proprietary-keys" class="auto internal xref">Section 3.1</a>), a proprietary key in destination
 rule MUST contain at least one underscore character ("_"), which separates a vendor-specific namespace from the key name.
 For example, "acme_processid" could be a key used to apply rules only to traffic of a specific process identifier as
-defined by a vendor named "acme".<a href="#section-4.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.1-3">Clients that encounter a proprietary key they do not recognize MUST ignore the entire destination rule in which the
+defined by a vendor named "acme".<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-3">Clients that encounter a proprietary key they do not recognize MUST ignore the entire destination rule in which the
 key appears. This ensures that unknown or unsupported matching logic does not inadvertently influence proxy selection
-or bypass security controls. This handling applies uniformly across all match rules, including fallback rules.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+or bypass security controls. This handling applies uniformly across all match rules, including fallback rules.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="example-1">
-<section id="section-4.2">
+<section id="section-4.4">
         <h3 id="name-example-2">
-<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-example-2" class="section-name selfRef">Example</a>
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-example-2" class="section-name selfRef">Example</a>
         </h3>
-<p id="section-4.2-1">Given a proxy URI template "https://proxy.example.org/masque{?target_host,target_port}",
-which in this case is for UDP proxying, the client could request PvD additional information
-with the following request:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2-2">
+<p id="section-4.4-1">In the following example, two proxies are defined with a common identifier, and
+there is a single match rule for "*.internal.example.org".<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4-2">
 <pre>
-:method = GET
-:scheme = https
-:authority = proxy.example.org
-:path = /.well-known/pvd
-accept = application/pvd+json
-</pre><a href="#section-4.2-2" class="pilcrow">¶</a>
-</div>
-<p id="section-4.2-3">If the proxy has a PvD definition for this proxy, it could return the following
-response to indicate a PvD that has one accessible zone, "*.internal.example.org".<a href="#section-4.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2-4">
-<pre>
-:status = 200
-content-type = application/pvd+json
-content-length = 135
-
 {
   "identifier": "proxy.example.org.",
   "expires": "2023-06-23T06:00:00Z",
@@ -1716,21 +1747,28 @@ content-length = 135
   "proxies": [
     {
       "protocol": "http-connect",
-      "proxy": "proxy.example.org:80"
+      "proxy": "proxy.example.org:80",
+      "identifier": "default_proxy"
     },
     {
       "protocol": "connect-udp",
       "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
-      "match": [{
-        domains: [ "*.internal.example.org" ]
-      }]
+      "identifier": "default_proxy"
+      }
+  ],
+  "proxy-match": [
+    {
+      "domains": [ "*.internal.example.org" ],
+      "proxies": [ "default_proxy" ]
     }
   ]
 }
-</pre><a href="#section-4.2-4" class="pilcrow">¶</a>
+</pre><a href="#section-4.4-2" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2-5">The client could then choose to use this proxy only for accessing names that fall
-within the "*.internal.example.org" zone.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
+<p id="section-4.4-3">The client could then choose to use either proxy associated with the "default_proxy" identifier
+for accessing names that fall within the "*.internal.example.org" zone. This would include the
+hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
+all other hosts within "internal.example.org".<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1763,6 +1801,11 @@ already proxying traffic and has multiple options to choose between.<a href="#se
 proxies, can only be safely used when fetched over a secure TLS-protected connection,
 and the client has validated that that the hostname of the proxy, the identifier of
 the PvD, and the validated hostname identity on the certificate all match.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">When using information in destination rules (<a href="#destinations" class="auto internal xref">Section 4</a>), clients MUST only allow
+the PvD configuration to narrow the scope of traffic that they will send through a proxy.
+Clients that are configured by policy to only send a particular set of traffic through
+a particular proxy can learn about rules that will cause them to send more narrowly-scoped
+traffic, but MUST NOT send traffic that would go beyond what is allowed by local policy.<a href="#section-6-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
@@ -1775,14 +1818,34 @@ the PvD, and the validated hostname identity on the certificate all match.<a hre
         <h3 id="name-new-pvd-additional-informat">
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-new-pvd-additional-informat" class="section-name selfRef">New PvD Additional Information key</a>
         </h3>
-<p id="section-7.1-1">This document registers a new key in the "Additional Information PvD Keys" registry.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">JSON Key: proxies<a href="#section-7.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1-3">Description: Array of proxy dictionaries associated with this PvD<a href="#section-7.1-3" class="pilcrow">¶</a></p>
-<p id="section-7.1-4">Type: Array of dictionaries<a href="#section-7.1-4" class="pilcrow">¶</a></p>
-<p id="section-7.1-5">Example: [ {
+<p id="section-7.1-1">This document registers two new keys in the "Additional Information PvD Keys" registry.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<div id="proxies-key">
+<section id="section-7.1.1">
+          <h4 id="name-proxies-key">
+<a href="#section-7.1.1" class="section-number selfRef">7.1.1. </a><a href="#name-proxies-key" class="section-name selfRef"><code>proxies</code> Key</a>
+          </h4>
+<p id="section-7.1.1-1">JSON Key: proxies<a href="#section-7.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-2">Description: Array of proxy dictionaries associated with this PvD<a href="#section-7.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-3">Type: Array of dictionaries<a href="#section-7.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-4">Example: [ {
   "protocol": "connect-udp",
   "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
-} ]<a href="#section-7.1-5" class="pilcrow">¶</a></p>
+} ]<a href="#section-7.1.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="proxy-match-key">
+<section id="section-7.1.2">
+          <h4 id="name-proxy-match-key">
+<a href="#section-7.1.2" class="section-number selfRef">7.1.2. </a><a href="#name-proxy-match-key" class="section-name selfRef"><code>proxy-match</code> Key</a>
+          </h4>
+<p id="section-7.1.2-1">JSON Key: proxy-match<a href="#section-7.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.1.2-2">Description: Array of proxy match rules, as dictionaries, associated with
+entries in the <code>proxies</code> list.<a href="#section-7.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-7.1.2-3">Type: Array of dictionaries<a href="#section-7.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-7.1.2-4">Example: [ {<a href="#section-7.1.2-4" class="pilcrow">¶</a></p>
+<p id="section-7.1.2-5">} ]<a href="#section-7.1.2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="proxy-info-iana">
@@ -1792,7 +1855,7 @@ the PvD, and the validated hostname identity on the certificate all match.<a hre
         </h3>
 <p id="section-7.2-1">IANA is requested to create a new registry "Proxy Information PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON keys for use in sub-dictionaries under the <code>proxies</code> key.
-The initial contents of this registry are given in <a href="#proxy-enumeration" class="auto internal xref">Section 3</a> and <a href="#destinations" class="auto internal xref">Section 4</a>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+The initial contents of this registry are given in <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.2-2">New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Experts are
 requested to ensure that defined keys do not overlap in names or semantics.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 </section>
@@ -1808,6 +1871,18 @@ The initial contents of this registry are given in <a href="#proxy-enumeration" 
 <p id="section-7.3-2">New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.
 Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
 The reference and notes fields MAY be empty.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="proxy-destination-iana">
+<section id="section-7.4">
+        <h3 id="name-new-pvd-proxy-destination-r">
+<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-new-pvd-proxy-destination-r" class="section-name selfRef">New PvD Proxy Destination Rule Registry</a>
+        </h3>
+<p id="section-7.4-1">IANA is requested to create a new registry "Proxy Destination Rule PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
+This new registry reserves JSON keys for use in sub-dictionaries under the <code>proxy-match</code> key.
+The initial contents of this registry are given in <a href="#destinations" class="auto internal xref">Section 4</a>.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+<p id="section-7.4-2">New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Experts are
+requested to ensure that defined keys do not overlap in names or semantics.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
