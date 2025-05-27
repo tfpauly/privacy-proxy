@@ -164,6 +164,7 @@ use of a proxy.
 | proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["match"] |
+| identifier | Yes | A string used to refer to the proxy, which can be referenced by other dictionaries, such as `proxy-match`  | String | "udp-proxy" |
 
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
@@ -197,6 +198,15 @@ The list can contain keys that are either:
 - or proprietary, as defined in {{proxy-proprietary-keys}}
 
 The `mandatory` list MUST NOT include any entries that are not present in the sub-dictionary.
+
+The value of `identifier` key is an optional string that can be used to refer to a particular
+proxy from other dictionaries, specifically those defined in {{destinations}}. The
+string value is an arbitrary JSON string. Identifier values MAY be duplicated
+across different proxy dictionaries in the `proxies` array, which indicates
+that all references from other dictionaries to a particular identifier value apply
+to all matching proxies. Proxies without `identifier` key are expected to accept any
+traffic since their destinations cannot be contained in `proxy-match` array defined
+in {{destinations}}.
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}} the proxies list describes
@@ -271,63 +281,81 @@ Destination accessibility information is used when only a subset of destinations
 a proxy. Destination restrictions are often used in VPN tunnel configurations such as split
 DNS in IKEv2 {{?IKEV2SPLIT=RFC8598}}.
 
-PvD Additional Information can be used to indicate that a proxy PvD only allows access to a limited
-set of destinations.
+PvD Additional Information can be used to indicate that a set of proxies only allows access to
+a limited set of destinations.
 
-This document defines two optional keys for subdictionaries in the `proxies`
-array that are used to signal information about destinations available through the proxy.
+To support determining which traffic is supported by different proxies, this document defines
+a new PvD Additional Information key `proxy-match`. This key has a value that is an array of
+dictionaries, where each subdictionary describes a rule for matching traffic to one or more
+proxies, or excluding the traffic from all proxies described in the PvD. These subdictionaries are referred
+to as "destination rules", since they define rules about which destinations can be accessed
+for a particular proxy.
 
-| JSON Key | Optional | Description | Type |
-| --- | --- | --- | --- |
-| match | Yes | An array of destination objects defining targets accessible over this proxy | Array of Objects |
-| exclude | Yes | An array of destination objects defining targets that cannot be accessed over this proxy | Array of Objects |
+## Destination Rule Keys
 
-This document defined three keys for destination objects. A destination object cannot
-be empty and MUST contain at least one valid key. Each provided key MUST correspond to an array with at least one entry.
+This document defines four keys for destination rules. Any destination rule MUST contain
+the `proxies` key. Values corresponding to the `proxies` key may be either an empty array,
+which implies that no proxy defined in this PvD can process matching traffic, or an array of strings
+with at least one proxy `identifier` string. All destination rules MUST also contain at least one
+other key use to describe the destination properties. Each key MUST correspond to an array
+with at least one entry.
 
-| JSON Key | Description | Type | Example |
-| --- | --- | --- | --- |
-| domains | An array of FQDNs and wildcard DNS domains | Array of Strings | ["www.example.com", "*.internal.example.com"] |
-| subnets | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.168.1.0/24"] |
-| ports | An array of TCP and UDP port ranges | Array of Strings | ["80", "443", "1024-65535"] |
+Extensions or proprietary deployments can define new keys to describe destination properties.
+Any destination rules that include keys not known to the client, or values that cannot be
+parsed, MUST be ignored in their entirety.
 
-When present in a PvD Additional Information dictionary that is retrieved for a proxy
-as described in {{proxy-pvd}}, entries in the `domains` array of a `match` object indicate
-specific FQDNs and zones that are accessible using the proxy. If a hostname does not match any entry,
-then a client SHOULD assume that the hostname will not be accessible through the proxy.
-If a hostname is included in the `domains` array of an `exclude` object, then the client SHOULD NOT
-access it through the proxy. The `domains` array can be present in an `exclude` object even if `domains`
-is omitted from all `match` objects or `match` key is not present in the `proxies` array subdictionary.
-When this is the case, the client assumes that all domains except the domains
-listed in the `domains` from `exclude` objects are accessible through the proxy. If `domains` arrays are
-specified in `match` and `exclude` objects, `domains` arrays from `exclude` objects SHOULD
-list more specific domains within entries in `domains` arrays from `match` objects.
+| JSON Key | Optional | Description | Type | Example |
+| --- | --- | --- | --- | --- |
+| proxies | No | An array of strings that match `identifier` values from the top-level `proxies` array | Array of Strings | ["tcp-proxy", "udp-proxy"] |
+| domains | Yes | An array of FQDNs and wildcard DNS domains | Array of Strings | ["www.example.com", "*.internal.example.com"] |
+| subnets | Yes | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.168.1.0/24"] |
+| ports | Yes | An array of TCP and UDP port ranges | Array of Strings | ["80", "443", "1024-65535"] |
 
-A wildcard prefix (`*.`) is used to indicate matching entire domains or subdomains instead of specific hostnames. Note
-that this can be used to match multiple levels of subdomains. For example "*.example.com"
+The `domains` array includes specific FQDNs and zones that are either accessible using specific proxy (for
+rules with non-empty `proxies` array) or non-accessible through any proxies (for rules with empty `proxies` array).
+A wildcard prefix (`*.`) is used to indicate matching entire domains or subdomains instead of
+specific hostnames. Note that this can be used to match multiple levels of subdomains. For example "*.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
-Entries that include the wildcard prefix also SHOULD be treated as if they match
+Entries that include the wildcard prefix also MUST be treated as if they match
 an FQDN that only contains the string after the prefix, with no subdomain. So,
-an entry "*.example.com" in the `domains` array of a `match` object would match the FQDN "example.com",
-unless "example.com" was specifically included in the `domains` array of an `exclude` object. This is
-done to prevent commonly needing to include both "*.example.com" and "example.com"
-in the `domains` array of a `match` object.
+an entry "*.example.com" in the `domains` array of a `proxy-match` rule would match the FQDN "example.com".
+This is done to prevent commonly needing to include both "*.example.com" and "example.com"
+in the `domains` array of a `proxy-match` rule.
 
-Entries in `subnets` array of a `match` object correspond to IP addresses and subnets that are available through the
-proxy, while entries in `subnets` array of an `exclude` object define IP addresses and subnets that SHOULD NOT be used
-with the proxy. Subnet-based destination information SHOULD only be used when
-applications are communicating with destinations identified by only an IP address and not a hostname.
-If `subnets` arrays are specified in `match` and `exclude` objects, `subnets` arrays from `exclude` objects SHOULD
-list more specific subnets within entries in `subnets` arrays from `match` objects.
+The `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
+written using CIDR notation. Subnet-based destination information are only meant be used when applications
+are communicating with destinations identified by only an IP address, and not a hostname.
 
-Port specification, if provided, refines the criteria for domain or subnet matching.
-For example, `ports` array of ["80", "443"] together with `domains` array of ["www.example.com"]
-in a `match` object specifies that only ports 80 and 443 of "www.example.com"
-domain are accessible through the proxy. If `ports` key is not present in a `match` or `exclude` object,
-all ports are assumed to match. Comma-separated port list may contain individual port numbers (such as "80")
-or inclusive ranges of ports. For example "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+Destination rules SHOULD NOT contain both the `domains` key and the `subnets` key. Many
+clients will not resolve a domain being accessed through the proxy to an IP address before using
+a proxy, so the subnet information may not be available.
 
-Entries listed in a `match` object MUST NOT expand the set of destinations that a client is
+The `ports` array includes specific ports (used for matching TCP and/or UDP ports), as well as
+ranges of ports written with a low port value and a high port value, with a `-` in between.
+For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+If `ports` key is not present, all ports are assumed to match. Comma-separated port list may
+contain individual port numbers (such as "80") or inclusive ranges of ports. For example
+"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+
+##  Using Destination Rules
+
+The destination rules can be used to determine which traffic can be sent through proxies, and
+which specific set of proxies to use for any particular connection. By evaluating the rules in
+order, a consistent behavior for usage can be achieved.
+
+Rules in the `proxy-match` list SHOULD be provided in order of priority, such that a client
+can evaluate the list of rules from the first in the array to the last in the array, and attempt
+using the matching proxy or proxies from the earliest matching rule first. If earliest matching
+rule has empty list of `proxies` client SHOULD NOT send matching traffic to any proxy defined
+in this PvD. Multiple rules can match for the same destination, in which case all are considered
+to be accessible through the matching proxies in case the sets of proxies are different.
+
+In order to match a destination rule in the `proxy-match` list, all properties MUST apply.
+A matched rule will then either point to one or more proxy `identifier` values, which correspond
+to proxies defined in the list from {{proxy-enumeration}}, or instructs the client to not send the
+matching traffic to any proxy.
+
+Entries listed in a `proxy-match` object MUST NOT expand the set of destinations that a client is
 willing to send to a particular proxy. The list can only narrow the list of destinations
 that the client is willing to send through the proxy. For example, if the client
 has a local policy to only send requests for "*.example.com" to a proxy
@@ -351,26 +379,10 @@ or bypass security controls. This handling applies uniformly across all match ru
 
 ## Example
 
-Given a proxy URI template "https://proxy.example.org/masque{?target_host,target_port}",
-which in this case is for UDP proxying, the client could request PvD additional information
-with the following request:
+In the following example, two proxies are defined with a common identifier, and
+there is a single match rule for "*.internal.example.org".
 
 ~~~
-:method = GET
-:scheme = https
-:authority = proxy.example.org
-:path = /.well-known/pvd
-accept = application/pvd+json
-~~~
-
-If the proxy has a PvD definition for this proxy, it could return the following
-response to indicate a PvD that has one accessible zone, "*.internal.example.org".
-
-~~~
-:status = 200
-content-type = application/pvd+json
-content-length = 135
-
 {
   "identifier": "proxy.example.org.",
   "expires": "2023-06-23T06:00:00Z",
@@ -378,21 +390,29 @@ content-length = 135
   "proxies": [
     {
       "protocol": "http-connect",
-      "proxy": "proxy.example.org:80"
+      "proxy": "proxy.example.org:80",
+      "identifier": "default_proxy"
     },
     {
       "protocol": "connect-udp",
       "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
-      "match": [{
-        domains: [ "*.internal.example.org" ]
-      }]
+      "identifier": "default_proxy"
+      }
+  ],
+  "proxy-match": [
+    {
+      "domains": [ "*.internal.example.org" ],
+      "proxies": [ "default_proxy" ]
     }
   ]
 }
 ~~~
 
-The client could then choose to use this proxy only for accessing names that fall
-within the "*.internal.example.org" zone.
+
+The client could then choose to use either proxy associated with the "default_proxy" identifier
+for accessing names that fall within the "*.internal.example.org" zone. This would include the
+hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
+all other hosts within "internal.example.org".
 
 # Discovering proxies from network PvDs {#network-proxies}
 
@@ -418,11 +438,19 @@ proxies, can only be safely used when fetched over a secure TLS-protected connec
 and the client has validated that that the hostname of the proxy, the identifier of
 the PvD, and the validated hostname identity on the certificate all match.
 
+When using information in destination rules ({{destinations}}), clients MUST only allow
+the PvD configuration to narrow the scope of traffic that they will send through a proxy.
+Clients that are configured by policy to only send a particular set of traffic through
+a particular proxy can learn about rules that will cause them to send more narrowly-scoped
+traffic, but MUST NOT send traffic that would go beyond what is allowed by local policy.
+
 # IANA Considerations
 
 ## New PvD Additional Information key {#proxies-key-iana}
 
-This document registers a new key in the "Additional Information PvD Keys" registry.
+This document registers two new keys in the "Additional Information PvD Keys" registry.
+
+### `proxies` Key
 
 JSON Key: proxies
 
@@ -435,11 +463,25 @@ Example: [ {
   "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
 } ]
 
+### `proxy-match` Key
+
+JSON Key: proxy-match
+
+Description: Array of proxy match rules, as dictionaries, associated with
+entries in the `proxies` list.
+
+Type: Array of dictionaries
+
+Example: [ {
+
+} ]
+
+
 ## New PvD Proxy Information Registry {#proxy-info-iana}
 
 IANA is requested to create a new registry "Proxy Information PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON keys for use in sub-dictionaries under the `proxies` key.
-The initial contents of this registry are given in {{proxy-enumeration}} and {{destinations}}.
+The initial contents of this registry are given in {{proxy-enumeration}}.
 
 New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review {{!RFC8126}}. Experts are
 requested to ensure that defined keys do not overlap in names or semantics.
@@ -450,6 +492,15 @@ IANA is requested to create a new registry "Proxy Protocol PvD Values", within t
 This new registry reserves JSON values for the `protocol` key in `proxies` sub-dictionaries.
 The initial contents of this registry are given in {{proxy-enumeration}}.
 
-New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review {{!RFC8126}}.
+New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review {{RFC8126}}.
 Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
 The reference and notes fields MAY be empty.
+
+## New PvD Proxy Destination Rule Registry {#proxy-destination-iana}
+
+IANA is requested to create a new registry "Proxy Destination Rule PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
+This new registry reserves JSON keys for use in sub-dictionaries under the `proxy-match` key.
+The initial contents of this registry are given in {{destinations}}.
+
+New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review {{RFC8126}}. Experts are
+requested to ensure that defined keys do not overlap in names or semantics.
