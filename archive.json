@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-29T00:21:17.364756+00:00",
+  "timestamp": "2025-06-05T00:21:30.537421+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4463,6 +4463,30 @@
       "updatedAt": "2025-04-10T09:10:59Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 282,
+      "id": "I_kwDOEwrMS865qONN",
+      "title": "Allow IP-based rules after a DNS lookup",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/282",
+      "state": "OPEN",
+      "author": "JamesTaft",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "\"Subnet-based destination information are only meant be used when applications are communicating with destinations identified by only an IP address, and not a hostname.\nDestination rules SHOULD NOT contain both the domains key and the subnets key. Many clients will not resolve a domain being accessed through the proxy to an IP address before using a proxy, so the subnet information may not be available.\"\n\nIt is very common for almost every PAC file in use today to have lines that send traffic to internal subnets DIRECT, based on a DNS lookup.  This is due to the common practice of internally hosted and externally hosted applications using the same domain.  The list to bypass these internally hosted sites one at a time, along with the maintenance of that list would be a large undertaking at any decently sized organization.  \n\nI understand the desire to prevent DNS requests by the host, but this would prevent the uptake of this standard in large corporate environments. ",
+      "createdAt": "2025-06-03T17:36:16Z",
+      "updatedAt": "2025-06-04T04:41:08Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "I think this is a bit more of a client policy decision at the end of the day. Perhaps the language can be softened, but I think we should be encouraging the matching rules to not rely on this behavior.",
+          "createdAt": "2025-06-04T04:41:07Z",
+          "updatedAt": "2025-06-04T04:41:07Z"
+        }
+      ]
     }
   ],
   "pulls": [
