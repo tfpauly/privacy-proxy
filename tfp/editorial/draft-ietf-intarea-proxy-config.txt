@@ -680,11 +680,11 @@ content-length = 307
 6.  Security Considerations
 
    The mechanisms in this document allow clients using a proxy to
-   "upgrade" a configuration for an insecure proxy into a configuration
-   for using TLS to communication to the proxy.  This upgrade can add
-   protection to the proxied traffic so it is less observable by
-   entities along the network path; however it does not prevent the
-   proxy itself from observing the traffic being proxied.
+   "upgrade" a configuration for a cleartext HTTP/1.1 or SOCKS proxy
+   into a configuration that uses TLS to communication to the proxy.
+   This upgrade can add protection to the proxied traffic so it is less
+   observable by entities along the network path; however it does not
+   prevent the proxy itself from observing the traffic being proxied.
 
    Configuration advertised via PvD Additional Information, such DNS
    zones or associated proxies, can only be safely used when fetched
