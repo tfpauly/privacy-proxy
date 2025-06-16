@@ -486,7 +486,7 @@ Further security and experience considerations are needed for these cases.
 # Security Considerations {#sec-considerations}
 
 The mechanisms in this document allow clients using a proxy to "upgrade" a configuration
-for an insecure proxy into a configuration for using TLS to communication to the proxy.
+for a cleartext HTTP/1.1 or SOCKS proxy into a configuration that uses TLS to communication to the proxy.
 This upgrade can add protection to the proxied traffic so it is less observable by
 entities along the network path; however it does not prevent the proxy itself from
 observing the traffic being proxied.
