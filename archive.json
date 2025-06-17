@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-05T00:21:30.537421+00:00",
+  "timestamp": "2025-06-17T00:21:35.210477+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4429,7 +4429,7 @@
       ],
       "body": "We currently have this:\n~~~\n:status = 200\ncontent-type = application/pvd+json\ncontent-length = 135\n\n{\n  \"identifier\": \"proxy.example.org.\",\n  \"expires\": \"2023-06-23T06:00:00Z\",\n  \"prefixes\": [],\n  \"proxies\": [\n    {\n      \"protocol\": \"http-connect\",\n      \"proxy\": \"proxy.example.org:80\"\n    },\n    {\n      \"protocol\": \"connect-udp\",\n      \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\",\n      \"match\": [{\n        domains: [ \"*.internal.example.org\" ]\n      }]\n    }\n  ]\n}\n~~~\n\nThat isn't easy to make both proxies have the same match domains.\n\nOne option we discussed and liked is having the match list be separate from proxy list; add some identifier to the proxy dictionary; and have the match rules refer to which proxies they apply to.\n\n~~~\n:status = 200\ncontent-type = application/pvd+json\ncontent-length = 135\n\n{\n  \"identifier\": \"proxy.example.org.\",\n  \"expires\": \"2023-06-23T06:00:00Z\",\n  \"prefixes\": [],\n  \"proxies\": [\n    {\n      \"identifier\": \"All Proxy\",\n      \"protocol\": \"http-connect\",\n      \"proxy\": \"all-proxy.example.org:80\",\n    },\n    {\n      \"identifier\": \"TCP Proxy\"\n      \"protocol\": \"http-connect\",\n      \"proxy\": \"proxy.example.org:80\",\n      \"mandatory\": [ \"auth\" ],\n      \"auth\": \"basic\"\n    },\n    {\n      \"identifier\": \"UDP Proxy\"\n      \"protocol\": \"connect-udp\",\n      \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\",\n    }\n  ]\n  \"matchProxies\": [ {\n      \"proxies\": [ \"All Proxy\" ]\n  },{\n      \"proxies\": [ \"TCP Proxy\", \"UDP Proxy\" ],\n      \"domains\": [ \"*.internal.example.org\" ],\n      \"ports\": [ 80, 443 ]\n  }, {\n      \"proxies\": [ \"TCP Proxy\" ],\n      \"domains\": [ \"*.internal.example.org\" ],\n      \"ports\": [ 22 ],\n      \"proprietaryKey\": \"foobar\" // Match rule only applies if you understand \"proprietaryKey\"\n  }]\n  \"excludeProxies\": [{\n      \"proxies\": [ \"TCP Proxy\", \"UDP Proxy\" ],\n      \"domains\": [ \"foo.internal.example.org\" ]\n  }]\n}\n~~~\n\nOther alternatives below:\n~~~\n:status = 200\ncontent-type = application/pvd+json\ncontent-length = 135\n\n{\n  \"identifier\": \"proxy.example.org.\",\n  \"expires\": \"2023-06-23T06:00:00Z\",\n  \"prefixes\": [],\n  \"proxyGroups\": [\n    {\n      \"proxies\": [{\n         \"protocol\": \"http-connect\",\n         \"proxy\": \"proxy.example.org:80\"\n        },\n        {\n         \"protocol\": \"connect-udp\",\n         \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\"\n      }],\n      \"match\": [{\n        domains: [ \"*.internal.example.org\" ]\n      }]\n    }\n    {\n      \"proxies\": [{\n         \"protocol\": \"http-connect\",\n         \"proxy\": \"proxy2.example.org:80\"\n        },\n        {\n         \"protocol\": \"connect-udp\",\n         \"proxy\": \"https://proxy2.example.org/masque{?target_host,target_port}\"\n      }],\n      \"match\": [{\n        domains: [ \"*.internal2.example.org\" ]\n      }]\n    }\n  ]\n}\n~~~\n\n~~~\n:status = 200\ncontent-type = application/pvd+json\ncontent-length = 135\n\n{\n  \"identifier\": \"proxy.example.org.\",\n  \"expires\": \"2023-06-23T06:00:00Z\",\n  \"prefixes\": [],\n  \"proxies\": [\n    {\n      \"protocol\": \"http-connect\",\n      \"proxy\": \"all-proxy.example.org:80\",\n    },\n    {\n      \"protocol\": \"http-connect\",\n      \"proxy\": \"proxy.example.org:80\",\n      \"match-identifiers\": [ \"Internal-HTTP\", \"Internal-SSH\" ]\n    },\n    {\n      \"protocol\": \"connect-udp\",\n      \"proxy\": \"https://proxy.example.org/masque{?target_host,target_port}\",\n      \"match-identifiers\": [ \"Internal-HTTP\" ]\n    }\n  ]\n  \"match\": [{\n      identifier: \"Internal-HTTP\",\n      domains: [ \"*.internal.example.org\" ],\n      ports: [ 80, 443 ]\n  }, {\n      identifier: \"Internal-SSH\",\n      domains: [ \"*.internal.example.org\" ],\n      ports: [ 22 ]\n  }]\n}\n~~~\n\n",
       "createdAt": "2025-03-07T16:41:34Z",
-      "updatedAt": "2025-05-27T22:00:04Z",
+      "updatedAt": "2025-06-16T13:15:50Z",
       "closedAt": "2025-05-27T22:00:03Z",
       "comments": [
         {
@@ -4445,6 +4445,27 @@
           "body": "Yes!",
           "createdAt": "2025-05-27T22:00:03Z",
           "updatedAt": "2025-05-27T22:00:03Z"
+        },
+        {
+          "author": "tdragoun",
+          "authorAssociation": "NONE",
+          "body": "Hello! Just to confirm\u2014was the idea of having `proxy-match` as a separate dictionary rejected?\n\nWe have a use case where we run a Network Relay proxy for Apple devices that supports both HTTP/3 and HTTP/2, each served under a different hostname. Both endpoints share the same set of match domains. A simplified configuration could look like this:\n\n```json\n[\n  {\n    \"identifier\": \"mask.example.com\",\n    \"expires\": \"2023-06-23T06:00:00Z\",\n    \"prefixes\": [],\n    \"proxies\": [\n      {\n        \"protocol\": \"connect-udp\",\n        \"proxy\": \"https://mask.example.com:443/masque{?target_host,target_port}\",\n        \"alpn\": [\n          \"h3\"\n        ],\n        \"identifier\": \"network_relay\"\n      }\n    ],\n    \"proxy-match\": [\n      {\n        \"domains\": [\n          \"*.internal.example.org\"\n        ],\n        \"proxies\": [\n          \"network_relay\"\n        ]\n      }\n    ]\n  },\n  {\n    \"identifier\": \"mask-h2.example.com\",\n    \"expires\": \"2023-06-23T06:00:00Z\",\n    \"prefixes\": [],\n    \"proxies\": [\n      {\n        \"protocol\": \"connect-udp\",\n        \"proxy\": \"https://mask-h2.example.com:443/masque{?target_host,target_port}\",\n        \"alpn\": [\n          \"h2\"\n        ],\n        \"identifier\": \"network_relay\"\n      }\n    ],\n    \"proxy-match\": [\n      {\n        \"domains\": [\n          \"*.internal.example.org\"\n        ],\n        \"proxies\": [\n          \"network_relay\"\n        ]\n      }\n    ]\n  }\n]\n```\n\nIs there currently a way in the draft spec to avoid this kind of proxy-match duplication when using the same logical proxy configuration under multiple hostnames?\n\nTo give some context: we use this setup both internally and for customers. Our internal configuration contains ~1,800 match domains, resulting in a ~160KB JSON file. With 11,000 clients fetching the config every 5 minutes, we would have ~20GB of bandwidth per hour just for downloading the configuration.\n\nAny suggestions for optimizing this? Thanks!",
+          "createdAt": "2025-06-16T11:29:47Z",
+          "updatedAt": "2025-06-16T11:29:47Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "It would be like this in the current spec, so no duplication:\n\n```\n[\n  {\n    \"identifier\": \"mask.example.com\",\n    \"expires\": \"2023-06-23T06:00:00Z\",\n    \"prefixes\": [],\n    \"proxies\": [\n      {\n        \"protocol\": \"connect-udp\",\n        \"proxy\": \"https://mask.example.com:443/masque{?target_host,target_port}\",\n        \"alpn\": [\n          \"h3\"\n        ],\n        \"identifier\": \"network_relay\"\n      },\n      {\n        \"protocol\": \"connect-udp\",\n        \"proxy\": \"https://mask-h2.example.com:443/masque{?target_host,target_port}\",\n        \"alpn\": [\n          \"h2\"\n        ],\n        \"identifier\": \"network_relay\"\n      }\n    ],\n    \"proxy-match\": [\n      {\n        \"domains\": [\n          \"*.internal.example.org\"\n        ],\n        \"proxies\": [\n          \"network_relay\"\n        ]\n      }\n    ]\n  }\n]\n\n```",
+          "createdAt": "2025-06-16T12:23:48Z",
+          "updatedAt": "2025-06-16T12:23:48Z"
+        },
+        {
+          "author": "tdragoun",
+          "authorAssociation": "NONE",
+          "body": "@tfpauly thanks for clarification \ud83d\udc4d ",
+          "createdAt": "2025-06-16T13:15:50Z",
+          "updatedAt": "2025-06-16T13:15:50Z"
         }
       ]
     },
@@ -19835,6 +19856,92 @@
           "createdAt": "2025-05-24T15:38:18Z",
           "updatedAt": "2025-05-24T15:38:18Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 283,
+      "id": "PR_kwDOEwrMS86aoFCL",
+      "title": "Editorial pass",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/283",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "editorial"
+      ],
+      "body": "Editorial pass after merging #281 ",
+      "createdAt": "2025-06-16T01:25:18Z",
+      "updatedAt": "2025-06-16T12:25:50Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "79b54ef5f7ba41b93290e419a1ecc0c97b6fcdfe",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfp/editorial",
+      "headRefOid": "4c8588577a89696122dc17aea3d7cffc12f7786f",
+      "closedAt": "2025-06-16T12:25:50Z",
+      "mergedAt": "2025-06-16T12:25:50Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "f0a52615965e07d834668edf368d402fd64127c6"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86urY5Q",
+          "commit": {
+            "abbreviatedOid": "58e7ceb"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-16T04:40:12Z",
+          "updatedAt": "2025-06-16T04:40:12Z",
+          "comments": [
+            {
+              "originalPosition": 299,
+              "body": "I think \"insecure proxy\" term needs to be defined or replaced with something more precise.\r\nI suspect you are referring to cleartext HTTP/1 proxy?",
+              "createdAt": "2025-06-16T04:40:12Z",
+              "updatedAt": "2025-06-16T04:40:13Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86utrMt",
+          "commit": {
+            "abbreviatedOid": "58e7ceb"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-16T08:57:37Z",
+          "updatedAt": "2025-06-16T08:57:37Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS86uwcn6",
+          "commit": {
+            "abbreviatedOid": "58e7ceb"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-16T12:25:32Z",
+          "updatedAt": "2025-06-16T12:25:32Z",
+          "comments": [
+            {
+              "originalPosition": 299,
+              "body": "```suggestion\r\nfor a cleartext HTTP/1.1 or SOCKS proxy into a configuration that uses TLS to communication to the proxy.\r\n```",
+              "createdAt": "2025-06-16T12:25:32Z",
+              "updatedAt": "2025-06-16T12:25:32Z"
+            }
+          ]
         }
       ]
     }
