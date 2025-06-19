@@ -171,7 +171,9 @@ URIs that support non-default protocols, such as {{CONNECT-UDP}} and
 This document defines two required keys for the sub-dictionaries in the
 `proxies` array: `protocol` and `proxy`. There are also optional keys, including
 `mandatory`, `alpn`, and `identifier`. Other optional keys can be added to the
-dictionary to further define or restrict the use of a proxy.
+dictionary to further define or restrict the use of a proxy. The keys
+are registered with IANA as described in {{proxy-info-iana}}, with the initial
+content provided below.
 
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
@@ -181,6 +183,7 @@ dictionary to further define or restrict the use of a proxy.
 | mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["example_key"] |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | identifier | Yes | A string used to refer to the proxy, which can be referenced by other dictionaries, such as entries in `proxy-match`  | String | "udp-proxy" |
+{: #proxy-information-keys-table title="Initial Proxy Information PvD Keys Registry Contents"}
 
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
@@ -196,6 +199,7 @@ the Upgrade Token / `:protocol` value.
 | connect-udp | URI template | {{CONNECT-UDP}} | |
 | connect-ip | URI template | {{CONNECT-IP}} | |
 | connect-tcp | URI template | {{!CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
+{: #proxy-protocol-value-table title="Initial PvD Proxy Protocol Registry Contents"}
 
 The value of `proxy` depends on the Proxy Location Format defined by proxy protocol.
 The types defined here either use a hostname and port, or a full URI template.
@@ -307,12 +311,16 @@ Extensions or proprietary deployments can define new keys to describe destinatio
 Any destination rules that include keys not known to the client, or values that cannot be
 parsed, MUST be ignored in their entirety.
 
+Destination rule keys are registered with IANA as defined in {{proxy-destination-iana}},
+with the initial content provided below.
+
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
 | proxies | No | An array of strings that match `identifier` values from the top-level `proxies` array | Array of Strings | ["tcp-proxy", "udp-proxy"] |
 | domains | Yes | An array of FQDNs and wildcard DNS domains | Array of Strings | ["www.example.com", "*.internal.example.com"] |
 | subnets | Yes | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.168.1.0/24"] |
 | ports | Yes | An array of TCP and UDP port ranges | Array of Strings | ["80", "443", "1024-65535"] |
+{: #destination-rule-keys-table title="Initial PvD Proxy Destination Rule Registry Contents"}
 
 The `domains` array includes specific FQDNs and zones that are either accessible using specific proxy (for
 rules with non-empty `proxies` array) or non-accessible through any proxies (for rules with empty `proxies` array).
@@ -540,7 +548,7 @@ Example: [ {
 
 IANA is requested to create a new registry "Proxy Information PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON keys for use in sub-dictionaries under the `proxies` key.
-The initial contents of this registry are given in {{proxy-enumeration}}.
+The initial contents of this registry are given in {{proxy-information-keys-table}}.
 
 New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review {{!RFC8126}}. Experts are
 requested to ensure that defined keys do not overlap in names or semantics.
@@ -549,7 +557,7 @@ requested to ensure that defined keys do not overlap in names or semantics.
 
 IANA is requested to create a new registry "Proxy Protocol PvD Values", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON values for the `protocol` key in `proxies` sub-dictionaries.
-The initial contents of this registry are given in {{proxy-enumeration}}.
+The initial contents of this registry are given in {{proxy-protocol-value-table}}.
 
 New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review {{RFC8126}}.
 Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
@@ -559,7 +567,7 @@ The reference and notes fields MAY be empty.
 
 IANA is requested to create a new registry "Proxy Destination Rule PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON keys for use in sub-dictionaries under the `proxy-match` key.
-The initial contents of this registry are given in {{destinations}}.
+The initial contents of this registry are given in {{destination-rule-keys-table}}.
 
 New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review {{RFC8126}}. Experts are
 requested to ensure that defined keys do not overlap in names or semantics.
