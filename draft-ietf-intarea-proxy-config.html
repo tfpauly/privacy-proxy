@@ -13,11 +13,11 @@
 associated with a proxy, such as other proxy URIs that support different protocols
 and information about which destinations are accessible using a proxy. 
     " name="description">
-<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="xml2rfc 3.29.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-intarea-proxy-config-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.1
+  xml2rfc 3.29.0
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 18 December 2025</td>
+<td class="center">Expires 22 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-16" class="published">16 June 2025</time>
+<time datetime="2025-06-20" class="published">20 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-18">18 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-22">22 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ and information about which destinations are accessible using a proxy.<a href="#
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 18 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1395,9 +1395,15 @@ URIs that support non-default protocols, such as <span>[<a href="#CONNECT-UDP" c
 <p id="section-3.1-1">This document defines two required keys for the sub-dictionaries in the
 <code>proxies</code> array: <code>protocol</code> and <code>proxy</code>. There are also optional keys, including
 <code>mandatory</code>, <code>alpn</code>, and <code>identifier</code>. Other optional keys can be added to the
-dictionary to further define or restrict the use of a proxy.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+dictionary to further define or restrict the use of a proxy. The keys
+are registered with IANA as described in <a href="#proxy-info-iana" class="auto internal xref">Section 7.2</a>, with the initial
+content provided below.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<span id="name-initial-proxy-information-p"></span><div id="proxy-information-keys-table">
 <table class="center" id="table-1">
-          <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+          <caption>
+<a href="#table-1" class="selfRef">Table 1</a>:
+<a href="#name-initial-proxy-information-p" class="selfRef">Initial Proxy Information PvD Keys Registry Contents</a>
+          </caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">JSON Key</th>
@@ -1453,13 +1459,18 @@ dictionary to further define or restrict the use of a proxy.<a href="#section-3.
             </tr>
           </tbody>
         </table>
+</div>
 <p id="section-3.1-3">The values for the <code>protocol</code> key are defined in the proxy protocol
 registry (<a href="#proxy-protocol-iana" class="auto internal xref">Section 7.3</a>), with the initial contents provided below.
 For consistency, any new proxy types that use HTTP Upgrade Tokens (and use
 the <code>:protocol</code> pseudo-header) SHOULD define the <code>protocol</code> value to match
 the Upgrade Token / <code>:protocol</code> value.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<span id="name-initial-pvd-proxy-protocol-"></span><div id="proxy-protocol-value-table">
 <table class="center" id="table-2">
-          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+          <caption>
+<a href="#table-2" class="selfRef">Table 2</a>:
+<a href="#name-initial-pvd-proxy-protocol-" class="selfRef">Initial PvD Proxy Protocol Registry Contents</a>
+          </caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Proxy Protocol</th>
@@ -1519,6 +1530,7 @@ the Upgrade Token / <code>:protocol</code> value.<a href="#section-3.1-3" class=
             </tr>
           </tbody>
         </table>
+</div>
 <p id="section-3.1-5">The value of <code>proxy</code> depends on the Proxy Location Format defined by proxy protocol.
 The types defined here either use a hostname and port, or a full URI template.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.1-6">The value of the <code>mandatory</code> key is a list of keys that the client must understand and process to be
@@ -1639,8 +1651,14 @@ with at least one entry.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">Extensions or proprietary deployments can define new keys to describe destination properties.
 Any destination rules that include keys not known to the client, or values that cannot be
 parsed, MUST be ignored in their entirety.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-3">Destination rule keys are registered with IANA as defined in <a href="#proxy-destination-iana" class="auto internal xref">Section 7.4</a>,
+with the initial content provided below.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<span id="name-initial-pvd-proxy-destinati"></span><div id="destination-rule-keys-table">
 <table class="center" id="table-3">
-          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
+          <caption>
+<a href="#table-3" class="selfRef">Table 3</a>:
+<a href="#name-initial-pvd-proxy-destinati" class="selfRef">Initial PvD Proxy Destination Rule Registry Contents</a>
+          </caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">JSON Key</th>
@@ -1681,7 +1699,8 @@ parsed, MUST be ignored in their entirety.<a href="#section-4.1-2" class="pilcro
             </tr>
           </tbody>
         </table>
-<p id="section-4.1-4">The <code>domains</code> array includes specific FQDNs and zones that are either accessible using specific proxy (for
+</div>
+<p id="section-4.1-5">The <code>domains</code> array includes specific FQDNs and zones that are either accessible using specific proxy (for
 rules with non-empty <code>proxies</code> array) or non-accessible through any proxies (for rules with empty <code>proxies</code> array).
 A wildcard prefix (<code>*.</code>) is used to indicate matching entire domains or subdomains instead of
 specific hostnames. Note that this can be used to match multiple levels of subdomains. For example "<em>.example.com"
@@ -1690,19 +1709,19 @@ Entries that include the wildcard prefix also MUST be treated as if they match
 an FQDN that only contains the string after the prefix, with no subdomain. So,
 an entry "</em>.example.com" in the <code>domains</code> array of a <code>proxy-match</code> rule would match the FQDN "example.com".
 This is done to prevent commonly needing to include both "*.example.com" and "example.com"
-in the <code>domains</code> array of a <code>proxy-match</code> rule.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
-<p id="section-4.1-5">The <code>subnets</code> array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
+in the <code>domains</code> array of a <code>proxy-match</code> rule.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+<p id="section-4.1-6">The <code>subnets</code> array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
 written using CIDR notation. Subnet-based destination information is only meant be used when applications
-are communicating with destinations identified by only an IP address, and not a hostname.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
-<p id="section-4.1-6">Destination rules SHOULD NOT contain both the <code>domains</code> key and the <code>subnets</code> key. Many
+are communicating with destinations identified by only an IP address, and not a hostname.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
+<p id="section-4.1-7">Destination rules SHOULD NOT contain both the <code>domains</code> key and the <code>subnets</code> key. Many
 clients will not resolve a domain being accessed through the proxy to an IP address before using
-a proxy, so the subnet information may not be available.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
-<p id="section-4.1-7">The <code>ports</code> array includes specific ports (used for matching TCP and/or UDP ports), as well as
+a proxy, so the subnet information may not be available.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
+<p id="section-4.1-8">The <code>ports</code> array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a <code>-</code> in between.
 For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
 If <code>ports</code> key is not present, all ports are assumed to match. Comma-separated port list may
 contain individual port numbers (such as "80") or inclusive ranges of ports. For example
-"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
+"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.<a href="#section-4.1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="using-destination-rules">
@@ -1926,7 +1945,7 @@ entries in the <code>proxies</code> list.<a href="#section-7.1.2-2" class="pilcr
         </h3>
 <p id="section-7.2-1">IANA is requested to create a new registry "Proxy Information PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON keys for use in sub-dictionaries under the <code>proxies</code> key.
-The initial contents of this registry are given in <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+The initial contents of this registry are given in <a href="#proxy-information-keys-table" class="auto internal xref">Table 1</a>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.2-2">New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Experts are
 requested to ensure that defined keys do not overlap in names or semantics.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 </section>
@@ -1938,7 +1957,7 @@ requested to ensure that defined keys do not overlap in names or semantics.<a hr
         </h3>
 <p id="section-7.3-1">IANA is requested to create a new registry "Proxy Protocol PvD Values", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON values for the <code>protocol</code> key in <code>proxies</code> sub-dictionaries.
-The initial contents of this registry are given in <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+The initial contents of this registry are given in <a href="#proxy-protocol-value-table" class="auto internal xref">Table 2</a>.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 <p id="section-7.3-2">New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.
 Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
 The reference and notes fields MAY be empty.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
@@ -1951,7 +1970,7 @@ The reference and notes fields MAY be empty.<a href="#section-7.3-2" class="pilc
         </h3>
 <p id="section-7.4-1">IANA is requested to create a new registry "Proxy Destination Rule PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON keys for use in sub-dictionaries under the <code>proxy-match</code> key.
-The initial contents of this registry are given in <a href="#destinations" class="auto internal xref">Section 4</a>.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+The initial contents of this registry are given in <a href="#destination-rule-keys-table" class="auto internal xref">Table 3</a>.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
 <p id="section-7.4-2">New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Experts are
 requested to ensure that defined keys do not overlap in names or semantics.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
 </section>
