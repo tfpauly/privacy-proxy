@@ -145,6 +145,31 @@ PvD Additional Information is required to contain the "identifier", "expires", a
 "prefixes" keys. For proxy PvDs as defined in this document, the "identifier" MUST
 match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.
 
+## Discovery via HTTPS/SVCB Records {#svcparamkey}
+
+To allow clients to determine whether PvD Additional Information is available for a given proxy,
+this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in {{!SVCB-DNS=RFC9460}}.
+
+Presence of this SvcParamKey, named `pvd` indicates that the proxy host supports PvD discovery via
+the well-known PvD URI ".well-known/pvd" defined in {{Section 4.1 of PVDDATA}}. The presence of this
+key in an HTTPS or SVCB record signals that the proxy's PvD Additional Information can be fetched
+using the "https" scheme from the proxy authority at the well-known path. The presentation and
+wire-format values for `pvd` SvcParamKey MUST be empty.
+
+A client receiving a DNS record like the following:
+
+~~~
+proxy.example.org. 3600 IN HTTPS 1 . alpn="h3,h2" pvd
+~~~
+
+can interpret the presence of the pvd key as an indication that it MAY perform a PvD fetch from
+"https://proxy.example.org/.well-known/pvd" using HTTP GET method.
+
+This marker is advisory; clients MAY still attempt to fetch PvD Additional Information even if
+`pvd` SvcParamKey is not present.
+
+The `pvd` SvcParamKey is registered with IANA as described in {{svcparamkey-iana}}.
+
 # Enumerating proxies within a PvD {#proxy-enumeration}
 
 This document defines a new PvD Additional Information key, `proxies`, that
@@ -571,3 +596,13 @@ The initial contents of this registry are given in {{destination-rule-keys-table
 
 New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review {{RFC8126}}. Experts are
 requested to ensure that defined keys do not overlap in names or semantics.
+
+## New DNS SVCB Service Parameter Key (SvcParamKey) {#svcparamkey-iana}
+
+IANA is requested to add a new entry to the "DNS SVCB Service Parameter Keys (SvcParamKeys)" registry:
+
+* Number: TBD
+* Name: pvd
+* Meaning: PvD configuration is available at the well-known path
+* Change Controller: IETF
+* Reference: this document, {{svcparamkey}}
