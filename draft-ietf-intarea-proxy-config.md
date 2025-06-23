@@ -38,7 +38,7 @@ and information about which destinations are accessible using a proxy.
 
 # Introduction
 
-HTTP proxies that use the CONNECT method {{Section 9.3.6 of !HTTP=RFC9110}}
+HTTP proxies that use the CONNECT method defined in {{Section 9.3.6 of !HTTP=RFC9110}}
 (often referred to as "forward" proxies) allow clients to open connections to
 hosts via a proxy. These typically allow for TCP stream proxying, but can also support
 UDP proxying {{!CONNECT-UDP=RFC9298}} and IP packet proxying
@@ -318,7 +318,7 @@ with the initial content provided below.
 | --- | --- | --- | --- | --- |
 | proxies | No | An array of strings that match `identifier` values from the top-level `proxies` array | Array of Strings | ["tcp-proxy", "udp-proxy"] |
 | domains | Yes | An array of FQDNs and wildcard DNS domains | Array of Strings | ["www.example.com", "*.internal.example.com"] |
-| subnets | Yes | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.168.1.0/24"] |
+| subnets | Yes | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.0.2.0/24"] |
 | ports | Yes | An array of TCP and UDP port ranges | Array of Strings | ["80", "443", "1024-65535"] |
 {: #destination-rule-keys-table title="Initial PvD Proxy Destination Rule Registry Contents"}
 
@@ -343,10 +343,10 @@ a proxy, so the subnet information may not be available.
 
 The `ports` array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a `-` in between.
-For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
 If `ports` key is not present, all ports are assumed to match. Comma-separated port list may
 contain individual port numbers (such as "80") or inclusive ranges of ports. For example
-"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
 
 ##  Using Destination Rules
 
