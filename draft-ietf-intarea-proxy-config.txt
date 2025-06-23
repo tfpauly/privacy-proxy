@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 22 December 2025                                      Microsoft
+Expires: 25 December 2025                                      Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                            20 June 2025
+                                                            23 June 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 December 2025.
+   This Internet-Draft will expire on 25 December 2025.
 
 Copyright Notice
 
@@ -90,8 +90,8 @@ Table of Contents
 
 1.  Introduction
 
-   HTTP proxies that use the CONNECT method Section 9.3.6 of [HTTP]
-   (often referred to as "forward" proxies) allow clients to open
+   HTTP proxies that use the CONNECT method defined in Section 9.3.6 of
+   [HTTP] (often referred to as "forward" proxies) allow clients to open
    connections to hosts via a proxy.  These typically allow for TCP
    stream proxying, but can also support UDP proxying [CONNECT-UDP] and
    IP packet proxying [CONNECT-IP].  The locations of these proxies are
@@ -478,7 +478,7 @@ content-length = 307
    |       |        | DNS domains |       |                           |
    +-------+--------+-------------+-------+---------------------------+
    |subnets|Yes     | An array of |Array  | ["2001:DB8::1",           |
-   |       |        | IPv4 and    |of     | "192.168.1.0/24"]         |
+   |       |        | IPv4 and    |of     | "192.0.2.0/24"]           |
    |       |        | IPv6        |Strings|                           |
    |       |        | addresses   |       |                           |
    |       |        | and subnets |       |                           |
@@ -519,11 +519,11 @@ content-length = 307
    The ports array includes specific ports (used for matching TCP and/or
    UDP ports), as well as ranges of ports written with a low port value
    and a high port value, with a - in between.  For example, "1024-2048"
-   matches all ports from 1024 to 2048, including the 1024 and 1028.  If
+   matches all ports from 1024 to 2048, including the 1024 and 2048.  If
    ports key is not present, all ports are assumed to match.  Comma-
    separated port list may contain individual port numbers (such as
    "80") or inclusive ranges of ports.  For example "1024-2048" matches
-   all ports from 1024 to 2048, including the 1024 and 1028.
+   all ports from 1024 to 2048, including the 1024 and 2048.
 
 4.2.  Using Destination Rules
 
