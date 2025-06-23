@@ -164,6 +164,7 @@ proxy.example.org. 3600 IN HTTPS 1 . alpn="h3,h2" pvd
 
 can interpret the presence of the pvd key as an indication that it MAY perform a PvD fetch from
 "https://proxy.example.org/.well-known/pvd" using HTTP GET method.
+
 While this key is particularly useful for detecting proxy configurations when
 looking up a DNS record for a known proxy name, this key generically provides
 a hint that PvD Additional Information is available, and can be used for use
