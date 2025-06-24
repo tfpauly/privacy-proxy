@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-22T00:24:19.068702+00:00",
+  "timestamp": "2025-06-24T00:21:48.063088+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4524,6 +4524,38 @@
           "updatedAt": "2025-06-04T04:41:07Z"
         }
       ]
+    },
+    {
+      "number": 288,
+      "id": "I_kwDOEwrMS86868Kx",
+      "title": "Different hosts, or different hosts or ports?",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/288",
+      "state": "OPEN",
+      "author": "mstojens",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In Section 2, it says:\n\n> Note that all proxies that are colocated on the same host and port share the same PvD Additional Information. Proxy deployments that need separate PvD configuration properties SHOULD use different hosts.\n\nThis means that proxies cannot colocate on the same (host, post) tuple, but the recommendation to separate the proxies is to change hostnames. Why not change ports on the same host? If that's acceptable, please just add that. If it isn't, please explain why.",
+      "createdAt": "2025-06-23T21:56:28Z",
+      "updatedAt": "2025-06-23T21:56:28Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 289,
+      "id": "I_kwDOEwrMS8686_J2",
+      "title": "Forbid IANA from reserving keys containing underscores",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/289",
+      "state": "OPEN",
+      "author": "mstojens",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This is implied but never stated. Instructions to IANA should be explicit to avoid any future conflict between the \"safe to use keys with underscores for vendor reasons\" feature of the spec and an erroneous IANA registration in the future.",
+      "createdAt": "2025-06-23T22:01:53Z",
+      "updatedAt": "2025-06-23T22:01:53Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -20010,6 +20042,143 @@
           "body": "",
           "createdAt": "2025-06-20T07:51:52Z",
           "updatedAt": "2025-06-20T07:51:52Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 285,
+      "id": "PR_kwDOEwrMS86bj2y2",
+      "title": "Added pvd marker for HTTPS/SVCB records",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/285",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As discussed, to close https://github.com/tfpauly/privacy-proxy/issues/235",
+      "createdAt": "2025-06-22T17:41:10Z",
+      "updatedAt": "2025-06-23T13:15:44Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "ef8bc142f41e0b2304063877659b8d32873f99d6",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "main",
+      "headRefOid": "fbad50b7e2ee12ec8202b0f8a750471d7dcf131d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86vvNRr",
+          "commit": {
+            "abbreviatedOid": "7233026"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-22T23:57:07Z",
+          "updatedAt": "2025-06-22T23:57:12Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "```suggestion\r\nWhile this key is particularly useful for detecting proxy configurations when\r\nlooking up a DNS record for a known proxy name, this key generically provides\r\na hint that PvD Additional Information is available, and can be used for use\r\ncases unrelated to proxies.\r\n\r\n```",
+              "createdAt": "2025-06-22T23:57:07Z",
+              "updatedAt": "2025-06-22T23:57:12Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 286,
+      "id": "PR_kwDOEwrMS86bj97I",
+      "title": "Added more examples and corrected existing ones",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/286",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Added two more examples to cover constraints of proxy protocols, default proxy configuration as well as ordered list of proxies.\r\n\r\nCorrected content-length in the very first example (I suppose we should count whitespace and line breaks if we include them in the text)\r\n\r\nCorrected previous examples:\r\n- clarified traffic protocols\r\n- ports are strings. Added a range of ports in the example to make it obvious",
+      "createdAt": "2025-06-22T18:38:58Z",
+      "updatedAt": "2025-06-22T23:53:34Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "ef8bc142f41e0b2304063877659b8d32873f99d6",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "more-examples",
+      "headRefOid": "255e64f7fdb20bbbc5746baaade3940aba9be241",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86vvM7V",
+          "commit": {
+            "abbreviatedOid": "255e64f"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-22T23:53:34Z",
+          "updatedAt": "2025-06-22T23:53:34Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 287,
+      "id": "PR_kwDOEwrMS86bvW6Z",
+      "title": "Minor nits",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/287",
+      "state": "MERGED",
+      "author": "mstojens",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- Inconsistent port number usage\r\n- Missing words in Introduction\r\n- Use RFC 5737 range instead of RFC 1918",
+      "createdAt": "2025-06-23T21:53:18Z",
+      "updatedAt": "2025-06-23T23:31:43Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "ef8bc142f41e0b2304063877659b8d32873f99d6",
+      "headRepository": "mstojens/privacy-proxy",
+      "headRefName": "patch-1",
+      "headRefOid": "368942eabd6c6e5d100032bd681949b6fa7b33da",
+      "closedAt": "2025-06-23T23:31:34Z",
+      "mergedAt": "2025-06-23T23:31:34Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "29bf5f53d750d07b2730441b35d86814c003e321"
+      },
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Thank you!",
+          "createdAt": "2025-06-23T23:31:43Z",
+          "updatedAt": "2025-06-23T23:31:43Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86v8GFw",
+          "commit": {
+            "abbreviatedOid": "368942e"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-23T23:31:28Z",
+          "updatedAt": "2025-06-23T23:31:28Z",
           "comments": []
         }
       ]
