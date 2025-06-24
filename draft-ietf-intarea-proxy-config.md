@@ -114,9 +114,7 @@ issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") {{PVDD
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
 that are identified by a URI or URI template. The fetch MUST use the "https" scheme
-and the default port for HTTP over TLS, 443. This is done because an HTTP CONNECT
-proxy running on a non-default port generally is accessed without TLS to the proxy,
-and thus would not be allowed to be used for the PvD fetch.
+and the default port for HTTP over TLS, 443.
 
 For example, a client would issue the following request for the PvD associated
 with "https://proxy.example.org/masque{?target_host,target_port}":
