@@ -1164,6 +1164,11 @@ and information about which destinations are accessible using a proxy.<a href="#
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-fetching-pvd-additional-inf" class="internal xref">Fetching PvD Additional Information for proxies</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-discovery-via-https-svcb-re" class="internal xref">Discovery via HTTPS/SVCB Records</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-enumerating-proxies-within-" class="internal xref">Enumerating proxies within a PvD</a></p>
@@ -1224,6 +1229,9 @@ and information about which destinations are accessible using a proxy.<a href="#
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
                 <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-new-pvd-proxy-destination-r" class="internal xref">New PvD Proxy Destination Rule Registry</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5">
+                <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="auto internal xref">7.5</a>.  <a href="#name-new-dns-svcb-service-parame" class="internal xref">New DNS SVCB Service Parameter Key (SvcParamKey)</a></p>
 </li>
             </ul>
 </li>
@@ -1358,6 +1366,35 @@ SHOULD use different hosts.<a href="#section-2-6" class="pilcrow">¶</a></p>
 <p id="section-2-7">PvD Additional Information is required to contain the "identifier", "expires", and
 "prefixes" keys. For proxy PvDs as defined in this document, the "identifier" MUST
 match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.<a href="#section-2-7" class="pilcrow">¶</a></p>
+<div id="svcparamkey">
+<section id="section-2.1">
+        <h3 id="name-discovery-via-https-svcb-re">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-discovery-via-https-svcb-re" class="section-name selfRef">Discovery via HTTPS/SVCB Records</a>
+        </h3>
+<p id="section-2.1-1">To allow clients to determine whether PvD Additional Information is available for a given proxy,
+this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in <span>[<a href="#SVCB-DNS" class="cite xref">SVCB-DNS</a>]</span>.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">Presence of this SvcParamKey, named <code>pvd</code> indicates that the proxy host supports PvD discovery via
+the well-known PvD URI ".well-known/pvd" defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.1" class="relref">Section 4.1</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>. The presence of this
+key in an HTTPS or SVCB record signals that the proxy's PvD Additional Information can be fetched
+using the "https" scheme from the proxy host on port 443 using the well-known path. The presentation and
+wire-format values for <code>pvd</code> SvcParamKey MUST be empty.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+<p id="section-2.1-3">A client receiving a DNS record like the following:<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.1-4">
+<pre>
+proxy.example.org. 3600 IN HTTPS 1 . alpn="h3,h2" pvd
+</pre><a href="#section-2.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-2.1-5">can interpret the presence of the pvd key as an indication that it MAY perform a PvD fetch from
+"https://proxy.example.org/.well-known/pvd" using HTTP GET method.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+<p id="section-2.1-6">While this key is particularly useful for detecting proxy configurations when
+looking up a DNS record for a known proxy name, this key generically provides
+a hint that PvD Additional Information is available, and can be used for use
+cases unrelated to proxies.
+This marker is advisory; clients MAY still attempt to fetch PvD Additional Information even if
+<code>pvd</code> SvcParamKey is not present.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+<p id="section-2.1-7">The <code>pvd</code> SvcParamKey is registered with IANA as described in <a href="#svcparamkey-iana" class="auto internal xref">Section 7.5</a>.<a href="#section-2.1-7" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="proxy-enumeration">
@@ -2064,6 +2101,31 @@ Experts are requested to ensure that defined keys do not overlap in names or sem
 in the names (since underscores are reserved for vendor-specific keys).<a href="#section-7.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="svcparamkey-iana">
+<section id="section-7.5">
+        <h3 id="name-new-dns-svcb-service-parame">
+<a href="#section-7.5" class="section-number selfRef">7.5. </a><a href="#name-new-dns-svcb-service-parame" class="section-name selfRef">New DNS SVCB Service Parameter Key (SvcParamKey)</a>
+        </h3>
+<p id="section-7.5-1">IANA is requested to add a new entry to the "DNS SVCB Service Parameter Keys (SvcParamKeys)" registry:<a href="#section-7.5-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7.5-2.1">
+            <p id="section-7.5-2.1.1">Number: TBD<a href="#section-7.5-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.5-2.2">
+            <p id="section-7.5-2.2.1">Name: pvd<a href="#section-7.5-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.5-2.3">
+            <p id="section-7.5-2.3.1">Meaning: PvD configuration is available at the well-known path<a href="#section-7.5-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.5-2.4">
+            <p id="section-7.5-2.4.1">Change Controller: IETF<a href="#section-7.5-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.5-2.5">
+            <p id="section-7.5-2.5.1">Reference: this document, <a href="#svcparamkey" class="auto internal xref">Section 2.1</a><a href="#section-7.5-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
 </section>
 </div>
 <div id="sec-combined-references">
@@ -2120,6 +2182,10 @@ in the names (since underscores are reserved for vendor-specific keys).<a href="
 <dt id="SOCKSv5">[SOCKSv5]</dt>
         <dd>
 <span class="refAuthor">Leech, M.</span>, <span class="refAuthor">Ganis, M.</span>, <span class="refAuthor">Lee, Y.</span>, <span class="refAuthor">Kuris, R.</span>, <span class="refAuthor">Koblas, D.</span>, and <span class="refAuthor">L. Jones</span>, <span class="refTitle">"SOCKS Protocol Version 5"</span>, <span class="seriesInfo">RFC 1928</span>, <span class="seriesInfo">DOI 10.17487/RFC1928</span>, <time datetime="1996-03" class="refDate">March 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1928">https://www.rfc-editor.org/rfc/rfc1928</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SVCB-DNS">[SVCB-DNS]</dt>
+        <dd>
+<span class="refAuthor">Schwartz, B.</span>, <span class="refAuthor">Bishop, M.</span>, and <span class="refAuthor">E. Nygren</span>, <span class="refTitle">"Service Binding and Parameter Specification via the DNS (SVCB and HTTPS Resource Records)"</span>, <span class="seriesInfo">RFC 9460</span>, <span class="seriesInfo">DOI 10.17487/RFC9460</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9460">https://www.rfc-editor.org/rfc/rfc9460</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="URITEMPLATE">[URITEMPLATE]</dt>
       <dd>

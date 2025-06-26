@@ -65,6 +65,7 @@ Table of Contents
      1.1.  Background
      1.2.  Requirements
    2.  Fetching PvD Additional Information for proxies
+     2.1.  Discovery via HTTPS/SVCB Records
    3.  Enumerating proxies within a PvD
      3.1.  Proxy definition keys
      3.2.  Proprietary keys in proxy configurations
@@ -83,6 +84,7 @@ Table of Contents
      7.2.  New PvD Proxy Information Registry
      7.3.  New PvD Proxy Protocol Registry
      7.4.  New PvD Proxy Destination Rule Registry
+     7.5.  New DNS SVCB Service Parameter Key (SvcParamKey)
    8.  References
      8.1.  Normative References
      8.2.  Informative References
@@ -205,6 +207,38 @@ Table of Contents
    "expires", and "prefixes" keys.  For proxy PvDs as defined in this
    document, the "identifier" MUST match the hostname of the HTTP proxy.
    The "prefixes" array SHOULD be empty by default.
+
+2.1.  Discovery via HTTPS/SVCB Records
+
+   To allow clients to determine whether PvD Additional Information is
+   available for a given proxy, this document defines a new SvcParamKey
+   in HTTPS and SVCB DNS records defined in [SVCB-DNS].
+
+   Presence of this SvcParamKey, named pvd indicates that the proxy host
+   supports PvD discovery via the well-known PvD URI ".well-known/pvd"
+   defined in Section 4.1 of [PVDDATA].  The presence of this key in an
+   HTTPS or SVCB record signals that the proxy's PvD Additional
+   Information can be fetched using the "https" scheme from the proxy
+   host on port 443 using the well-known path.  The presentation and
+   wire-format values for pvd SvcParamKey MUST be empty.
+
+   A client receiving a DNS record like the following:
+
+   proxy.example.org. 3600 IN HTTPS 1 . alpn="h3,h2" pvd
+
+   can interpret the presence of the pvd key as an indication that it
+   MAY perform a PvD fetch from "https://proxy.example.org/.well-known/
+   pvd" using HTTP GET method.
+
+   While this key is particularly useful for detecting proxy
+   configurations when looking up a DNS record for a known proxy name,
+   this key generically provides a hint that PvD Additional Information
+   is available, and can be used for use cases unrelated to proxies.
+   This marker is advisory; clients MAY still attempt to fetch PvD
+   Additional Information even if pvd SvcParamKey is not present.
+
+   The pvd SvcParamKey is registered with IANA as described in
+   Section 7.5.
 
 3.  Enumerating proxies within a PvD
 
@@ -865,6 +899,21 @@ content-length = 322
    in the names (since underscores are reserved for vendor-specific
    keys).
 
+7.5.  New DNS SVCB Service Parameter Key (SvcParamKey)
+
+   IANA is requested to add a new entry to the "DNS SVCB Service
+   Parameter Keys (SvcParamKeys)" registry:
+
+   *  Number: TBD
+
+   *  Name: pvd
+
+   *  Meaning: PvD configuration is available at the well-known path
+
+   *  Change Controller: IETF
+
+   *  Reference: this document, Section 2.1
+
 8.  References
 
 8.1.  Normative References
@@ -925,6 +974,11 @@ content-length = 322
               L. Jones, "SOCKS Protocol Version 5", RFC 1928,
               DOI 10.17487/RFC1928, March 1996,
               <https://www.rfc-editor.org/rfc/rfc1928>.
+
+   [SVCB-DNS] Schwartz, B., Bishop, M., and E. Nygren, "Service Binding
+              and Parameter Specification via the DNS (SVCB and HTTPS
+              Resource Records)", RFC 9460, DOI 10.17487/RFC9460,
+              November 2023, <https://www.rfc-editor.org/rfc/rfc9460>.
 
    [URITEMPLATE]
               Gregorio, J., Fielding, R., Hadley, M., Nottingham, M.,
