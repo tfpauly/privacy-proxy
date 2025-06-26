@@ -271,58 +271,55 @@ Table of Contents
    proxy.  The keys are registered with IANA as described in
    Section 7.2, with the initial content provided below.
 
-   +=================================+========+=============+=======+===============+
-   |JSON Key                         |Optional|Description  |Type   |Example        |
-   +=================================+========+=============+=======+===============+
-   |protocol                         |No      |The protocol |String |"connect-udp"  |
-   |                                 |        |used to      |       |               |
-   |                                 |        |communicate  |       |               |
-   |                                 |        |with the     |       |               |
-   |                                 |        |proxy        |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
-   |proxy                            |No      |String       |String |               |
-   |                                 |        |containing   |       |               |
-   |                                 |        |the URI      |       |               |
-   |                                 |        |template or  |       |               |
-   |                                 |        |hostname and |       |               |
-   |                                 |        |port of the  |       |               |
-   |                                 |        |proxy,       |       |               |
-   |                                 |        |depending on |       |               |
-   |                                 |        |the format   |       |               |
-   |                                 |        |defined by   |       |               |
-   |                                 |        |the protocol |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
-   |"https://proxy.example.org:4443/ |        |             |       |               |
-   |masque{?target_host,target_port}"|        |             |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
-   |mandatory                        |Yes     |An array of  |Array  |["example_key"]|
-   |                                 |        |optional keys|of     |               |
-   |                                 |        |that client  |Strings|               |
-   |                                 |        |must         |       |               |
-   |                                 |        |understand   |       |               |
-   |                                 |        |and process  |       |               |
-   |                                 |        |to use this  |       |               |
-   |                                 |        |proxy        |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
-   |alpn                             |Yes     |An array of  |Array  |["h3","h2"]    |
-   |                                 |        |Application- |of     |               |
-   |                                 |        |Layer        |Strings|               |
-   |                                 |        |Protocol     |       |               |
-   |                                 |        |Negotiation  |       |               |
-   |                                 |        |protocol     |       |               |
-   |                                 |        |identifiers  |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
-   |identifier                       |Yes     |A string used|String |"udp-proxy"    |
-   |                                 |        |to refer to  |       |               |
-   |                                 |        |the proxy,   |       |               |
-   |                                 |        |which can be |       |               |
-   |                                 |        |referenced by|       |               |
-   |                                 |        |other        |       |               |
-   |                                 |        |dictionaries,|       |               |
-   |                                 |        |such as      |       |               |
-   |                                 |        |entries in   |       |               |
-   |                                 |        |proxy-match  |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
+   +==========+========+=============+=======+=================================+
+   |JSON Key  |Optional|Description  |Type   |Example                          |
+   +==========+========+=============+=======+=================================+
+   |protocol  |No      |The protocol |String |"connect-udp"                    |
+   |          |        |used to      |       |                                 |
+   |          |        |communicate  |       |                                 |
+   |          |        |with the     |       |                                 |
+   |          |        |proxy        |       |                                 |
+   +----------+--------+-------------+-------+---------------------------------+
+   |proxy     |No      |String       |String |"https://proxy.example.org:4443/ |
+   |          |        |containing   |       |masque{?target_host,target_port}"|
+   |          |        |the URI      |       |                                 |
+   |          |        |template or  |       |                                 |
+   |          |        |hostname and |       |                                 |
+   |          |        |port of the  |       |                                 |
+   |          |        |proxy,       |       |                                 |
+   |          |        |depending on |       |                                 |
+   |          |        |the format   |       |                                 |
+   |          |        |defined by   |       |                                 |
+   |          |        |the protocol |       |                                 |
+   +----------+--------+-------------+-------+---------------------------------+
+   |mandatory |Yes     |An array of  |Array  |["example_key"]                  |
+   |          |        |optional keys|of     |                                 |
+   |          |        |that client  |Strings|                                 |
+   |          |        |must         |       |                                 |
+   |          |        |understand   |       |                                 |
+   |          |        |and process  |       |                                 |
+   |          |        |to use this  |       |                                 |
+   |          |        |proxy        |       |                                 |
+   +----------+--------+-------------+-------+---------------------------------+
+   |alpn      |Yes     |An array of  |Array  |["h3","h2"]                      |
+   |          |        |Application- |of     |                                 |
+   |          |        |Layer        |Strings|                                 |
+   |          |        |Protocol     |       |                                 |
+   |          |        |Negotiation  |       |                                 |
+   |          |        |protocol     |       |                                 |
+   |          |        |identifiers  |       |                                 |
+   +----------+--------+-------------+-------+---------------------------------+
+   |identifier|Yes     |A string used|String |"udp-proxy"                      |
+   |          |        |to refer to  |       |                                 |
+   |          |        |the proxy,   |       |                                 |
+   |          |        |which can be |       |                                 |
+   |          |        |referenced by|       |                                 |
+   |          |        |other        |       |                                 |
+   |          |        |dictionaries,|       |                                 |
+   |          |        |such as      |       |                                 |
+   |          |        |entries in   |       |                                 |
+   |          |        |proxy-match  |       |                                 |
+   +----------+--------+-------------+-------+---------------------------------+
 
        Table 1: Initial Proxy Information PvD Keys Registry Contents
 
@@ -525,11 +522,11 @@ content-length = 322
    proxies array).  A wildcard prefix (*.) is used to indicate matching
    entire domains or subdomains instead of specific hostnames.  Note
    that this can be used to match multiple levels of subdomains.  For
-   example "_.example.com" matches "internal.example.com" as well as
+   example "*.example.com" matches "internal.example.com" as well as
    "www.public.example.com".  Entries that include the wildcard prefix
    also MUST be treated as if they match an FQDN that only contains the
    string after the prefix, with no subdomain.  So, an entry
-   "_.example.com" in the domains array of a proxy-match rule would
+   "*.example.com" in the domains array of a proxy-match rule would
    match the FQDN "example.com".  This is done to prevent commonly
    needing to include both "*.example.com" and "example.com" in the
    domains array of a proxy-match rule.
@@ -739,8 +736,8 @@ content-length = 322
       the proxy with "connect-ip" protocol
 
    *  Traffic other than TCP and UDP destined to hosts within the
-      "*.internal.example.org" zone is sent either to the proxy with
-      "connect-ip" protocol
+      "*.internal.example.org" zone is sent to the proxy with "connect-
+      ip" protocol
 
    The following example provides a configuration of proxies to be used
    by default with a set with exceptions to bypass:
@@ -840,8 +837,14 @@ content-length = 322
 
    Type: Array of dictionaries
 
-   Example: [ { "protocol": "connect-udp", "proxy":
-   "https://proxy.example.org/masque{?target_host,target_port}" } ]
+   Example:
+
+ [
+  {
+   "protocol": "connect-udp",
+   "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
+  }
+ ]
 
 7.1.2.  proxy-match Key
 
@@ -852,8 +855,14 @@ content-length = 322
 
    Type: Array of dictionaries
 
-   Example: [ { "domains": [ "*.internal.example.org" ], "proxies": [
-   "default_proxy" ] } ]
+   Example:
+
+   [
+    {
+     "domains": [ "*.internal.example.org" ],
+     "proxies": [ "default_proxy" ]
+    }
+   ]
 
 7.2.  New PvD Proxy Information Registry
 
