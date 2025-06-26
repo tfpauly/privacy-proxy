@@ -1335,7 +1335,8 @@ a proxy. This PvD describes the properties of the network accessible through the
 issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") <span>[<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
-that are identified by a URI or URI template.<a href="#section-2-2" class="pilcrow">¶</a></p>
+that are identified by a URI or URI template. The fetch MUST use the "https" scheme
+and the default port for HTTP over TLS, 443.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">For example, a client would issue the following request for the PvD associated
 with "https://proxy.example.org/masque{?target_host,target_port}":<a href="#section-2-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-2-4">
@@ -1347,23 +1348,16 @@ with "https://proxy.example.org/masque{?target_host,target_port}":<a href="#sect
 accept = application/pvd+json
 </pre><a href="#section-2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-2-5">As another example, a client would send the following request for the PvD
-assocated with an HTTP CONNECT proxy on "proxy.example.org:8080":<a href="#section-2-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2-6">
-<pre>
-:method = GET
-:scheme = https
-:authority = proxy.example.org:8080
-:path = /.well-known/pvd
-accept = application/pvd+json
-</pre><a href="#section-2-6" class="pilcrow">¶</a>
-</div>
-<p id="section-2-7">Note that all proxies that are colocated on the same host and port share the same PvD
+<p id="section-2-5">A client would send the same request as above for the PvD
+assocated with an HTTP CONNECT proxy on "proxy.example.org:8080".
+Note that the client will not make a request to port 8080, but
+to port 443.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">Note that all proxies that are co-located on the same host share the same PvD
 Additional Information. Proxy deployments that need separate PvD configuration properties
-SHOULD use different hosts.<a href="#section-2-7" class="pilcrow">¶</a></p>
-<p id="section-2-8">PvD Additional Information is required to contain the "identifier", "expires", and
+SHOULD use different hosts.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-7">PvD Additional Information is required to contain the "identifier", "expires", and
 "prefixes" keys. For proxy PvDs as defined in this document, the "identifier" MUST
-match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.<a href="#section-2-8" class="pilcrow">¶</a></p>
+match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.<a href="#section-2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="proxy-enumeration">

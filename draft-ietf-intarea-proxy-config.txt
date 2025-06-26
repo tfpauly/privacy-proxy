@@ -180,7 +180,8 @@ Table of Contents
    (".well-known/pvd") [PVDDATA] and the host authority of the proxy.
    This is applicable for both proxies that are identified by a host and
    port only (such as SOCKS proxies and HTTP CONNECT proxies) and
-   proxies that are identified by a URI or URI template.
+   proxies that are identified by a URI or URI template.  The fetch MUST
+   use the "https" scheme and the default port for HTTP over TLS, 443.
 
    For example, a client would issue the following request for the PvD
    associated with "https://proxy.example.org/
@@ -192,19 +193,13 @@ Table of Contents
    :path = /.well-known/pvd
    accept = application/pvd+json
 
-   As another example, a client would send the following request for the
-   PvD assocated with an HTTP CONNECT proxy on "proxy.example.org:8080":
+   A client would send the same request as above for the PvD assocated
+   with an HTTP CONNECT proxy on "proxy.example.org:8080".  Note that
+   the client will not make a request to port 8080, but to port 443.
 
-   :method = GET
-   :scheme = https
-   :authority = proxy.example.org:8080
-   :path = /.well-known/pvd
-   accept = application/pvd+json
-
-   Note that all proxies that are colocated on the same host and port
-   share the same PvD Additional Information.  Proxy deployments that
-   need separate PvD configuration properties SHOULD use different
-   hosts.
+   Note that all proxies that are co-located on the same host share the
+   same PvD Additional Information.  Proxy deployments that need
+   separate PvD configuration properties SHOULD use different hosts.
 
    PvD Additional Information is required to contain the "identifier",
    "expires", and "prefixes" keys.  For proxy PvDs as defined in this
