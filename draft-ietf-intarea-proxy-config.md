@@ -202,8 +202,7 @@ content provided below.
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
 | protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
-| proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String |
- "https://proxy.example.org:4443/masque{?target_host,target_port}" |
+| proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 | mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["example_key"] |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | identifier | Yes | A string used to refer to the proxy, which can be referenced by other dictionaries, such as entries in `proxy-match`  | String | "udp-proxy" |
@@ -341,7 +340,7 @@ with the initial content provided below.
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
 | proxies | No | An array of strings that match `identifier` values from the top-level `proxies` array | Array of Strings | ["tcp-proxy", "udp-proxy"] |
-| domains | Yes | An array of FQDNs and wildcard DNS domains | Array of Strings | ["www.example.com", "*.internal.example.com"] |
+| domains | Yes | An array of FQDNs and wildcard DNS domains | Array of Strings | ["www.example.com", "\*.internal.example.com"] |
 | subnets | Yes | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.0.2.0/24"] |
 | ports | Yes | An array of TCP and UDP port ranges | Array of Strings | ["80", "443", "1024-65535"] |
 {: #destination-rule-keys-table title="Initial PvD Proxy Destination Rule Registry Contents"}
@@ -349,12 +348,12 @@ with the initial content provided below.
 The `domains` array includes specific FQDNs and zones that are either accessible using specific proxy (for
 rules with non-empty `proxies` array) or non-accessible through any proxies (for rules with empty `proxies` array).
 A wildcard prefix (`*.`) is used to indicate matching entire domains or subdomains instead of
-specific hostnames. Note that this can be used to match multiple levels of subdomains. For example "*.example.com"
+specific hostnames. Note that this can be used to match multiple levels of subdomains. For example "\*.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
 Entries that include the wildcard prefix also MUST be treated as if they match
 an FQDN that only contains the string after the prefix, with no subdomain. So,
-an entry "*.example.com" in the `domains` array of a `proxy-match` rule would match the FQDN "example.com".
-This is done to prevent commonly needing to include both "*.example.com" and "example.com"
+an entry "\*.example.com" in the `domains` array of a `proxy-match` rule would match the FQDN "example.com".
+This is done to prevent commonly needing to include both "\*.example.com" and "example.com"
 in the `domains` array of a `proxy-match` rule.
 
 The `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
@@ -397,7 +396,7 @@ matching traffic to any proxy.
 Entries listed in a `proxy-match` object MUST NOT expand the set of destinations that a client is
 willing to send to a particular proxy. The list can only narrow the list of destinations
 that the client is willing to send through the proxy. For example, if the client
-has a local policy to only send requests for "*.example.com" to a proxy
+has a local policy to only send requests for "\*.example.com" to a proxy
 "proxy.example.com", and `domains` array of a `match` object contains "internal.example.com" and
 "other.company.com", the client would end up only proxying "internal.example.com"
 through the proxy.
@@ -408,7 +407,7 @@ Implementations MAY include proprietary or vendor-specific keys in destination r
 not specified in this document.
 
 Similar to proprietary keys in proxy definitions ({{proxy-proprietary-keys}}), a proprietary key in destination
-rule MUST contain at least one underscore character ("_"), which separates a vendor-specific namespace from the key name.
+rule MUST contain at least one underscore character ("\_"), which separates a vendor-specific namespace from the key name.
 For example, "acme_processid" could be a key used to apply rules only to traffic of a specific process identifier as
 defined by a vendor named "acme".
 
@@ -541,7 +540,7 @@ either to the proxy with "http-connect" protocol or to the proxy with "connect-i
 - UDP traffic destined to hosts within the "\*.internal.example.org" zone is sent
 either to the proxy with "connect-udp" protocol or to the proxy with "connect-ip" protocol
 - Traffic other than TCP and UDP destined to hosts within the "\*.internal.example.org" zone is sent
-either to the proxy with "connect-ip" protocol
+to the proxy with "connect-ip" protocol
 
 The following example provides a configuration of proxies to be used by default with a
 set with exceptions to bypass:
@@ -634,10 +633,16 @@ Description: Array of proxy dictionaries associated with this PvD
 
 Type: Array of dictionaries
 
-Example: [ {
+Example:
+
+~~~
+[
+ {
   "protocol": "connect-udp",
   "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
-} ]
+ }
+]
+~~~
 
 ### `proxy-match` Key
 
@@ -648,11 +653,16 @@ entries in the `proxies` list.
 
 Type: Array of dictionaries
 
-Example: [ {
+Example:
+
+~~~
+[
+ {
   "domains": [ "*.internal.example.org" ],
   "proxies": [ "default_proxy" ]
-} ]
-
+ }
+]
+~~~
 
 ## New PvD Proxy Information Registry {#proxy-info-iana}
 
@@ -670,7 +680,7 @@ This new registry reserves JSON values for the `protocol` key in `proxies` sub-d
 The initial contents of this registry are given in {{proxy-protocol-value-table}}.
 
 New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review {{RFC8126}}.
-Experts are requested to ensure that defined keys do not overlap in names or semantics, do not contain an underscore character ("_")
+Experts are requested to ensure that defined keys do not overlap in names or semantics, do not contain an underscore character ("\_")
 in the names (since underscores are reserved for vendor-specific keys), and have clear format definitions.
 The reference and notes fields MAY be empty.
 
@@ -681,7 +691,7 @@ This new registry reserves JSON keys for use in sub-dictionaries under the `prox
 The initial contents of this registry are given in {{destination-rule-keys-table}}.
 
 New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review {{RFC8126}}.
-Experts are requested to ensure that defined keys do not overlap in names or semantics, and do not contain an underscore character ("_")
+Experts are requested to ensure that defined keys do not overlap in names or semantics, and do not contain an underscore character ("\_")
 in the names (since underscores are reserved for vendor-specific keys).
 
 ## New DNS SVCB Service Parameter Key (SvcParamKey) {#svcparamkey-iana}
