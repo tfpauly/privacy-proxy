@@ -38,7 +38,7 @@ and information about which destinations are accessible using a proxy.
 
 # Introduction
 
-HTTP proxies that use the CONNECT method {{Section 9.3.6 of !HTTP=RFC9110}}
+HTTP proxies that use the CONNECT method defined in {{Section 9.3.6 of !HTTP=RFC9110}}
 (often referred to as "forward" proxies) allow clients to open connections to
 hosts via a proxy. These typically allow for TCP stream proxying, but can also support
 UDP proxying {{!CONNECT-UDP=RFC9298}} and IP packet proxying
@@ -113,7 +113,8 @@ In order to fetch PvD Additional Information associated with a proxy, a client
 issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") {{PVDDATA}}
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
-that are identified by a URI or URI template.
+that are identified by a URI or URI template. The fetch MUST use the "https" scheme
+and the default port for HTTP over TLS, 443.
 
 For example, a client would issue the following request for the PvD associated
 with "https://proxy.example.org/masque{?target_host,target_port}":
@@ -126,18 +127,12 @@ with "https://proxy.example.org/masque{?target_host,target_port}":
 accept = application/pvd+json
 ~~~
 
-As another example, a client would send the following request for the PvD
-assocated with an HTTP CONNECT proxy on "proxy.example.org:8080":
+A client would send the same request as above for the PvD
+assocated with an HTTP CONNECT proxy on "proxy.example.org:8080".
+Note that the client will not make a request to port 8080, but
+to port 443.
 
-~~~
-:method = GET
-:scheme = https
-:authority = proxy.example.org:8080
-:path = /.well-known/pvd
-accept = application/pvd+json
-~~~
-
-Note that all proxies that are colocated on the same host and port share the same PvD
+Note that all proxies that are co-located on the same host share the same PvD
 Additional Information. Proxy deployments that need separate PvD configuration properties
 SHOULD use different hosts.
 
@@ -289,7 +284,7 @@ response to indicate a PvD that has two related proxy URIs.
 ~~~
 :status = 200
 content-type = application/pvd+json
-content-length = 307
+content-length = 322
 
 {
   "identifier": "proxy.example.org.",
@@ -347,7 +342,7 @@ with the initial content provided below.
 | --- | --- | --- | --- | --- |
 | proxies | No | An array of strings that match `identifier` values from the top-level `proxies` array | Array of Strings | ["tcp-proxy", "udp-proxy"] |
 | domains | Yes | An array of FQDNs and wildcard DNS domains | Array of Strings | ["www.example.com", "*.internal.example.com"] |
-| subnets | Yes | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.168.1.0/24"] |
+| subnets | Yes | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.0.2.0/24"] |
 | ports | Yes | An array of TCP and UDP port ranges | Array of Strings | ["80", "443", "1024-65535"] |
 {: #destination-rule-keys-table title="Initial PvD Proxy Destination Rule Registry Contents"}
 
@@ -372,10 +367,10 @@ a proxy, so the subnet information may not be available.
 
 The `ports` array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a `-` in between.
-For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
 If `ports` key is not present, all ports are assumed to match. Comma-separated port list may
 contain individual port numbers (such as "80") or inclusive ranges of ports. For example
-"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
 
 ##  Using Destination Rules
 
@@ -438,8 +433,8 @@ a single destination rule for "\*.internal.example.org".
       "identifier": "default_proxy"
     },
     {
-      "protocol": "connect-udp",
-      "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
+      "protocol": "http-connect",
+      "proxy": "proxy2.example.org:80",
       "identifier": "default_proxy"
     }
   ],
@@ -453,7 +448,7 @@ a single destination rule for "\*.internal.example.org".
 ~~~
 
 The client could then choose to use either proxy associated with the "default_proxy" identifier
-for accessing names that fall within the "\*.internal.example.org" zone. This would include the
+for accessing TCP hosts that fall within the "\*.internal.example.org" zone. This would include the
 hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
 all other hosts within "internal.example.org".
 
@@ -481,7 +476,7 @@ three destination rules:
   "proxy-match": [
     {
       "domains": [ "*.special.example.org" ],
-      "ports": [ 80, 443 ],
+      "ports": [ "80", "443", "49152-65535" ],
       "proxies": [ "special_proxy" ]
     },
     {
@@ -497,11 +492,97 @@ three destination rules:
 ~~~
 
 In this case, the client would use "special-proxy.example.org:80"
-for any traffic using ports 80 or 443 that matches "\*.special.example.org".
-The client would not use any of the defined proxies for access to
+for any TCP traffic that matches "\*.special.example.org" destined to ports 80, 443 or any port between
+49152 and 65535. The client would not use any of the defined proxies for access to
 "no-proxy.internal.example.org". And finally, the client would use
-"proxy.example.org:80" to access any other traffic that matches
+"proxy.example.org:80" to access any other TCP traffic that matches
 "\*.internal.example.org".
+
+In the following example, three proxies are sharing a common identifier ("default-proxy"), but use
+separate protocols constraining the traffic that they can process.
+
+~~~
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2023-06-23T06:00:00Z",
+  "prefixes": [],
+  "proxies": [
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "connect-udp",
+      "proxy": "https://proxy.example.org/masque/udp/{target_host},{target_port}",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "connect-ip",
+      "proxy": "https://proxy.example.org/masque/ip{?target,ipproto}",
+      "identifier": "default_proxy"
+    }
+  ],
+  "proxy-match": [
+    {
+      "domains": [ "*.internal.example.org" ],
+      "proxies": [ "default_proxy" ]
+    }
+  ]
+}
+~~~
+
+The client would use proxies in the following way:
+
+- Traffic not destined to hosts within the "\*.internal.example.org" zone is not sent
+to any proxy defined in this configuration
+- TCP traffic destined to hosts within the "\*.internal.example.org" zone is sent
+either to the proxy with "http-connect" protocol or to the proxy with "connect-ip" protocol
+- UDP traffic destined to hosts within the "\*.internal.example.org" zone is sent
+either to the proxy with "connect-udp" protocol or to the proxy with "connect-ip" protocol
+- Traffic other than TCP and UDP destined to hosts within the "\*.internal.example.org" zone is sent
+either to the proxy with "connect-ip" protocol
+
+The following example provides a configuration of proxies to be used by default with a
+set with exceptions to bypass:
+
+~~~
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2023-06-23T06:00:00Z",
+  "prefixes": [],
+  "proxies": [
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "http-connect",
+      "proxy": "backup.example.org:80",
+      "identifier": "secondary_proxy"
+    }
+  ],
+  "proxy-match": [
+    {
+      "domains": [ "*.intranet.example.org" ],
+      "proxies": [ ]
+    },
+    {
+      "subnets": [ "192.168.0.0/16", "2001:DB8::/32" ],
+      "proxies": [ ]
+    },
+    {
+      "proxies": [ "default_proxy", "secondary_proxy" ]
+    }
+  ]
+}
+~~~
+
+In this case, the client would not send to the proxies any TCP traffic
+that is not destined to hosts matching "\*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32.
+Due to the order in "proxies" list in the last rule of "proxy-match", the client would prefer
+"proxy.example.org:80" over "backup.example.org:80"
 
 # Discovering proxies from network PvDs {#network-proxies}
 
@@ -589,7 +670,8 @@ This new registry reserves JSON values for the `protocol` key in `proxies` sub-d
 The initial contents of this registry are given in {{proxy-protocol-value-table}}.
 
 New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review {{RFC8126}}.
-Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
+Experts are requested to ensure that defined keys do not overlap in names or semantics, do not contain an underscore character ("_")
+in the names (since underscores are reserved for vendor-specific keys), and have clear format definitions.
 The reference and notes fields MAY be empty.
 
 ## New PvD Proxy Destination Rule Registry {#proxy-destination-iana}
@@ -598,8 +680,9 @@ IANA is requested to create a new registry "Proxy Destination Rule PvD Keys", wi
 This new registry reserves JSON keys for use in sub-dictionaries under the `proxy-match` key.
 The initial contents of this registry are given in {{destination-rule-keys-table}}.
 
-New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review {{RFC8126}}. Experts are
-requested to ensure that defined keys do not overlap in names or semantics.
+New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review {{RFC8126}}.
+Experts are requested to ensure that defined keys do not overlap in names or semantics, and do not contain an underscore character ("_")
+in the names (since underscores are reserved for vendor-specific keys).
 
 ## New DNS SVCB Service Parameter Key (SvcParamKey) {#svcparamkey-iana}
 
