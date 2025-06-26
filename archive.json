@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-24T00:21:48.063088+00:00",
+  "timestamp": "2025-06-26T00:21:42.473233+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4486,10 +4486,12 @@
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "When implementing proxy config format for our use cases I run into a challenge with versioning and policy refresh.\nThat is, client needs to constantly make a HEAD request for proxy config to see if it was updated or not. And in some cases (VPN-like remote access) configuration can change rapidly.\n\nI think it would be great to include a \"version\" field (could be an opaque string) and propose a HTTP header for MASQUE proxies to include in their responses that would signal the latest proxy configuration version. This way client knows when its proxy config is outdated and needs to be refreshed.\n\nOn top of that we could specify that implementors should use Expires header as per RFC9111 for client to periodically refresh proxy configuration.\n\n@tfpauly @ddragana what do you think?",
       "createdAt": "2025-04-10T09:10:59Z",
-      "updatedAt": "2025-06-19T15:26:58Z",
+      "updatedAt": "2025-06-24T03:11:28Z",
       "closedAt": null,
       "comments": [
         {
@@ -4510,10 +4512,12 @@
       "author": "JamesTaft",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "\"Subnet-based destination information are only meant be used when applications are communicating with destinations identified by only an IP address, and not a hostname.\nDestination rules SHOULD NOT contain both the domains key and the subnets key. Many clients will not resolve a domain being accessed through the proxy to an IP address before using a proxy, so the subnet information may not be available.\"\n\nIt is very common for almost every PAC file in use today to have lines that send traffic to internal subnets DIRECT, based on a DNS lookup.  This is due to the common practice of internally hosted and externally hosted applications using the same domain.  The list to bypass these internally hosted sites one at a time, along with the maintenance of that list would be a large undertaking at any decently sized organization.  \n\nI understand the desire to prevent DNS requests by the host, but this would prevent the uptake of this standard in large corporate environments. ",
       "createdAt": "2025-06-03T17:36:16Z",
-      "updatedAt": "2025-06-04T04:41:08Z",
+      "updatedAt": "2025-06-24T03:11:28Z",
       "closedAt": null,
       "comments": [
         {
@@ -4534,12 +4538,22 @@
       "author": "mstojens",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "In Section 2, it says:\n\n> Note that all proxies that are colocated on the same host and port share the same PvD Additional Information. Proxy deployments that need separate PvD configuration properties SHOULD use different hosts.\n\nThis means that proxies cannot colocate on the same (host, post) tuple, but the recommendation to separate the proxies is to change hostnames. Why not change ports on the same host? If that's acceptable, please just add that. If it isn't, please explain why.",
       "createdAt": "2025-06-23T21:56:28Z",
-      "updatedAt": "2025-06-23T21:56:28Z",
+      "updatedAt": "2025-06-24T03:24:16Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "See the PR I just opened @mstojens ! This was a bug in the spec, thanks for catching \u2014 it should be the same PvD for the entire host, regardless of port.",
+          "createdAt": "2025-06-24T03:24:16Z",
+          "updatedAt": "2025-06-24T03:24:16Z"
+        }
+      ]
     },
     {
       "number": 289,
@@ -4550,10 +4564,12 @@
       "author": "mstojens",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "This is implied but never stated. Instructions to IANA should be explicit to avoid any future conflict between the \"safe to use keys with underscores for vendor reasons\" feature of the spec and an erroneous IANA registration in the future.",
       "createdAt": "2025-06-23T22:01:53Z",
-      "updatedAt": "2025-06-23T22:01:53Z",
+      "updatedAt": "2025-06-24T03:11:29Z",
       "closedAt": null,
       "comments": []
     }
@@ -20055,10 +20071,12 @@
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "As discussed, to close https://github.com/tfpauly/privacy-proxy/issues/235",
       "createdAt": "2025-06-22T17:41:10Z",
-      "updatedAt": "2025-06-23T13:15:44Z",
+      "updatedAt": "2025-06-25T23:27:46Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "ef8bc142f41e0b2304063877659b8d32873f99d6",
@@ -20090,6 +20108,26 @@
               "updatedAt": "2025-06-22T23:57:12Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86wbRsR",
+          "commit": {
+            "abbreviatedOid": "fbad50b"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-25T23:27:46Z",
+          "updatedAt": "2025-06-25T23:27:46Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "should we mention port 443 here as well?",
+              "createdAt": "2025-06-25T23:27:46Z",
+              "updatedAt": "2025-06-25T23:27:58Z"
+            }
+          ]
         }
       ]
     },
@@ -20102,10 +20140,12 @@
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "Added two more examples to cover constraints of proxy protocols, default proxy configuration as well as ordered list of proxies.\r\n\r\nCorrected content-length in the very first example (I suppose we should count whitespace and line breaks if we include them in the text)\r\n\r\nCorrected previous examples:\r\n- clarified traffic protocols\r\n- ports are strings. Added a range of ports in the example to make it obvious",
       "createdAt": "2025-06-22T18:38:58Z",
-      "updatedAt": "2025-06-22T23:53:34Z",
+      "updatedAt": "2025-06-25T23:23:39Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "ef8bc142f41e0b2304063877659b8d32873f99d6",
@@ -20129,6 +20169,19 @@
           "body": "",
           "createdAt": "2025-06-22T23:53:34Z",
           "updatedAt": "2025-06-22T23:53:34Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS86wbQkI",
+          "commit": {
+            "abbreviatedOid": "255e64f"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-25T23:23:39Z",
+          "updatedAt": "2025-06-25T23:23:39Z",
           "comments": []
         }
       ]
@@ -20179,6 +20232,193 @@
           "body": "",
           "createdAt": "2025-06-23T23:31:28Z",
           "updatedAt": "2025-06-23T23:31:28Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 290,
+      "id": "PR_kwDOEwrMS86bxDsP",
+      "title": "Tell experts not to allow underscores in keys",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/290",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Closes #289 ",
+      "createdAt": "2025-06-24T03:10:39Z",
+      "updatedAt": "2025-06-25T23:17:51Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "29bf5f53d750d07b2730441b35d86814c003e321",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfp/iana-no-underscore",
+      "headRefOid": "e04fac7b95141b1819f9f6b8cf714a627d70df46",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86wFLIz",
+          "commit": {
+            "abbreviatedOid": "e04fac7"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-24T14:33:19Z",
+          "updatedAt": "2025-06-24T14:33:19Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS86wbO1c",
+          "commit": {
+            "abbreviatedOid": "e04fac7"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-25T23:17:51Z",
+          "updatedAt": "2025-06-25T23:17:51Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 291,
+      "id": "PR_kwDOEwrMS86bxIEx",
+      "title": "Clarify which port to fetch the PvD on",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/291",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Closes #288 \r\n\r\nFixes a bug in the spec where in an example, we showed fetching the PvD from a non-TLS port. We need to use a single PvD config per hostname.",
+      "createdAt": "2025-06-24T03:23:41Z",
+      "updatedAt": "2025-06-25T23:16:19Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "29bf5f53d750d07b2730441b35d86814c003e321",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfp/just-host",
+      "headRefOid": "6a8f6fb1c383ce415df6e8938799dafb2000b2ee",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS86wFGvQ",
+          "commit": {
+            "abbreviatedOid": "ab98e9b"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-24T14:28:34Z",
+          "updatedAt": "2025-06-24T14:32:42Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "```suggestion\r\nand the default port for HTTP over TLS, 443.\r\n```\r\n\r\nI don't the explanation is necessary. Also it does not cover SOCKS and non-standard ports for MASQUE things.",
+              "createdAt": "2025-06-24T14:28:34Z",
+              "updatedAt": "2025-06-24T14:32:42Z"
+            },
+            {
+              "originalPosition": 20,
+              "body": "How about we use port 3128 instead of 8080? Though it is not \"official\", it is actually more commonly used for cleartext proxies since it's the default for squid.",
+              "createdAt": "2025-06-24T14:32:24Z",
+              "updatedAt": "2025-06-24T14:32:42Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86wHrug",
+          "commit": {
+            "abbreviatedOid": "ab98e9b"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-24T17:57:41Z",
+          "updatedAt": "2025-06-24T17:57:41Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "Okay, that's fine",
+              "createdAt": "2025-06-24T17:57:41Z",
+              "updatedAt": "2025-06-24T17:57:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86wHscI",
+          "commit": {
+            "abbreviatedOid": "ab98e9b"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-24T17:58:34Z",
+          "updatedAt": "2025-06-24T17:58:34Z",
+          "comments": [
+            {
+              "originalPosition": 20,
+              "body": "I think 8080 is also used for various proxies, yeah?",
+              "createdAt": "2025-06-24T17:58:34Z",
+              "updatedAt": "2025-06-24T17:58:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86wINJG",
+          "commit": {
+            "abbreviatedOid": "ab98e9b"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-24T18:41:30Z",
+          "updatedAt": "2025-06-24T18:41:30Z",
+          "comments": [
+            {
+              "originalPosition": 20,
+              "body": "Yes, some vendors default to 8080. Okay, let's keep 8080 as it is somewhat aligns with IANA :-)",
+              "createdAt": "2025-06-24T18:41:30Z",
+              "updatedAt": "2025-06-24T18:41:30Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86wbOUs",
+          "commit": {
+            "abbreviatedOid": "6a8f6fb"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-25T23:16:19Z",
+          "updatedAt": "2025-06-25T23:16:19Z",
           "comments": []
         }
       ]
