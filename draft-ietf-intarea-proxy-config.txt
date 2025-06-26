@@ -392,7 +392,7 @@ Table of Contents
 
 :status = 200
 content-type = application/pvd+json
-content-length = 307
+content-length = 322
 
 {
   "identifier": "proxy.example.org.",
@@ -583,33 +583,33 @@ content-length = 307
    identifier ("default_proxy"), with a single destination rule for
    "*.internal.example.org".
 
-{
-  "identifier": "proxy.example.org.",
-  "expires": "2023-06-23T06:00:00Z",
-  "prefixes": [],
-  "proxies": [
-    {
-      "protocol": "http-connect",
-      "proxy": "proxy.example.org:80",
-      "identifier": "default_proxy"
-    },
-    {
-      "protocol": "connect-udp",
-      "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
-      "identifier": "default_proxy"
-    }
-  ],
-  "proxy-match": [
-    {
-      "domains": [ "*.internal.example.org" ],
-      "proxies": [ "default_proxy" ]
-    }
-  ]
-}
+   {
+     "identifier": "proxy.example.org.",
+     "expires": "2023-06-23T06:00:00Z",
+     "prefixes": [],
+     "proxies": [
+       {
+         "protocol": "http-connect",
+         "proxy": "proxy.example.org:80",
+         "identifier": "default_proxy"
+       },
+       {
+         "protocol": "http-connect",
+         "proxy": "proxy2.example.org:80",
+         "identifier": "default_proxy"
+       }
+     ],
+     "proxy-match": [
+       {
+         "domains": [ "*.internal.example.org" ],
+         "proxies": [ "default_proxy" ]
+       }
+     ]
+   }
 
    The client could then choose to use either proxy associated with the
-   "default_proxy" identifier for accessing names that fall within the
-   "*.internal.example.org" zone.  This would include the hostnames
+   "default_proxy" identifier for accessing TCP hosts that fall within
+   the "*.internal.example.org" zone.  This would include the hostnames
    "internal.example.org", "foo.internal.example.org",
    "www.bar.internal.example.org" and all other hosts within
    "internal.example.org".
@@ -636,7 +636,7 @@ content-length = 307
      "proxy-match": [
        {
          "domains": [ "*.special.example.org" ],
-         "ports": [ 80, 443 ],
+         "ports": [ "80", "443", "49152-65535" ],
          "proxies": [ "special_proxy" ]
        },
        {
@@ -651,11 +651,103 @@ content-length = 307
    }
 
    In this case, the client would use "special-proxy.example.org:80" for
-   any traffic using ports 80 or 443 that matches
-   "*.special.example.org".  The client would not use any of the defined
-   proxies for access to "no-proxy.internal.example.org".  And finally,
-   the client would use "proxy.example.org:80" to access any other
-   traffic that matches "*.internal.example.org".
+   any TCP traffic that matches "*.special.example.org" destined to
+   ports 80, 443 or any port between 49152 and 65535.  The client would
+   not use any of the defined proxies for access to "no-
+   proxy.internal.example.org".  And finally, the client would use
+   "proxy.example.org:80" to access any other TCP traffic that matches
+   "*.internal.example.org".
+
+   In the following example, three proxies are sharing a common
+   identifier ("default-proxy"), but use separate protocols constraining
+   the traffic that they can process.
+
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2023-06-23T06:00:00Z",
+  "prefixes": [],
+  "proxies": [
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "connect-udp",
+      "proxy": "https://proxy.example.org/masque/udp/{target_host},{target_port}",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "connect-ip",
+      "proxy": "https://proxy.example.org/masque/ip{?target,ipproto}",
+      "identifier": "default_proxy"
+    }
+  ],
+  "proxy-match": [
+    {
+      "domains": [ "*.internal.example.org" ],
+      "proxies": [ "default_proxy" ]
+    }
+  ]
+}
+
+   The client would use proxies in the following way:
+
+   *  Traffic not destined to hosts within the "*.internal.example.org"
+      zone is not sent to any proxy defined in this configuration
+
+   *  TCP traffic destined to hosts within the "*.internal.example.org"
+      zone is sent either to the proxy with "http-connect" protocol or
+      to the proxy with "connect-ip" protocol
+
+   *  UDP traffic destined to hosts within the "*.internal.example.org"
+      zone is sent either to the proxy with "connect-udp" protocol or to
+      the proxy with "connect-ip" protocol
+
+   *  Traffic other than TCP and UDP destined to hosts within the
+      "*.internal.example.org" zone is sent either to the proxy with
+      "connect-ip" protocol
+
+   The following example provides a configuration of proxies to be used
+   by default with a set with exceptions to bypass:
+
+   {
+     "identifier": "proxy.example.org.",
+     "expires": "2023-06-23T06:00:00Z",
+     "prefixes": [],
+     "proxies": [
+       {
+         "protocol": "http-connect",
+         "proxy": "proxy.example.org:80",
+         "identifier": "default_proxy"
+       },
+       {
+         "protocol": "http-connect",
+         "proxy": "backup.example.org:80",
+         "identifier": "secondary_proxy"
+       }
+     ],
+     "proxy-match": [
+       {
+         "domains": [ "*.intranet.example.org" ],
+         "proxies": [ ]
+       },
+       {
+         "subnets": [ "192.168.0.0/16", "2001:DB8::/32" ],
+         "proxies": [ ]
+       },
+       {
+         "proxies": [ "default_proxy", "secondary_proxy" ]
+       }
+     ]
+   }
+
+   In this case, the client would not send to the proxies any TCP
+   traffic that is not destined to hosts matching
+   "*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32.  Due to
+   the order in "proxies" list in the last rule of "proxy-match", the
+   client would prefer "proxy.example.org:80" over
+   "backup.example.org:80"
 
 5.  Discovering proxies from network PvDs
 

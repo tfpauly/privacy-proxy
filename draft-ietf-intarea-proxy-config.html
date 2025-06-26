@@ -1590,7 +1590,7 @@ response to indicate a PvD that has two related proxy URIs.<a href="#section-3.3
 <pre>
 :status = 200
 content-type = application/pvd+json
-content-length = 307
+content-length = 322
 
 {
   "identifier": "proxy.example.org.",
@@ -1784,8 +1784,8 @@ a single destination rule for "*.internal.example.org".<a href="#section-4.4-1" 
       "identifier": "default_proxy"
     },
     {
-      "protocol": "connect-udp",
-      "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
+      "protocol": "http-connect",
+      "proxy": "proxy2.example.org:80",
       "identifier": "default_proxy"
     }
   ],
@@ -1799,7 +1799,7 @@ a single destination rule for "*.internal.example.org".<a href="#section-4.4-1" 
 </pre><a href="#section-4.4-2" class="pilcrow">¶</a>
 </div>
 <p id="section-4.4-3">The client could then choose to use either proxy associated with the "default_proxy" identifier
-for accessing names that fall within the "*.internal.example.org" zone. This would include the
+for accessing TCP hosts that fall within the "*.internal.example.org" zone. This would include the
 hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
 all other hosts within "internal.example.org".<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 <p id="section-4.4-4">In the next example, two proxies are defined with a separate identifiers, and there are
@@ -1825,7 +1825,7 @@ three destination rules:<a href="#section-4.4-4" class="pilcrow">¶</a></p>
   "proxy-match": [
     {
       "domains": [ "*.special.example.org" ],
-      "ports": [ 80, 443 ],
+      "ports": [ "80", "443", "49152-65535" ],
       "proxies": [ "special_proxy" ]
     },
     {
@@ -1841,11 +1841,104 @@ three destination rules:<a href="#section-4.4-4" class="pilcrow">¶</a></p>
 </pre><a href="#section-4.4-5" class="pilcrow">¶</a>
 </div>
 <p id="section-4.4-6">In this case, the client would use "special-proxy.example.org:80"
-for any traffic using ports 80 or 443 that matches "*.special.example.org".
-The client would not use any of the defined proxies for access to
+for any TCP traffic that matches "*.special.example.org" destined to ports 80, 443 or any port between
+49152 and 65535. The client would not use any of the defined proxies for access to
 "no-proxy.internal.example.org". And finally, the client would use
-"proxy.example.org:80" to access any other traffic that matches
+"proxy.example.org:80" to access any other TCP traffic that matches
 "*.internal.example.org".<a href="#section-4.4-6" class="pilcrow">¶</a></p>
+<p id="section-4.4-7">In the following example, three proxies are sharing a common identifier ("default-proxy"), but use
+separate protocols constraining the traffic that they can process.<a href="#section-4.4-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4-8">
+<pre>
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2023-06-23T06:00:00Z",
+  "prefixes": [],
+  "proxies": [
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "connect-udp",
+      "proxy": "https://proxy.example.org/masque/udp/{target_host},{target_port}",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "connect-ip",
+      "proxy": "https://proxy.example.org/masque/ip{?target,ipproto}",
+      "identifier": "default_proxy"
+    }
+  ],
+  "proxy-match": [
+    {
+      "domains": [ "*.internal.example.org" ],
+      "proxies": [ "default_proxy" ]
+    }
+  ]
+}
+</pre><a href="#section-4.4-8" class="pilcrow">¶</a>
+</div>
+<p id="section-4.4-9">The client would use proxies in the following way:<a href="#section-4.4-9" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.4-10.1">
+            <p id="section-4.4-10.1.1">Traffic not destined to hosts within the "*.internal.example.org" zone is not sent
+to any proxy defined in this configuration<a href="#section-4.4-10.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.4-10.2">
+            <p id="section-4.4-10.2.1">TCP traffic destined to hosts within the "*.internal.example.org" zone is sent
+either to the proxy with "http-connect" protocol or to the proxy with "connect-ip" protocol<a href="#section-4.4-10.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.4-10.3">
+            <p id="section-4.4-10.3.1">UDP traffic destined to hosts within the "*.internal.example.org" zone is sent
+either to the proxy with "connect-udp" protocol or to the proxy with "connect-ip" protocol<a href="#section-4.4-10.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.4-10.4">
+            <p id="section-4.4-10.4.1">Traffic other than TCP and UDP destined to hosts within the "*.internal.example.org" zone is sent
+either to the proxy with "connect-ip" protocol<a href="#section-4.4-10.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.4-11">The following example provides a configuration of proxies to be used by default with a
+set with exceptions to bypass:<a href="#section-4.4-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4-12">
+<pre>
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2023-06-23T06:00:00Z",
+  "prefixes": [],
+  "proxies": [
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "http-connect",
+      "proxy": "backup.example.org:80",
+      "identifier": "secondary_proxy"
+    }
+  ],
+  "proxy-match": [
+    {
+      "domains": [ "*.intranet.example.org" ],
+      "proxies": [ ]
+    },
+    {
+      "subnets": [ "192.168.0.0/16", "2001:DB8::/32" ],
+      "proxies": [ ]
+    },
+    {
+      "proxies": [ "default_proxy", "secondary_proxy" ]
+    }
+  ]
+}
+</pre><a href="#section-4.4-12" class="pilcrow">¶</a>
+</div>
+<p id="section-4.4-13">In this case, the client would not send to the proxies any TCP traffic
+that is not destined to hosts matching "*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32.
+Due to the order in "proxies" list in the last rule of "proxy-match", the client would prefer
+"proxy.example.org:80" over "backup.example.org:80"<a href="#section-4.4-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
