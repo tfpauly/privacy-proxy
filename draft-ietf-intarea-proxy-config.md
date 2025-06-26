@@ -148,7 +148,7 @@ this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in
 Presence of this SvcParamKey, named `pvd` indicates that the proxy host supports PvD discovery via
 the well-known PvD URI ".well-known/pvd" defined in {{Section 4.1 of PVDDATA}}. The presence of this
 key in an HTTPS or SVCB record signals that the proxy's PvD Additional Information can be fetched
-using the "https" scheme from the proxy authority at the well-known path. The presentation and
+using the "https" scheme from the proxy host on port 443 using the `.well-known/pvd` path. The presentation and
 wire-format values for `pvd` SvcParamKey MUST be empty.
 
 A client receiving a DNS record like the following:
