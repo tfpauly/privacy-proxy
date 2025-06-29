@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-26T00:21:42.473233+00:00",
+  "timestamp": "2025-06-29T00:24:41.898230+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -3725,7 +3725,7 @@
       "id": "I_kwDOEwrMS85mEwFj",
       "title": "Consider marking PvD support in HTTPS/SVCB records",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/235",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [],
@@ -3734,8 +3734,8 @@
       ],
       "body": "We could add a flag in the HTTPS/SVCB record to indicate that a host has a PvD (presumably at .well-known/pvd?) that clients should look at",
       "createdAt": "2023-05-16T18:25:14Z",
-      "updatedAt": "2023-05-16T18:25:14Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-26T02:32:58Z",
+      "closedAt": "2025-06-26T02:32:58Z",
       "comments": []
     },
     {
@@ -3972,7 +3972,7 @@
       "id": "I_kwDOEwrMS86PyBNP",
       "title": "Make sure example content-lengths are correct",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/252",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [],
@@ -3981,9 +3981,17 @@
       ],
       "body": "",
       "createdAt": "2024-07-16T23:57:30Z",
-      "updatedAt": "2024-07-16T23:57:31Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-06-26T02:33:31Z",
+      "closedAt": "2025-06-26T02:33:31Z",
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Done with #286 ",
+          "createdAt": "2025-06-26T02:33:31Z",
+          "updatedAt": "2025-06-26T02:33:31Z"
+        }
+      ]
     },
     {
       "number": 253,
@@ -4363,7 +4371,7 @@
       "id": "I_kwDOEwrMS86tDkPt",
       "title": "Provide more examples of matching criteria",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/273",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -4374,8 +4382,8 @@
       ],
       "body": "To help explain common patterns, give examples of how to use the match and exclude criteria",
       "createdAt": "2025-03-07T16:07:02Z",
-      "updatedAt": "2025-06-19T15:27:19Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-26T02:33:13Z",
+      "closedAt": "2025-06-26T02:33:13Z",
       "comments": [
         {
           "author": "tfpauly",
@@ -4383,6 +4391,13 @@
           "body": "Some examples added in #283 , more can be added",
           "createdAt": "2025-06-19T15:27:19Z",
           "updatedAt": "2025-06-19T15:27:19Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Done with #286 ",
+          "createdAt": "2025-06-26T02:33:13Z",
+          "updatedAt": "2025-06-26T02:33:13Z"
         }
       ]
     },
@@ -4487,11 +4502,12 @@
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
+        "Future Version",
         "Proxy PvDs"
       ],
       "body": "When implementing proxy config format for our use cases I run into a challenge with versioning and policy refresh.\nThat is, client needs to constantly make a HEAD request for proxy config to see if it was updated or not. And in some cases (VPN-like remote access) configuration can change rapidly.\n\nI think it would be great to include a \"version\" field (could be an opaque string) and propose a HTTP header for MASQUE proxies to include in their responses that would signal the latest proxy configuration version. This way client knows when its proxy config is outdated and needs to be refreshed.\n\nOn top of that we could specify that implementors should use Expires header as per RFC9111 for client to periodically refresh proxy configuration.\n\n@tfpauly @ddragana what do you think?",
       "createdAt": "2025-04-10T09:10:59Z",
-      "updatedAt": "2025-06-24T03:11:28Z",
+      "updatedAt": "2025-06-26T02:33:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -4534,7 +4550,7 @@
       "id": "I_kwDOEwrMS86868Kx",
       "title": "Different hosts, or different hosts or ports?",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/288",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mstojens",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -4543,8 +4559,8 @@
       ],
       "body": "In Section 2, it says:\n\n> Note that all proxies that are colocated on the same host and port share the same PvD Additional Information. Proxy deployments that need separate PvD configuration properties SHOULD use different hosts.\n\nThis means that proxies cannot colocate on the same (host, post) tuple, but the recommendation to separate the proxies is to change hostnames. Why not change ports on the same host? If that's acceptable, please just add that. If it isn't, please explain why.",
       "createdAt": "2025-06-23T21:56:28Z",
-      "updatedAt": "2025-06-24T03:24:16Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-26T02:22:58Z",
+      "closedAt": "2025-06-26T02:22:58Z",
       "comments": [
         {
           "author": "tfpauly",
@@ -4560,7 +4576,7 @@
       "id": "I_kwDOEwrMS8686_J2",
       "title": "Forbid IANA from reserving keys containing underscores",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/289",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mstojens",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -4569,7 +4585,25 @@
       ],
       "body": "This is implied but never stated. Instructions to IANA should be explicit to avoid any future conflict between the \"safe to use keys with underscores for vendor reasons\" feature of the spec and an erroneous IANA registration in the future.",
       "createdAt": "2025-06-23T22:01:53Z",
-      "updatedAt": "2025-06-24T03:11:29Z",
+      "updatedAt": "2025-06-26T02:22:40Z",
+      "closedAt": "2025-06-26T02:22:40Z",
+      "comments": []
+    },
+    {
+      "number": 292,
+      "id": "I_kwDOEwrMS869k6nh",
+      "title": "Should we document which protocols can be proxied over various proxy types?",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/292",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "We have a table of proxy protocols, we should consider adding a note about which protocols can go over those (TCP only over http-connect, etc)",
+      "createdAt": "2025-06-26T21:59:48Z",
+      "updatedAt": "2025-06-26T21:59:48Z",
       "closedAt": null,
       "comments": []
     }
@@ -20067,7 +20101,7 @@
       "id": "PR_kwDOEwrMS86bj2y2",
       "title": "Added pvd marker for HTTPS/SVCB records",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/285",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -20076,17 +20110,19 @@
       ],
       "body": "As discussed, to close https://github.com/tfpauly/privacy-proxy/issues/235",
       "createdAt": "2025-06-22T17:41:10Z",
-      "updatedAt": "2025-06-25T23:27:46Z",
+      "updatedAt": "2025-06-26T02:32:57Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
-      "baseRefOid": "ef8bc142f41e0b2304063877659b8d32873f99d6",
+      "baseRefOid": "bd6e07e747382d16578426bc55ebe97bc09bbbaa",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "main",
-      "headRefOid": "fbad50b7e2ee12ec8202b0f8a750471d7dcf131d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "98b02db169a9462e443390afe5e99f8940c9ef88",
+      "closedAt": "2025-06-26T02:32:57Z",
+      "mergedAt": "2025-06-26T02:32:57Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "4b87677e3facb202ddc97ac16c5f36f47bfec35a"
+      },
       "comments": [],
       "reviews": [
         {
@@ -20128,6 +20164,46 @@
               "updatedAt": "2025-06-25T23:27:58Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86wc2iH",
+          "commit": {
+            "abbreviatedOid": "537f3a1"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-26T02:31:07Z",
+          "updatedAt": "2025-06-26T02:31:08Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "Yup, makes sense\r\n```suggestion\r\nusing the \"https\" scheme from the proxy host on port 443 using the `.well-known/pvd` path. The presentation and\r\n```",
+              "createdAt": "2025-06-26T02:31:08Z",
+              "updatedAt": "2025-06-26T02:31:08Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86wc2y-",
+          "commit": {
+            "abbreviatedOid": "cb28569"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-26T02:32:02Z",
+          "updatedAt": "2025-06-26T02:32:02Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "```suggestion\r\nusing the \"https\" scheme from the proxy host on port 443 using the well-known path. The presentation and\r\n```",
+              "createdAt": "2025-06-26T02:32:02Z",
+              "updatedAt": "2025-06-26T02:32:02Z"
+            }
+          ]
         }
       ]
     },
@@ -20136,7 +20212,7 @@
       "id": "PR_kwDOEwrMS86bj97I",
       "title": "Added more examples and corrected existing ones",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/286",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -20145,17 +20221,19 @@
       ],
       "body": "Added two more examples to cover constraints of proxy protocols, default proxy configuration as well as ordered list of proxies.\r\n\r\nCorrected content-length in the very first example (I suppose we should count whitespace and line breaks if we include them in the text)\r\n\r\nCorrected previous examples:\r\n- clarified traffic protocols\r\n- ports are strings. Added a range of ports in the example to make it obvious",
       "createdAt": "2025-06-22T18:38:58Z",
-      "updatedAt": "2025-06-25T23:23:39Z",
+      "updatedAt": "2025-06-26T02:23:06Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "ef8bc142f41e0b2304063877659b8d32873f99d6",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "more-examples",
       "headRefOid": "255e64f7fdb20bbbc5746baaade3940aba9be241",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-06-26T02:23:06Z",
+      "mergedAt": "2025-06-26T02:23:06Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "bd6e07e747382d16578426bc55ebe97bc09bbbaa"
+      },
       "comments": [],
       "reviews": [
         {
@@ -20241,7 +20319,7 @@
       "id": "PR_kwDOEwrMS86bxDsP",
       "title": "Tell experts not to allow underscores in keys",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/290",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -20252,17 +20330,19 @@
       ],
       "body": "Closes #289 ",
       "createdAt": "2025-06-24T03:10:39Z",
-      "updatedAt": "2025-06-25T23:17:51Z",
+      "updatedAt": "2025-06-26T02:22:39Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "29bf5f53d750d07b2730441b35d86814c003e321",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "tfp/iana-no-underscore",
       "headRefOid": "e04fac7b95141b1819f9f6b8cf714a627d70df46",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-06-26T02:22:39Z",
+      "mergedAt": "2025-06-26T02:22:39Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "4830c96a814029f454d238fd259858ae0e7d1dcd"
+      },
       "comments": [],
       "reviews": [
         {
@@ -20298,7 +20378,7 @@
       "id": "PR_kwDOEwrMS86bxIEx",
       "title": "Clarify which port to fetch the PvD on",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/291",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -20309,17 +20389,19 @@
       ],
       "body": "Closes #288 \r\n\r\nFixes a bug in the spec where in an example, we showed fetching the PvD from a non-TLS port. We need to use a single PvD config per hostname.",
       "createdAt": "2025-06-24T03:23:41Z",
-      "updatedAt": "2025-06-25T23:16:19Z",
+      "updatedAt": "2025-06-26T02:22:57Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "29bf5f53d750d07b2730441b35d86814c003e321",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "tfp/just-host",
       "headRefOid": "6a8f6fb1c383ce415df6e8938799dafb2000b2ee",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-06-26T02:22:57Z",
+      "mergedAt": "2025-06-26T02:22:57Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "b159d99ae6e03062447f95f1054f505315370bc2"
+      },
       "comments": [],
       "reviews": [
         {
