@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-29T00:24:41.898230+00:00",
+  "timestamp": "2025-07-15T00:23:09.594970+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4603,9 +4603,17 @@
       ],
       "body": "We have a table of proxy protocols, we should consider adding a note about which protocols can go over those (TCP only over http-connect, etc)",
       "createdAt": "2025-06-26T21:59:48Z",
-      "updatedAt": "2025-06-26T21:59:48Z",
+      "updatedAt": "2025-07-14T09:38:19Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'd stay away from that as it may be very implementation specific when it comes to things such as CONNECT-IP.",
+          "createdAt": "2025-07-14T09:38:19Z",
+          "updatedAt": "2025-07-14T09:38:19Z"
+        }
+      ]
     }
   ],
   "pulls": [
