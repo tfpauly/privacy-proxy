@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-15T00:23:09.594970+00:00",
+  "timestamp": "2025-07-22T00:23:20.447234+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4533,7 +4533,7 @@
       ],
       "body": "\"Subnet-based destination information are only meant be used when applications are communicating with destinations identified by only an IP address, and not a hostname.\nDestination rules SHOULD NOT contain both the domains key and the subnets key. Many clients will not resolve a domain being accessed through the proxy to an IP address before using a proxy, so the subnet information may not be available.\"\n\nIt is very common for almost every PAC file in use today to have lines that send traffic to internal subnets DIRECT, based on a DNS lookup.  This is due to the common practice of internally hosted and externally hosted applications using the same domain.  The list to bypass these internally hosted sites one at a time, along with the maintenance of that list would be a large undertaking at any decently sized organization.  \n\nI understand the desire to prevent DNS requests by the host, but this would prevent the uptake of this standard in large corporate environments. ",
       "createdAt": "2025-06-03T17:36:16Z",
-      "updatedAt": "2025-06-24T03:11:28Z",
+      "updatedAt": "2025-07-21T21:03:26Z",
       "closedAt": null,
       "comments": [
         {
@@ -4542,6 +4542,13 @@
           "body": "I think this is a bit more of a client policy decision at the end of the day. Perhaps the language can be softened, but I think we should be encouraging the matching rules to not rely on this behavior.",
           "createdAt": "2025-06-04T04:41:07Z",
           "updatedAt": "2025-06-04T04:41:07Z"
+        },
+        {
+          "author": "JamesTaft",
+          "authorAssociation": "NONE",
+          "body": "I've socialized this with quite a few heavy PAC file users recently and none of them can use this without rules around the resolved IP.\n\nThe good thing is this can be done much more efficiently by the browser compared to how the javascript is interpreted today.  Admins don't know better and write PAC files to do a DNS lookup for the domain in question on every line, instead of looking it up once and assigning it to a variable.  Even with caching, you can drop the evaluation time from 300ms down to 100ms by making this change.",
+          "createdAt": "2025-07-21T21:03:26Z",
+          "updatedAt": "2025-07-21T21:03:26Z"
         }
       ]
     },
@@ -4603,7 +4610,7 @@
       ],
       "body": "We have a table of proxy protocols, we should consider adding a note about which protocols can go over those (TCP only over http-connect, etc)",
       "createdAt": "2025-06-26T21:59:48Z",
-      "updatedAt": "2025-07-14T09:38:19Z",
+      "updatedAt": "2025-07-21T21:04:48Z",
       "closedAt": null,
       "comments": [
         {
@@ -4612,6 +4619,13 @@
           "body": "I'd stay away from that as it may be very implementation specific when it comes to things such as CONNECT-IP.",
           "createdAt": "2025-07-14T09:38:19Z",
           "updatedAt": "2025-07-14T09:38:19Z"
+        },
+        {
+          "author": "JamesTaft",
+          "authorAssociation": "NONE",
+          "body": "I think citing those RFCs would be enough.",
+          "createdAt": "2025-07-21T21:04:47Z",
+          "updatedAt": "2025-07-21T21:04:47Z"
         }
       ]
     }
