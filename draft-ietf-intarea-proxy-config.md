@@ -357,12 +357,12 @@ This is done to prevent commonly needing to include both "\*.example.com" and "e
 in the `domains` array of a `proxy-match` rule.
 
 The `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
-written using CIDR notation. Subnet-based destination information is only meant be used when applications
-are communicating with destinations identified by only an IP address, and not a hostname.
-
-Destination rules SHOULD NOT contain both the `domains` key and the `subnets` key. Many
-clients will not resolve a domain being accessed through the proxy to an IP address before using
-a proxy, so the subnet information may not be available.
+written using CIDR notation. Subnet-based destination information can apply to cases where
+applications are communicating directly with an IP address (without having resolved a DNS name)
+as well as cases where an application resolved a DNS name to a set of IP addresses. Note that
+if destination rules includes an empty `proxies` list (indicating that no proxy is applicable for
+this subnet), an application can only reliably follow this destination rule if it resolves DNS
+names prior to proxying.
 
 The `ports` array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a `-` in between.
