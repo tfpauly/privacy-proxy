@@ -449,8 +449,9 @@ a single destination rule for "\*.internal.example.org".
 The client could then choose to use either proxy associated with the "default_proxy" identifier
 for accessing TCP hosts that fall within the "\*.internal.example.org" zone. This would include the
 hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
-all other hosts within "internal.example.org".
-
+all other hosts within "internal.example.org". The client should use the same proxy for the following
+requests to hosts falling into the "\*.internal.example.org" zone to increase connection reuse and make
+use of the connection resumption.
 
 In the next example, two proxies are defined with a separate identifiers, and there are
 three destination rules:
