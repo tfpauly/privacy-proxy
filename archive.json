@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-22T00:23:20.447234+00:00",
+  "timestamp": "2025-07-24T00:23:07.485810+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4527,13 +4527,15 @@
       "state": "OPEN",
       "author": "JamesTaft",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "tfpauly"
+      ],
       "labels": [
         "Proxy PvDs"
       ],
       "body": "\"Subnet-based destination information are only meant be used when applications are communicating with destinations identified by only an IP address, and not a hostname.\nDestination rules SHOULD NOT contain both the domains key and the subnets key. Many clients will not resolve a domain being accessed through the proxy to an IP address before using a proxy, so the subnet information may not be available.\"\n\nIt is very common for almost every PAC file in use today to have lines that send traffic to internal subnets DIRECT, based on a DNS lookup.  This is due to the common practice of internally hosted and externally hosted applications using the same domain.  The list to bypass these internally hosted sites one at a time, along with the maintenance of that list would be a large undertaking at any decently sized organization.  \n\nI understand the desire to prevent DNS requests by the host, but this would prevent the uptake of this standard in large corporate environments. ",
       "createdAt": "2025-06-03T17:36:16Z",
-      "updatedAt": "2025-07-21T21:03:26Z",
+      "updatedAt": "2025-07-22T09:31:51Z",
       "closedAt": null,
       "comments": [
         {
@@ -4610,7 +4612,7 @@
       ],
       "body": "We have a table of proxy protocols, we should consider adding a note about which protocols can go over those (TCP only over http-connect, etc)",
       "createdAt": "2025-06-26T21:59:48Z",
-      "updatedAt": "2025-07-21T21:04:48Z",
+      "updatedAt": "2025-07-22T07:44:47Z",
       "closedAt": null,
       "comments": [
         {
@@ -4626,6 +4628,57 @@
           "body": "I think citing those RFCs would be enough.",
           "createdAt": "2025-07-21T21:04:47Z",
           "updatedAt": "2025-07-21T21:04:47Z"
+        },
+        {
+          "author": "mstojens",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I agree this should be avoided. The implications of tunnel choice seems out of scope, this is just about how to advertise them.",
+          "createdAt": "2025-07-22T07:44:47Z",
+          "updatedAt": "2025-07-22T07:44:47Z"
+        }
+      ]
+    },
+    {
+      "number": 293,
+      "id": "I_kwDOEwrMS87Bz7xL",
+      "title": "Clarify that proxy should be reused",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/293",
+      "state": "OPEN",
+      "author": "ddragana",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "We should document that if there are multiple proxies that can serve the same destination or a set of destination, the proxy should be reuse. We do not need to document how to  choose a proxy, just that once chosen it should e reused.",
+      "createdAt": "2025-07-22T08:14:10Z",
+      "updatedAt": "2025-07-22T08:17:20Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 294,
+      "id": "I_kwDOEwrMS87B0GTy",
+      "title": "Clarify that a resolved IP address can be use to decide on destination rules.",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/294",
+      "state": "CLOSED",
+      "author": "ddragana",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "it is not clear IP destination rule can only be use with IP when connecting to an IP address or whether a resolved IP address can be used as well.\n\nThe subnets rules can be use for both.",
+      "createdAt": "2025-07-22T08:25:20Z",
+      "updatedAt": "2025-07-22T09:31:47Z",
+      "closedAt": "2025-07-22T09:31:47Z",
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "I think this is a dup of #282 ",
+          "createdAt": "2025-07-22T09:31:47Z",
+          "updatedAt": "2025-07-22T09:31:47Z"
         }
       ]
     }
@@ -20526,6 +20579,211 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 295,
+      "id": "PR_kwDOEwrMS86gCXv6",
+      "title": "Allow IP subnet rules to apply to resolved names",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/295",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Closes #282",
+      "createdAt": "2025-07-22T10:08:08Z",
+      "updatedAt": "2025-07-22T20:32:59Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "f08da4940d7392c2b0d8fa3e7bd157f208553011",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-24",
+      "headRefOid": "d49ae78ea90847cbf3866ff743c91dc245a37434",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS861Vy3g",
+          "commit": {
+            "abbreviatedOid": "d49ae78"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM! Thank you for doing it so quickly.",
+          "createdAt": "2025-07-22T10:33:35Z",
+          "updatedAt": "2025-07-22T10:33:35Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS861WKiX",
+          "commit": {
+            "abbreviatedOid": "d49ae78"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-22T11:00:48Z",
+          "updatedAt": "2025-07-22T11:00:48Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "Do we care if the all IP from the resolved set are in the subnets or just a subset? ",
+              "createdAt": "2025-07-22T11:00:48Z",
+              "updatedAt": "2025-07-22T11:00:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS861WLgr",
+          "commit": {
+            "abbreviatedOid": "d49ae78"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-22T11:02:13Z",
+          "updatedAt": "2025-07-22T11:02:14Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "Was removing SHOULD NOT on purpose?",
+              "createdAt": "2025-07-22T11:02:14Z",
+              "updatedAt": "2025-07-22T11:02:14Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS861Y8uS",
+          "commit": {
+            "abbreviatedOid": "d49ae78"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-22T14:15:04Z",
+          "updatedAt": "2025-07-22T14:15:04Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "I think if there are some IPs in the set and others not in the set, then the flows can be split... some would proxy and some wouldn't, depending on what the client picks",
+              "createdAt": "2025-07-22T14:15:04Z",
+              "updatedAt": "2025-07-22T14:15:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS861Y9Ay",
+          "commit": {
+            "abbreviatedOid": "d49ae78"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-22T14:15:23Z",
+          "updatedAt": "2025-07-22T14:15:23Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "Yes, I don't think this makes sense anymore with the current language.",
+              "createdAt": "2025-07-22T14:15:23Z",
+              "updatedAt": "2025-07-22T14:15:23Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS861e8r6",
+          "commit": {
+            "abbreviatedOid": "d49ae78"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-22T20:31:20Z",
+          "updatedAt": "2025-07-22T20:31:21Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "That is fine.",
+              "createdAt": "2025-07-22T20:31:21Z",
+              "updatedAt": "2025-07-22T20:31:21Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS861e9X9",
+          "commit": {
+            "abbreviatedOid": "d49ae78"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-22T20:32:38Z",
+          "updatedAt": "2025-07-22T20:32:39Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "That is true.",
+              "createdAt": "2025-07-22T20:32:39Z",
+              "updatedAt": "2025-07-22T20:32:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS861e9kF",
+          "commit": {
+            "abbreviatedOid": "d49ae78"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-22T20:32:58Z",
+          "updatedAt": "2025-07-22T20:32:58Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 296,
+      "id": "PR_kwDOEwrMS86gC4IH",
+      "title": "Clarify that the proxy should be reuse.",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/296",
+      "state": "OPEN",
+      "author": "ddragana",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Fixes #293 .",
+      "createdAt": "2025-07-22T10:50:46Z",
+      "updatedAt": "2025-07-22T20:59:41Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "f08da4940d7392c2b0d8fa3e7bd157f208553011",
+      "headRepository": "ddragana/privacy-proxy",
+      "headRefName": "reuse_proxy",
+      "headRefOid": "2d823d1d1ac5b262182193a7dface1bfaa9f6614",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
