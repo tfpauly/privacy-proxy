@@ -391,7 +391,11 @@ the rule needs to match at one of the entries in the `domains` array and one of 
 
 A matched rule will then either point to one or more proxy `identifier` values, which correspond
 to proxies defined in the list from {{proxy-enumeration}}, or instructs the client to not send the
-matching traffic to any proxy.
+matching traffic to any proxy. If a matching rule contains more then one `identifier` the client
+should treat the list as an ordered list, where the first `identifier` is the most preferred.
+Multiple proxy dictionaries can contain the same `identifier` value. In this case, the client
+can choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests
+to the same proxy `identifier` to increase connection reuse.
 
 Entries listed in a `proxy-match` object MUST NOT expand the set of destinations that a client is
 willing to send to a particular proxy. The list can only narrow the list of destinations
@@ -449,8 +453,9 @@ a single destination rule for "\*.internal.example.org".
 The client could then choose to use either proxy associated with the "default_proxy" identifier
 for accessing TCP hosts that fall within the "\*.internal.example.org" zone. This would include the
 hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
-all other hosts within "internal.example.org".
-
+all other hosts within "internal.example.org". The client will use the same proxy for the following
+requests to hosts falling into the "\*.internal.example.org" zone to increase connection reuse and make
+use of the connection resumption.
 
 In the next example, two proxies are defined with a separate identifiers, and there are
 three destination rules:
