@@ -1769,7 +1769,11 @@ the rule needs to match at one of the entries in the <code>domains</code> array 
 <code>ports</code> array.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.2-4">A matched rule will then either point to one or more proxy <code>identifier</code> values, which correspond
 to proxies defined in the list from <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>, or instructs the client to not send the
-matching traffic to any proxy.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+matching traffic to any proxy. If a matching rule contains more then one <code>identifier</code> the client
+should treat the list as an ordered list, where the first <code>identifier</code> is the most preferred.
+Multiple proxy dictionaries can contain the same <code>identifier</code> value. In this case, the client
+can choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests
+to the same proxy <code>identifier</code> to increase connection reuse.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
 <p id="section-4.2-5">Entries listed in a <code>proxy-match</code> object MUST NOT expand the set of destinations that a client is
 willing to send to a particular proxy. The list can only narrow the list of destinations
 that the client is willing to send through the proxy. For example, if the client
@@ -1832,7 +1836,9 @@ a single destination rule for "*.internal.example.org".<a href="#section-4.4-1" 
 <p id="section-4.4-3">The client could then choose to use either proxy associated with the "default_proxy" identifier
 for accessing TCP hosts that fall within the "*.internal.example.org" zone. This would include the
 hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
-all other hosts within "internal.example.org".<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+all other hosts within "internal.example.org". The client will use the same proxy for the following
+requests to hosts falling into the "*.internal.example.org" zone to increase connection reuse and make
+use of the connection resumption.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 <p id="section-4.4-4">In the next example, two proxies are defined with a separate identifiers, and there are
 three destination rules:<a href="#section-4.4-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.4-5">
