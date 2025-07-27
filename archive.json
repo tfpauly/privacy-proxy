@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-24T00:23:07.485810+00:00",
+  "timestamp": "2025-07-27T00:25:36.173898+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4507,7 +4507,7 @@
       ],
       "body": "When implementing proxy config format for our use cases I run into a challenge with versioning and policy refresh.\nThat is, client needs to constantly make a HEAD request for proxy config to see if it was updated or not. And in some cases (VPN-like remote access) configuration can change rapidly.\n\nI think it would be great to include a \"version\" field (could be an opaque string) and propose a HTTP header for MASQUE proxies to include in their responses that would signal the latest proxy configuration version. This way client knows when its proxy config is outdated and needs to be refreshed.\n\nOn top of that we could specify that implementors should use Expires header as per RFC9111 for client to periodically refresh proxy configuration.\n\n@tfpauly @ddragana what do you think?",
       "createdAt": "2025-04-10T09:10:59Z",
-      "updatedAt": "2025-06-26T02:33:40Z",
+      "updatedAt": "2025-07-26T08:41:45Z",
       "closedAt": null,
       "comments": [
         {
@@ -4516,6 +4516,13 @@
           "body": "This is being tracked in a proposal https://github.com/yaroslavros/httpbis-outdated-proxy-config",
           "createdAt": "2025-06-19T15:26:58Z",
           "updatedAt": "2025-06-19T15:26:58Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Published here: https://datatracker.ietf.org/doc/draft-rosomakho-httpbis-outdated-proxy-config/",
+          "createdAt": "2025-07-26T08:41:45Z",
+          "updatedAt": "2025-07-26T08:41:45Z"
         }
       ]
     },
@@ -4524,7 +4531,7 @@
       "id": "I_kwDOEwrMS865qONN",
       "title": "Allow IP-based rules after a DNS lookup",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/282",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "JamesTaft",
       "authorAssociation": "NONE",
       "assignees": [
@@ -4535,8 +4542,8 @@
       ],
       "body": "\"Subnet-based destination information are only meant be used when applications are communicating with destinations identified by only an IP address, and not a hostname.\nDestination rules SHOULD NOT contain both the domains key and the subnets key. Many clients will not resolve a domain being accessed through the proxy to an IP address before using a proxy, so the subnet information may not be available.\"\n\nIt is very common for almost every PAC file in use today to have lines that send traffic to internal subnets DIRECT, based on a DNS lookup.  This is due to the common practice of internally hosted and externally hosted applications using the same domain.  The list to bypass these internally hosted sites one at a time, along with the maintenance of that list would be a large undertaking at any decently sized organization.  \n\nI understand the desire to prevent DNS requests by the host, but this would prevent the uptake of this standard in large corporate environments. ",
       "createdAt": "2025-06-03T17:36:16Z",
-      "updatedAt": "2025-07-22T09:31:51Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-26T08:34:24Z",
+      "closedAt": "2025-07-26T08:34:24Z",
       "comments": [
         {
           "author": "tfpauly",
@@ -4603,7 +4610,7 @@
       "id": "I_kwDOEwrMS869k6nh",
       "title": "Should we document which protocols can be proxied over various proxy types?",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/292",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [],
@@ -4612,8 +4619,8 @@
       ],
       "body": "We have a table of proxy protocols, we should consider adding a note about which protocols can go over those (TCP only over http-connect, etc)",
       "createdAt": "2025-06-26T21:59:48Z",
-      "updatedAt": "2025-07-22T07:44:47Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-26T08:41:22Z",
+      "closedAt": "2025-07-26T08:41:22Z",
       "comments": [
         {
           "author": "yaroslavros",
@@ -4635,6 +4642,13 @@
           "body": "I agree this should be avoided. The implications of tunnel choice seems out of scope, this is just about how to advertise them.",
           "createdAt": "2025-07-22T07:44:47Z",
           "updatedAt": "2025-07-22T07:44:47Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Sounds good, closing!",
+          "createdAt": "2025-07-26T08:41:22Z",
+          "updatedAt": "2025-07-26T08:41:22Z"
         }
       ]
     },
@@ -4643,7 +4657,7 @@
       "id": "I_kwDOEwrMS87Bz7xL",
       "title": "Clarify that proxy should be reused",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/293",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ddragana",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -4652,8 +4666,8 @@
       ],
       "body": "We should document that if there are multiple proxies that can serve the same destination or a set of destination, the proxy should be reuse. We do not need to document how to  choose a proxy, just that once chosen it should e reused.",
       "createdAt": "2025-07-22T08:14:10Z",
-      "updatedAt": "2025-07-22T08:17:20Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-26T08:41:04Z",
+      "closedAt": "2025-07-26T08:41:04Z",
       "comments": []
     },
     {
@@ -20585,7 +20599,7 @@
       "id": "PR_kwDOEwrMS86gCXv6",
       "title": "Allow IP subnet rules to apply to resolved names",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/295",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -20596,17 +20610,19 @@
       ],
       "body": "Closes #282",
       "createdAt": "2025-07-22T10:08:08Z",
-      "updatedAt": "2025-07-22T20:32:59Z",
+      "updatedAt": "2025-07-26T08:34:24Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "f08da4940d7392c2b0d8fa3e7bd157f208553011",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "tfpauly-patch-24",
       "headRefOid": "d49ae78ea90847cbf3866ff743c91dc245a37434",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-07-26T08:34:24Z",
+      "mergedAt": "2025-07-26T08:34:24Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "ef2f497735c026f6c1836806bedc01cb4b597c8b"
+      },
       "comments": [],
       "reviews": [
         {
@@ -20762,7 +20778,7 @@
       "id": "PR_kwDOEwrMS86gC4IH",
       "title": "Clarify that the proxy should be reuse.",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/296",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ddragana",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -20771,19 +20787,66 @@
       ],
       "body": "Fixes #293 .",
       "createdAt": "2025-07-22T10:50:46Z",
-      "updatedAt": "2025-07-22T20:59:41Z",
+      "updatedAt": "2025-07-26T08:41:03Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "f08da4940d7392c2b0d8fa3e7bd157f208553011",
       "headRepository": "ddragana/privacy-proxy",
       "headRefName": "reuse_proxy",
-      "headRefOid": "2d823d1d1ac5b262182193a7dface1bfaa9f6614",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "6d6ce9fbee93885af5e7380f5a8babfd861a02d6",
+      "closedAt": "2025-07-26T08:41:03Z",
+      "mergedAt": "2025-07-26T08:41:03Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "186a0480da4325f04d2a01508c464a289f536164"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS862RNyX",
+          "commit": {
+            "abbreviatedOid": "2d823d1"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "Editorial comments, but looks good!",
+          "createdAt": "2025-07-26T08:34:50Z",
+          "updatedAt": "2025-07-26T08:37:32Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\r\nshould treat the list as an ordered list, where the first `identifier` is the most preferred.\r\n```",
+              "createdAt": "2025-07-26T08:34:50Z",
+              "updatedAt": "2025-07-26T08:37:32Z"
+            },
+            {
+              "originalPosition": 7,
+              "body": "```suggestion\r\nMultiple proxy dictionaries can contain the same `identifier` value. In this case, the client\r\n```",
+              "createdAt": "2025-07-26T08:35:19Z",
+              "updatedAt": "2025-07-26T08:37:32Z"
+            },
+            {
+              "originalPosition": 8,
+              "body": "```suggestion\r\ncan choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests\r\n```",
+              "createdAt": "2025-07-26T08:36:04Z",
+              "updatedAt": "2025-07-26T08:37:32Z"
+            },
+            {
+              "originalPosition": 9,
+              "body": "```suggestion\r\nto the same proxy `identifier` to increase connection reuse.\r\n```",
+              "createdAt": "2025-07-26T08:36:26Z",
+              "updatedAt": "2025-07-26T08:37:32Z"
+            },
+            {
+              "originalPosition": 19,
+              "body": "```suggestion\r\nall other hosts within \"internal.example.org\". The client will use the same proxy for the following\r\n```",
+              "createdAt": "2025-07-26T08:36:54Z",
+              "updatedAt": "2025-07-26T08:37:32Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
