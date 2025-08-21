@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-29T00:25:16.018019+00:00",
+  "timestamp": "2025-08-21T00:19:37.162571+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4695,6 +4695,22 @@
           "updatedAt": "2025-07-22T09:31:47Z"
         }
       ]
+    },
+    {
+      "number": 297,
+      "id": "I_kwDOEwrMS87GvhM0",
+      "title": "Proxy PvD: define failure mode for \"expires\" key",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/297",
+      "state": "OPEN",
+      "author": "tdragoun",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "> PvD Additional Information is required to contain the \"identifier\", \"expires\", and \"prefixes\" keys.\n\nThe document defines the `expires` key but does not specify expected client behavior if the configuration expires and subsequent fetch attempts fail. Should the client continue using the last known configuration or revert to the initial configuration? \n\nOn one hand, the last configuration might have expanded the set of known proxies, on the other hand `proxy-match` section might become outdated and overly restrictive. ",
+      "createdAt": "2025-08-19T13:13:05Z",
+      "updatedAt": "2025-08-19T13:13:05Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
