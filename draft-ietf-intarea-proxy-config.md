@@ -56,7 +56,7 @@ to only allow access to a limited set of destinations.
 These improvements to client behavior can be achieved through the use of
 Provisioning Domains. Provisioning Domains (PvDs) are defined in {{?PVD=RFC7556}}
 as consistent sets of network configuration information, which can include proxy
-configuration details {{Section 2 of PVD}}. {{!PVDDATA=RFC8801}} defines a JSON
+configuration details {{Section 2 of PVD}}. {{Section 4.3 of !PVDDATA=RFC8801}} defines a JSON
 {{!JSON=RFC8259}} format for describing Provisioning Domain Additional Information,
 which is an extensible dictionary of properties of the Provisioning Domain.
 
@@ -110,7 +110,7 @@ This document defines a way to fetch PvD Additional Information associated with
 a proxy. This PvD describes the properties of the network accessible through the proxy.
 
 In order to fetch PvD Additional Information associated with a proxy, a client
-issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") {{PVDDATA}}
+issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") as defined in {{Section 4.1 of PVDDATA}}
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
 that are identified by a URI or URI template.
