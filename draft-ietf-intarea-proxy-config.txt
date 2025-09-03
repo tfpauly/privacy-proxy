@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 27 January 2026                                       Microsoft
+Expires: 7 March 2026                                          Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                            26 July 2025
+                                                        3 September 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 January 2026.
+   This Internet-Draft will expire on 7 March 2026.
 
 Copyright Notice
 
@@ -113,9 +113,9 @@ Table of Contents
    of Provisioning Domains.  Provisioning Domains (PvDs) are defined in
    [PVD] as consistent sets of network configuration information, which
    can include proxy configuration details Section 2 of [PVD].
-   [PVDDATA] defines a JSON [JSON] format for describing Provisioning
-   Domain Additional Information, which is an extensible dictionary of
-   properties of the Provisioning Domain.
+   Section 4.3 of [PVDDATA] defines a JSON [JSON] format for describing
+   Provisioning Domain Additional Information, which is an extensible
+   dictionary of properties of the Provisioning Domain.
 
    This document defines several mechanisms to use PvDs to help clients
    understand how to use proxies:
@@ -179,11 +179,12 @@ Table of Contents
 
    In order to fetch PvD Additional Information associated with a proxy,
    a client issues an HTTP GET request for the well-known PvD URI
-   (".well-known/pvd") [PVDDATA] and the host authority of the proxy.
-   This is applicable for both proxies that are identified by a host and
-   port only (such as SOCKS proxies and HTTP CONNECT proxies) and
-   proxies that are identified by a URI or URI template.  The fetch MUST
-   use the "https" scheme and the default port for HTTP over TLS, 443.
+   (".well-known/pvd") as defined in Section 4.1 of [PVDDATA] and the
+   host authority of the proxy.  This is applicable for both proxies
+   that are identified by a host and port only (such as SOCKS proxies
+   and HTTP CONNECT proxies) and proxies that are identified by a URI or
+   URI template.  The fetch MUST use the "https" scheme and the default
+   port for HTTP over TLS, 443.
 
    For example, a client would issue the following request for the PvD
    associated with "https://proxy.example.org/

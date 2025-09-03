@@ -13,21 +13,21 @@
 associated with a proxy, such as other proxy URIs that support different protocols
 and information about which destinations are accessible using a proxy. 
     " name="description">
-<meta content="xml2rfc 3.30.0" name="generator">
+<meta content="xml2rfc 3.30.1" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-intarea-proxy-config-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.0
+  xml2rfc 3.30.1
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.3.8
+    platformdirs 4.4.0
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.4
+    requests 2.32.5
     setuptools 80.9.0
     wcwidth 0.2.13
 -->
@@ -1048,11 +1048,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Proxy Configuration PvDs</td>
-<td class="right">July 2025</td>
+<td class="right">September 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 27 January 2026</td>
+<td class="center">Expires 7 March 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-26" class="published">26 July 2025</time>
+<time datetime="2025-09-03" class="published">3 September 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-27">27 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-03-07">7 March 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ and information about which destinations are accessible using a proxy.<a href="#
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 27 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 7 March 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1273,7 +1273,7 @@ to only allow access to a limited set of destinations.<a href="#section-1-3" cla
 <p id="section-1-4">These improvements to client behavior can be achieved through the use of
 Provisioning Domains. Provisioning Domains (PvDs) are defined in <span>[<a href="#PVD" class="cite xref">PVD</a>]</span>
 as consistent sets of network configuration information, which can include proxy
-configuration details <span><a href="https://rfc-editor.org/rfc/rfc7556#section-2" class="relref">Section 2</a> of [<a href="#PVD" class="cite xref">PVD</a>]</span>. <span>[<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span> defines a JSON
+configuration details <span><a href="https://rfc-editor.org/rfc/rfc7556#section-2" class="relref">Section 2</a> of [<a href="#PVD" class="cite xref">PVD</a>]</span>. <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.3" class="relref">Section 4.3</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span> defines a JSON
 <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> format for describing Provisioning Domain Additional Information,
 which is an extensible dictionary of properties of the Provisioning Domain.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">This document defines several mechanisms to use PvDs to help clients understand how
@@ -1340,7 +1340,7 @@ appear in all capitals, as shown here.<a href="#section-1.2-1" class="pilcrow">�
 <p id="section-2-1">This document defines a way to fetch PvD Additional Information associated with
 a proxy. This PvD describes the properties of the network accessible through the proxy.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">In order to fetch PvD Additional Information associated with a proxy, a client
-issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") <span>[<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>
+issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") as defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.1" class="relref">Section 4.1</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
 that are identified by a URI or URI template. The fetch MUST use the "https" scheme
