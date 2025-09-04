@@ -202,7 +202,7 @@ content provided below.
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
 | protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
-| proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
+| proxy | No | String containing the URI template or host and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 | mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["example_key"] |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | identifier | Yes | A string used to refer to the proxy, which can be referenced by other dictionaries, such as entries in `proxy-match`  | String | "udp-proxy" |
@@ -216,16 +216,17 @@ the Upgrade Token / `:protocol` value.
 
 | Proxy Protocol | Proxy Location Format | Reference | Notes |
 | --- | --- | --- |
-| socks5 | hostname:port | {{!SOCKSv5=RFC1928}} | |
-| http-connect | hostname:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |
-| https-connect | hostname:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |
+| socks5 | host:port | {{!SOCKSv5=RFC1928}} | |
+| http-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |
+| https-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |
 | connect-udp | URI template | {{CONNECT-UDP}} | |
 | connect-ip | URI template | {{CONNECT-IP}} | |
 | connect-tcp | URI template | {{!CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
 {: #proxy-protocol-value-table title="Initial PvD Proxy Protocol Registry Contents"}
 
 The value of `proxy` depends on the Proxy Location Format defined by proxy protocol.
-The types defined here either use a hostname and port, or a full URI template.
+The types defined here either use a host as defined in {{Section 3.2.2 of !URI=RFC3986}} and port,
+or a full URI template.
 
 The value of the `mandatory` key is a list of keys that the client must understand and process to be
 able to use the proxy. A client that does not understand a key from the list or cannot fully process
