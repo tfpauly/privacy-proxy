@@ -249,7 +249,9 @@ across different proxy dictionaries in the `proxies` array, which indicates
 that all references from other dictionaries to a particular identifier value apply
 to all matching proxies. Proxies without the `identifier` key are expected to accept any
 traffic since their destinations cannot be contained in `proxy-match` array defined
-in {{destinations}}.
+in {{destinations}}. Proxies with `identifier` keys are expected to accept only traffic
+matching rules in the `proxy-match` array and SHOULD NOT be used if they are not included in
+the `proxy-match` array.
 
 ## Proprietary keys in proxy configurations {#proxy-proprietary-keys}
 
