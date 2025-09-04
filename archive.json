@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-21T00:19:37.162571+00:00",
+  "timestamp": "2025-09-04T00:19:08.608692+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4704,13 +4704,25 @@
       "state": "OPEN",
       "author": "tdragoun",
       "authorAssociation": "NONE",
-      "assignees": [],
-      "labels": [],
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "> PvD Additional Information is required to contain the \"identifier\", \"expires\", and \"prefixes\" keys.\n\nThe document defines the `expires` key but does not specify expected client behavior if the configuration expires and subsequent fetch attempts fail. Should the client continue using the last known configuration or revert to the initial configuration? \n\nOn one hand, the last configuration might have expanded the set of known proxies, on the other hand `proxy-match` section might become outdated and overly restrictive. ",
       "createdAt": "2025-08-19T13:13:05Z",
-      "updatedAt": "2025-08-19T13:13:05Z",
+      "updatedAt": "2025-09-02T22:36:37Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "The expiration key is part of the original PvD in RFC 8801. However, I agree that we should add a bit of explanatory text \u2014 essentially that the contents of the PvD are valid until that date, and then the client should re-fetch it at that time. I think it makes sense to have the last known configuration be used for at least a period, but we may want to consider what to do if failures are persistent (or the PvD file is missing)",
+          "createdAt": "2025-09-02T22:30:55Z",
+          "updatedAt": "2025-09-02T22:30:55Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -20861,6 +20873,61 @@
               "updatedAt": "2025-07-26T08:37:32Z"
             }
           ]
+        }
+      ]
+    },
+    {
+      "number": 298,
+      "id": "PR_kwDOEwrMS86mcqem",
+      "title": "Added more specific references to RFC 8801",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/298",
+      "state": "MERGED",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "To address first part of https://mailarchive.ietf.org/arch/msg/int-area/O-S89f6JVdEPrCLF7VMJYdarvsc/",
+      "createdAt": "2025-09-02T12:41:42Z",
+      "updatedAt": "2025-09-03T21:30:05Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "186a0480da4325f04d2a01508c464a289f536164",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "more-examples",
+      "headRefOid": "086eb1bea98fb23e37aa3c91512014e8d8e55edf",
+      "closedAt": "2025-09-03T21:30:05Z",
+      "mergedAt": "2025-09-03T21:30:05Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "c9ce173c1d44593a1b57e47d2385100aae577f0c"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS869ccLI",
+          "commit": {
+            "abbreviatedOid": "086eb1b"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-09-02T22:32:28Z",
+          "updatedAt": "2025-09-02T22:32:28Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS869fGzM",
+          "commit": {
+            "abbreviatedOid": "086eb1b"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-09-03T05:56:21Z",
+          "updatedAt": "2025-09-03T05:56:21Z",
+          "comments": []
         }
       ]
     }
