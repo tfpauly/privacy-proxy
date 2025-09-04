@@ -455,7 +455,8 @@ for accessing TCP hosts that fall within the "\*.internal.example.org" zone. Thi
 hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
 all other hosts within "internal.example.org". The client will use the same proxy for the following
 requests to hosts falling into the "\*.internal.example.org" zone to increase connection reuse and make
-use of the connection resumption.
+use of the connection resumption. The client will not use the proxies defined in this configuration
+to hosts outside of the "\*.internal.example.org" zone.
 
 In the next example, two proxies are defined with a separate identifiers, and there are
 three destination rules:
