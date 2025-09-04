@@ -377,17 +377,19 @@ The destination rules can be used to determine which traffic can be sent through
 which specific set of proxies to use for any particular connection. By evaluating the rules in
 order, a consistent behavior for usage can be achieved.
 
-Rules in the `proxy-match` list SHOULD be provided in order of priority, such that a client
+Rules in the `proxy-match` list are provided in order of priority, such that a client
 can evaluate the list of rules from the first in the array to the last in the array, and attempt
 using the matching proxy or proxies from the earliest matching rule first. If earliest matching
 rule has empty list of `proxies` client SHOULD NOT send matching traffic to any proxy defined
-in this PvD. Multiple rules can match for the same destination, in which case all are considered
-to be accessible through the matching proxies in case the sets of proxies are different.
+in this PvD.
 
 In order to match a destination rule in the `proxy-match` list, all properties MUST apply. For
 example, if a destination rule includes a `domains` array and a `ports` array, traffic that matches
 the rule needs to match at one of the entries in the `domains` array and one of the entries in the
-`ports` array.
+`ports` array. In addition, a destination rule is considered a match only if at least one of the
+associated proxy identifiers supports the protocol required by the connection attempt (for
+example, `connect-udp` for UDP traffic). If no listed proxy identifier is applicable to the protocol,
+the rule MUST be treated as not matching, and the client continues evaluation of subsequent rules.
 
 A matched rule will then either point to one or more proxy `identifier` values, which correspond
 to proxies defined in the list from {{proxy-enumeration}}, or instructs the client to not send the
