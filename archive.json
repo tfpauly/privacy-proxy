@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-07T00:21:50.881754+00:00",
+  "timestamp": "2025-09-09T00:20:26.319693+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -21223,7 +21223,7 @@
       "labels": [],
       "body": "Address feedback from Philip Lisiecki:\r\n\r\n>> traffic that matches the rule needs to match at one of the entries in\r\n\r\n> Typo? => \"at least one of\"\r\n\r\n>> In this case, the client would not send to the proxies any TCP traffic that is not destined to hosts matching \"*.[intranet.example.org](http://intranet.example.org/)\", [192.168.0.0/16](http://192.168.0.0/16) or 2001:DB8::/32.\r\n\r\n> Typo? => Either \"that is destined\" or \"the client would only send\" (The stated logic appears to be backwards.)\r\n",
       "createdAt": "2025-09-04T23:09:43Z",
-      "updatedAt": "2025-09-05T11:18:30Z",
+      "updatedAt": "2025-09-08T16:32:14Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
@@ -21275,6 +21275,32 @@
               "updatedAt": "2025-09-05T11:18:30Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS86-ei67",
+          "commit": {
+            "abbreviatedOid": "e1d3a4e"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-09-08T09:18:11Z",
+          "updatedAt": "2025-09-08T09:18:11Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS86-ksD7",
+          "commit": {
+            "abbreviatedOid": "e1d3a4e"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-09-08T16:32:14Z",
+          "updatedAt": "2025-09-08T16:32:14Z",
+          "comments": []
         }
       ]
     },
