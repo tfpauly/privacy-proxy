@@ -42,23 +42,18 @@ IP addresses to determine client location. Maintaining a geographically
 relevant user experience requires large pools of IP addresses, which can
 be costly. Additionally, users often receive inaccurate geolocation
 results because servers rely on geo-IP feeds that can be outdated. To
-address these challenges, we can allow clients to actively send their
-network geolocation directly to the origin server via an HTTP Client
-Hint. This approach will not only enhance geolocation accuracy and reduce IP
+address these challenges, we can allow HTTP clients to actively send their
+network geolocation to an HTTP server via an HTTP header field.
+This approach will not only enhance geolocation accuracy and reduce IP
 costs, but it also gives clients more transparency regarding their perceived
-geolocation.
+geolocation. This is also particularly useful in the case of HTTP
+intermediaries that hide client IP addresses, such as OHTTP relays.
 
 --- middle
 
 # Introduction {#introduction}
 
-HTTP Client Hints {{!RFC8942}} defines a convention for HTTP headers to
-communicate optional information from clients to servers as hints. This
-can be done conditionally based on whether a server claims to support a
-particular hint. A server can request hints by listing them in the
-Accept-CH response header.
-
-This document defines a client hint that can be used to send a
+This document defines an HTTP header field that can be used to send a
 geolocation entry based on the client's determined location. This
 location can be used to influence server behavior, such as by causing
 the server to return responses relevant to the client's location. The
@@ -80,8 +75,22 @@ results. In addition, the hint reduces most servers' reliance on geo-IP
 feeds that often come with limitations such as outdated
 IP-to-location mappings and ongoing maintenance costs.
 
-The client determines geolocation via a cooperating server
-that performs a geo-IP database lookup of the client's IP address.
+Due to the inherent privacy risks in sharing location data, this mechanism
+is not designed for general-purpose use, and is instead defined for specific
+scenarios where the client's IP address is hidden from an HTTP server and
+the sharing of coarse information is deemed appropriate. As an example,
+OHTTP relays {{?OHTTP=RFC9458}} are designed to hide the client's IP address
+from OHTTP gateways and targets, but they may wish to reveal some level of
+coarse information about the client's location to the gateway and target.
+For example, there are cases where regulation requires the target to know
+which country the client appears to be in. This can be accomplished today by
+using a different IP address on the HTTP connection from relay to gateway,
+and encoding the location in a geolocation feed. Alternative, this document
+describes a way to encode the coarse location in the HTTP request headers
+instead.
+
+The geolocation of the client is determined via a geo-IP database
+lookup of the client's IP address.
 
 ## Requirements
 
@@ -104,7 +113,7 @@ For example, the header for an entry "192.0.2.5,US,US-AL,Alabaster" would be:
 Given that the Sec-CH-IP-Geo is a high-entropy client hint (i.e.,
 a client hint that is not in the low-entropy hint table), the server
 needs to explicitly opt-in in order to receive the Geo Client Hint as defined in
-{{RFC8942}}. It will not be sent by default and the server MAY
+{{!RFC8942}}. It will not be sent by default and the server MAY
 indicate support for this hint via the Accept-CH header in the
 initial response:
 
