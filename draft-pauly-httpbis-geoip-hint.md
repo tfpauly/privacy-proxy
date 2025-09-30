@@ -3,12 +3,20 @@ title: The IP Geolocation HTTP Client Hint
 abbrev: IP-Geo Client Hint
 docname: draft-pauly-httpbis-geoip-hint-latest
 category: exp
-
-ipr: trust200902
-keyword: Internet-Draft
-
-stand_alone: yes
-pi: [toc, sortrefs, symrefs]
+submissiontype: IETF
+number:
+date:
+consensus: true
+v: 3
+wg: HTTPBIS
+area: "Web and Internet Transport"
+venue:
+  group: HTTPBIS
+  type: Working Group
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/tfpauly/privacy-proxy
+  latest: "https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-geoip-hint.html"
 
 author:
  -
@@ -34,6 +42,7 @@ author:
     name: Dustin Mitchell
     organization: Google LLC
     email: djmitche@gmail.com
+
 --- abstract
 
 Techniques that improve user privacy by hiding original client IP addresses,
