@@ -47,7 +47,8 @@ network geolocation to an HTTP server via an HTTP header field.
 This approach will not only enhance geolocation accuracy and reduce IP
 costs, but it also gives clients more transparency regarding their perceived
 geolocation. This is also particularly useful in the case of HTTP
-intermediaries that hide client IP addresses, such as Oblivious HTTP (OHTTP) relays.
+intermediaries that hide client IP addresses, such as Oblivious HTTP (OHTTP)
+relays.
 
 --- middle
 
