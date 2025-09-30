@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 7 March 2026                                          Microsoft
+Expires: 3 April 2026                                          Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                        3 September 2025
+                                                       30 September 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 March 2026.
+   This Internet-Draft will expire on 3 April 2026.
 
 Copyright Notice
 
