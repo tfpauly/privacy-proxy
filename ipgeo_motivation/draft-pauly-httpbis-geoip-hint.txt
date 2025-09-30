@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                                Apple Inc.
 Intended status: Experimental                                D. Schinazi
-Expires: 2 April 2026                                        C. McMullin
+Expires: 3 April 2026                                        C. McMullin
                                                              D. Mitchell
                                                               Google LLC
-                                                       29 September 2025
+                                                       30 September 2025
 
 
                   The IP Geolocation HTTP Client Hint
@@ -28,7 +28,7 @@ Abstract
    enhance geolocation accuracy and reduce IP costs, but it also gives
    clients more transparency regarding their perceived geolocation.
    This is also particularly useful in the case of HTTP intermediaries
-   that hide client IP addresses, such as OHTTP relays.
+   that hide client IP addresses, such as Oblivious HTTP (OHTTP) relays.
 
 Discussion Venues
 
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 April 2026.
+   This Internet-Draft will expire on 3 April 2026.
 
 Copyright Notice
 
