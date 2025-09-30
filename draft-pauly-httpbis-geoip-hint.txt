@@ -2,7 +2,7 @@
 
 
 
-Network Working Group                                           T. Pauly
+HTTPBIS                                                         T. Pauly
 Internet-Draft                                                Apple Inc.
 Intended status: Experimental                                D. Schinazi
 Expires: 3 April 2026                                        C. McMullin
@@ -30,9 +30,18 @@ Abstract
    This is also particularly useful in the case of HTTP intermediaries
    that hide client IP addresses, such as Oblivious HTTP (OHTTP) relays.
 
-Discussion Venues
+About This Document
 
    This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at
+   https://tfpauly.github.io/privacy-proxy/#go.draft-pauly-httpbis-
+   geoip-hint.html.  Status information for this document may be found
+   at https://datatracker.ietf.org/doc/draft-pauly-httpbis-geoip-hint/.
+
+   Discussion of this document takes place on the HTTPBIS Working Group
+   mailing list (mailto:ietf-http-wg@w3.org), which is archived at
+   https://lists.w3.org/Archives/Public/ietf-http-wg/.
 
    Source for this draft and an issue tracker can be found at
    https://github.com/tfpauly/privacy-proxy.
