@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-09T00:20:26.319693+00:00",
+  "timestamp": "2025-09-30T00:20:27.756376+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -21363,6 +21363,34 @@
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "absolute-domain",
       "headRefOid": "ead44b84f8bc507d941fc59e7c36ae7110b7e5dc",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 307,
+      "id": "PR_kwDOEwrMS86rNdJe",
+      "title": "GeoIP: Add OHTTP use case to motivation",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/307",
+      "state": "OPEN",
+      "author": "DavidSchinazi",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "Geo Hint"
+      ],
+      "body": "This PR adds the OHTTP use case to the geoIP draft, and mentions that this is intended for specific use cases and not general browsing. It also removes some of the early text on client hint since that's not the focus of the background/motivation.",
+      "createdAt": "2025-09-29T23:51:51Z",
+      "updatedAt": "2025-09-29T23:51:51Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "ipgeo_motivation",
+      "headRefOid": "97a11c529669438cb0fc028541a3a0dc324fb68f",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
