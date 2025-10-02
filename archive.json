@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-30T00:20:27.756376+00:00",
+  "timestamp": "2025-10-02T00:19:39.040829+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -21375,7 +21375,7 @@
       "id": "PR_kwDOEwrMS86rNdJe",
       "title": "GeoIP: Add OHTTP use case to motivation",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/307",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "DavidSchinazi",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -21384,19 +21384,42 @@
       ],
       "body": "This PR adds the OHTTP use case to the geoIP draft, and mentions that this is intended for specific use cases and not general browsing. It also removes some of the early text on client hint since that's not the focus of the background/motivation.",
       "createdAt": "2025-09-29T23:51:51Z",
-      "updatedAt": "2025-09-29T23:51:51Z",
+      "updatedAt": "2025-09-30T21:13:14Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "ipgeo_motivation",
-      "headRefOid": "97a11c529669438cb0fc028541a3a0dc324fb68f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "77b58fbb63bf3f50e6b091f873c46f98a89e89c5",
+      "closedAt": "2025-09-30T21:13:14Z",
+      "mergedAt": "2025-09-30T21:13:14Z",
+      "mergedBy": "DavidSchinazi",
+      "mergeCommit": {
+        "oid": "abd952a643bc39f5b13262e74cc7924db6af831e"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87D5nGs",
+          "commit": {
+            "abbreviatedOid": "97a11c5"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-09-30T20:43:52Z",
+          "updatedAt": "2025-09-30T20:44:30Z",
+          "comments": [
+            {
+              "originalPosition": 13,
+              "body": "Maybe spell this as:\r\n```suggestion\r\nintermediaries that hide client IP addresses, such as Oblivious HTTP (OHTTP) relays.\r\n```\r\nAnd add a reference?",
+              "createdAt": "2025-09-30T20:43:52Z",
+              "updatedAt": "2025-09-30T20:44:30Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
