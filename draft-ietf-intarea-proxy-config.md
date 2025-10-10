@@ -397,7 +397,7 @@ in this PvD.
 
 In order to match a destination rule in the `proxy-match` list, all properties MUST apply. For
 example, if a destination rule includes a `domains` array and a `ports` array, traffic that matches
-the rule needs to match at one of the entries in the `domains` array and one of the entries in the
+the rule needs to match at least one of the entries in the `domains` array and one of the entries in the
 `ports` array. In addition, a destination rule is considered a match only if at least one of the
 associated proxy identifiers supports the protocol required by the connection attempt (for
 example, `connect-udp` for UDP traffic). If no listed proxy identifier is applicable to the protocol,
@@ -597,8 +597,8 @@ set with exceptions to bypass:
 }
 ~~~
 
-In this case, the client would not send to the proxies any TCP traffic
-that is not destined to hosts matching "\*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32.
+In this case, the client will not forward TCP traffic that is destined to hosts matching
+"\*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32, through the proxies.
 Due to the order in "proxies" list in the last rule of "proxy-match", the client would prefer
 "proxy.example.org:80" over "backup.example.org:80"
 
