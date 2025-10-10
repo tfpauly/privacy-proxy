@@ -1779,7 +1779,7 @@ rule has empty list of <code>proxies</code> client SHOULD NOT send matching traf
 in this PvD.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 <p id="section-4.2-3">In order to match a destination rule in the <code>proxy-match</code> list, all properties MUST apply. For
 example, if a destination rule includes a <code>domains</code> array and a <code>ports</code> array, traffic that matches
-the rule needs to match at one of the entries in the <code>domains</code> array and one of the entries in the
+the rule needs to match at least one of the entries in the <code>domains</code> array and one of the entries in the
 <code>ports</code> array. In addition, a destination rule is considered a match only if at least one of the
 associated proxy identifiers supports the protocol required by the connection attempt (for
 example, <code>connect-udp</code> for UDP traffic). If no listed proxy identifier is applicable to the protocol,
@@ -1989,8 +1989,8 @@ set with exceptions to bypass:<a href="#section-4.4-11" class="pilcrow">¶</a></
 }
 </pre><a href="#section-4.4-12" class="pilcrow">¶</a>
 </div>
-<p id="section-4.4-13">In this case, the client would not send to the proxies any TCP traffic
-that is not destined to hosts matching "*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32.
+<p id="section-4.4-13">In this case, the client will not forward TCP traffic that is destined to hosts matching
+"*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32, through the proxies.
 Due to the order in "proxies" list in the last rule of "proxy-match", the client would prefer
 "proxy.example.org:80" over "backup.example.org:80"<a href="#section-4.4-13" class="pilcrow">¶</a></p>
 </section>
