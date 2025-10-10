@@ -1855,7 +1855,8 @@ for accessing TCP hosts that fall within the "*.internal.example.org" zone. This
 hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
 all other hosts within "internal.example.org". The client will use the same proxy for the following
 requests to hosts falling into the "*.internal.example.org" zone to increase connection reuse and make
-use of the connection resumption.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+use of the connection resumption. The client will not use the proxies defined in this configuration
+to hosts outside of the "*.internal.example.org" zone.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 <p id="section-4.4-4">In the next example, two proxies are defined with a separate identifiers, and there are
 three destination rules:<a href="#section-4.4-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.4-5">
