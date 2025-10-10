@@ -298,9 +298,8 @@ Table of Contents
    |          |        |containing   |       |masque{?target_host,target_port}"|
    |          |        |the URI      |       |                                 |
    |          |        |template or  |       |                                 |
-   |          |        |hostname and |       |                                 |
-   |          |        |port of the  |       |                                 |
-   |          |        |proxy,       |       |                                 |
+   |          |        |host and port|       |                                 |
+   |          |        |of the proxy,|       |                                 |
    |          |        |depending on |       |                                 |
    |          |        |the format   |       |                                 |
    |          |        |defined by   |       |                                 |
@@ -343,36 +342,38 @@ Table of Contents
    (and use the :protocol pseudo-header) SHOULD define the protocol
    value to match the Upgrade Token / :protocol value.
 
-   +===============+===============+===============+===================+
-   | Proxy         | Proxy         | Reference     | Notes             |
-   | Protocol      | Location      |               |                   |
-   |               | Format        |               |                   |
-   +===============+===============+===============+===================+
-   | socks5        | hostname:port | [SOCKSv5]     |                   |
-   +---------------+---------------+---------------+-------------------+
-   | http-connect  | hostname:port | Section 9.3.6 | Standard CONNECT  |
-   |               |               | of [HTTP]     | method, using     |
-   |               |               |               | unencrypted HTTP  |
-   |               |               |               | to the proxy      |
-   +---------------+---------------+---------------+-------------------+
-   | https-connect | hostname:port | Section 9.3.6 | Standard CONNECT  |
-   |               |               | of [HTTP]     | method, using     |
-   |               |               |               | TLS-protected     |
-   |               |               |               | HTTP to the       |
-   |               |               |               | proxy             |
-   +---------------+---------------+---------------+-------------------+
-   | connect-udp   | URI template  | [CONNECT-UDP] |                   |
-   +---------------+---------------+---------------+-------------------+
-   | connect-ip    | URI template  | [CONNECT-IP]  |                   |
-   +---------------+---------------+---------------+-------------------+
-   | connect-tcp   | URI template  | [CONNECT-TCP] |                   |
-   +---------------+---------------+---------------+-------------------+
+     +===============+===========+===============+===================+
+     | Proxy         | Proxy     | Reference     | Notes             |
+     | Protocol      | Location  |               |                   |
+     |               | Format    |               |                   |
+     +===============+===========+===============+===================+
+     | socks5        | host:port | [SOCKSv5]     |                   |
+     +---------------+-----------+---------------+-------------------+
+     | http-connect  | host:port | Section 9.3.6 | Standard CONNECT  |
+     |               |           | of [HTTP]     | method, using     |
+     |               |           |               | unencrypted HTTP  |
+     |               |           |               | to the proxy      |
+     +---------------+-----------+---------------+-------------------+
+     | https-connect | host:port | Section 9.3.6 | Standard CONNECT  |
+     |               |           | of [HTTP]     | method, using     |
+     |               |           |               | TLS-protected     |
+     |               |           |               | HTTP to the proxy |
+     +---------------+-----------+---------------+-------------------+
+     | connect-udp   | URI       | [CONNECT-UDP] |                   |
+     |               | template  |               |                   |
+     +---------------+-----------+---------------+-------------------+
+     | connect-ip    | URI       | [CONNECT-IP]  |                   |
+     |               | template  |               |                   |
+     +---------------+-----------+---------------+-------------------+
+     | connect-tcp   | URI       | [CONNECT-TCP] |                   |
+     |               | template  |               |                   |
+     +---------------+-----------+---------------+-------------------+
 
            Table 2: Initial PvD Proxy Protocol Registry Contents
 
    The value of proxy depends on the Proxy Location Format defined by
-   proxy protocol.  The types defined here either use a hostname and
-   port, or a full URI template.
+   proxy protocol.  The types defined here either use a host as defined
+   in Section 3.2.2 of [URI] and port, or a full URI template.
 
    The value of the mandatory key is a list of keys that the client must
    understand and process to be able to use the proxy.  A client that
@@ -1010,6 +1011,11 @@ content-length = 322
               and Parameter Specification via the DNS (SVCB and HTTPS
               Resource Records)", RFC 9460, DOI 10.17487/RFC9460,
               November 2023, <https://www.rfc-editor.org/rfc/rfc9460>.
+
+   [URI]      Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, DOI 10.17487/RFC3986, January 2005,
+              <https://www.rfc-editor.org/rfc/rfc3986>.
 
    [URITEMPLATE]
               Gregorio, J., Fielding, R., Hadley, M., Nottingham, M.,
