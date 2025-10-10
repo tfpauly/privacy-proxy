@@ -116,6 +116,15 @@ by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and pro
 that are identified by a URI or URI template. The fetch MUST use the "https" scheme
 and the default port for HTTP over TLS, 443.
 
+It is not necessary for the client to re‑fetch PvD Additional Information unless
+one of the following conditions occurs:
+
+- The current time is beyond the "expires" value defined in {{Section 4.3 of PVDDATA}}
+- A new Sequence Number for that PvD is received in a Router Advertisement (RA)
+
+To avoid synchronized queries toward the server hosting the PvD Additional Information
+when an object expires, clients MUST apply a randomized backoff as specified in {{Section 4.1 of PVDDATA}}.
+
 For example, a client would issue the following request for the PvD associated
 with "https://proxy.example.org/masque{?target_host,target_port}":
 
