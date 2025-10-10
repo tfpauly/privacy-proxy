@@ -116,6 +116,15 @@ by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and pro
 that are identified by a URI or URI template. The fetch MUST use the "https" scheme
 and the default port for HTTP over TLS, 443.
 
+It is not necessary for the client to re‑fetch PvD Additional Information unless
+one of the following conditions occurs:
+
+- The current time is beyond the "expires" value defined in {{Section 4.3 of PVDDATA}}
+- A new Sequence Number for that PvD is received in a Router Advertisement (RA)
+
+To avoid synchronized queries toward the server hosting the PvD Additional Information
+when an object expires, clients MUST apply a randomized backoff as specified in {{Section 4.1 of PVDDATA}}.
+
 For example, a client would issue the following request for the PvD associated
 with "https://proxy.example.org/masque{?target_host,target_port}":
 
@@ -202,7 +211,7 @@ content provided below.
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
 | protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
-| proxy | No | String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
+| proxy | No | String containing the URI template or host and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
 | mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["example_key"] |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | identifier | Yes | A string used to refer to the proxy, which can be referenced by other dictionaries, such as entries in `proxy-match`  | String | "udp-proxy" |
@@ -216,16 +225,17 @@ the Upgrade Token / `:protocol` value.
 
 | Proxy Protocol | Proxy Location Format | Reference | Notes |
 | --- | --- | --- |
-| socks5 | hostname:port | {{!SOCKSv5=RFC1928}} | |
-| http-connect | hostname:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |
-| https-connect | hostname:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |
+| socks5 | host:port | {{!SOCKSv5=RFC1928}} | |
+| http-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |
+| https-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |
 | connect-udp | URI template | {{CONNECT-UDP}} | |
 | connect-ip | URI template | {{CONNECT-IP}} | |
 | connect-tcp | URI template | {{!CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
 {: #proxy-protocol-value-table title="Initial PvD Proxy Protocol Registry Contents"}
 
 The value of `proxy` depends on the Proxy Location Format defined by proxy protocol.
-The types defined here either use a hostname and port, or a full URI template.
+The types defined here either use a host as defined in {{Section 3.2.2 of !URI=RFC3986}} and port,
+or a full URI template.
 
 The value of the `mandatory` key is a list of keys that the client must understand and process to be
 able to use the proxy. A client that does not understand a key from the list or cannot fully process
@@ -249,7 +259,9 @@ across different proxy dictionaries in the `proxies` array, which indicates
 that all references from other dictionaries to a particular identifier value apply
 to all matching proxies. Proxies without the `identifier` key are expected to accept any
 traffic since their destinations cannot be contained in `proxy-match` array defined
-in {{destinations}}.
+in {{destinations}}. Proxies with `identifier` keys are expected to accept only traffic
+matching rules in the `proxy-match` array and SHOULD NOT be used if they are not included in
+the `proxy-match` array.
 
 ## Proprietary keys in proxy configurations {#proxy-proprietary-keys}
 
@@ -367,7 +379,7 @@ names prior to proxying.
 The `ports` array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a `-` in between.
 For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
-If `ports` key is not present, all ports are assumed to match. Comma-separated port list may
+If `ports` key is not present, all ports are assumed to match. The list may
 contain individual port numbers (such as "80") or inclusive ranges of ports. For example
 "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
 
@@ -377,17 +389,19 @@ The destination rules can be used to determine which traffic can be sent through
 which specific set of proxies to use for any particular connection. By evaluating the rules in
 order, a consistent behavior for usage can be achieved.
 
-Rules in the `proxy-match` list SHOULD be provided in order of priority, such that a client
+Rules in the `proxy-match` list are provided in order of priority, such that a client
 can evaluate the list of rules from the first in the array to the last in the array, and attempt
 using the matching proxy or proxies from the earliest matching rule first. If earliest matching
 rule has empty list of `proxies` client SHOULD NOT send matching traffic to any proxy defined
-in this PvD. Multiple rules can match for the same destination, in which case all are considered
-to be accessible through the matching proxies in case the sets of proxies are different.
+in this PvD.
 
 In order to match a destination rule in the `proxy-match` list, all properties MUST apply. For
 example, if a destination rule includes a `domains` array and a `ports` array, traffic that matches
 the rule needs to match at least one of the entries in the `domains` array and one of the entries in the
-`ports` array.
+`ports` array. In addition, a destination rule is considered a match only if at least one of the
+associated proxy identifiers supports the protocol required by the connection attempt (for
+example, `connect-udp` for UDP traffic). If no listed proxy identifier is applicable to the protocol,
+the rule MUST be treated as not matching, and the client continues evaluation of subsequent rules.
 
 A matched rule will then either point to one or more proxy `identifier` values, which correspond
 to proxies defined in the list from {{proxy-enumeration}}, or instructs the client to not send the
