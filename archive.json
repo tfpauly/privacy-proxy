@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-02T00:19:39.040829+00:00",
+  "timestamp": "2025-10-12T00:21:36.171140+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -20936,7 +20936,7 @@
       "id": "PR_kwDOEwrMS86m85Yd",
       "title": "Added reference to expiry and randomized backoff",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/299",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -20945,17 +20945,19 @@
       ],
       "body": "Based on feedback from Watson Ladd.",
       "createdAt": "2025-09-04T22:13:25Z",
-      "updatedAt": "2025-09-05T12:17:52Z",
+      "updatedAt": "2025-10-10T15:37:18Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "main",
       "headRefOid": "0bd3dc5bd205ad2df7e74c5c6fe0e52d22f05f62",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-10-10T15:37:18Z",
+      "mergedAt": "2025-10-10T15:37:18Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "4c4861ab269f2b79f55b59a158b72d49cc1135a6"
+      },
       "comments": [],
       "reviews": [
         {
@@ -20991,7 +20993,7 @@
       "id": "PR_kwDOEwrMS86m9Fe5",
       "title": "Changed hostname to host with reference to RFC 3986",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/300",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -21000,17 +21002,19 @@
       ],
       "body": "To address feedback from Philip Lisiecki\r\n\r\n> When the proxy field is hostname:port, can an IP address be used? For IPv6, should the address use [ipv6]:port like with a URI or just IPv6:port? I didn't see IPv6 mentioned in the referenced HTTP spec section, although maybe it's actually transitively specified. Regardless, is it worth calling out explicitly whether or not IP addresses are OK and if so whether the [] is required here?",
       "createdAt": "2025-09-04T22:42:38Z",
-      "updatedAt": "2025-09-05T10:35:12Z",
+      "updatedAt": "2025-10-10T15:37:31Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "ipv6-address",
       "headRefOid": "90895a00b2ec7296cfc7faab636e24bae0b682da",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-10-10T15:37:30Z",
+      "mergedAt": "2025-10-10T15:37:30Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "c0d11a60da36af34583bbc75c91e4af670f63013"
+      },
       "comments": [],
       "reviews": [
         {
@@ -21046,7 +21050,7 @@
       "id": "PR_kwDOEwrMS86m9IcD",
       "title": "Clarified limited use of proxies with the identifier",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/301",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -21055,17 +21059,19 @@
       ],
       "body": "Addresses feedback from Philip Lisiecki:\r\n\r\n>> The value of identifier key is a string that can be used to refer to a particular proxy from other dictionaries, specifically those defined in Section 4.\r\n\r\n> It is unclear whether an entry with an identifier is allowed to be used even if there is no relevant proxy-match. E.g., is the intent something like \"Proxies with an identifier key SHOULD only be used when a proxy-match applies\"? Or is it meant to be more vague in some way?",
       "createdAt": "2025-09-04T22:49:59Z",
-      "updatedAt": "2025-09-05T10:42:59Z",
+      "updatedAt": "2025-10-10T15:37:47Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "identifier-key-clarification",
       "headRefOid": "621dcafd6d62e6f3cadbe2620979db2155c81121",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-10-10T15:37:47Z",
+      "mergedAt": "2025-10-10T15:37:47Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "159eb6699182351230e46afdfff44f6c63393ed4"
+      },
       "comments": [],
       "reviews": [
         {
@@ -21101,7 +21107,7 @@
       "id": "PR_kwDOEwrMS86m9Jk_",
       "title": "Removed confusing \"Comma-separated list\"",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/302",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -21110,17 +21116,19 @@
       ],
       "body": "Addresses following feedback from Philip Lisiecki:\r\n\r\n>> Comma-separated port list may contain individual port numbers...\r\n\r\n> The explicit mention of \"comma\" makes me think that [\"80,443,12345\"] might be supported in addition to a standard JSON list [\"80\",\"443\",\"12345\"].",
       "createdAt": "2025-09-04T22:53:23Z",
-      "updatedAt": "2025-09-05T10:45:23Z",
+      "updatedAt": "2025-10-10T15:38:04Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "confusing-comma",
       "headRefOid": "41816ea96d3d3b2f429d429c3ec9abd31c3e9a7c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-10-10T15:38:03Z",
+      "mergedAt": "2025-10-10T15:38:03Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "5137e3bc19c95ae947c4ce552c35f2970bda9c4a"
+      },
       "comments": [],
       "reviews": [
         {
@@ -21156,24 +21164,28 @@
       "id": "PR_kwDOEwrMS86m9N-V",
       "title": "Clarified destination rules match criteria",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/303",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "To address feedback from Philip Lisiecki:\r\n\r\n>> Multiple rules can match for the same destination, in which case all are considered to be accessible through the matching proxies in case the sets of proxies are different.\r\n\r\n> I'm confused. This seems to suggest that the client can/should continue looking for more matches after making a match, but that conflicts with the \"first match\" rule proposed just before. Are there some cases where clients can/should continue looking for rule matches? If so, when is that OK to do? Is this just a matter of preference levels, except for empty proxy sets, which always mean \"stop here\"?\r\n> On a related note, what if I have a proxy-match none of whose proxy identifiers apply to the protocol, e.g., a TCP connection but the identified proxy only has \"connect-udp\"? Should the client consider that \"not a match\" and continue looking for more rules? Or stop and declare no proxy available?",
       "createdAt": "2025-09-04T23:04:28Z",
-      "updatedAt": "2025-09-05T11:14:27Z",
+      "updatedAt": "2025-10-10T15:39:11Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "conflicting-rules",
       "headRefOid": "37dc07326365b8e4113d6c607cbd3c07e43883de",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-10-10T15:39:11Z",
+      "mergedAt": "2025-10-10T15:39:11Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "a22c385380c84852827cae28b3f312c31f977456"
+      },
       "comments": [],
       "reviews": [
         {
@@ -21208,6 +21220,19 @@
           "createdAt": "2025-09-05T11:14:27Z",
           "updatedAt": "2025-09-05T11:14:27Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87GJbNO",
+          "commit": {
+            "abbreviatedOid": "37dc073"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-10-10T15:39:06Z",
+          "updatedAt": "2025-10-10T15:39:06Z",
+          "comments": []
         }
       ]
     },
@@ -21216,24 +21241,28 @@
       "id": "PR_kwDOEwrMS86m9PlN",
       "title": "Corrected typos",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/304",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "Address feedback from Philip Lisiecki:\r\n\r\n>> traffic that matches the rule needs to match at one of the entries in\r\n\r\n> Typo? => \"at least one of\"\r\n\r\n>> In this case, the client would not send to the proxies any TCP traffic that is not destined to hosts matching \"*.[intranet.example.org](http://intranet.example.org/)\", [192.168.0.0/16](http://192.168.0.0/16) or 2001:DB8::/32.\r\n\r\n> Typo? => Either \"that is destined\" or \"the client would only send\" (The stated logic appears to be backwards.)\r\n",
       "createdAt": "2025-09-04T23:09:43Z",
-      "updatedAt": "2025-09-08T16:32:14Z",
+      "updatedAt": "2025-10-10T15:39:50Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
-      "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
+      "baseRefOid": "a22c385380c84852827cae28b3f312c31f977456",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "typos",
-      "headRefOid": "e1d3a4ea61e27ebf7de5659a30277c5e6f5fadf5",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "dc3aaa99b0579424ab3999b35c845b07467619db",
+      "closedAt": "2025-10-10T15:39:50Z",
+      "mergedAt": "2025-10-10T15:39:50Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "bef27f0f2ac438d0aea057dcd0c3b3f0b28a94e5"
+      },
       "comments": [],
       "reviews": [
         {
@@ -21309,24 +21338,28 @@
       "id": "PR_kwDOEwrMS86m9S0g",
       "title": "Clarified example 1",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/305",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "Addresses following feedback from Philip Lisiecki:\r\n\r\n> Example #1: Would it be helpful to add a note that domains outside of *.[internal.example.com](http://internal.example.com/) would not use these proxies at all? I see that's explicitly covered in example #2, so that may be sufficient...",
       "createdAt": "2025-09-04T23:17:47Z",
-      "updatedAt": "2025-09-05T11:38:38Z",
+      "updatedAt": "2025-10-10T15:40:16Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "clarify-examples",
       "headRefOid": "63e3bc9c7a92c3cdb12c7676c35828afb44e97d9",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-10-10T15:40:15Z",
+      "mergedAt": "2025-10-10T15:40:15Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "db738cb23e1a2079200e791c7da94d7ecf3aff76"
+      },
       "comments": [],
       "reviews": [
         {
@@ -21341,6 +21374,19 @@
           "createdAt": "2025-09-05T11:38:38Z",
           "updatedAt": "2025-09-05T11:38:38Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87GJc0I",
+          "commit": {
+            "abbreviatedOid": "63e3bc9"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-10-10T15:40:11Z",
+          "updatedAt": "2025-10-10T15:40:11Z",
+          "comments": []
         }
       ]
     },
@@ -21353,10 +21399,12 @@
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "This addresses following feedback from Philip Lisiecki:\r\n\r\n> proxy-match.domains: The examples lack trailing \".\".  Are these to be interpreted using the client's default DNS suffixes or be treated as absolute domain names regardless?",
       "createdAt": "2025-09-05T14:14:00Z",
-      "updatedAt": "2025-09-05T14:14:00Z",
+      "updatedAt": "2025-10-10T15:44:38Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
@@ -21368,7 +21416,34 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87GJhib",
+          "commit": {
+            "abbreviatedOid": "ead44b8"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2025-10-10T15:43:21Z",
+          "updatedAt": "2025-10-10T15:44:38Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "```suggestion\r\nat the end of a domain name is not required; the matching logic is the same regardless of its presence or absence.\r\n```",
+              "createdAt": "2025-10-10T15:43:21Z",
+              "updatedAt": "2025-10-10T15:44:38Z"
+            },
+            {
+              "originalPosition": 6,
+              "body": "I wonder if the URI reference is correct here \u2014 the traffic being matched wouldn't necessarily have a URI as its input. Can we just remove this sentence perhaps?",
+              "createdAt": "2025-10-10T15:44:35Z",
+              "updatedAt": "2025-10-10T15:44:38Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 307,
