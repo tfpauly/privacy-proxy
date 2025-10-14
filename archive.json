@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-12T00:21:36.171140+00:00",
+  "timestamp": "2025-10-14T00:19:43.155658+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -21404,13 +21404,13 @@
       ],
       "body": "This addresses following feedback from Philip Lisiecki:\r\n\r\n> proxy-match.domains: The examples lack trailing \".\".  Are these to be interpreted using the client's default DNS suffixes or be treated as absolute domain names regardless?",
       "createdAt": "2025-09-05T14:14:00Z",
-      "updatedAt": "2025-10-10T15:44:38Z",
+      "updatedAt": "2025-10-13T19:37:05Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "absolute-domain",
-      "headRefOid": "ead44b84f8bc507d941fc59e7c36ae7110b7e5dc",
+      "headRefOid": "4ca9c30b95d36781f873021591d1c3a04762aede",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -21442,6 +21442,59 @@
               "updatedAt": "2025-10-10T15:44:38Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87Gcemf",
+          "commit": {
+            "abbreviatedOid": "710efac"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-12T18:49:01Z",
+          "updatedAt": "2025-10-12T18:49:01Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\r\nin the `domains` array of a `proxy-match` rule.\r\n```",
+              "createdAt": "2025-10-12T18:49:01Z",
+              "updatedAt": "2025-10-12T18:49:02Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87Gceuw",
+          "commit": {
+            "abbreviatedOid": "ead44b8"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-10-12T18:49:54Z",
+          "updatedAt": "2025-10-12T18:49:54Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Removed. Following part should provide enough clarity.",
+              "createdAt": "2025-10-12T18:49:54Z",
+              "updatedAt": "2025-10-12T18:49:54Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87GpqHj",
+          "commit": {
+            "abbreviatedOid": "4ca9c30"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-10-13T19:37:05Z",
+          "updatedAt": "2025-10-13T19:37:05Z",
+          "comments": []
         }
       ]
     },
