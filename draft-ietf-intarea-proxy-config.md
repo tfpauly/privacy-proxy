@@ -367,6 +367,9 @@ an FQDN that only contains the string after the prefix, with no subdomain. So,
 an entry "\*.example.com" in the `domains` array of a `proxy-match` rule would match the FQDN "example.com".
 This is done to prevent commonly needing to include both "\*.example.com" and "example.com"
 in the `domains` array of a `proxy-match` rule.
+Matches are performed against absolute domain names, independent of the client's configured DNS search suffixes.
+Clients MUST NOT apply local DNS suffix search rules when interpreting `domains` entries. A trailing dot (".")
+at the end of a domain name is not required; the matching logic is the same regardless of its presence or absence.
 
 The `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
 written using CIDR notation. Subnet-based destination information can apply to cases where
