@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 13 April 2026                                         Microsoft
+Expires: 18 April 2026                                         Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                         10 October 2025
+                                                         15 October 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 April 2026.
+   This Internet-Draft will expire on 18 April 2026.
 
 Copyright Notice
 
@@ -547,7 +547,12 @@ content-length = 322
    "*.example.com" in the domains array of a proxy-match rule would
    match the FQDN "example.com".  This is done to prevent commonly
    needing to include both "*.example.com" and "example.com" in the
-   domains array of a proxy-match rule.
+   domains array of a proxy-match rule.  Matches are performed against
+   absolute domain names, independent of the client's configured DNS
+   search suffixes.  Clients MUST NOT apply local DNS suffix search
+   rules when interpreting domains entries.  A trailing dot (".") at the
+   end of a domain name is not required; the matching logic is the same
+   regardless of its presence or absence.
 
    The subnets array includes IPv4 and IPv6 address literals, as well as
    IPv4 and IPv6 address subnets written using CIDR notation.  Subnet-
