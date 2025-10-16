@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-14T00:19:43.155658+00:00",
+  "timestamp": "2025-10-16T00:21:02.178734+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -21395,7 +21395,7 @@
       "id": "PR_kwDOEwrMS86nDm1L",
       "title": "Clarify that client DNS search suffix is not relevant",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/306",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -21404,17 +21404,19 @@
       ],
       "body": "This addresses following feedback from Philip Lisiecki:\r\n\r\n> proxy-match.domains: The examples lack trailing \".\".  Are these to be interpreted using the client's default DNS suffixes or be treated as absolute domain names regardless?",
       "createdAt": "2025-09-05T14:14:00Z",
-      "updatedAt": "2025-10-13T19:37:05Z",
+      "updatedAt": "2025-10-15T02:23:31Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "c9ce173c1d44593a1b57e47d2385100aae577f0c",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "absolute-domain",
       "headRefOid": "4ca9c30b95d36781f873021591d1c3a04762aede",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-10-15T02:23:31Z",
+      "mergedAt": "2025-10-15T02:23:30Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "7f5ef4172a78e63b8e01a4f9a9a9092c1b24eec1"
+      },
       "comments": [],
       "reviews": [
         {
@@ -21494,6 +21496,19 @@
           "body": "",
           "createdAt": "2025-10-13T19:37:05Z",
           "updatedAt": "2025-10-13T19:37:05Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87G99qo",
+          "commit": {
+            "abbreviatedOid": "4ca9c30"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-10-15T02:23:22Z",
+          "updatedAt": "2025-10-15T02:23:22Z",
           "comments": []
         }
       ]
