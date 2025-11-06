@@ -13,23 +13,22 @@
 associated with a proxy, such as other proxy URIs that support different protocols
 and information about which destinations are accessible using a proxy. 
     " name="description">
-<meta content="xml2rfc 3.30.2" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-intarea-proxy-config-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.2
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.4.0
+    platformdirs 4.5.0
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.5
-    setuptools 80.9.0
-    wcwidth 0.2.13
+    wcwidth 0.2.14
 -->
 <link href="draft-ietf-intarea-proxy-config.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1048,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Proxy Configuration PvDs</td>
-<td class="right">September 2025</td>
+<td class="right">November 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 3 April 2026</td>
+<td class="center">Expires 10 May 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-09-30" class="published">30 September 2025</time>
+<time datetime="2025-11-06" class="published">6 November 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-03">3 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-05-10">10 May 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1121,7 @@ and information about which destinations are accessible using a proxy.<a href="#
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 3 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 10 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1345,27 +1344,39 @@ and the host authority of the proxy. This is applicable for both proxies that ar
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
 that are identified by a URI or URI template. The fetch MUST use the "https" scheme
 and the default port for HTTP over TLS, 443.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">For example, a client would issue the following request for the PvD associated
-with "https://proxy.example.org/masque{?target_host,target_port}":<a href="#section-2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2-4">
+<p id="section-2-3">It is not necessary for the client to re‑fetch PvD Additional Information unless
+one of the following conditions occurs:<a href="#section-2-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-2-4.1">
+          <p id="section-2-4.1.1">The current time is beyond the "expires" value defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.3" class="relref">Section 4.3</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span><a href="#section-2-4.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-4.2">
+          <p id="section-2-4.2.1">A new Sequence Number for that PvD is received in a Router Advertisement (RA)<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-2-5">To avoid synchronized queries toward the server hosting the PvD Additional Information
+when an object expires, clients MUST apply a randomized backoff as specified in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.1" class="relref">Section 4.1</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">For example, a client would issue the following request for the PvD associated
+with "https://proxy.example.org/masque{?target_host,target_port}":<a href="#section-2-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2-7">
 <pre>
 :method = GET
 :scheme = https
 :authority = proxy.example.org
 :path = /.well-known/pvd
 accept = application/pvd+json
-</pre><a href="#section-2-4" class="pilcrow">¶</a>
+</pre><a href="#section-2-7" class="pilcrow">¶</a>
 </div>
-<p id="section-2-5">A client would send the same request as above for the PvD
+<p id="section-2-8">A client would send the same request as above for the PvD
 assocated with an HTTP CONNECT proxy on "proxy.example.org:8080".
 Note that the client will not make a request to port 8080, but
-to port 443.<a href="#section-2-5" class="pilcrow">¶</a></p>
-<p id="section-2-6">Note that all proxies that are co-located on the same host share the same PvD
+to port 443.<a href="#section-2-8" class="pilcrow">¶</a></p>
+<p id="section-2-9">Note that all proxies that are co-located on the same host share the same PvD
 Additional Information. Proxy deployments that need separate PvD configuration properties
-SHOULD use different hosts.<a href="#section-2-6" class="pilcrow">¶</a></p>
-<p id="section-2-7">PvD Additional Information is required to contain the "identifier", "expires", and
+SHOULD use different hosts.<a href="#section-2-9" class="pilcrow">¶</a></p>
+<p id="section-2-10">PvD Additional Information is required to contain the "identifier", "expires", and
 "prefixes" keys. For proxy PvDs as defined in this document, the "identifier" MUST
-match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.<a href="#section-2-7" class="pilcrow">¶</a></p>
+match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.<a href="#section-2-10" class="pilcrow">¶</a></p>
 <div id="svcparamkey">
 <section id="section-2.1">
         <h3 id="name-discovery-via-https-svcb-re">
@@ -1455,7 +1466,7 @@ content provided below.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">proxy</td>
               <td class="text-left" rowspan="1" colspan="1">No</td>
-              <td class="text-left" rowspan="1" colspan="1">String containing the URI template or hostname and port of the proxy, depending on the format defined by the protocol</td>
+              <td class="text-left" rowspan="1" colspan="1">String containing the URI template or host and port of the proxy, depending on the format defined by the protocol</td>
               <td class="text-left" rowspan="1" colspan="1">String</td>
               <td class="text-left" rowspan="1" colspan="1">"https://proxy.example.org:4443/masque{?target_host,target_port}"</td>
             </tr>
@@ -1488,7 +1499,11 @@ content provided below.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 registry (<a href="#proxy-protocol-iana" class="auto internal xref">Section 7.3</a>), with the initial contents provided below.
 For consistency, any new proxy types that use HTTP Upgrade Tokens (and use
 the <code>:protocol</code> pseudo-header) SHOULD define the <code>protocol</code> value to match
-the Upgrade Token / <code>:protocol</code> value.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+the Upgrade Token / <code>:protocol</code> value. Extensions to proxy types that use
+the same HTTP Upgrade Tokens ought to be covered by the same <code>protocol</code> value;
+if there are properties specific to an extension, the extensions can either
+define new optional keys or rely on negotation within the protocol to discover
+support.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <span id="name-initial-pvd-proxy-protocol-"></span><div id="proxy-protocol-value-table">
 <table class="center" id="table-2">
           <caption>
@@ -1506,7 +1521,7 @@ the Upgrade Token / <code>:protocol</code> value.<a href="#section-3.1-3" class=
           <tbody>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">socks5</td>
-              <td class="text-left" rowspan="1" colspan="1">hostname:port</td>
+              <td class="text-left" rowspan="1" colspan="1">host:port</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <span>[<a href="#SOCKSv5" class="cite xref">SOCKSv5</a>]</span>
 </td>
@@ -1514,7 +1529,7 @@ the Upgrade Token / <code>:protocol</code> value.<a href="#section-3.1-3" class=
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">http-connect</td>
-              <td class="text-left" rowspan="1" colspan="1">hostname:port</td>
+              <td class="text-left" rowspan="1" colspan="1">host:port</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>
 </td>
@@ -1522,7 +1537,7 @@ the Upgrade Token / <code>:protocol</code> value.<a href="#section-3.1-3" class=
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">https-connect</td>
-              <td class="text-left" rowspan="1" colspan="1">hostname:port</td>
+              <td class="text-left" rowspan="1" colspan="1">host:port</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>
 </td>
@@ -1556,7 +1571,8 @@ the Upgrade Token / <code>:protocol</code> value.<a href="#section-3.1-3" class=
         </table>
 </div>
 <p id="section-3.1-5">The value of <code>proxy</code> depends on the Proxy Location Format defined by proxy protocol.
-The types defined here either use a hostname and port, or a full URI template.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+The types defined here either use a host as defined in <span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.2.2" class="relref">Section 3.2.2</a> of [<a href="#URI" class="cite xref">URI</a>]</span> and port,
+or a full URI template.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.1-6">The value of the <code>mandatory</code> key is a list of keys that the client must understand and process to be
 able to use the proxy. A client that does not understand a key from the list or cannot fully process
 the value of a key from the list MUST ignore the entire proxy definition.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
@@ -1580,7 +1596,9 @@ across different proxy dictionaries in the <code>proxies</code> array, which ind
 that all references from other dictionaries to a particular identifier value apply
 to all matching proxies. Proxies without the <code>identifier</code> key are expected to accept any
 traffic since their destinations cannot be contained in <code>proxy-match</code> array defined
-in <a href="#destinations" class="auto internal xref">Section 4</a>.<a href="#section-3.1-11" class="pilcrow">¶</a></p>
+in <a href="#destinations" class="auto internal xref">Section 4</a>. Proxies with <code>identifier</code> keys are expected to accept only traffic
+matching rules in the <code>proxy-match</code> array and SHOULD NOT be used if they are not included in
+the <code>proxy-match</code> array.<a href="#section-3.1-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="proxy-proprietary-keys">
@@ -1733,7 +1751,10 @@ Entries that include the wildcard prefix also MUST be treated as if they match
 an FQDN that only contains the string after the prefix, with no subdomain. So,
 an entry "*.example.com" in the <code>domains</code> array of a <code>proxy-match</code> rule would match the FQDN "example.com".
 This is done to prevent commonly needing to include both "*.example.com" and "example.com"
-in the <code>domains</code> array of a <code>proxy-match</code> rule.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+in the <code>domains</code> array of a <code>proxy-match</code> rule.
+Matches are performed against absolute domain names, independent of the client's configured DNS search suffixes.
+Clients MUST NOT apply local DNS suffix search rules when interpreting <code>domains</code> entries. A trailing dot (".")
+at the end of a domain name is not required; the matching logic is the same regardless of its presence or absence.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 <p id="section-4.1-6">The <code>subnets</code> array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
 written using CIDR notation. Subnet-based destination information can apply to cases where
 applications are communicating directly with an IP address (without having resolved a DNS name)
@@ -1744,7 +1765,7 @@ names prior to proxying.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
 <p id="section-4.1-7">The <code>ports</code> array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a <code>-</code> in between.
 For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
-If <code>ports</code> key is not present, all ports are assumed to match. Comma-separated port list may
+If <code>ports</code> key is not present, all ports are assumed to match. The list may
 contain individual port numbers (such as "80") or inclusive ranges of ports. For example
 "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
 </section>
@@ -1757,16 +1778,18 @@ contain individual port numbers (such as "80") or inclusive ranges of ports. For
 <p id="section-4.2-1">The destination rules can be used to determine which traffic can be sent through proxies, and
 which specific set of proxies to use for any particular connection. By evaluating the rules in
 order, a consistent behavior for usage can be achieved.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">Rules in the <code>proxy-match</code> list SHOULD be provided in order of priority, such that a client
+<p id="section-4.2-2">Rules in the <code>proxy-match</code> list are provided in order of priority, such that a client
 can evaluate the list of rules from the first in the array to the last in the array, and attempt
 using the matching proxy or proxies from the earliest matching rule first. If earliest matching
 rule has empty list of <code>proxies</code> client SHOULD NOT send matching traffic to any proxy defined
-in this PvD. Multiple rules can match for the same destination, in which case all are considered
-to be accessible through the matching proxies in case the sets of proxies are different.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+in this PvD.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 <p id="section-4.2-3">In order to match a destination rule in the <code>proxy-match</code> list, all properties MUST apply. For
 example, if a destination rule includes a <code>domains</code> array and a <code>ports</code> array, traffic that matches
-the rule needs to match at one of the entries in the <code>domains</code> array and one of the entries in the
-<code>ports</code> array.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+the rule needs to match at least one of the entries in the <code>domains</code> array and one of the entries in the
+<code>ports</code> array. In addition, a destination rule is considered a match only if at least one of the
+associated proxy identifiers supports the protocol required by the connection attempt (for
+example, <code>connect-udp</code> for UDP traffic). If no listed proxy identifier is applicable to the protocol,
+the rule MUST be treated as not matching, and the client continues evaluation of subsequent rules.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.2-4">A matched rule will then either point to one or more proxy <code>identifier</code> values, which correspond
 to proxies defined in the list from <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>, or instructs the client to not send the
 matching traffic to any proxy. If a matching rule contains more then one <code>identifier</code> the client
@@ -1838,7 +1861,8 @@ for accessing TCP hosts that fall within the "*.internal.example.org" zone. This
 hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
 all other hosts within "internal.example.org". The client will use the same proxy for the following
 requests to hosts falling into the "*.internal.example.org" zone to increase connection reuse and make
-use of the connection resumption.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+use of the connection resumption. The client will not use the proxies defined in this configuration
+to hosts outside of the "*.internal.example.org" zone.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 <p id="section-4.4-4">In the next example, two proxies are defined with a separate identifiers, and there are
 three destination rules:<a href="#section-4.4-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.4-5">
@@ -1972,8 +1996,8 @@ set with exceptions to bypass:<a href="#section-4.4-11" class="pilcrow">¶</a></
 }
 </pre><a href="#section-4.4-12" class="pilcrow">¶</a>
 </div>
-<p id="section-4.4-13">In this case, the client would not send to the proxies any TCP traffic
-that is not destined to hosts matching "*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32.
+<p id="section-4.4-13">In this case, the client will not forward TCP traffic that is destined to hosts matching
+"*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32, through the proxies.
 Due to the order in "proxies" list in the last rule of "proxy-match", the client would prefer
 "proxy.example.org:80" over "backup.example.org:80"<a href="#section-4.4-13" class="pilcrow">¶</a></p>
 </section>
@@ -2084,8 +2108,10 @@ entries in the <code>proxies</code> list.<a href="#section-7.1.2-2" class="pilcr
 <p id="section-7.2-1">IANA is requested to create a new registry "Proxy Information PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON keys for use in sub-dictionaries under the <code>proxies</code> key.
 The initial contents of this registry are given in <a href="#proxy-information-keys-table" class="auto internal xref">Table 1</a>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
-<p id="section-7.2-2">New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Experts are
-requested to ensure that defined keys do not overlap in names or semantics.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.
+Experts are requested to ensure that defined keys do not overlap in names or semantics, do not contain an underscore character ("_")
+in the names (since underscores are reserved for vendor-specific keys), and have clear format definitions.
+The reference and notes fields MAY be empty.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="proxy-protocol-iana">
@@ -2097,9 +2123,7 @@ requested to ensure that defined keys do not overlap in names or semantics.<a hr
 This new registry reserves JSON values for the <code>protocol</code> key in <code>proxies</code> sub-dictionaries.
 The initial contents of this registry are given in <a href="#proxy-protocol-value-table" class="auto internal xref">Table 2</a>.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 <p id="section-7.3-2">New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.
-Experts are requested to ensure that defined keys do not overlap in names or semantics, do not contain an underscore character ("_")
-in the names (since underscores are reserved for vendor-specific keys), and have clear format definitions.
-The reference and notes fields MAY be empty.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+Experts are requested to ensure that defined keys do not overlap in names. The reference and notes fields MAY be empty.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="proxy-destination-iana">
@@ -2200,6 +2224,10 @@ in the names (since underscores are reserved for vendor-specific keys).<a href="
 <dt id="SVCB-DNS">[SVCB-DNS]</dt>
         <dd>
 <span class="refAuthor">Schwartz, B.</span>, <span class="refAuthor">Bishop, M.</span>, and <span class="refAuthor">E. Nygren</span>, <span class="refTitle">"Service Binding and Parameter Specification via the DNS (SVCB and HTTPS Resource Records)"</span>, <span class="seriesInfo">RFC 9460</span>, <span class="seriesInfo">DOI 10.17487/RFC9460</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9460">https://www.rfc-editor.org/rfc/rfc9460</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="URI">[URI]</dt>
+        <dd>
+<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="URITEMPLATE">[URITEMPLATE]</dt>
       <dd>

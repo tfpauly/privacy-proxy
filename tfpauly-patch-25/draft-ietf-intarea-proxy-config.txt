@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 3 April 2026                                          Microsoft
+Expires: 10 May 2026                                           Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                       30 September 2025
+                                                         6 November 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 April 2026.
+   This Internet-Draft will expire on 10 May 2026.
 
 Copyright Notice
 
@@ -186,6 +186,19 @@ Table of Contents
    URI template.  The fetch MUST use the "https" scheme and the default
    port for HTTP over TLS, 443.
 
+   It is not necessary for the client to re-fetch PvD Additional
+   Information unless one of the following conditions occurs:
+
+   *  The current time is beyond the "expires" value defined in
+      Section 4.3 of [PVDDATA]
+
+   *  A new Sequence Number for that PvD is received in a Router
+      Advertisement (RA)
+
+   To avoid synchronized queries toward the server hosting the PvD
+   Additional Information when an object expires, clients MUST apply a
+   randomized backoff as specified in Section 4.1 of [PVDDATA].
+
    For example, a client would issue the following request for the PvD
    associated with "https://proxy.example.org/
    masque{?target_host,target_port}":
@@ -285,9 +298,8 @@ Table of Contents
    |          |        |containing   |       |masque{?target_host,target_port}"|
    |          |        |the URI      |       |                                 |
    |          |        |template or  |       |                                 |
-   |          |        |hostname and |       |                                 |
-   |          |        |port of the  |       |                                 |
-   |          |        |proxy,       |       |                                 |
+   |          |        |host and port|       |                                 |
+   |          |        |of the proxy,|       |                                 |
    |          |        |depending on |       |                                 |
    |          |        |the format   |       |                                 |
    |          |        |defined by   |       |                                 |
@@ -328,38 +340,44 @@ Table of Contents
    registry (Section 7.3), with the initial contents provided below.
    For consistency, any new proxy types that use HTTP Upgrade Tokens
    (and use the :protocol pseudo-header) SHOULD define the protocol
-   value to match the Upgrade Token / :protocol value.
+   value to match the Upgrade Token / :protocol value.  Extensions to
+   proxy types that use the same HTTP Upgrade Tokens ought to be covered
+   by the same protocol value; if there are properties specific to an
+   extension, the extensions can either define new optional keys or rely
+   on negotation within the protocol to discover support.
 
-   +===============+===============+===============+===================+
-   | Proxy         | Proxy         | Reference     | Notes             |
-   | Protocol      | Location      |               |                   |
-   |               | Format        |               |                   |
-   +===============+===============+===============+===================+
-   | socks5        | hostname:port | [SOCKSv5]     |                   |
-   +---------------+---------------+---------------+-------------------+
-   | http-connect  | hostname:port | Section 9.3.6 | Standard CONNECT  |
-   |               |               | of [HTTP]     | method, using     |
-   |               |               |               | unencrypted HTTP  |
-   |               |               |               | to the proxy      |
-   +---------------+---------------+---------------+-------------------+
-   | https-connect | hostname:port | Section 9.3.6 | Standard CONNECT  |
-   |               |               | of [HTTP]     | method, using     |
-   |               |               |               | TLS-protected     |
-   |               |               |               | HTTP to the       |
-   |               |               |               | proxy             |
-   +---------------+---------------+---------------+-------------------+
-   | connect-udp   | URI template  | [CONNECT-UDP] |                   |
-   +---------------+---------------+---------------+-------------------+
-   | connect-ip    | URI template  | [CONNECT-IP]  |                   |
-   +---------------+---------------+---------------+-------------------+
-   | connect-tcp   | URI template  | [CONNECT-TCP] |                   |
-   +---------------+---------------+---------------+-------------------+
+     +===============+===========+===============+===================+
+     | Proxy         | Proxy     | Reference     | Notes             |
+     | Protocol      | Location  |               |                   |
+     |               | Format    |               |                   |
+     +===============+===========+===============+===================+
+     | socks5        | host:port | [SOCKSv5]     |                   |
+     +---------------+-----------+---------------+-------------------+
+     | http-connect  | host:port | Section 9.3.6 | Standard CONNECT  |
+     |               |           | of [HTTP]     | method, using     |
+     |               |           |               | unencrypted HTTP  |
+     |               |           |               | to the proxy      |
+     +---------------+-----------+---------------+-------------------+
+     | https-connect | host:port | Section 9.3.6 | Standard CONNECT  |
+     |               |           | of [HTTP]     | method, using     |
+     |               |           |               | TLS-protected     |
+     |               |           |               | HTTP to the proxy |
+     +---------------+-----------+---------------+-------------------+
+     | connect-udp   | URI       | [CONNECT-UDP] |                   |
+     |               | template  |               |                   |
+     +---------------+-----------+---------------+-------------------+
+     | connect-ip    | URI       | [CONNECT-IP]  |                   |
+     |               | template  |               |                   |
+     +---------------+-----------+---------------+-------------------+
+     | connect-tcp   | URI       | [CONNECT-TCP] |                   |
+     |               | template  |               |                   |
+     +---------------+-----------+---------------+-------------------+
 
            Table 2: Initial PvD Proxy Protocol Registry Contents
 
    The value of proxy depends on the Proxy Location Format defined by
-   proxy protocol.  The types defined here either use a hostname and
-   port, or a full URI template.
+   proxy protocol.  The types defined here either use a host as defined
+   in Section 3.2.2 of [URI] and port, or a full URI template.
 
    The value of the mandatory key is a list of keys that the client must
    understand and process to be able to use the proxy.  A client that
@@ -389,7 +407,10 @@ Table of Contents
    references from other dictionaries to a particular identifier value
    apply to all matching proxies.  Proxies without the identifier key
    are expected to accept any traffic since their destinations cannot be
-   contained in proxy-match array defined in Section 4.
+   contained in proxy-match array defined in Section 4.  Proxies with
+   identifier keys are expected to accept only traffic matching rules in
+   the proxy-match array and SHOULD NOT be used if they are not included
+   in the proxy-match array.
 
 3.2.  Proprietary keys in proxy configurations
 
@@ -530,7 +551,12 @@ content-length = 322
    "*.example.com" in the domains array of a proxy-match rule would
    match the FQDN "example.com".  This is done to prevent commonly
    needing to include both "*.example.com" and "example.com" in the
-   domains array of a proxy-match rule.
+   domains array of a proxy-match rule.  Matches are performed against
+   absolute domain names, independent of the client's configured DNS
+   search suffixes.  Clients MUST NOT apply local DNS suffix search
+   rules when interpreting domains entries.  A trailing dot (".") at the
+   end of a domain name is not required; the matching logic is the same
+   regardless of its presence or absence.
 
    The subnets array includes IPv4 and IPv6 address literals, as well as
    IPv4 and IPv6 address subnets written using CIDR notation.  Subnet-
@@ -546,10 +572,10 @@ content-length = 322
    UDP ports), as well as ranges of ports written with a low port value
    and a high port value, with a - in between.  For example, "1024-2048"
    matches all ports from 1024 to 2048, including the 1024 and 2048.  If
-   ports key is not present, all ports are assumed to match.  Comma-
-   separated port list may contain individual port numbers (such as
-   "80") or inclusive ranges of ports.  For example "1024-2048" matches
-   all ports from 1024 to 2048, including the 1024 and 2048.
+   ports key is not present, all ports are assumed to match.  The list
+   may contain individual port numbers (such as "80") or inclusive
+   ranges of ports.  For example "1024-2048" matches all ports from 1024
+   to 2048, including the 1024 and 2048.
 
 4.2.  Using Destination Rules
 
@@ -558,21 +584,24 @@ content-length = 322
    any particular connection.  By evaluating the rules in order, a
    consistent behavior for usage can be achieved.
 
-   Rules in the proxy-match list SHOULD be provided in order of
-   priority, such that a client can evaluate the list of rules from the
-   first in the array to the last in the array, and attempt using the
-   matching proxy or proxies from the earliest matching rule first.  If
-   earliest matching rule has empty list of proxies client SHOULD NOT
-   send matching traffic to any proxy defined in this PvD.  Multiple
-   rules can match for the same destination, in which case all are
-   considered to be accessible through the matching proxies in case the
-   sets of proxies are different.
+   Rules in the proxy-match list are provided in order of priority, such
+   that a client can evaluate the list of rules from the first in the
+   array to the last in the array, and attempt using the matching proxy
+   or proxies from the earliest matching rule first.  If earliest
+   matching rule has empty list of proxies client SHOULD NOT send
+   matching traffic to any proxy defined in this PvD.
 
    In order to match a destination rule in the proxy-match list, all
    properties MUST apply.  For example, if a destination rule includes a
    domains array and a ports array, traffic that matches the rule needs
-   to match at one of the entries in the domains array and one of the
-   entries in the ports array.
+   to match at least one of the entries in the domains array and one of
+   the entries in the ports array.  In addition, a destination rule is
+   considered a match only if at least one of the associated proxy
+   identifiers supports the protocol required by the connection attempt
+   (for example, connect-udp for UDP traffic).  If no listed proxy
+   identifier is applicable to the protocol, the rule MUST be treated as
+   not matching, and the client continues evaluation of subsequent
+   rules.
 
    A matched rule will then either point to one or more proxy identifier
    values, which correspond to proxies defined in the list from
@@ -652,7 +681,8 @@ content-length = 322
    "internal.example.org".  The client will use the same proxy for the
    following requests to hosts falling into the "*.internal.example.org"
    zone to increase connection reuse and make use of the connection
-   resumption.
+   resumption.  The client will not use the proxies defined in this
+   configuration to hosts outside of the "*.internal.example.org" zone.
 
    In the next example, two proxies are defined with a separate
    identifiers, and there are three destination rules:
@@ -782,12 +812,11 @@ content-length = 322
      ]
    }
 
-   In this case, the client would not send to the proxies any TCP
-   traffic that is not destined to hosts matching
-   "*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32.  Due to
-   the order in "proxies" list in the last rule of "proxy-match", the
-   client would prefer "proxy.example.org:80" over
-   "backup.example.org:80"
+   In this case, the client will not forward TCP traffic that is
+   destined to hosts matching "*.intranet.example.org", 192.168.0.0/16
+   or 2001:DB8::/32, through the proxies.  Due to the order in "proxies"
+   list in the last rule of "proxy-match", the client would prefer
+   "proxy.example.org:80" over "backup.example.org:80"
 
 5.  Discovering proxies from network PvDs
 
@@ -884,7 +913,10 @@ content-length = 322
    New assignments in the "Proxy Information PvD Keys" registry will be
    administered by IANA through Expert Review [RFC8126].  Experts are
    requested to ensure that defined keys do not overlap in names or
-   semantics.
+   semantics, do not contain an underscore character ("_") in the names
+   (since underscores are reserved for vendor-specific keys), and have
+   clear format definitions.  The reference and notes fields MAY be
+   empty.
 
 7.3.  New PvD Proxy Protocol Registry
 
@@ -896,11 +928,8 @@ content-length = 322
 
    New assignments in the "Proxy Protocol PvD Values" registry will be
    administered by IANA through Expert Review [RFC8126].  Experts are
-   requested to ensure that defined keys do not overlap in names or
-   semantics, do not contain an underscore character ("_") in the names
-   (since underscores are reserved for vendor-specific keys), and have
-   clear format definitions.  The reference and notes fields MAY be
-   empty.
+   requested to ensure that defined keys do not overlap in names.  The
+   reference and notes fields MAY be empty.
 
 7.4.  New PvD Proxy Destination Rule Registry
 
@@ -997,6 +1026,11 @@ content-length = 322
               and Parameter Specification via the DNS (SVCB and HTTPS
               Resource Records)", RFC 9460, DOI 10.17487/RFC9460,
               November 2023, <https://www.rfc-editor.org/rfc/rfc9460>.
+
+   [URI]      Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, DOI 10.17487/RFC3986, January 2005,
+              <https://www.rfc-editor.org/rfc/rfc3986>.
 
    [URITEMPLATE]
               Gregorio, J., Fielding, R., Hadley, M., Nottingham, M.,
