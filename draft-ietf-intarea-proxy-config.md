@@ -221,7 +221,11 @@ The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
 For consistency, any new proxy types that use HTTP Upgrade Tokens (and use
 the `:protocol` pseudo-header) SHOULD define the `protocol` value to match
-the Upgrade Token / `:protocol` value.
+the Upgrade Token / `:protocol` value. Extensions to proxy types that use
+the same HTTP Upgrade Tokens ought to be covered by the same `protocol` value;
+if there are properties specific to an extension, the extensions can either
+define new optional keys or rely on negotation within the protocol to discover
+support.
 
 | Proxy Protocol | Proxy Location Format | Reference | Notes |
 | --- | --- | --- |
@@ -693,8 +697,10 @@ IANA is requested to create a new registry "Proxy Information PvD Keys", within 
 This new registry reserves JSON keys for use in sub-dictionaries under the `proxies` key.
 The initial contents of this registry are given in {{proxy-information-keys-table}}.
 
-New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review {{!RFC8126}}. Experts are
-requested to ensure that defined keys do not overlap in names or semantics.
+New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review {{!RFC8126}}.
+Experts are requested to ensure that defined keys do not overlap in names or semantics, do not contain an underscore character ("\_")
+in the names (since underscores are reserved for vendor-specific keys), and have clear format definitions.
+The reference and notes fields MAY be empty.
 
 ## New PvD Proxy Protocol Registry {#proxy-protocol-iana}
 
@@ -703,9 +709,7 @@ This new registry reserves JSON values for the `protocol` key in `proxies` sub-d
 The initial contents of this registry are given in {{proxy-protocol-value-table}}.
 
 New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review {{RFC8126}}.
-Experts are requested to ensure that defined keys do not overlap in names or semantics, do not contain an underscore character ("\_")
-in the names (since underscores are reserved for vendor-specific keys), and have clear format definitions.
-The reference and notes fields MAY be empty.
+Experts are requested to ensure that defined keys do not overlap in names. The reference and notes fields MAY be empty.
 
 ## New PvD Proxy Destination Rule Registry {#proxy-destination-iana}
 
