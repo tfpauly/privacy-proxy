@@ -254,7 +254,8 @@ this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
 
 The value of `identifier` key is a string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in {{destinations}}. The
-string value is an arbitrary JSON string. Identifier values MAY be duplicated
+string value is an arbitrary JSON string (allowing any format valid for a JSON string
+as defined in {{Section 7 of JSON}}). Identifier values MAY be duplicated
 across different proxy dictionaries in the `proxies` array, which indicates
 that all references from other dictionaries to a particular identifier value apply
 to all matching proxies. Proxies without the `identifier` key are expected to accept any
