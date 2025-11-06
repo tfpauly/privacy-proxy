@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-16T00:21:02.178734+00:00",
+  "timestamp": "2025-11-06T00:21:30.606183+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4723,6 +4723,124 @@
           "updatedAt": "2025-09-02T22:30:55Z"
         }
       ]
+    },
+    {
+      "number": 308,
+      "id": "I_kwDOEwrMS87V34_L",
+      "title": "Why restrict discovery to well-known?",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/308",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "yaroslavros"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "> * why do we restrict the discovery to .well-known/pvd ? I totally get\n> having the well-known path for cases where the proxy is configured via\n> hostname and port (similar to the default URI template for connect-udp),\n> but forcing the path like this prevents having multiple different\n> configurations on the same hostname. I think that's a shame, it prevents\n> one from running the proxy at a specific path while keeping the rest of the\n> website open. If we force a separate hostname, we're leaking that to the\n> network in the SNI.",
+      "createdAt": "2025-11-04T21:27:01Z",
+      "updatedAt": "2025-11-04T21:33:18Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 309,
+      "id": "I_kwDOEwrMS87V35Sd",
+      "title": "Why restrict PvD fetch to 443?",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/309",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "yaroslavros"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "From David Schinazi\n\n> * Similarly, I understand forcing the port if the proxy uses a different\n> protocol like SOCKS, but it doesn't make sense to me for HTTPS. I would\n> love to be able to have a full-service HTTPS proxy with all the methods and\n> the discovery, all within its own port.",
+      "createdAt": "2025-11-04T21:27:36Z",
+      "updatedAt": "2025-11-04T21:33:27Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 310,
+      "id": "I_kwDOEwrMS87V357A",
+      "title": "Clarify characters in \"identifier\" string",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/310",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "From David Schinazi\n\n> * what characters are allowed in the \"identifier\" string? Is it encoded as\n> ASCII or UTF-8?",
+      "createdAt": "2025-11-04T21:28:51Z",
+      "updatedAt": "2025-11-04T21:34:41Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 311,
+      "id": "I_kwDOEwrMS87V36Uu",
+      "title": "Explain adding new proxy protocol support",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/311",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "From David Schinazi\n\n> * how would you envision advertising support\n> for draft-ietf-masque-connect-udp-listen or draft-ietf-masque-quic-proxy in\n> this config? Perhaps some guidance in the document would help designers of\n> future extensions to proxying protocols?",
+      "createdAt": "2025-11-04T21:29:38Z",
+      "updatedAt": "2025-11-04T21:34:35Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 312,
+      "id": "I_kwDOEwrMS87V36iZ",
+      "title": "Clarify complex wildcards",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/312",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "ddragana"
+      ],
+      "labels": [],
+      "body": "From David Schinazi\n\n> * in destination rule domains, do wildcards have to be prefixes? Or is\n> \"*.example.*\" allowed?",
+      "createdAt": "2025-11-04T21:30:03Z",
+      "updatedAt": "2025-11-04T21:34:28Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 313,
+      "id": "I_kwDOEwrMS87V37ac",
+      "title": "Reference CIDR notation",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/313",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "ddragana"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "From David Schinazi\n\n> * would be good to include a reference for CIDR notation",
+      "createdAt": "2025-11-04T21:31:44Z",
+      "updatedAt": "2025-11-04T21:33:45Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
