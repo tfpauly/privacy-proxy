@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-06T00:21:30.606183+00:00",
+  "timestamp": "2025-11-09T00:23:06.951216+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -21679,6 +21679,183 @@
               "updatedAt": "2025-09-30T20:44:30Z"
             }
           ]
+        }
+      ]
+    },
+    {
+      "number": 314,
+      "id": "PR_kwDOEwrMS86xy6Wi",
+      "title": "Allow local policy to override port and path",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/314",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "To address https://github.com/tfpauly/privacy-proxy/issues/309 and https://github.com/tfpauly/privacy-proxy/issues/308",
+      "createdAt": "2025-11-06T03:40:54Z",
+      "updatedAt": "2025-11-06T18:49:14Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "7f5ef4172a78e63b8e01a4f9a9a9092c1b24eec1",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "main",
+      "headRefOid": "2233aa85775e5ab01e2fb9e433d7bc19331be5e4",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87MNeKz",
+          "commit": {
+            "abbreviatedOid": "64b4ad0"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "Looks good! just phrasing nits",
+          "createdAt": "2025-11-06T04:54:17Z",
+          "updatedAt": "2025-11-06T04:54:28Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "```suggestion\r\nBy default, the fetch SHOULD use the standard port for HTTP over TLS (443) and the \".well-known/pvd\" path.\r\nHowever, both the port and the path MAY be overridden by local configuration policy on the client.\r\n```",
+              "createdAt": "2025-11-06T04:54:17Z",
+              "updatedAt": "2025-11-06T04:54:28Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 315,
+      "id": "PR_kwDOEwrMS86xzuOc",
+      "title": "Suggest how to handle proxy protocol extensions",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/315",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Closes #311 \r\nClarify requirements for proxy protocol and PvD keys.",
+      "createdAt": "2025-11-06T05:04:01Z",
+      "updatedAt": "2025-11-06T10:56:33Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "7f5ef4172a78e63b8e01a4f9a9a9092c1b24eec1",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-25",
+      "headRefOid": "a81ede2460ad8299fcd94b2addb8b5a7eea0c435",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87MTE0m",
+          "commit": {
+            "abbreviatedOid": "a81ede2"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good!",
+          "createdAt": "2025-11-06T10:56:33Z",
+          "updatedAt": "2025-11-06T10:56:33Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 316,
+      "id": "PR_kwDOEwrMS86xzy4W",
+      "title": "Clarify characters in identifier string",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/316",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Closes #310 \r\nClarify the format of the identifier value in proxy dictionaries.",
+      "createdAt": "2025-11-06T05:11:15Z",
+      "updatedAt": "2025-11-06T20:14:12Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "7f5ef4172a78e63b8e01a4f9a9a9092c1b24eec1",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-26",
+      "headRefOid": "f54a3d4b2b88d7fa2c6f1049dda21024120923ad",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87MTAYE",
+          "commit": {
+            "abbreviatedOid": "86fe7cc"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-06T10:52:55Z",
+          "updatedAt": "2025-11-06T10:52:55Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Maybe we should be explicit that any UTF-8 string is valid as long as escape rule are followed?\r\nAlso I think it's a good idea to mention that the string is not empty.\r\n\r\nSomething along the lines of\r\n```suggestion\r\nstring value is an arbitrary non-empty JSON string. According to {{Section 8.1 of JSON}} UTF-8 characters are allowed as\r\nlong as they are correctly represented as defined in {{Section 7 of JSON}}). Identifier values MAY be duplicated\r\n```\r\n\r\nWhat do you think?",
+              "createdAt": "2025-11-06T10:52:55Z",
+              "updatedAt": "2025-11-06T10:52:55Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87McYZd",
+          "commit": {
+            "abbreviatedOid": "86fe7cc"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-06T18:51:52Z",
+          "updatedAt": "2025-11-06T18:51:53Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "How about this simple version?\r\n```suggestion\r\nstring value is an arbitrary non-empty JSON string using UTF-8 encoding\r\nas discussed in {{Section 8.1 of JSON}}. Identifier values MAY be duplicated\r\n```",
+              "createdAt": "2025-11-06T18:51:52Z",
+              "updatedAt": "2025-11-06T18:51:53Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87MdtHd",
+          "commit": {
+            "abbreviatedOid": "f54a3d4"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-11-06T20:14:12Z",
+          "updatedAt": "2025-11-06T20:14:12Z",
+          "comments": []
         }
       ]
     }
