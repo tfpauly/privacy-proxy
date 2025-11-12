@@ -1587,7 +1587,8 @@ the value of a key from the list MUST ignore the entire proxy definition.<a href
 this can indicate if the proxy supports HTTP/3, HTTP/2, etc.<a href="#section-3.1-10" class="pilcrow">¶</a></p>
 <p id="section-3.1-11">The value of <code>identifier</code> key is a string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in <a href="#destinations" class="auto internal xref">Section 4</a>. The
-string value is an arbitrary JSON string. Identifier values MAY be duplicated
+string value is an arbitrary non-empty JSON string using UTF-8 encoding
+as discussed in <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.1" class="relref">Section 8.1</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span>. Identifier values MAY be duplicated
 across different proxy dictionaries in the <code>proxies</code> array, which indicates
 that all references from other dictionaries to a particular identifier value apply
 to all matching proxies. Proxies without the <code>identifier</code> key are expected to accept any
