@@ -372,7 +372,7 @@ Clients MUST NOT apply local DNS suffix search rules when interpreting `domains`
 at the end of a domain name is not required; the matching logic is the same regardless of its presence or absence.
 
 The `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
-written using CIDR notation {{?RFC4632}}. Subnet-based destination information can apply to cases where
+written using CIDR notation {{?CIDR=RFC4632}}. Subnet-based destination information can apply to cases where
 applications are communicating directly with an IP address (without having resolved a DNS name)
 as well as cases where an application resolved a DNS name to a set of IP addresses. Note that
 if destination rules includes an empty `proxies` list (indicating that no proxy is applicable for
