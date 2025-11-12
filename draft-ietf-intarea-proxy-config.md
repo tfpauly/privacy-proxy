@@ -359,7 +359,7 @@ with the initial content provided below.
 
 The `domains` array includes specific FQDNs and zones that are either accessible using specific proxy (for
 rules with non-empty `proxies` array) or non-accessible through any proxies (for rules with empty `proxies` array).
-Only wildcard prefix (`*.`) is allowed. A wildcard prefix is used to indicate matching entire domains or subdomains instead of
+Wildcards are allowed only as prefixes (`*.`). A wildcard prefix is used to indicate matching entire domains or subdomains instead of
 specific hostnames. Note that this can be used to match multiple levels of subdomains. For example "\*.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
 Entries that include the wildcard prefix also MUST be treated as if they match
