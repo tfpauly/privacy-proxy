@@ -113,8 +113,9 @@ In order to fetch PvD Additional Information associated with a proxy, a client
 issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") as defined in {{Section 4.1 of PVDDATA}}
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
-that are identified by a URI or URI template. The fetch MUST use the "https" scheme
-and the default port for HTTP over TLS, 443.
+that are identified by a URI or URI template. The fetch MUST use the "https" scheme.
+By default, the fetch SHOULD use the standard port for HTTP over TLS (443) and the ".well-known/pvd" path.
+However, both the port and the path MAY be overridden by local configuration policy on the client.
 
 It is not necessary for the client to re‑fetch PvD Additional Information unless
 one of the following conditions occurs:
