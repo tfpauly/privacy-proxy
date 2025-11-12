@@ -4,8 +4,8 @@
 
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
-Intended status: Standards Track                         15 October 2025
-Expires: 18 April 2026
+Intended status: Standards Track                        12 November 2025
+Expires: 16 May 2026
 
 
               HTTP Header Fields for Proxied SVCB Metadata
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 April 2026.
+   This Internet-Draft will expire on 16 May 2026.
 
 Copyright Notice
 

@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 18 April 2026                                         Microsoft
+Expires: 16 May 2026                                           Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                         15 October 2025
+                                                        12 November 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 April 2026.
+   This Internet-Draft will expire on 16 May 2026.
 
 Copyright Notice
 
@@ -555,14 +555,15 @@ content-length = 322
    regardless of its presence or absence.
 
    The subnets array includes IPv4 and IPv6 address literals, as well as
-   IPv4 and IPv6 address subnets written using CIDR notation.  Subnet-
-   based destination information can apply to cases where applications
-   are communicating directly with an IP address (without having
-   resolved a DNS name) as well as cases where an application resolved a
-   DNS name to a set of IP addresses.  Note that if destination rules
-   includes an empty proxies list (indicating that no proxy is
-   applicable for this subnet), an application can only reliably follow
-   this destination rule if it resolves DNS names prior to proxying.
+   IPv4 and IPv6 address subnets written using CIDR notation [CIDR].
+   Subnet-based destination information can apply to cases where
+   applications are communicating directly with an IP address (without
+   having resolved a DNS name) as well as cases where an application
+   resolved a DNS name to a set of IP addresses.  Note that if
+   destination rules includes an empty proxies list (indicating that no
+   proxy is applicable for this subnet), an application can only
+   reliably follow this destination rule if it resolves DNS names prior
+   to proxying.
 
    The ports array includes specific ports (used for matching TCP and/or
    UDP ports), as well as ranges of ports written with a low port value
@@ -1035,6 +1036,11 @@ content-length = 322
               <https://www.rfc-editor.org/rfc/rfc6570>.
 
 8.2.  Informative References
+
+   [CIDR]     Fuller, V. and T. Li, "Classless Inter-domain Routing
+              (CIDR): The Internet Address Assignment and Aggregation
+              Plan", BCP 122, RFC 4632, DOI 10.17487/RFC4632, August
+              2006, <https://www.rfc-editor.org/rfc/rfc4632>.
 
    [IKEV2SPLIT]
               Pauly, T. and P. Wouters, "Split DNS Configuration for the

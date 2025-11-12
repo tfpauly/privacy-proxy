@@ -13,22 +13,21 @@
 associated with a proxy, such as other proxy URIs that support different protocols
 and information about which destinations are accessible using a proxy. 
     " name="description">
-<meta content="xml2rfc 3.30.2" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-intarea-proxy-config-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.2
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.4.0
+    platformdirs 4.5.0
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.5
-    setuptools 80.9.0
     wcwidth 0.2.14
 -->
 <link href="draft-ietf-intarea-proxy-config.xml" rel="alternate" type="application/rfc+xml">
@@ -1048,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Proxy Configuration PvDs</td>
-<td class="right">October 2025</td>
+<td class="right">November 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 18 April 2026</td>
+<td class="center">Expires 16 May 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-15" class="published">15 October 2025</time>
+<time datetime="2025-11-12" class="published">12 November 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-18">18 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-05-16">16 May 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1121,7 @@ and information about which destinations are accessible using a proxy.<a href="#
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 18 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 16 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1753,7 +1752,7 @@ Matches are performed against absolute domain names, independent of the client's
 Clients MUST NOT apply local DNS suffix search rules when interpreting <code>domains</code> entries. A trailing dot (".")
 at the end of a domain name is not required; the matching logic is the same regardless of its presence or absence.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 <p id="section-4.1-6">The <code>subnets</code> array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
-written using CIDR notation. Subnet-based destination information can apply to cases where
+written using CIDR notation <span>[<a href="#CIDR" class="cite xref">CIDR</a>]</span>. Subnet-based destination information can apply to cases where
 applications are communicating directly with an IP address (without having resolved a DNS name)
 as well as cases where an application resolved a DNS name to a set of IP addresses. Note that
 if destination rules includes an empty <code>proxies</code> list (indicating that no proxy is applicable for
@@ -2239,6 +2238,10 @@ in the names (since underscores are reserved for vendor-specific keys).<a href="
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="CIDR">[CIDR]</dt>
+        <dd>
+<span class="refAuthor">Fuller, V.</span> and <span class="refAuthor">T. Li</span>, <span class="refTitle">"Classless Inter-domain Routing (CIDR): The Internet Address Assignment and Aggregation Plan"</span>, <span class="seriesInfo">BCP 122</span>, <span class="seriesInfo">RFC 4632</span>, <span class="seriesInfo">DOI 10.17487/RFC4632</span>, <time datetime="2006-08" class="refDate">August 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4632">https://www.rfc-editor.org/rfc/rfc4632</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="IKEV2SPLIT">[IKEV2SPLIT]</dt>
         <dd>
 <span class="refAuthor">Pauly, T.</span> and <span class="refAuthor">P. Wouters</span>, <span class="refTitle">"Split DNS Configuration for the Internet Key Exchange Protocol Version 2 (IKEv2)"</span>, <span class="seriesInfo">RFC 8598</span>, <span class="seriesInfo">DOI 10.17487/RFC8598</span>, <time datetime="2019-05" class="refDate">May 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8598">https://www.rfc-editor.org/rfc/rfc8598</a>&gt;</span>. </dd>
