@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-09T00:23:06.951216+00:00",
+  "timestamp": "2025-11-13T00:21:48.322667+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4729,7 +4729,7 @@
       "id": "I_kwDOEwrMS87V34_L",
       "title": "Why restrict discovery to well-known?",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/308",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -4740,8 +4740,8 @@
       ],
       "body": "> * why do we restrict the discovery to .well-known/pvd ? I totally get\n> having the well-known path for cases where the proxy is configured via\n> hostname and port (similar to the default URI template for connect-udp),\n> but forcing the path like this prevents having multiple different\n> configurations on the same hostname. I think that's a shame, it prevents\n> one from running the proxy at a specific path while keeping the rest of the\n> website open. If we force a separate hostname, we're leaking that to the\n> network in the SNI.",
       "createdAt": "2025-11-04T21:27:01Z",
-      "updatedAt": "2025-11-04T21:33:18Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-12T04:18:41Z",
+      "closedAt": "2025-11-12T04:18:41Z",
       "comments": []
     },
     {
@@ -4749,7 +4749,7 @@
       "id": "I_kwDOEwrMS87V35Sd",
       "title": "Why restrict PvD fetch to 443?",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/309",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -4760,8 +4760,8 @@
       ],
       "body": "From David Schinazi\n\n> * Similarly, I understand forcing the port if the proxy uses a different\n> protocol like SOCKS, but it doesn't make sense to me for HTTPS. I would\n> love to be able to have a full-service HTTPS proxy with all the methods and\n> the discovery, all within its own port.",
       "createdAt": "2025-11-04T21:27:36Z",
-      "updatedAt": "2025-11-04T21:33:27Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-12T04:18:41Z",
+      "closedAt": "2025-11-12T04:18:41Z",
       "comments": []
     },
     {
@@ -4769,7 +4769,7 @@
       "id": "I_kwDOEwrMS87V357A",
       "title": "Clarify characters in \"identifier\" string",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/310",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -4780,8 +4780,8 @@
       ],
       "body": "From David Schinazi\n\n> * what characters are allowed in the \"identifier\" string? Is it encoded as\n> ASCII or UTF-8?",
       "createdAt": "2025-11-04T21:28:51Z",
-      "updatedAt": "2025-11-04T21:34:41Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-12T04:18:04Z",
+      "closedAt": "2025-11-12T04:18:04Z",
       "comments": []
     },
     {
@@ -4789,7 +4789,7 @@
       "id": "I_kwDOEwrMS87V36Uu",
       "title": "Explain adding new proxy protocol support",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/311",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -4800,8 +4800,8 @@
       ],
       "body": "From David Schinazi\n\n> * how would you envision advertising support\n> for draft-ietf-masque-connect-udp-listen or draft-ietf-masque-quic-proxy in\n> this config? Perhaps some guidance in the document would help designers of\n> future extensions to proxying protocols?",
       "createdAt": "2025-11-04T21:29:38Z",
-      "updatedAt": "2025-11-04T21:34:35Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-12T04:18:26Z",
+      "closedAt": "2025-11-12T04:18:26Z",
       "comments": []
     },
     {
@@ -4809,7 +4809,7 @@
       "id": "I_kwDOEwrMS87V36iZ",
       "title": "Clarify complex wildcards",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/312",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -4818,8 +4818,8 @@
       "labels": [],
       "body": "From David Schinazi\n\n> * in destination rule domains, do wildcards have to be prefixes? Or is\n> \"*.example.*\" allowed?",
       "createdAt": "2025-11-04T21:30:03Z",
-      "updatedAt": "2025-11-04T21:34:28Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-12T04:17:49Z",
+      "closedAt": "2025-11-12T04:17:48Z",
       "comments": []
     },
     {
@@ -4827,7 +4827,7 @@
       "id": "I_kwDOEwrMS87V37ac",
       "title": "Reference CIDR notation",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/313",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -4838,8 +4838,8 @@
       ],
       "body": "From David Schinazi\n\n> * would be good to include a reference for CIDR notation",
       "createdAt": "2025-11-04T21:31:44Z",
-      "updatedAt": "2025-11-04T21:33:45Z",
-      "closedAt": null,
+      "updatedAt": "2025-11-12T04:11:23Z",
+      "closedAt": "2025-11-12T04:11:23Z",
       "comments": []
     }
   ],
@@ -21687,7 +21687,7 @@
       "id": "PR_kwDOEwrMS86xy6Wi",
       "title": "Allow local policy to override port and path",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/314",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -21696,17 +21696,19 @@
       ],
       "body": "To address https://github.com/tfpauly/privacy-proxy/issues/309 and https://github.com/tfpauly/privacy-proxy/issues/308",
       "createdAt": "2025-11-06T03:40:54Z",
-      "updatedAt": "2025-11-06T18:49:14Z",
+      "updatedAt": "2025-11-12T04:18:40Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "7f5ef4172a78e63b8e01a4f9a9a9092c1b24eec1",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "main",
       "headRefOid": "2233aa85775e5ab01e2fb9e433d7bc19331be5e4",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-11-12T04:18:40Z",
+      "mergedAt": "2025-11-12T04:18:40Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "00c915892667d2c05b4d0a56096661a76ee25926"
+      },
       "comments": [],
       "reviews": [
         {
@@ -21728,6 +21730,19 @@
               "updatedAt": "2025-11-06T04:54:28Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87NYzlA",
+          "commit": {
+            "abbreviatedOid": "2233aa8"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-11-11T01:27:02Z",
+          "updatedAt": "2025-11-11T01:27:02Z",
+          "comments": []
         }
       ]
     },
@@ -21736,7 +21751,7 @@
       "id": "PR_kwDOEwrMS86xzuOc",
       "title": "Suggest how to handle proxy protocol extensions",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/315",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -21747,17 +21762,19 @@
       ],
       "body": "Closes #311 \r\nClarify requirements for proxy protocol and PvD keys.",
       "createdAt": "2025-11-06T05:04:01Z",
-      "updatedAt": "2025-11-06T10:56:33Z",
+      "updatedAt": "2025-11-12T04:18:25Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "7f5ef4172a78e63b8e01a4f9a9a9092c1b24eec1",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "tfpauly-patch-25",
       "headRefOid": "a81ede2460ad8299fcd94b2addb8b5a7eea0c435",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-11-12T04:18:25Z",
+      "mergedAt": "2025-11-12T04:18:25Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "dacc8d1664d2007a14ff07b59657b11a0839f60e"
+      },
       "comments": [],
       "reviews": [
         {
@@ -21772,6 +21789,19 @@
           "createdAt": "2025-11-06T10:56:33Z",
           "updatedAt": "2025-11-06T10:56:33Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87NYyPb",
+          "commit": {
+            "abbreviatedOid": "a81ede2"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-11-11T01:24:11Z",
+          "updatedAt": "2025-11-11T01:24:11Z",
+          "comments": []
         }
       ]
     },
@@ -21780,7 +21810,7 @@
       "id": "PR_kwDOEwrMS86xzy4W",
       "title": "Clarify characters in identifier string",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/316",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -21791,17 +21821,19 @@
       ],
       "body": "Closes #310 \r\nClarify the format of the identifier value in proxy dictionaries.",
       "createdAt": "2025-11-06T05:11:15Z",
-      "updatedAt": "2025-11-06T20:14:12Z",
+      "updatedAt": "2025-11-12T04:18:04Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "7f5ef4172a78e63b8e01a4f9a9a9092c1b24eec1",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "tfpauly-patch-26",
       "headRefOid": "f54a3d4b2b88d7fa2c6f1049dda21024120923ad",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-11-12T04:18:04Z",
+      "mergedAt": "2025-11-12T04:18:04Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "1117a973af01d5d051f28605a89f2aec39de34d1"
+      },
       "comments": [],
       "reviews": [
         {
@@ -21855,6 +21887,156 @@
           "body": "",
           "createdAt": "2025-11-06T20:14:12Z",
           "updatedAt": "2025-11-06T20:14:12Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87NYbLD",
+          "commit": {
+            "abbreviatedOid": "f54a3d4"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-11-11T00:36:07Z",
+          "updatedAt": "2025-11-11T00:36:07Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 317,
+      "id": "PR_kwDOEwrMS86yplPT",
+      "title": "Add a reference for CIDR notation.",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/317",
+      "state": "MERGED",
+      "author": "ddragana",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #313.",
+      "createdAt": "2025-11-11T00:55:07Z",
+      "updatedAt": "2025-11-12T04:11:22Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "7f5ef4172a78e63b8e01a4f9a9a9092c1b24eec1",
+      "headRepository": "ddragana/privacy-proxy",
+      "headRefName": "cidr_reference",
+      "headRefOid": "5d056a5d28de8097522ede37d2d460161cbe4361",
+      "closedAt": "2025-11-12T04:11:22Z",
+      "mergedAt": "2025-11-12T04:11:22Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "60c38c390b1345a1e910174b677b328292666cc6"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87NrScG",
+          "commit": {
+            "abbreviatedOid": "34a9fcc"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-12T00:02:57Z",
+          "updatedAt": "2025-11-12T00:02:57Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\nwritten using CIDR notation {{?CIDR=RFC4632}}. Subnet-based destination information can apply to cases where\r\n```",
+              "createdAt": "2025-11-12T00:02:57Z",
+              "updatedAt": "2025-11-12T00:02:57Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87NtkCh",
+          "commit": {
+            "abbreviatedOid": "5d056a5"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-11-12T04:11:07Z",
+          "updatedAt": "2025-11-12T04:11:07Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 318,
+      "id": "PR_kwDOEwrMS86ypwpx",
+      "title": "Clarify that only wildcard prefix is allowed.",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/318",
+      "state": "MERGED",
+      "author": "ddragana",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #312.",
+      "createdAt": "2025-11-11T01:21:24Z",
+      "updatedAt": "2025-11-12T04:17:48Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "7f5ef4172a78e63b8e01a4f9a9a9092c1b24eec1",
+      "headRepository": "ddragana/privacy-proxy",
+      "headRefName": "prefix_wildcards",
+      "headRefOid": "9920026ed18d44a03775beb364b7537495766e0a",
+      "closedAt": "2025-11-12T04:17:48Z",
+      "mergedAt": "2025-11-12T04:17:48Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "4773a928f2093813ad20fb7ceddad5067b4c6f8f"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87NrSBp",
+          "commit": {
+            "abbreviatedOid": "3328a56"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-11-12T00:01:55Z",
+          "updatedAt": "2025-11-12T00:01:55Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87NtkuC",
+          "commit": {
+            "abbreviatedOid": "3328a56"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-11-12T04:12:09Z",
+          "updatedAt": "2025-11-12T04:12:09Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\nWildcards are allowed only as prefixes (`*.`). A wildcard prefix is used to indicate matching entire domains or subdomains instead of\r\n```",
+              "createdAt": "2025-11-12T04:12:09Z",
+              "updatedAt": "2025-11-12T04:12:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87NtlCC",
+          "commit": {
+            "abbreviatedOid": "9920026"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-11-12T04:12:41Z",
+          "updatedAt": "2025-11-12T04:12:41Z",
           "comments": []
         }
       ]
