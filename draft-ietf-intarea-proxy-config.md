@@ -415,7 +415,7 @@ the rule MUST be treated as not matching, and the client continues evaluation of
 A matched rule will then either point to one or more proxy `identifier` values, which correspond
 to proxies defined in the list from {{proxy-enumeration}}, or instructs the client to not send the
 matching traffic to any proxy. If a matching rule contains more then one `identifier` the client
-should treat the list as an ordered list, where the first `identifier` is the most preferred.
+SHOULD treat the list as an ordered list, where the first `identifier` is the most preferred.
 Multiple proxy dictionaries can contain the same `identifier` value. In this case, the client
 can choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests
 to the same proxy `identifier` to increase connection reuse.
