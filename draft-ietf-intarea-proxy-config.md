@@ -597,7 +597,7 @@ set with exceptions to bypass:
       "proxies": [ ]
     },
     {
-      "subnets": [ "192.168.0.0/16", "2001:DB8::/32" ],
+      "subnets": [ "192.0.2.0/24", "2001:DB8::/32" ],
       "proxies": [ ]
     },
     {
@@ -608,7 +608,7 @@ set with exceptions to bypass:
 ~~~
 
 In this case, the client will not forward TCP traffic that is destined to hosts matching
-"\*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32, through the proxies.
+"\*.intranet.example.org", 192.0.2.0/24 or 2001:DB8::/32, through the proxies.
 Due to the order in "proxies" list in the last rule of "proxy-match", the client would prefer
 "proxy.example.org:80" over "backup.example.org:80"
 
