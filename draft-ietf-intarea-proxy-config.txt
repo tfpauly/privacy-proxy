@@ -614,7 +614,7 @@ content-length = 322
    values, which correspond to proxies defined in the array from
    Section 3, or instructs the client to not send the matching traffic
    to any proxy.  If a matching rule contains more then one identifier
-   the client should treat the array as an ordered list, where the first
+   the client SHOULD treat the array as an ordered list, where the first
    identifier is the most preferred.  Multiple proxy dictionaries can
    contain the same identifier value.  In this case, the client can
    choose any of the proxies; however, the client ought to prefer using
