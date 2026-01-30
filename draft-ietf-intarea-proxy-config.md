@@ -212,7 +212,7 @@ content provided below.
 | JSON Key | Optional | Description | Type | Example |
 | --- | --- | --- | --- | --- |
 | protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
-| proxy | No | String containing the URI template or host and port of the proxy, depending on the format defined by the protocol | String | "https://proxy.example.org:4443/masque{?target_host,target_port}" |
+| proxy | No | String containing the URI template or host and port of the proxy, depending on the format defined by the protocol | String | "https://example.org:4443/masque/<br>{?target_host,target_port}" |
 | mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["example_key"] |
 | alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
 | identifier | Yes | A string used to refer to the proxy, which can be referenced by other dictionaries, such as entries in `proxy-match`  | String | "udp-proxy" |
@@ -260,7 +260,9 @@ this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
 The value of `identifier` key is a string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in {{destinations}}. The
 string value is an arbitrary non-empty JSON string using UTF-8 encoding
-as discussed in {{Section 8.1 of JSON}}. Identifier values MAY be duplicated
+as discussed in {{Section 8.1 of JSON}}. Characters that need to be escaped in JSON strings
+per {{Section 7 of JSON}} are NOT RECOMMENDED as they can lead to difficulties in
+string comparisions as discussed in {{Section 8.3 of JSON}}. Identifier values MAY be duplicated
 across different proxy dictionaries in the `proxies` array, which indicates
 that all references from other dictionaries to a particular identifier value apply
 to all matching proxies. Proxies without the `identifier` key are expected to accept any
@@ -274,9 +276,9 @@ the `proxy-match` array.
 Implementations MAY include proprietary or vendor-specific keys in the sub-dictionaries of the `proxies`
 array to convey additional proxy configuration information not defined in this specification.
 
-A proprietary key MUST contain at least one underscore character ("_"). This character serves as a
-separator between a vendor-specific namespace and the key name. For example, "acme_authmode" could
-be a proprietary key indicating an authentication mode defined by a vendor named "acme".
+A proprietary key MUST contain at least one underscore character ("_"). The last underscore serves as a
+separator between a vendor-specific namespace and the key name. For example, "acme_tech_authmode" could
+be a proprietary key indicating an authentication mode defined by a vendor named "acme_tech".
 
 When combined with `mandatory` array, this mechanism allows implementations to extend proxy metadata while
 maintaining interoperability and ensuring safe fallback behavior for clients that do not support a given
@@ -597,7 +599,7 @@ set with exceptions to bypass:
       "proxies": [ ]
     },
     {
-      "subnets": [ "192.168.0.0/16", "2001:DB8::/32" ],
+      "subnets": [ "192.0.2.0/24", "2001:DB8::/32" ],
       "proxies": [ ]
     },
     {
@@ -608,7 +610,7 @@ set with exceptions to bypass:
 ~~~
 
 In this case, the client will not forward TCP traffic that is destined to hosts matching
-"\*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32, through the proxies.
+"\*.intranet.example.org", 192.0.2.0/24 or 2001:DB8::/32, through the proxies.
 Due to the order in "proxies" array in the last rule of "proxy-match", the client would prefer
 "proxy.example.org:80" over "backup.example.org:80"
 
