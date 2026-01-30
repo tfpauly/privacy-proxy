@@ -21,14 +21,14 @@ and information about which destinations are accessible using a proxy.
     Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 5.3.1
-    platformdirs 4.5.0
+    lxml 6.0.2
+    platformdirs 4.5.1
     pycountry 24.6.1
-    PyYAML 6.0.2
+    PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.2.14
+    wcwidth 0.3.0
 -->
 <link href="draft-ietf-intarea-proxy-config.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -569,6 +569,7 @@ aside, blockquote {
 }
 blockquote {
   margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
 }
 cite {
   display: block;
@@ -639,7 +640,7 @@ a.pilcrow {
   }
 }
 @media not print {
-  :hover > a.pilcrow {
+  :hover > a.pilcrow, a.pilcrow:focus {
     opacity: 1;
   }
   a.pilcrow[href]:hover {
@@ -1047,11 +1048,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Proxy Configuration PvDs</td>
-<td class="right">November 2025</td>
+<td class="right">January 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 16 May 2026</td>
+<td class="center">Expires 3 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-11-12" class="published">12 November 2025</time>
+<time datetime="2026-01-30" class="published">30 January 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-05-16">16 May 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-03">3 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1121,7 +1122,7 @@ and information about which destinations are accessible using a proxy.<a href="#
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 16 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1130,7 +1131,7 @@ and information about which destinations are accessible using a proxy.<a href="#
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2025 IETF Trust and the persons identified as the
+            Copyright (c) 2026 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1593,7 +1594,9 @@ this can indicate if the proxy supports HTTP/3, HTTP/2, etc.<a href="#section-3.
 <p id="section-3.1-11">The value of <code>identifier</code> key is a string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in <a href="#destinations" class="auto internal xref">Section 4</a>. The
 string value is an arbitrary non-empty JSON string using UTF-8 encoding
-as discussed in <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.1" class="relref">Section 8.1</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span>. Identifier values MAY be duplicated
+as discussed in <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.1" class="relref">Section 8.1</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span>. Characters that need to be escaped in JSON strings
+per <span><a href="https://rfc-editor.org/rfc/rfc8259#section-7" class="relref">Section 7</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span> are NOT RECOMMENDED as they can lead to difficulties in
+string comparisions as discussed in <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.3" class="relref">Section 8.3</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span>. Identifier values MAY be duplicated
 across different proxy dictionaries in the <code>proxies</code> array, which indicates
 that all references from other dictionaries to a particular identifier value apply
 to all matching proxies. Proxies without the <code>identifier</code> key are expected to accept any
@@ -2189,7 +2192,7 @@ in the names (since underscores are reserved for vendor-specific keys).<a href="
 <dd class="break"></dd>
 <dt id="CONNECT-TCP">[CONNECT-TCP]</dt>
         <dd>
-<span class="refAuthor">Schwartz, B. M.</span>, <span class="refTitle">"Template-Driven HTTP CONNECT Proxying for TCP"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-connect-tcp-09</span>, <time datetime="2025-06-30" class="refDate">30 June 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-09">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-09</a>&gt;</span>. </dd>
+<span class="refAuthor">Schwartz, B. M.</span>, <span class="refTitle">"Template-Driven HTTP CONNECT Proxying for TCP"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-connect-tcp-10</span>, <time datetime="2025-12-05" class="refDate">5 December 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-10">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-10</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="CONNECT-UDP">[CONNECT-UDP]</dt>
         <dd>

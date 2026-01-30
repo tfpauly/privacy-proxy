@@ -5,10 +5,10 @@
 HTTPBIS                                                         T. Pauly
 Internet-Draft                                                Apple Inc.
 Intended status: Experimental                                D. Schinazi
-Expires: 16 May 2026                                         C. McMullin
+Expires: 3 August 2026                                       C. McMullin
                                                              D. Mitchell
                                                               Google LLC
-                                                        12 November 2025
+                                                         30 January 2026
 
 
                   The IP Geolocation HTTP Client Hint
@@ -61,11 +61,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 May 2026.
+   This Internet-Draft will expire on 3 August 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal

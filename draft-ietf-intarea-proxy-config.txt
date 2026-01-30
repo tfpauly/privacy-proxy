@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 16 May 2026                                           Microsoft
+Expires: 3 August 2026                                         Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                        12 November 2025
+                                                         30 January 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,11 +43,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 May 2026.
+   This Internet-Draft will expire on 3 August 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -405,6 +405,9 @@ Table of Contents
    a particular proxy from other dictionaries, specifically those
    defined in Section 4.  The string value is an arbitrary non-empty
    JSON string using UTF-8 encoding as discussed in Section 8.1 of
+   [JSON].  Characters that need to be escaped in JSON strings per
+   Section 7 of [JSON] are NOT RECOMMENDED as they can lead to
+   difficulties in string comparisions as discussed in Section 8.3 of
    [JSON].  Identifier values MAY be duplicated across different proxy
    dictionaries in the proxies array, which indicates that all
    references from other dictionaries to a particular identifier value
@@ -983,9 +986,9 @@ content-length = 322
    [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-09, 30 June 2025,
+              httpbis-connect-tcp-10, 5 December 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-09>.
+              connect-tcp-10>.
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
