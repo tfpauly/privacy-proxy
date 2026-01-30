@@ -1613,9 +1613,9 @@ the <code>proxy-match</code> array.<a href="#section-3.1-11" class="pilcrow">¶<
         </h3>
 <p id="section-3.2-1">Implementations MAY include proprietary or vendor-specific keys in the sub-dictionaries of the <code>proxies</code>
 array to convey additional proxy configuration information not defined in this specification.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">A proprietary key MUST contain at least one underscore character ("_"). This character serves as a
-separator between a vendor-specific namespace and the key name. For example, "acme_authmode" could
-be a proprietary key indicating an authentication mode defined by a vendor named "acme".<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">A proprietary key MUST contain at least one underscore character ("_"). The last underscore serves as a
+separator between a vendor-specific namespace and the key name. For example, "acme_tech_authmode" could
+be a proprietary key indicating an authentication mode defined by a vendor named "acme_tech".<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">When combined with <code>mandatory</code> list, this mechanism allows implementations to extend proxy metadata while
 maintaining interoperability and ensuring safe fallback behavior for clients that do not support a given
 extension.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
