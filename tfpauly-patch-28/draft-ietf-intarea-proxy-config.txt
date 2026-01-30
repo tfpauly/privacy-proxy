@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 2 August 2026                                         Microsoft
+Expires: 3 August 2026                                         Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                         29 January 2026
+                                                         30 January 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 August 2026.
+   This Internet-Draft will expire on 3 August 2026.
 
 Copyright Notice
 
@@ -67,7 +67,7 @@ Table of Contents
    2.  Fetching PvD Additional Information for proxies
      2.1.  Discovery via HTTPS/SVCB Records
    3.  Enumerating proxies within a PvD
-     3.1.  Proxy definition keys
+     3.1.  Proxy dictionary keys
      3.2.  Proprietary keys in proxy configurations
      3.3.  Example
    4.  Destination accessibility information for proxies
@@ -266,7 +266,7 @@ Table of Contents
    along with other optional keys.
 
    When a PvD that contains the proxies key is fetched from a known
-   proxy using the method described in Section 2, the proxies list
+   proxy using the method described in Section 2, the proxies array
    describes equivalent proxies (potentially supporting other protocols)
    that can be used in addition to the known proxy.
 
@@ -278,7 +278,7 @@ Table of Contents
    URI to learn the list of complete URIs that support non-default
    protocols, such as [CONNECT-UDP] and [CONNECT-IP].
 
-3.1.  Proxy definition keys
+3.1.  Proxy dictionary keys
 
    This document defines two required keys for the sub-dictionaries in
    the proxies array: protocol and proxy.  There are also optional keys,
@@ -287,54 +287,54 @@ Table of Contents
    proxy.  The keys are registered with IANA as described in
    Section 7.2, with the initial content provided below.
 
-   +==========+========+=============+=======+=================================+
-   |JSON Key  |Optional|Description  |Type   |Example                          |
-   +==========+========+=============+=======+=================================+
-   |protocol  |No      |The protocol |String |"connect-udp"                    |
-   |          |        |used to      |       |                                 |
-   |          |        |communicate  |       |                                 |
-   |          |        |with the     |       |                                 |
-   |          |        |proxy        |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |proxy     |No      |String       |String |"https://proxy.example.org:4443/ |
-   |          |        |containing   |       |masque{?target_host,target_port}"|
-   |          |        |the URI      |       |                                 |
-   |          |        |template or  |       |                                 |
-   |          |        |host and port|       |                                 |
-   |          |        |of the proxy,|       |                                 |
-   |          |        |depending on |       |                                 |
-   |          |        |the format   |       |                                 |
-   |          |        |defined by   |       |                                 |
-   |          |        |the protocol |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |mandatory |Yes     |An array of  |Array  |["example_key"]                  |
-   |          |        |optional keys|of     |                                 |
-   |          |        |that client  |Strings|                                 |
-   |          |        |must         |       |                                 |
-   |          |        |understand   |       |                                 |
-   |          |        |and process  |       |                                 |
-   |          |        |to use this  |       |                                 |
-   |          |        |proxy        |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |alpn      |Yes     |An array of  |Array  |["h3","h2"]                      |
-   |          |        |Application- |of     |                                 |
-   |          |        |Layer        |Strings|                                 |
-   |          |        |Protocol     |       |                                 |
-   |          |        |Negotiation  |       |                                 |
-   |          |        |protocol     |       |                                 |
-   |          |        |identifiers  |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |identifier|Yes     |A string used|String |"udp-proxy"                      |
-   |          |        |to refer to  |       |                                 |
-   |          |        |the proxy,   |       |                                 |
-   |          |        |which can be |       |                                 |
-   |          |        |referenced by|       |                                 |
-   |          |        |other        |       |                                 |
-   |          |        |dictionaries,|       |                                 |
-   |          |        |such as      |       |                                 |
-   |          |        |entries in   |       |                                 |
-   |          |        |proxy-match  |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
+   +==========+========+=============+=======+===========================+
+   |JSON Key  |Optional|Description  |Type   |Example                    |
+   +==========+========+=============+=======+===========================+
+   |protocol  |No      |The protocol |String |"connect-udp"              |
+   |          |        |used to      |       |                           |
+   |          |        |communicate  |       |                           |
+   |          |        |with the     |       |                           |
+   |          |        |proxy        |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |proxy     |No      |String       |String |"https://example.org:4443/ |
+   |          |        |containing   |       |masque/                    |
+   |          |        |the URI      |       |{?target_host,target_port}"|
+   |          |        |template or  |       |                           |
+   |          |        |host and port|       |                           |
+   |          |        |of the proxy,|       |                           |
+   |          |        |depending on |       |                           |
+   |          |        |the format   |       |                           |
+   |          |        |defined by   |       |                           |
+   |          |        |the protocol |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |mandatory |Yes     |An array of  |Array  |["example_key"]            |
+   |          |        |optional keys|of     |                           |
+   |          |        |that client  |Strings|                           |
+   |          |        |must         |       |                           |
+   |          |        |understand   |       |                           |
+   |          |        |and process  |       |                           |
+   |          |        |to use this  |       |                           |
+   |          |        |proxy        |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |alpn      |Yes     |An array of  |Array  |["h3","h2"]                |
+   |          |        |Application- |of     |                           |
+   |          |        |Layer        |Strings|                           |
+   |          |        |Protocol     |       |                           |
+   |          |        |Negotiation  |       |                           |
+   |          |        |protocol     |       |                           |
+   |          |        |identifiers  |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |identifier|Yes     |A string used|String |"udp-proxy"                |
+   |          |        |to refer to  |       |                           |
+   |          |        |the proxy,   |       |                           |
+   |          |        |which can be |       |                           |
+   |          |        |referenced by|       |                           |
+   |          |        |other        |       |                           |
+   |          |        |dictionaries,|       |                           |
+   |          |        |such as      |       |                           |
+   |          |        |entries in   |       |                           |
+   |          |        |proxy-match  |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
 
        Table 1: Initial Proxy Information PvD Keys Registry Contents
 
@@ -381,19 +381,20 @@ Table of Contents
    proxy protocol.  The types defined here either use a host as defined
    in Section 3.2.2 of [URI] and port, or a full URI template.
 
-   The value of the mandatory key is a list of keys that the client must
-   understand and process to be able to use the proxy.  A client that
-   does not understand a key from the list or cannot fully process the
-   value of a key from the list MUST ignore the entire proxy definition.
+   The value of the mandatory key is an array of keys that the client
+   must understand and process to be able to use the proxy.  A client
+   that does not understand a key from the array or cannot fully process
+   the value of a key from the array MUST ignore the entire proxy
+   dictionary.
 
-   The mandatory list can contain keys that are either:
+   The mandatory array can contain keys that are either:
 
    *  registered in an IANA registry, defined in Section 7.2 and marked
       as optional;
 
    *  or proprietary, as defined in Section 3.2
 
-   The mandatory list MUST NOT include any entries that are not present
+   The mandatory array MUST NOT include any entries that are not present
    in the sub-dictionary.
 
    If the alpn key is present, it provides a hint for the Application-
@@ -405,15 +406,17 @@ Table of Contents
    a particular proxy from other dictionaries, specifically those
    defined in Section 4.  The string value is an arbitrary non-empty
    JSON string using UTF-8 encoding as discussed in Section 8.1 of
+   [JSON].  Characters that need to be escaped in JSON strings per
+   Section 7 of [JSON] are NOT RECOMMENDED as they can lead to
+   difficulties in string comparisions as discussed in Section 8.3 of
    [JSON].  Identifier values MAY be duplicated across different proxy
-   dictionaries in the proxies array, which indicates that all
-   references from other dictionaries to a particular identifier value
-   apply to all matching proxies.  Proxies without the identifier key
-   are expected to accept any traffic since their destinations cannot be
-   contained in proxy-match array defined in Section 4.  Proxies with
-   identifier keys are expected to accept only traffic matching rules in
-   the proxy-match array and SHOULD NOT be used if they are not included
-   in the proxy-match array.
+   dictionaries in the proxies array.  References to a particular
+   identifier apply to the set of proxies sharing that identifier.
+   Proxies without the identifier key are expected to accept any traffic
+   since their destinations cannot be contained in proxy-match array
+   defined in Section 4.  Proxies with identifier keys are expected to
+   accept only traffic matching rules in the proxy-match array and
+   SHOULD NOT be used if they are not included in the proxy-match array.
 
 3.2.  Proprietary keys in proxy configurations
 
@@ -422,12 +425,12 @@ Table of Contents
    configuration information not defined in this specification.
 
    A proprietary key MUST contain at least one underscore character
-   ("_").  This character serves as a separator between a vendor-
-   specific namespace and the key name.  For example, "acme_authmode"
-   could be a proprietary key indicating an authentication mode defined
-   by a vendor named "acme".
+   ("_").  The last underscore serves as a separator between a vendor-
+   specific namespace and the key name.  For example,
+   "acme_tech_authmode" could be a proprietary key indicating an
+   authentication mode defined by a vendor named "acme_tech".
 
-   When combined with mandatory list, this mechanism allows
+   When combined with mandatory array, this mechanism allows
    implementations to extend proxy metadata while maintaining
    interoperability and ensuring safe fallback behavior for clients that
    do not support a given extension.
@@ -567,7 +570,7 @@ content-length = 322
    applications are communicating directly with an IP address (without
    having resolved a DNS name) as well as cases where an application
    resolved a DNS name to a set of IP addresses.  Note that if
-   destination rules includes an empty proxies list (indicating that no
+   destination rules includes an empty proxies array (indicating that no
    proxy is applicable for this subnet), an application can only
    reliably follow this destination rule if it resolves DNS names prior
    to proxying.
@@ -576,7 +579,7 @@ content-length = 322
    UDP ports), as well as ranges of ports written with a low port value
    and a high port value, with a - in between.  For example, "1024-2048"
    matches all ports from 1024 to 2048, including the 1024 and 2048.  If
-   ports key is not present, all ports are assumed to match.  The list
+   ports key is not present, all ports are assumed to match.  The array
    may contain individual port numbers (such as "80") or inclusive
    ranges of ports.  For example "1024-2048" matches all ports from 1024
    to 2048, including the 1024 and 2048.
@@ -588,14 +591,14 @@ content-length = 322
    any particular connection.  By evaluating the rules in order, a
    consistent behavior for usage can be achieved.
 
-   Rules in the proxy-match list are provided in order of priority, such
-   that a client can evaluate the list of rules from the first in the
-   array to the last in the array, and attempt using the matching proxy
-   or proxies from the earliest matching rule first.  If earliest
-   matching rule has empty list of proxies client SHOULD NOT send
-   matching traffic to any proxy defined in this PvD.
+   Rules in the proxy-match array are provided in order of priority,
+   such that a client can evaluate the rules from the first in the array
+   to the last in the array, and attempt using the matching proxy or
+   proxies from the earliest matching rule first.  If earliest matching
+   rule has empty array of proxies client SHOULD NOT send matching
+   traffic to any proxy defined in this PvD.
 
-   In order to match a destination rule in the proxy-match list, all
+   In order to match a destination rule in the proxy-match array, all
    properties MUST apply.  For example, if a destination rule includes a
    domains array and a ports array, traffic that matches the rule needs
    to match at least one of the entries in the domains array and one of
@@ -608,10 +611,10 @@ content-length = 322
    rules.
 
    A matched rule will then either point to one or more proxy identifier
-   values, which correspond to proxies defined in the list from
+   values, which correspond to proxies defined in the array from
    Section 3, or instructs the client to not send the matching traffic
    to any proxy.  If a matching rule contains more then one identifier
-   the client SHOULD treat the list as an ordered list, where the first
+   the client SHOULD treat the array as an ordered list, where the first
    identifier is the most preferred.  Multiple proxy dictionaries can
    contain the same identifier value.  In this case, the client can
    choose any of the proxies; however, the client ought to prefer using
@@ -620,7 +623,7 @@ content-length = 322
 
    Entries listed in a proxy-match object MUST NOT expand the set of
    destinations that a client is willing to send to a particular proxy.
-   The list can only narrow the list of destinations that the client is
+   The array can only narrow the set of destinations that the client is
    willing to send through the proxy.  For example, if the client has a
    local policy to only send requests for "*.example.com" to a proxy
    "proxy.example.com", and domains array of a match object contains
@@ -633,7 +636,7 @@ content-length = 322
    destination rules to define custom matching logic not specified in
    this document.
 
-   Similar to proprietary keys in proxy definitions (Section 3.2), a
+   Similar to proprietary keys in proxy dictionaries (Section 3.2), a
    proprietary key in destination rule MUST contain at least one
    underscore character ("_"), which separates a vendor-specific
    namespace from the key name.  For example, "acme_processid" could be
@@ -807,7 +810,7 @@ content-length = 322
          "proxies": [ ]
        },
        {
-         "subnets": [ "192.168.0.0/16", "2001:DB8::/32" ],
+         "subnets": [ "192.0.2.0/24", "2001:DB8::/32" ],
          "proxies": [ ]
        },
        {
@@ -817,9 +820,9 @@ content-length = 322
    }
 
    In this case, the client will not forward TCP traffic that is
-   destined to hosts matching "*.intranet.example.org", 192.168.0.0/16
-   or 2001:DB8::/32, through the proxies.  Due to the order in "proxies"
-   list in the last rule of "proxy-match", the client would prefer
+   destined to hosts matching "*.intranet.example.org", 192.0.2.0/24 or
+   2001:DB8::/32, through the proxies.  Due to the order in "proxies"
+   array in the last rule of "proxy-match", the client would prefer
    "proxy.example.org:80" over "backup.example.org:80"
 
 5.  Discovering proxies from network PvDs
@@ -893,7 +896,7 @@ content-length = 322
    JSON Key: proxy-match
 
    Description: Array of proxy match rules, as dictionaries, associated
-   with entries in the proxies list.
+   with entries in the proxies array.
 
    Type: Array of dictionaries
 

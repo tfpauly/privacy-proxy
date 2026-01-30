@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 2 August 2026</td>
+<td class="center">Expires 3 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-29" class="published">29 January 2026</time>
+<time datetime="2026-01-30" class="published">30 January 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-02">2 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-03">3 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ and information about which destinations are accessible using a proxy.<a href="#
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 2 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1174,7 +1174,7 @@ and information about which destinations are accessible using a proxy.<a href="#
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-enumerating-proxies-within-" class="internal xref">Enumerating proxies within a PvD</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
-                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-proxy-definition-keys" class="internal xref">Proxy definition keys</a></p>
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-proxy-dictionary-keys" class="internal xref">Proxy dictionary keys</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-proprietary-keys-in-proxy-c" class="internal xref">Proprietary keys in proxy configurations</a></p>
@@ -1421,7 +1421,7 @@ a single proxy that is available as part of the PvD (see <a href="#proxies-key-i
 Each proxy is defined by a proxy protocol and a proxy location (i.e., a hostname and port or a URI template
 <span>[<a href="#URITEMPLATE" class="cite xref">URITEMPLATE</a>]</span>), along with other optional keys.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">When a PvD that contains the <code>proxies</code> key is fetched from a known proxy
-using the method described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a>, the proxies list describes
+using the method described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a>, the proxies array describes
 equivalent proxies (potentially supporting other protocols) that can be used
 in addition to the known proxy.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">Such cases are useful for informing clients of related proxies as a discovery
@@ -1431,10 +1431,10 @@ a single FQDN hostname for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
 URIs that support non-default protocols, such as <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span> and
 <span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.<a href="#section-3-3" class="pilcrow">¶</a></p>
-<div id="proxy-definition-keys">
+<div id="proxy-dictionary-keys">
 <section id="section-3.1">
-        <h3 id="name-proxy-definition-keys">
-<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-proxy-definition-keys" class="section-name selfRef">Proxy definition keys</a>
+        <h3 id="name-proxy-dictionary-keys">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-proxy-dictionary-keys" class="section-name selfRef">Proxy dictionary keys</a>
         </h3>
 <p id="section-3.1-1">This document defines two required keys for the sub-dictionaries in the
 <code>proxies</code> array: <code>protocol</code> and <code>proxy</code>. There are also optional keys, including
@@ -1470,7 +1470,7 @@ content provided below.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
               <td class="text-left" rowspan="1" colspan="1">No</td>
               <td class="text-left" rowspan="1" colspan="1">String containing the URI template or host and port of the proxy, depending on the format defined by the protocol</td>
               <td class="text-left" rowspan="1" colspan="1">String</td>
-              <td class="text-left" rowspan="1" colspan="1">"https://proxy.example.org:4443/masque{?target_host,target_port}"</td>
+              <td class="text-left" rowspan="1" colspan="1">"https://example.org:4443/masque/<br>{?target_host,target_port}"</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">mandatory</td>
@@ -1575,10 +1575,10 @@ support.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <p id="section-3.1-5">The value of <code>proxy</code> depends on the Proxy Location Format defined by proxy protocol.
 The types defined here either use a host as defined in <span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.2.2" class="relref">Section 3.2.2</a> of [<a href="#URI" class="cite xref">URI</a>]</span> and port,
 or a full URI template.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.1-6">The value of the <code>mandatory</code> key is a list of keys that the client must understand and process to be
-able to use the proxy. A client that does not understand a key from the list or cannot fully process
-the value of a key from the list MUST ignore the entire proxy definition.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
-<p id="section-3.1-7">The <code>mandatory</code> list can contain keys that are either:<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1-6">The value of the <code>mandatory</code> key is an array of keys that the client must understand and process to be
+able to use the proxy. A client that does not understand a key from the array or cannot fully process
+the value of a key from the array MUST ignore the entire proxy dictionary.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1-7">The <code>mandatory</code> array can contain keys that are either:<a href="#section-3.1-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-8.1">
             <p id="section-3.1-8.1.1">registered in an IANA registry, defined in <a href="#proxy-info-iana" class="auto internal xref">Section 7.2</a> and marked as optional;<a href="#section-3.1-8.1.1" class="pilcrow">¶</a></p>
@@ -1587,18 +1587,19 @@ the value of a key from the list MUST ignore the entire proxy definition.<a href
             <p id="section-3.1-8.2.1">or proprietary, as defined in <a href="#proxy-proprietary-keys" class="auto internal xref">Section 3.2</a><a href="#section-3.1-8.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.1-9">The <code>mandatory</code> list MUST NOT include any entries that are not present in the sub-dictionary.<a href="#section-3.1-9" class="pilcrow">¶</a></p>
+<p id="section-3.1-9">The <code>mandatory</code> array MUST NOT include any entries that are not present in the sub-dictionary.<a href="#section-3.1-9" class="pilcrow">¶</a></p>
 <p id="section-3.1-10">If the <code>alpn</code> key is present, it provides a hint for the Application-Layer Protocol Negotiation
 (ALPN) <span>[<a href="#ALPN" class="cite xref">ALPN</a>]</span> protocol identifiers associated with this server. For HTTP proxies,
 this can indicate if the proxy supports HTTP/3, HTTP/2, etc.<a href="#section-3.1-10" class="pilcrow">¶</a></p>
 <p id="section-3.1-11">The value of <code>identifier</code> key is a string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in <a href="#destinations" class="auto internal xref">Section 4</a>. The
 string value is an arbitrary non-empty JSON string using UTF-8 encoding
-as discussed in <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.1" class="relref">Section 8.1</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span>. Identifier values MAY be duplicated
-across different proxy dictionaries in the <code>proxies</code> array, which indicates
-that all references from other dictionaries to a particular identifier value apply
-to all matching proxies. Proxies without the <code>identifier</code> key are expected to accept any
-traffic since their destinations cannot be contained in <code>proxy-match</code> array defined
+as discussed in <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.1" class="relref">Section 8.1</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span>. Characters that need to be escaped in JSON strings
+per <span><a href="https://rfc-editor.org/rfc/rfc8259#section-7" class="relref">Section 7</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span> are NOT RECOMMENDED as they can lead to difficulties in
+string comparisions as discussed in <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.3" class="relref">Section 8.3</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span>. Identifier values MAY be duplicated
+across different proxy dictionaries in the <code>proxies</code> array. References to a particular identifier
+apply to the set of proxies sharing that identifier. Proxies without the <code>identifier</code> key are
+expected to accept any traffic since their destinations cannot be contained in <code>proxy-match</code> array defined
 in <a href="#destinations" class="auto internal xref">Section 4</a>. Proxies with <code>identifier</code> keys are expected to accept only traffic
 matching rules in the <code>proxy-match</code> array and SHOULD NOT be used if they are not included in
 the <code>proxy-match</code> array.<a href="#section-3.1-11" class="pilcrow">¶</a></p>
@@ -1611,10 +1612,10 @@ the <code>proxy-match</code> array.<a href="#section-3.1-11" class="pilcrow">¶<
         </h3>
 <p id="section-3.2-1">Implementations MAY include proprietary or vendor-specific keys in the sub-dictionaries of the <code>proxies</code>
 array to convey additional proxy configuration information not defined in this specification.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">A proprietary key MUST contain at least one underscore character ("_"). This character serves as a
-separator between a vendor-specific namespace and the key name. For example, "acme_authmode" could
-be a proprietary key indicating an authentication mode defined by a vendor named "acme".<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3">When combined with <code>mandatory</code> list, this mechanism allows implementations to extend proxy metadata while
+<p id="section-3.2-2">A proprietary key MUST contain at least one underscore character ("_"). The last underscore serves as a
+separator between a vendor-specific namespace and the key name. For example, "acme_tech_authmode" could
+be a proprietary key indicating an authentication mode defined by a vendor named "acme_tech".<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">When combined with <code>mandatory</code> array, this mechanism allows implementations to extend proxy metadata while
 maintaining interoperability and ensuring safe fallback behavior for clients that do not support a given
 extension.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 </section>
@@ -1762,13 +1763,13 @@ at the end of a domain name is not required; the matching logic is the same rega
 written using CIDR notation <span>[<a href="#CIDR" class="cite xref">CIDR</a>]</span>. Subnet-based destination information can apply to cases where
 applications are communicating directly with an IP address (without having resolved a DNS name)
 as well as cases where an application resolved a DNS name to a set of IP addresses. Note that
-if destination rules includes an empty <code>proxies</code> list (indicating that no proxy is applicable for
+if destination rules includes an empty <code>proxies</code> array (indicating that no proxy is applicable for
 this subnet), an application can only reliably follow this destination rule if it resolves DNS
 names prior to proxying.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
 <p id="section-4.1-7">The <code>ports</code> array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a <code>-</code> in between.
 For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
-If <code>ports</code> key is not present, all ports are assumed to match. The list may
+If <code>ports</code> key is not present, all ports are assumed to match. The array may
 contain individual port numbers (such as "80") or inclusive ranges of ports. For example
 "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
 </section>
@@ -1781,12 +1782,12 @@ contain individual port numbers (such as "80") or inclusive ranges of ports. For
 <p id="section-4.2-1">The destination rules can be used to determine which traffic can be sent through proxies, and
 which specific set of proxies to use for any particular connection. By evaluating the rules in
 order, a consistent behavior for usage can be achieved.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">Rules in the <code>proxy-match</code> list are provided in order of priority, such that a client
-can evaluate the list of rules from the first in the array to the last in the array, and attempt
+<p id="section-4.2-2">Rules in the <code>proxy-match</code> array are provided in order of priority, such that a client
+can evaluate the rules from the first in the array to the last in the array, and attempt
 using the matching proxy or proxies from the earliest matching rule first. If earliest matching
-rule has empty list of <code>proxies</code> client SHOULD NOT send matching traffic to any proxy defined
+rule has empty array of <code>proxies</code> client SHOULD NOT send matching traffic to any proxy defined
 in this PvD.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2-3">In order to match a destination rule in the <code>proxy-match</code> list, all properties MUST apply. For
+<p id="section-4.2-3">In order to match a destination rule in the <code>proxy-match</code> array, all properties MUST apply. For
 example, if a destination rule includes a <code>domains</code> array and a <code>ports</code> array, traffic that matches
 the rule needs to match at least one of the entries in the <code>domains</code> array and one of the entries in the
 <code>ports</code> array. In addition, a destination rule is considered a match only if at least one of the
@@ -1794,14 +1795,14 @@ associated proxy identifiers supports the protocol required by the connection at
 example, <code>connect-udp</code> for UDP traffic). If no listed proxy identifier is applicable to the protocol,
 the rule MUST be treated as not matching, and the client continues evaluation of subsequent rules.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.2-4">A matched rule will then either point to one or more proxy <code>identifier</code> values, which correspond
-to proxies defined in the list from <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>, or instructs the client to not send the
+to proxies defined in the array from <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>, or instructs the client to not send the
 matching traffic to any proxy. If a matching rule contains more then one <code>identifier</code> the client
-SHOULD treat the list as an ordered list, where the first <code>identifier</code> is the most preferred.
+SHOULD treat the array as an ordered list, where the first <code>identifier</code> is the most preferred.
 Multiple proxy dictionaries can contain the same <code>identifier</code> value. In this case, the client
 can choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests
 to the same proxy <code>identifier</code> to increase connection reuse.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
 <p id="section-4.2-5">Entries listed in a <code>proxy-match</code> object MUST NOT expand the set of destinations that a client is
-willing to send to a particular proxy. The list can only narrow the list of destinations
+willing to send to a particular proxy. The array can only narrow the set of destinations
 that the client is willing to send through the proxy. For example, if the client
 has a local policy to only send requests for "*.example.com" to a proxy
 "proxy.example.com", and <code>domains</code> array of a <code>match</code> object contains "internal.example.com" and
@@ -1816,7 +1817,7 @@ through the proxy.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-4.3-1">Implementations MAY include proprietary or vendor-specific keys in destination rules to define custom matching logic
 not specified in this document.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.3-2">Similar to proprietary keys in proxy definitions (<a href="#proxy-proprietary-keys" class="auto internal xref">Section 3.2</a>), a proprietary key in destination
+<p id="section-4.3-2">Similar to proprietary keys in proxy dictionaries (<a href="#proxy-proprietary-keys" class="auto internal xref">Section 3.2</a>), a proprietary key in destination
 rule MUST contain at least one underscore character ("_"), which separates a vendor-specific namespace from the key name.
 For example, "acme_processid" could be a key used to apply rules only to traffic of a specific process identifier as
 defined by a vendor named "acme".<a href="#section-4.3-2" class="pilcrow">¶</a></p>
@@ -1989,7 +1990,7 @@ set with exceptions to bypass:<a href="#section-4.4-11" class="pilcrow">¶</a></
       "proxies": [ ]
     },
     {
-      "subnets": [ "192.168.0.0/16", "2001:DB8::/32" ],
+      "subnets": [ "192.0.2.0/24", "2001:DB8::/32" ],
       "proxies": [ ]
     },
     {
@@ -2000,8 +2001,8 @@ set with exceptions to bypass:<a href="#section-4.4-11" class="pilcrow">¶</a></
 </pre><a href="#section-4.4-12" class="pilcrow">¶</a>
 </div>
 <p id="section-4.4-13">In this case, the client will not forward TCP traffic that is destined to hosts matching
-"*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32, through the proxies.
-Due to the order in "proxies" list in the last rule of "proxy-match", the client would prefer
+"*.intranet.example.org", 192.0.2.0/24 or 2001:DB8::/32, through the proxies.
+Due to the order in "proxies" array in the last rule of "proxy-match", the client would prefer
 "proxy.example.org:80" over "backup.example.org:80"<a href="#section-4.4-13" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2086,7 +2087,7 @@ traffic, but MUST NOT send traffic that would go beyond what is allowed by local
           </h4>
 <p id="section-7.1.2-1">JSON Key: proxy-match<a href="#section-7.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.1.2-2">Description: Array of proxy match rules, as dictionaries, associated with
-entries in the <code>proxies</code> list.<a href="#section-7.1.2-2" class="pilcrow">¶</a></p>
+entries in the <code>proxies</code> array.<a href="#section-7.1.2-2" class="pilcrow">¶</a></p>
 <p id="section-7.1.2-3">Type: Array of dictionaries<a href="#section-7.1.2-3" class="pilcrow">¶</a></p>
 <p id="section-7.1.2-4">Example:<a href="#section-7.1.2-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-7.1.2-5">
