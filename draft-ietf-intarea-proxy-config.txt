@@ -287,54 +287,54 @@ Table of Contents
    proxy.  The keys are registered with IANA as described in
    Section 7.2, with the initial content provided below.
 
-   +==========+========+=============+=======+=================================+
-   |JSON Key  |Optional|Description  |Type   |Example                          |
-   +==========+========+=============+=======+=================================+
-   |protocol  |No      |The protocol |String |"connect-udp"                    |
-   |          |        |used to      |       |                                 |
-   |          |        |communicate  |       |                                 |
-   |          |        |with the     |       |                                 |
-   |          |        |proxy        |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |proxy     |No      |String       |String |"https://proxy.example.org:4443/ |
-   |          |        |containing   |       |masque{?target_host,target_port}"|
-   |          |        |the URI      |       |                                 |
-   |          |        |template or  |       |                                 |
-   |          |        |host and port|       |                                 |
-   |          |        |of the proxy,|       |                                 |
-   |          |        |depending on |       |                                 |
-   |          |        |the format   |       |                                 |
-   |          |        |defined by   |       |                                 |
-   |          |        |the protocol |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |mandatory |Yes     |An array of  |Array  |["example_key"]                  |
-   |          |        |optional keys|of     |                                 |
-   |          |        |that client  |Strings|                                 |
-   |          |        |must         |       |                                 |
-   |          |        |understand   |       |                                 |
-   |          |        |and process  |       |                                 |
-   |          |        |to use this  |       |                                 |
-   |          |        |proxy        |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |alpn      |Yes     |An array of  |Array  |["h3","h2"]                      |
-   |          |        |Application- |of     |                                 |
-   |          |        |Layer        |Strings|                                 |
-   |          |        |Protocol     |       |                                 |
-   |          |        |Negotiation  |       |                                 |
-   |          |        |protocol     |       |                                 |
-   |          |        |identifiers  |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |identifier|Yes     |A string used|String |"udp-proxy"                      |
-   |          |        |to refer to  |       |                                 |
-   |          |        |the proxy,   |       |                                 |
-   |          |        |which can be |       |                                 |
-   |          |        |referenced by|       |                                 |
-   |          |        |other        |       |                                 |
-   |          |        |dictionaries,|       |                                 |
-   |          |        |such as      |       |                                 |
-   |          |        |entries in   |       |                                 |
-   |          |        |proxy-match  |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
+   +==========+========+=============+=======+===========================+
+   |JSON Key  |Optional|Description  |Type   |Example                    |
+   +==========+========+=============+=======+===========================+
+   |protocol  |No      |The protocol |String |"connect-udp"              |
+   |          |        |used to      |       |                           |
+   |          |        |communicate  |       |                           |
+   |          |        |with the     |       |                           |
+   |          |        |proxy        |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |proxy     |No      |String       |String |"https://example.org:4443/ |
+   |          |        |containing   |       |masque/                    |
+   |          |        |the URI      |       |{?target_host,target_port}"|
+   |          |        |template or  |       |                           |
+   |          |        |host and port|       |                           |
+   |          |        |of the proxy,|       |                           |
+   |          |        |depending on |       |                           |
+   |          |        |the format   |       |                           |
+   |          |        |defined by   |       |                           |
+   |          |        |the protocol |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |mandatory |Yes     |An array of  |Array  |["example_key"]            |
+   |          |        |optional keys|of     |                           |
+   |          |        |that client  |Strings|                           |
+   |          |        |must         |       |                           |
+   |          |        |understand   |       |                           |
+   |          |        |and process  |       |                           |
+   |          |        |to use this  |       |                           |
+   |          |        |proxy        |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |alpn      |Yes     |An array of  |Array  |["h3","h2"]                |
+   |          |        |Application- |of     |                           |
+   |          |        |Layer        |Strings|                           |
+   |          |        |Protocol     |       |                           |
+   |          |        |Negotiation  |       |                           |
+   |          |        |protocol     |       |                           |
+   |          |        |identifiers  |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |identifier|Yes     |A string used|String |"udp-proxy"                |
+   |          |        |to refer to  |       |                           |
+   |          |        |the proxy,   |       |                           |
+   |          |        |which can be |       |                           |
+   |          |        |referenced by|       |                           |
+   |          |        |other        |       |                           |
+   |          |        |dictionaries,|       |                           |
+   |          |        |such as      |       |                           |
+   |          |        |entries in   |       |                           |
+   |          |        |proxy-match  |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
 
        Table 1: Initial Proxy Information PvD Keys Registry Contents
 
