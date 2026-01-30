@@ -200,7 +200,7 @@ PvD information from the well-known URI to learn the list of complete
 URIs that support non-default protocols, such as {{CONNECT-UDP}} and
 {{CONNECT-IP}}.
 
-## Proxy definition keys
+## Proxy dictionary keys
 
 This document defines two required keys for the sub-dictionaries in the
 `proxies` array: `protocol` and `proxy`. There are also optional keys, including
@@ -244,7 +244,7 @@ or a full URI template.
 
 The value of the `mandatory` key is an array of keys that the client must understand and process to be
 able to use the proxy. A client that does not understand a key from the array or cannot fully process
-the value of a key from the array MUST ignore the entire proxy definition.
+the value of a key from the array MUST ignore the entire proxy dictionary.
 
 The `mandatory` array can contain keys that are either:
 
@@ -434,7 +434,7 @@ through the proxy.
 Implementations MAY include proprietary or vendor-specific keys in destination rules to define custom matching logic
 not specified in this document.
 
-Similar to proprietary keys in proxy definitions ({{proxy-proprietary-keys}}), a proprietary key in destination
+Similar to proprietary keys in proxy dictionaries ({{proxy-proprietary-keys}}), a proprietary key in destination
 rule MUST contain at least one underscore character ("\_"), which separates a vendor-specific namespace from the key name.
 For example, "acme_processid" could be a key used to apply rules only to traffic of a specific process identifier as
 defined by a vendor named "acme".
