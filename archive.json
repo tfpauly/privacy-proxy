@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-13T00:21:48.322667+00:00",
+  "timestamp": "2026-02-01T00:32:58.908603+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -22037,6 +22037,453 @@
           "body": "",
           "createdAt": "2025-11-12T04:12:41Z",
           "updatedAt": "2025-11-12T04:12:41Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 319,
+      "id": "PR_kwDOEwrMS87AOQNe",
+      "title": "Discourage escaped characters in JSON identifiers",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/319",
+      "state": "MERGED",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-01-29T20:16:05Z",
+      "updatedAt": "2026-01-30T15:33:30Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "00c915892667d2c05b4d0a56096661a76ee25926",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "main",
+      "headRefOid": "2a736223b4ce73b5fcccd4fcd877c95aa585d94c",
+      "closedAt": "2026-01-30T15:33:30Z",
+      "mergedAt": "2026-01-30T15:33:29Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "d7d65f631e8e681a297cf7123d825c982ab2aff0"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87eCr_J",
+          "commit": {
+            "abbreviatedOid": "2a73622"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-29T21:53:28Z",
+          "updatedAt": "2026-01-29T21:53:28Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87eKtQA",
+          "commit": {
+            "abbreviatedOid": "2a73622"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-30T09:53:22Z",
+          "updatedAt": "2026-01-30T09:53:22Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 320,
+      "id": "PR_kwDOEwrMS87AOZ56",
+      "title": "Clarified multiple underscores",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/320",
+      "state": "MERGED",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-01-29T20:28:34Z",
+      "updatedAt": "2026-01-30T15:35:35Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "00c915892667d2c05b4d0a56096661a76ee25926",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "many_underscores",
+      "headRefOid": "f626cbf1efe0074df87658159a3bedcf10438a75",
+      "closedAt": "2026-01-30T15:35:35Z",
+      "mergedAt": "2026-01-30T15:35:35Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "eda2bd52530baa1d9cd634038ed28d76c0a7f130"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87eCuru",
+          "commit": {
+            "abbreviatedOid": "1600847"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-29T21:56:29Z",
+          "updatedAt": "2026-01-29T21:56:32Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "Might be nice to leave this example with just one to show that you can also just have one underscore =)",
+              "createdAt": "2026-01-29T21:56:29Z",
+              "updatedAt": "2026-01-29T21:56:32Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87eK1XE",
+          "commit": {
+            "abbreviatedOid": "1600847"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-30T10:01:25Z",
+          "updatedAt": "2026-01-30T10:01:25Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87eQ8kS",
+          "commit": {
+            "abbreviatedOid": "1600847"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-01-30T15:34:09Z",
+          "updatedAt": "2026-01-30T15:34:10Z",
+          "comments": [
+            {
+              "originalPosition": 20,
+              "body": "```suggestion\nFor example, \"acme_processid\" could be a key used to apply rules only to traffic of a specific process identifier as\ndefined by a vendor named \"acme\".\n```",
+              "createdAt": "2026-01-30T15:34:09Z",
+              "updatedAt": "2026-01-30T15:34:10Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 321,
+      "id": "PR_kwDOEwrMS87AOty2",
+      "title": "Changed IPv4 example subnet",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/321",
+      "state": "MERGED",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-01-29T20:52:09Z",
+      "updatedAt": "2026-01-30T15:36:03Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "00c915892667d2c05b4d0a56096661a76ee25926",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "ip-example",
+      "headRefOid": "b2bd9f86dfb21e38758884b2953645e220b89637",
+      "closedAt": "2026-01-30T15:36:03Z",
+      "mergedAt": "2026-01-30T15:36:03Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "3bc754b2754d9c475775ef36973e5a7fb3bdfee5"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87eCl5D",
+          "commit": {
+            "abbreviatedOid": "b2bd9f8"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-29T21:47:14Z",
+          "updatedAt": "2026-01-29T21:47:14Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87eKbFX",
+          "commit": {
+            "abbreviatedOid": "b2bd9f8"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-30T09:36:01Z",
+          "updatedAt": "2026-01-30T09:36:01Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 322,
+      "id": "PR_kwDOEwrMS87AO0Fm",
+      "title": "Adjusted example URL to shrink overall table width",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/322",
+      "state": "MERGED",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-01-29T21:02:22Z",
+      "updatedAt": "2026-01-30T15:36:18Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "00c915892667d2c05b4d0a56096661a76ee25926",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "table-width",
+      "headRefOid": "0eaddb4141dc3a057737c001afe361b6f22364cb",
+      "closedAt": "2026-01-30T15:36:18Z",
+      "mergedAt": "2026-01-30T15:36:18Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "1104a8e97c0e7d62efefa438455a5a681681563e"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87eCmNb",
+          "commit": {
+            "abbreviatedOid": "0eaddb4"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-29T21:47:36Z",
+          "updatedAt": "2026-01-29T21:47:36Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87eKcnY",
+          "commit": {
+            "abbreviatedOid": "0eaddb4"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-30T09:37:21Z",
+          "updatedAt": "2026-01-30T09:37:21Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 323,
+      "id": "PR_kwDOEwrMS87AO5xx",
+      "title": "Use \"array\" instead of \"list\" in JSON context",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/323",
+      "state": "MERGED",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We used these terms interchangeably. It's good to tighten up terminology.",
+      "createdAt": "2026-01-29T21:10:47Z",
+      "updatedAt": "2026-01-30T15:41:14Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "1104a8e97c0e7d62efefa438455a5a681681563e",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "list-array",
+      "headRefOid": "694949c24bdc85c8f1db67b1ce14ce8812b8919c",
+      "closedAt": "2026-01-30T15:41:14Z",
+      "mergedAt": "2026-01-30T15:41:14Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "7e368119d052bd9ed58aafcbbe968e7d9fb428a4"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87eCmp6",
+          "commit": {
+            "abbreviatedOid": "62e2299"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-29T21:48:05Z",
+          "updatedAt": "2026-01-29T21:48:05Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87eKgaU",
+          "commit": {
+            "abbreviatedOid": "62e2299"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-30T09:40:44Z",
+          "updatedAt": "2026-01-30T09:40:44Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 324,
+      "id": "PR_kwDOEwrMS87AO7LY",
+      "title": "Improve wording as suggested by Marcus",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/324",
+      "state": "MERGED",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-01-29T21:12:54Z",
+      "updatedAt": "2026-01-30T15:45:08Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "7e368119d052bd9ed58aafcbbe968e7d9fb428a4",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "clunky",
+      "headRefOid": "5a5692c92955b4ba6f0506d2edd4b80d2ecb750a",
+      "closedAt": "2026-01-30T15:45:08Z",
+      "mergedAt": "2026-01-30T15:45:08Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "d2b3dbf2ddf7823ff33d49b216ce31bec9d850e5"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87eCnHy",
+          "commit": {
+            "abbreviatedOid": "e28852e"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-29T21:48:36Z",
+          "updatedAt": "2026-01-29T21:48:36Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87eKibm",
+          "commit": {
+            "abbreviatedOid": "e28852e"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-30T09:42:24Z",
+          "updatedAt": "2026-01-30T09:42:24Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 325,
+      "id": "PR_kwDOEwrMS87APYds",
+      "title": "Use \"proxy dictionary\" instead of \"proxy definition\"",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/325",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "From shepherd review nits.\r\n\r\nUpdated terminology from 'Proxy definition' to 'Proxy dictionary' for consistency. Adjusted references to proxy definitions to proxy dictionaries throughout the document.",
+      "createdAt": "2026-01-29T21:52:28Z",
+      "updatedAt": "2026-01-30T15:49:02Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "d2b3dbf2ddf7823ff33d49b216ce31bec9d850e5",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-27",
+      "headRefOid": "197a4389c6898c12218e1a3af59e7affd8456cdd",
+      "closedAt": "2026-01-30T15:49:01Z",
+      "mergedAt": "2026-01-30T15:49:01Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "5a0d7d3d6c52e89fe6e755916ff382d3bb7af0df"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87eKltF",
+          "commit": {
+            "abbreviatedOid": "405cba1"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-30T09:45:27Z",
+          "updatedAt": "2026-01-30T09:45:27Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 326,
+      "id": "PR_kwDOEwrMS87APfGQ",
+      "title": "Change 'should' to 'SHOULD' for proxy identifier handling",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/326",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Make ordering across different identifiers a normative SHOULD",
+      "createdAt": "2026-01-29T22:01:52Z",
+      "updatedAt": "2026-01-30T15:49:54Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "5a0d7d3d6c52e89fe6e755916ff382d3bb7af0df",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-28",
+      "headRefOid": "072064fe497d8e1aca0af74996628dc0668c6342",
+      "closedAt": "2026-01-30T15:49:54Z",
+      "mergedAt": "2026-01-30T15:49:54Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "39cae734397a1ce655c335358876994049c6b4a4"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87eLOUg",
+          "commit": {
+            "abbreviatedOid": "19a8aa0"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-30T10:23:38Z",
+          "updatedAt": "2026-01-30T10:23:38Z",
           "comments": []
         }
       ]
