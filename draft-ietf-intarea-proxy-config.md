@@ -28,6 +28,14 @@ author:
     organization: Zscaler
     email: yrosomakho@zscaler.com
 
+normative:
+  IANA_PVD:
+    target: https://www.iana.org/assignments/pvds/pvds.xhtml#additional-information-pvd-keys
+    title: Additional Information PvD Keys Registry
+  IANA_SVCB:
+    target: https://www.iana.org/assignments/dns-svcb/dns-svcb.xhtml#dns-svcparamkeys
+    title: SvcParamKeys Registry
+
 --- abstract
 
 This document defines a mechanism for accessing provisioning domain information
@@ -41,9 +49,9 @@ and information about which destinations are accessible using a proxy.
 HTTP proxies that use the CONNECT method defined in {{Section 9.3.6 of !HTTP=RFC9110}}
 (often referred to as "forward" proxies) allow clients to open connections to
 hosts via a proxy. These typically allow for TCP stream proxying, but can also support
-UDP proxying {{!CONNECT-UDP=RFC9298}} and IP packet proxying
-{{!CONNECT-IP=RFC9484}}. The locations of these proxies are not just defined as
-hostnames and ports, but can use URI templates {{!URITEMPLATE=RFC6570}}.
+UDP proxying {{?CONNECT-UDP=RFC9298}} and IP packet proxying
+{{?CONNECT-IP=RFC9484}}. The locations of these proxies are not just defined as
+hostnames and ports, but can use URI templates {{?URITEMPLATE=RFC6570}}.
 
 In order to make use of multiple related proxies, clients need a way to understand
 which proxies are associated with one another, and which protocols can be used
@@ -195,10 +203,10 @@ in addition to the known proxy.
 Such cases are useful for informing clients of related proxies as a discovery
 method, with the assumption that the client already is aware of one proxy.
 Many historical methods of configuring a proxy only allow configuring
-a single FQDN hostname for the proxy. A client can attempt to fetch the
+a single hostname and port for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
-URIs that support non-default protocols, such as {{CONNECT-UDP}} and
-{{CONNECT-IP}}.
+URIs that support non-default protocols, such as {{?CONNECT-UDP}} and
+{{?CONNECT-IP}}.
 
 ## Proxy dictionary keys
 
@@ -221,7 +229,7 @@ content provided below.
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
 For consistency, any new proxy types that use HTTP Upgrade Tokens (and use
-the `:protocol` pseudo-header) SHOULD define the `protocol` value to match
+the `:protocol` pseudo-header) MUST define the `protocol` value to match
 the Upgrade Token / `:protocol` value. Extensions to proxy types that use
 the same HTTP Upgrade Tokens ought to be covered by the same `protocol` value;
 if there are properties specific to an extension, the extensions can either
@@ -230,12 +238,12 @@ support.
 
 | Proxy Protocol | Proxy Location Format | Reference | Notes |
 | --- | --- | --- |
-| socks5 | host:port | {{!SOCKSv5=RFC1928}} | |
-| http-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |
-| https-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |
-| connect-udp | URI template | {{CONNECT-UDP}} | |
-| connect-ip | URI template | {{CONNECT-IP}} | |
-| connect-tcp | URI template | {{!CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
+| socks5 | host:port | {{?SOCKSv5=RFC1928}} | |
+| http-connect | host:port | {{Section 9.3.6 of ?HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |
+| https-connect | host:port | {{Section 9.3.6 of ?HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |
+| connect-udp | URI template | {{?CONNECT-UDP}} | |
+| connect-ip | URI template | {{?CONNECT-IP}} | |
+| connect-tcp | URI template | {{?CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
 {: #proxy-protocol-value-table title="Initial PvD Proxy Protocol Registry Contents"}
 
 The value of `proxy` depends on the Proxy Location Format defined by proxy protocol.
@@ -275,9 +283,11 @@ the `proxy-match` array.
 Implementations MAY include proprietary or vendor-specific keys in the sub-dictionaries of the `proxies`
 array to convey additional proxy configuration information not defined in this specification.
 
-A proprietary key MUST contain at least one underscore character ("_"). The last underscore serves as a
-separator between a vendor-specific namespace and the key name. For example, "acme_tech_authmode" could
-be a proprietary key indicating an authentication mode defined by a vendor named "acme_tech".
+A proprietary key MUST contain at least one underscore character ("_"). The right-most underscore serves
+as a separator between a vendor-specific namespace and the key name, i.e. the string to the right of the
+right-most underscore is the key name and the string left from the underscore specifies the
+vendor-specific namespace. For example, "acme_tech_authmode" could be a proprietary key indicating an
+authentication mode defined by a vendor named "acme_tech".
 
 When combined with `mandatory` array, this mechanism allows implementations to extend proxy metadata while
 maintaining interoperability and ensuring safe fallback behavior for clients that do not support a given
@@ -321,7 +331,7 @@ content-length = 322
 }
 ~~~
 
-From this response, the client would learn the URI template of the proxy that supports UDP using {{CONNECT-UDP}},
+From this response, the client would learn the URI template of the proxy that supports UDP using {{?CONNECT-UDP}},
 at "https://proxy.example.org/masque{?target_host,target_port}".
 
 # Destination accessibility information for proxies {#destinations}
@@ -416,7 +426,7 @@ the rule MUST be treated as not matching, and the client continues evaluation of
 A matched rule will then either point to one or more proxy `identifier` values, which correspond
 to proxies defined in the array from {{proxy-enumeration}}, or instructs the client to not send the
 matching traffic to any proxy. If a matching rule contains more then one `identifier` the client
-SHOULD treat the array as an ordered list, where the first `identifier` is the most preferred.
+MUST treat the array as an ordered list, where the first `identifier` is the most preferred.
 Multiple proxy dictionaries can contain the same `identifier` value. In this case, the client
 can choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests
 to the same proxy `identifier` to increase connection reuse.
@@ -640,7 +650,7 @@ observing the traffic being proxied.
 
 Configuration advertised via PvD Additional Information, such DNS zones or associated
 proxies, can only be safely used when fetched over a secure TLS-protected connection,
-and the client has validated that that the hostname of the proxy, the identifier of
+and the client has validated that the hostname of the proxy, the identifier of
 the PvD, and the validated hostname identity on the certificate all match.
 
 When using information in destination rules ({{destinations}}), clients MUST only allow
@@ -653,7 +663,7 @@ traffic, but MUST NOT send traffic that would go beyond what is allowed by local
 
 ## New PvD Additional Information key {#proxies-key-iana}
 
-This document registers two new keys in the "Additional Information PvD Keys" registry.
+This document registers two new keys in the "Additional Information PvD Keys" registry {{IANA_PVD}}.
 
 ### `proxies` Key
 
@@ -726,7 +736,8 @@ in the names (since underscores are reserved for vendor-specific keys).
 
 ## New DNS SVCB Service Parameter Key (SvcParamKey) {#svcparamkey-iana}
 
-IANA is requested to add a new entry to the "DNS SVCB Service Parameter Keys (SvcParamKeys)" registry:
+IANA is requested to add a new entry to the "DNS SVCB Service Parameter Keys (SvcParamKeys)" registry
+{{IANA_SVCB}}:
 
 * Number: TBD
 * Name: pvd
