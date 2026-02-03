@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 3 August 2026                                         Microsoft
+Expires: 7 August 2026                                         Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                         30 January 2026
+                                                         3 February 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 August 2026.
+   This Internet-Draft will expire on 7 August 2026.
 
 Copyright Notice
 
@@ -104,7 +104,7 @@ Table of Contents
    to understand which proxies are associated with one another, and
    which protocols can be used to communicate with the proxies.
 
-   Client can also benefit from learning about additional information
+   Clients can also benefit from learning about additional information
    associated with the proxy to optimize their proxy usage, such knowing
    that a proxy is configured to only allow access to a limited set of
    destinations.
@@ -211,7 +211,7 @@ Table of Contents
    :path = /.well-known/pvd
    accept = application/pvd+json
 
-   A client would send the same request as above for the PvD assocated
+   A client would send the same request as above for the PvD associated
    with an HTTP CONNECT proxy on "proxy.example.org:8080".  Note that
    the client will not make a request to port 8080, but to port 443.
 
@@ -346,7 +346,7 @@ Table of Contents
    proxy types that use the same HTTP Upgrade Tokens ought to be covered
    by the same protocol value; if there are properties specific to an
    extension, the extensions can either define new optional keys or rely
-   on negotation within the protocol to discover support.
+   on negotiation within the protocol to discover support.
 
      +===============+===========+===============+===================+
      | Proxy         | Proxy     | Reference     | Notes             |
@@ -390,7 +390,7 @@ Table of Contents
    The mandatory array can contain keys that are either:
 
    *  registered in an IANA registry, defined in Section 7.2 and marked
-      as optional;
+      as optional,
 
    *  or proprietary, as defined in Section 3.2
 
@@ -408,7 +408,7 @@ Table of Contents
    JSON string using UTF-8 encoding as discussed in Section 8.1 of
    [JSON].  Characters that need to be escaped in JSON strings per
    Section 7 of [JSON] are NOT RECOMMENDED as they can lead to
-   difficulties in string comparisions as discussed in Section 8.3 of
+   difficulties in string comparisons as discussed in Section 8.3 of
    [JSON].  Identifier values MAY be duplicated across different proxy
    dictionaries in the proxies array.  References to a particular
    identifier apply to the set of proxies sharing that identifier.
@@ -455,7 +455,7 @@ content-length = 322
 
 {
   "identifier": "proxy.example.org.",
-  "expires": "2023-06-23T06:00:00Z",
+  "expires": "2026-06-23T06:00:00Z",
   "prefixes": [],
   "proxies": [
     {
@@ -531,7 +531,7 @@ content-length = 322
    |       |        | wildcard    |Strings|                           |
    |       |        | DNS domains |       |                           |
    +-------+--------+-------------+-------+---------------------------+
-   |subnets|Yes     | An array of |Array  | ["2001:DB8::1",           |
+   |subnets|Yes     | An array of |Array  | ["2001:db8::1",           |
    |       |        | IPv4 and    |of     | "192.0.2.0/24"]           |
    |       |        | IPv6        |Strings|                           |
    |       |        | addresses   |       |                           |
@@ -550,7 +550,7 @@ content-length = 322
    proxies array).  Wildcards are allowed only as prefixes (*.).  A
    wildcard prefix is used to indicate matching entire domains or
    subdomains instead of specific hostnames.  Note that this can be used
-   to match multiple levels of subdomains.  For example "*.example.com"
+   to match multiple levels of subdomains.  For example, "*.example.com"
    matches "internal.example.com" as well as "www.public.example.com".
    Entries that include the wildcard prefix also MUST be treated as if
    they match an FQDN that only contains the string after the prefix,
@@ -570,7 +570,7 @@ content-length = 322
    applications are communicating directly with an IP address (without
    having resolved a DNS name) as well as cases where an application
    resolved a DNS name to a set of IP addresses.  Note that if
-   destination rules includes an empty proxies array (indicating that no
+   destination rules include an empty proxies array (indicating that no
    proxy is applicable for this subnet), an application can only
    reliably follow this destination rule if it resolves DNS names prior
    to proxying.
@@ -581,8 +581,8 @@ content-length = 322
    matches all ports from 1024 to 2048, including the 1024 and 2048.  If
    ports key is not present, all ports are assumed to match.  The array
    may contain individual port numbers (such as "80") or inclusive
-   ranges of ports.  For example "1024-2048" matches all ports from 1024
-   to 2048, including the 1024 and 2048.
+   ranges of ports.  For example, "1024-2048" matches all ports from
+   1024 to 2048, including the 1024 and 2048.
 
 4.2.  Using Destination Rules
 
@@ -613,7 +613,7 @@ content-length = 322
    A matched rule will then either point to one or more proxy identifier
    values, which correspond to proxies defined in the array from
    Section 3, or instructs the client to not send the matching traffic
-   to any proxy.  If a matching rule contains more then one identifier
+   to any proxy.  If a matching rule contains more than one identifier
    the client SHOULD treat the array as an ordered list, where the first
    identifier is the most preferred.  Multiple proxy dictionaries can
    contain the same identifier value.  In this case, the client can
@@ -658,7 +658,7 @@ content-length = 322
 
    {
      "identifier": "proxy.example.org.",
-     "expires": "2023-06-23T06:00:00Z",
+     "expires": "2026-06-23T06:00:00Z",
      "prefixes": [],
      "proxies": [
        {
@@ -692,11 +692,11 @@ content-length = 322
    configuration to hosts outside of the "*.internal.example.org" zone.
 
    In the next example, two proxies are defined with a separate
-   identifiers, and there are three destination rules:
+   identifier, and there are three destination rules:
 
    {
      "identifier": "proxy.example.org.",
-     "expires": "2023-06-23T06:00:00Z",
+     "expires": "2026-06-23T06:00:00Z",
      "prefixes": [],
      "proxies": [
        {
@@ -741,7 +741,7 @@ content-length = 322
 
 {
   "identifier": "proxy.example.org.",
-  "expires": "2023-06-23T06:00:00Z",
+  "expires": "2026-06-23T06:00:00Z",
   "prefixes": [],
   "proxies": [
     {
@@ -790,7 +790,7 @@ content-length = 322
 
    {
      "identifier": "proxy.example.org.",
-     "expires": "2023-06-23T06:00:00Z",
+     "expires": "2026-06-23T06:00:00Z",
      "prefixes": [],
      "proxies": [
        {
@@ -810,7 +810,7 @@ content-length = 322
          "proxies": [ ]
        },
        {
-         "subnets": [ "192.0.2.0/24", "2001:DB8::/32" ],
+         "subnets": [ "192.0.2.0/24", "2001:db8::/32" ],
          "proxies": [ ]
        },
        {
@@ -821,7 +821,7 @@ content-length = 322
 
    In this case, the client will not forward TCP traffic that is
    destined to hosts matching "*.intranet.example.org", 192.0.2.0/24 or
-   2001:DB8::/32, through the proxies.  Due to the order in "proxies"
+   2001:db8::/32, through the proxies.  Due to the order in "proxies"
    array in the last rule of "proxy-match", the client would prefer
    "proxy.example.org:80" over "backup.example.org:80"
 
