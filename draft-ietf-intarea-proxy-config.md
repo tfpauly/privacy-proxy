@@ -205,8 +205,8 @@ method, with the assumption that the client already is aware of one proxy.
 Many historical methods of configuring a proxy only allow configuring
 a single hostname and port for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
-URIs that support non-default protocols, such as {{?CONNECT-UDP}} and
-{{?CONNECT-IP}}.
+URIs that support non-default protocols, such as {{CONNECT-UDP}} and
+{{CONNECT-IP}}.
 
 ## Proxy dictionary keys
 
