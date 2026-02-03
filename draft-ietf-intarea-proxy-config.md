@@ -241,8 +241,8 @@ support.
 | socks5 | host:port | {{?SOCKSv5=RFC1928}} | |
 | http-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |
 | https-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |
-| connect-udp | URI template | {{?CONNECT-UDP}} | |
-| connect-ip | URI template | {{?CONNECT-IP}} | |
+| connect-udp | URI template | {{CONNECT-UDP}} | |
+| connect-ip | URI template | {{CONNECT-IP}} | |
 | connect-tcp | URI template | {{?CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
 {: #proxy-protocol-value-table title="Initial PvD Proxy Protocol Registry Contents"}
 
