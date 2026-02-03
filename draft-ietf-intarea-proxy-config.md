@@ -72,8 +72,10 @@ learn about other proxy options given a known proxy ({{proxy-enumeration}}).
 proxy ({{destinations}}).
 
 Additionally, this document outline how these mechanisms might be used
-to discover proxies associated with a network ({{network-proxies}}), but
-for this use case, further security and experience considerations are needed.
+to discover proxies associated with a network ({{network-proxies}}). However, this approach is not described for the
+purpose of generic proxy discovery, and requires careful
+security considerations for clients to limit usage to trusted
+scenarios.
 
 Using this mechanism a client can learn that a legacy insecure HTTP proxy that
 the client is configured with is also accessible using HTTPS. In this way,
