@@ -331,7 +331,7 @@ content-length = 322
 }
 ~~~
 
-From this response, the client would learn the URI template of the proxy that supports UDP using {{?CONNECT-UDP}},
+From this response, the client would learn the URI template of the proxy that supports UDP using {{CONNECT-UDP}},
 at "https://proxy.example.org/masque{?target_host,target_port}".
 
 # Destination accessibility information for proxies {#destinations}
