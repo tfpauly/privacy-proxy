@@ -71,7 +71,7 @@ learn about other proxy options given a known proxy ({{proxy-enumeration}}).
 1. A way to define the set of destinations that are accessible through the
 proxy ({{destinations}}).
 
-Additionally, this document outline how these mechanisms might be used
+Additionally, this document outlines how these mechanisms might be used
 to discover proxies associated with a network ({{network-proxies}}). However, this approach is not described for the
 purpose of generic proxy discovery, and requires careful
 security considerations for clients to limit usage to trusted
