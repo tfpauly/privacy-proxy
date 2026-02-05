@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 7 August 2026                                         Microsoft
+Expires: 9 August 2026                                         Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                         3 February 2026
+                                                         5 February 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 August 2026.
+   This Internet-Draft will expire on 9 August 2026.
 
 Copyright Notice
 
@@ -273,7 +273,7 @@ Table of Contents
    Such cases are useful for informing clients of related proxies as a
    discovery method, with the assumption that the client already is
    aware of one proxy.  Many historical methods of configuring a proxy
-   only allow configuring a single FQDN hostname for the proxy.  A
+   only allow configuring a single hostname and port for the proxy.  A
    client can attempt to fetch the PvD information from the well-known
    URI to learn the list of complete URIs that support non-default
    protocols, such as [CONNECT-UDP] and [CONNECT-IP].
@@ -341,10 +341,10 @@ Table of Contents
    The values for the protocol key are defined in the proxy protocol
    registry (Section 7.3), with the initial contents provided below.
    For consistency, any new proxy types that use HTTP Upgrade Tokens
-   (and use the :protocol pseudo-header) SHOULD define the protocol
-   value to match the Upgrade Token / :protocol value.  Extensions to
-   proxy types that use the same HTTP Upgrade Tokens ought to be covered
-   by the same protocol value; if there are properties specific to an
+   (and use the :protocol pseudo-header) MUST define the protocol value
+   to match the Upgrade Token / :protocol value.  Extensions to proxy
+   types that use the same HTTP Upgrade Tokens ought to be covered by
+   the same protocol value; if there are properties specific to an
    extension, the extensions can either define new optional keys or rely
    on negotiation within the protocol to discover support.
 
@@ -425,10 +425,13 @@ Table of Contents
    configuration information not defined in this specification.
 
    A proprietary key MUST contain at least one underscore character
-   ("_").  The last underscore serves as a separator between a vendor-
-   specific namespace and the key name.  For example,
-   "acme_tech_authmode" could be a proprietary key indicating an
-   authentication mode defined by a vendor named "acme_tech".
+   ("_").  The right-most underscore serves as a separator between a
+   vendor-specific namespace and the key name, i.e. the string to the
+   right of the right-most underscore is the key name and the string
+   left from the underscore specifies the vendor-specific namespace.
+   For example, "acme_tech_authmode" could be a proprietary key
+   indicating an authentication mode defined by a vendor named
+   "acme_tech".
 
    When combined with mandatory array, this mechanism allows
    implementations to extend proxy metadata while maintaining
@@ -614,7 +617,7 @@ content-length = 322
    values, which correspond to proxies defined in the array from
    Section 3, or instructs the client to not send the matching traffic
    to any proxy.  If a matching rule contains more than one identifier
-   the client SHOULD treat the array as an ordered list, where the first
+   the client MUST treat the array as an ordered list, where the first
    identifier is the most preferred.  Multiple proxy dictionaries can
    contain the same identifier value.  In this case, the client can
    choose any of the proxies; however, the client ought to prefer using
@@ -856,8 +859,8 @@ content-length = 322
    Configuration advertised via PvD Additional Information, such DNS
    zones or associated proxies, can only be safely used when fetched
    over a secure TLS-protected connection, and the client has validated
-   that that the hostname of the proxy, the identifier of the PvD, and
-   the validated hostname identity on the certificate all match.
+   that the hostname of the proxy, the identifier of the PvD, and the
+   validated hostname identity on the certificate all match.
 
    When using information in destination rules (Section 4), clients MUST
    only allow the PvD configuration to narrow the scope of traffic that
@@ -872,7 +875,7 @@ content-length = 322
 7.1.  New PvD Additional Information key
 
    This document registers two new keys in the "Additional Information
-   PvD Keys" registry.
+   PvD Keys" registry [IANA_PVD].
 
 7.1.1.  proxies Key
 
@@ -956,7 +959,7 @@ content-length = 322
 7.5.  New DNS SVCB Service Parameter Key (SvcParamKey)
 
    IANA is requested to add a new entry to the "DNS SVCB Service
-   Parameter Keys (SvcParamKeys)" registry:
+   Parameter Keys (SvcParamKeys)" registry [IANA_SVCB]:
 
    *  Number: TBD
 
@@ -977,28 +980,19 @@ content-length = 322
               Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
               July 2014, <https://www.rfc-editor.org/rfc/rfc7301>.
 
-   [CONNECT-IP]
-              Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,
-              Kühlewind, M., and M. Westerlund, "Proxying IP in HTTP",
-              RFC 9484, DOI 10.17487/RFC9484, October 2023,
-              <https://www.rfc-editor.org/rfc/rfc9484>.
-
-   [CONNECT-TCP]
-              Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
-              for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-10, 5 December 2025,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-10>.
-
-   [CONNECT-UDP]
-              Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
-              DOI 10.17487/RFC9298, August 2022,
-              <https://www.rfc-editor.org/rfc/rfc9298>.
-
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
               DOI 10.17487/RFC9110, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9110>.
+
+   [IANA_PVD] "Additional Information PvD Keys Registry", n.d.,
+              <https://www.iana.org/assignments/pvds/
+              pvds.xhtml#additional-information-pvd-keys>.
+
+   [IANA_SVCB]
+              "SvcParamKeys Registry", n.d.,
+              <https://www.iana.org/assignments/dns-svcb/dns-
+              svcb.xhtml#dns-svcparamkeys>.
 
    [JSON]     Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
               Interchange Format", STD 90, RFC 8259,
@@ -1024,11 +1018,6 @@ content-length = 322
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-   [SOCKSv5]  Leech, M., Ganis, M., Lee, Y., Kuris, R., Koblas, D., and
-              L. Jones, "SOCKS Protocol Version 5", RFC 1928,
-              DOI 10.17487/RFC1928, March 1996,
-              <https://www.rfc-editor.org/rfc/rfc1928>.
-
    [SVCB-DNS] Schwartz, B., Bishop, M., and E. Nygren, "Service Binding
               and Parameter Specification via the DNS (SVCB and HTTPS
               Resource Records)", RFC 9460, DOI 10.17487/RFC9460,
@@ -1052,6 +1041,24 @@ content-length = 322
               Plan", BCP 122, RFC 4632, DOI 10.17487/RFC4632, August
               2006, <https://www.rfc-editor.org/rfc/rfc4632>.
 
+   [CONNECT-IP]
+              Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,
+              Kühlewind, M., and M. Westerlund, "Proxying IP in HTTP",
+              RFC 9484, DOI 10.17487/RFC9484, October 2023,
+              <https://www.rfc-editor.org/rfc/rfc9484>.
+
+   [CONNECT-TCP]
+              Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
+              for TCP", Work in Progress, Internet-Draft, draft-ietf-
+              httpbis-connect-tcp-10, 5 December 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
+              connect-tcp-10>.
+
+   [CONNECT-UDP]
+              Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
+              DOI 10.17487/RFC9298, August 2022,
+              <https://www.rfc-editor.org/rfc/rfc9298>.
+
    [IKEV2SPLIT]
               Pauly, T. and P. Wouters, "Split DNS Configuration for the
               Internet Key Exchange Protocol Version 2 (IKEv2)",
@@ -1071,6 +1078,11 @@ content-length = 322
               "Neighbor Discovery for IP version 6 (IPv6)", RFC 4861,
               DOI 10.17487/RFC4861, September 2007,
               <https://www.rfc-editor.org/rfc/rfc4861>.
+
+   [SOCKSv5]  Leech, M., Ganis, M., Lee, Y., Kuris, R., Koblas, D., and
+              L. Jones, "SOCKS Protocol Version 5", RFC 1928,
+              DOI 10.17487/RFC1928, March 1996,
+              <https://www.rfc-editor.org/rfc/rfc1928>.
 
 Authors' Addresses
 
