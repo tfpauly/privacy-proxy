@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-03T00:29:37.527078+00:00",
+  "timestamp": "2026-02-05T00:29:17.552203+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -22493,24 +22493,26 @@
       "id": "PR_kwDOEwrMS87BAQjq",
       "title": "Address 'Non-critical/cosmetic issues' for the AD review.",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/327",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ddragana",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-02-02T20:08:07Z",
-      "updatedAt": "2026-02-02T21:59:59Z",
+      "updatedAt": "2026-02-03T17:07:58Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "39cae734397a1ce655c335358876994049c6b4a4",
       "headRepository": "ddragana/privacy-proxy",
       "headRefName": "patch_1",
       "headRefOid": "5e9d2faacdc019a45a33f99f1c55cedc746ee420",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-02-03T17:07:58Z",
+      "mergedAt": "2026-02-03T17:07:58Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "1a328f1e3af05ffbe53b30f7d04961f3a80e844f"
+      },
       "comments": [],
       "reviews": [
         {
@@ -22524,6 +22526,19 @@
           "body": "",
           "createdAt": "2026-02-02T21:59:59Z",
           "updatedAt": "2026-02-02T21:59:59Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87fTTqT",
+          "commit": {
+            "abbreviatedOid": "5e9d2fa"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks great!",
+          "createdAt": "2026-02-03T16:48:26Z",
+          "updatedAt": "2026-02-03T16:48:26Z",
           "comments": []
         }
       ]
@@ -22540,13 +22555,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-02-02T20:37:34Z",
-      "updatedAt": "2026-02-02T22:03:39Z",
+      "updatedAt": "2026-02-03T16:33:18Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "39cae734397a1ce655c335358876994049c6b4a4",
       "headRepository": "ddragana/privacy-proxy",
       "headRefName": "patch_2",
-      "headRefOid": "6cac36761389c7b1998797129c8c599784aafcd3",
+      "headRefOid": "de4e1963c127cfeff3354c28fe343dee5e5dd4d9",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -22578,6 +22593,32 @@
               "updatedAt": "2026-02-02T22:03:39Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87fS0lq",
+          "commit": {
+            "abbreviatedOid": "de4e196"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-03T16:24:48Z",
+          "updatedAt": "2026-02-03T16:33:18Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "I think \"not described for purpose of generic proxy discovery\" creates ambiguity and raises more questions. Maybe we could drop along the lines of\n\n```suggestion\nto discover proxies associated with a network ({{network-proxies}}). This approach requires careful\nsecurity considerations for clients to limit usage to trusted\nscenarios.\n```",
+              "createdAt": "2026-02-03T16:24:48Z",
+              "updatedAt": "2026-02-03T16:33:18Z"
+            },
+            {
+              "originalPosition": 19,
+              "body": "RFC2132 refers to this as \"site-specific\" option codes rather than private. As far as I can tell RFC2939 added \"Private Use\" language. Maybe we should use that as the reference?\n\nAlso, I believe this option is DHCPv4 specific and does not work with DHCPv6\n\n```suggestion\nuses the DHCPv4 option 252, reserved for private use according to {{Section 2.1 of ?IANA-DHCP=RFC2939}}.\n```",
+              "createdAt": "2026-02-03T16:32:58Z",
+              "updatedAt": "2026-02-03T16:33:18Z"
+            }
+          ]
         }
       ]
     },
@@ -22593,13 +22634,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-02-02T21:03:42Z",
-      "updatedAt": "2026-02-02T22:07:13Z",
+      "updatedAt": "2026-02-03T16:35:21Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "39cae734397a1ce655c335358876994049c6b4a4",
       "headRepository": "ddragana/privacy-proxy",
       "headRefName": "patch_3",
-      "headRefOid": "16f139202bd7c2b16110c1dd4b96394b23cd9842",
+      "headRefOid": "2ab9f706595ac44769c5ce1fa77aff86d07f7c59",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -22651,6 +22692,117 @@
               "updatedAt": "2026-02-02T22:07:13Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87fTA68",
+          "commit": {
+            "abbreviatedOid": "2ab9f70"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-03T16:35:21Z",
+          "updatedAt": "2026-02-03T16:35:21Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "I think \"by default\" is no longer necessary when we specify the condition.\n\n```suggestion\nmatch the hostname of the HTTP proxy. The \"prefixes\" array MUST be empty for cases when the PvD identifier is not provided by a Router Advertisement as defined in {{PVDDATA}}.\n```",
+              "createdAt": "2026-02-03T16:35:21Z",
+              "updatedAt": "2026-02-03T16:35:21Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 330,
+      "id": "PR_kwDOEwrMS87BJfdU",
+      "title": "Address AD comments part 4.",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/330",
+      "state": "OPEN",
+      "author": "ddragana",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-02-03T10:07:21Z",
+      "updatedAt": "2026-02-03T18:36:36Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "1a328f1e3af05ffbe53b30f7d04961f3a80e844f",
+      "headRepository": "ddragana/privacy-proxy",
+      "headRefName": "patch_4",
+      "headRefOid": "c25955c9e103b4d4d6a4d3d56729940a13ad79ee",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87fTGUG",
+          "commit": {
+            "abbreviatedOid": "9ebd550"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-03T16:39:16Z",
+          "updatedAt": "2026-02-03T16:43:23Z",
+          "comments": [
+            {
+              "originalPosition": 38,
+              "body": "Question marks are not necessary as CONNECT-UDP/CONNECT-IP references already set as informative when defined via {{?CONNECT-UDP=RFC9298}} / {{?CONNECT-IP=RFC9484}} above.\r\n\r\n```suggestion\r\nURIs that support non-default protocols, such as {{CONNECT-UDP}} and\r\n{{CONNECT-IP}}.\r\n```",
+              "createdAt": "2026-02-03T16:39:16Z",
+              "updatedAt": "2026-02-03T16:50:42Z"
+            },
+            {
+              "originalPosition": 63,
+              "body": "HTTP is already used as a normative reference (back in Introduction section), we cannot have that both ways.\r\nGiven that PvDs are sent over HTTP and there is quite a bit of text about using the same hostname for proxy and PvD distribution, HTTP should stay normative.\r\n\r\n```suggestion\r\n| http-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |\r\n| https-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |\r\n```",
+              "createdAt": "2026-02-03T16:42:00Z",
+              "updatedAt": "2026-02-03T16:51:07Z"
+            },
+            {
+              "originalPosition": 65,
+              "body": "Same as above. They are already defined as informative.\n\n```suggestion\n| connect-udp | URI template | {{CONNECT-UDP}} | |\n| connect-ip | URI template | {{CONNECT-IP}} | |\n```",
+              "createdAt": "2026-02-03T16:42:26Z",
+              "updatedAt": "2026-02-03T16:43:23Z"
+            },
+            {
+              "originalPosition": 90,
+              "body": "```suggestion\nFrom this response, the client would learn the URI template of the proxy that supports UDP using {{CONNECT-UDP}},\n```",
+              "createdAt": "2026-02-03T16:42:56Z",
+              "updatedAt": "2026-02-03T16:43:23Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87fTyp5",
+          "commit": {
+            "abbreviatedOid": "269525f"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-03T17:11:48Z",
+          "updatedAt": "2026-02-03T17:11:48Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87fUITC",
+          "commit": {
+            "abbreviatedOid": "269525f"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-03T17:30:46Z",
+          "updatedAt": "2026-02-03T17:30:46Z",
+          "comments": []
         }
       ]
     }
