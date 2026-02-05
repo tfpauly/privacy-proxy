@@ -28,6 +28,14 @@ author:
     organization: Zscaler
     email: yrosomakho@zscaler.com
 
+normative:
+  IANA_PVD:
+    target: https://www.iana.org/assignments/pvds/pvds.xhtml#additional-information-pvd-keys
+    title: Additional Information PvD Keys Registry
+  IANA_SVCB:
+    target: https://www.iana.org/assignments/dns-svcb/dns-svcb.xhtml#dns-svcparamkeys
+    title: SvcParamKeys Registry
+
 --- abstract
 
 This document defines a mechanism for accessing provisioning domain information
@@ -41,15 +49,15 @@ and information about which destinations are accessible using a proxy.
 HTTP proxies that use the CONNECT method defined in {{Section 9.3.6 of !HTTP=RFC9110}}
 (often referred to as "forward" proxies) allow clients to open connections to
 hosts via a proxy. These typically allow for TCP stream proxying, but can also support
-UDP proxying {{!CONNECT-UDP=RFC9298}} and IP packet proxying
-{{!CONNECT-IP=RFC9484}}. The locations of these proxies are not just defined as
-hostnames and ports, but can use URI templates {{!URITEMPLATE=RFC6570}}.
+UDP proxying {{?CONNECT-UDP=RFC9298}} and IP packet proxying
+{{?CONNECT-IP=RFC9484}}. The locations of these proxies are not just defined as
+hostnames and ports, but can use URI templates {{?URITEMPLATE=RFC6570}}.
 
 In order to make use of multiple related proxies, clients need a way to understand
 which proxies are associated with one another, and which protocols can be used
 to communicate with the proxies.
 
-Client can also benefit from learning about additional information associated with
+Clients can also benefit from learning about additional information associated with
 the proxy to optimize their proxy usage, such knowing that a proxy is configured
 to only allow access to a limited set of destinations.
 
@@ -195,7 +203,7 @@ in addition to the known proxy.
 Such cases are useful for informing clients of related proxies as a discovery
 method, with the assumption that the client already is aware of one proxy.
 Many historical methods of configuring a proxy only allow configuring
-a single FQDN hostname for the proxy. A client can attempt to fetch the
+a single hostname and port for the proxy. A client can attempt to fetch the
 PvD information from the well-known URI to learn the list of complete
 URIs that support non-default protocols, such as {{CONNECT-UDP}} and
 {{CONNECT-IP}}.
@@ -221,21 +229,21 @@ content provided below.
 The values for the `protocol` key are defined in the proxy protocol
 registry ({{proxy-protocol-iana}}), with the initial contents provided below.
 For consistency, any new proxy types that use HTTP Upgrade Tokens (and use
-the `:protocol` pseudo-header) SHOULD define the `protocol` value to match
+the `:protocol` pseudo-header) MUST define the `protocol` value to match
 the Upgrade Token / `:protocol` value. Extensions to proxy types that use
 the same HTTP Upgrade Tokens ought to be covered by the same `protocol` value;
 if there are properties specific to an extension, the extensions can either
-define new optional keys or rely on negotation within the protocol to discover
+define new optional keys or rely on negotiation within the protocol to discover
 support.
 
 | Proxy Protocol | Proxy Location Format | Reference | Notes |
 | --- | --- | --- |
-| socks5 | host:port | {{!SOCKSv5=RFC1928}} | |
+| socks5 | host:port | {{?SOCKSv5=RFC1928}} | |
 | http-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using unencrypted HTTP to the proxy |
 | https-connect | host:port | {{Section 9.3.6 of HTTP}} | Standard CONNECT method, using TLS-protected HTTP to the proxy |
 | connect-udp | URI template | {{CONNECT-UDP}} | |
 | connect-ip | URI template | {{CONNECT-IP}} | |
-| connect-tcp | URI template | {{!CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
+| connect-tcp | URI template | {{?CONNECT-TCP=I-D.ietf-httpbis-connect-tcp}} | |
 {: #proxy-protocol-value-table title="Initial PvD Proxy Protocol Registry Contents"}
 
 The value of `proxy` depends on the Proxy Location Format defined by proxy protocol.
@@ -248,7 +256,7 @@ the value of a key from the array MUST ignore the entire proxy dictionary.
 
 The `mandatory` array can contain keys that are either:
 
-- registered in an IANA registry, defined in {{proxy-info-iana}} and marked as optional;
+- registered in an IANA registry, defined in {{proxy-info-iana}} and marked as optional,
 - or proprietary, as defined in {{proxy-proprietary-keys}}
 
 The `mandatory` array MUST NOT include any entries that are not present in the sub-dictionary.
@@ -262,7 +270,7 @@ proxy from other dictionaries, specifically those defined in {{destinations}}. T
 string value is an arbitrary non-empty JSON string using UTF-8 encoding
 as discussed in {{Section 8.1 of JSON}}. Characters that need to be escaped in JSON strings
 per {{Section 7 of JSON}} are NOT RECOMMENDED as they can lead to difficulties in
-string comparisions as discussed in {{Section 8.3 of JSON}}. Identifier values MAY be duplicated
+string comparisons as discussed in {{Section 8.3 of JSON}}. Identifier values MAY be duplicated
 across different proxy dictionaries in the `proxies` array. References to a particular identifier
 apply to the set of proxies sharing that identifier. Proxies without the `identifier` key are
 expected to accept any traffic since their destinations cannot be contained in `proxy-match` array defined
@@ -275,9 +283,11 @@ the `proxy-match` array.
 Implementations MAY include proprietary or vendor-specific keys in the sub-dictionaries of the `proxies`
 array to convey additional proxy configuration information not defined in this specification.
 
-A proprietary key MUST contain at least one underscore character ("_"). The last underscore serves as a
-separator between a vendor-specific namespace and the key name. For example, "acme_tech_authmode" could
-be a proprietary key indicating an authentication mode defined by a vendor named "acme_tech".
+A proprietary key MUST contain at least one underscore character ("_"). The right-most underscore serves
+as a separator between a vendor-specific namespace and the key name, i.e. the string to the right of the
+right-most underscore is the key name and the string left from the underscore specifies the
+vendor-specific namespace. For example, "acme_tech_authmode" could be a proprietary key indicating an
+authentication mode defined by a vendor named "acme_tech".
 
 When combined with `mandatory` array, this mechanism allows implementations to extend proxy metadata while
 maintaining interoperability and ensuring safe fallback behavior for clients that do not support a given
@@ -306,7 +316,7 @@ content-length = 322
 
 {
   "identifier": "proxy.example.org.",
-  "expires": "2023-06-23T06:00:00Z",
+  "expires": "2026-06-23T06:00:00Z",
   "prefixes": [],
   "proxies": [
     {
@@ -360,14 +370,14 @@ with the initial content provided below.
 | --- | --- | --- | --- | --- |
 | proxies | No | An array of strings that match `identifier` values from the top-level `proxies` array | Array of Strings | ["tcp-proxy", "udp-proxy"] |
 | domains | Yes | An array of FQDNs and wildcard DNS domains | Array of Strings | ["www.example.com", "\*.internal.example.com"] |
-| subnets | Yes | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:DB8::1", "192.0.2.0/24"] |
+| subnets | Yes | An array of IPv4 and IPv6 addresses and subnets | Array of Strings | ["2001:db8::1", "192.0.2.0/24"] |
 | ports | Yes | An array of TCP and UDP port ranges | Array of Strings | ["80", "443", "1024-65535"] |
 {: #destination-rule-keys-table title="Initial PvD Proxy Destination Rule Registry Contents"}
 
 The `domains` array includes specific FQDNs and zones that are either accessible using specific proxy (for
 rules with non-empty `proxies` array) or non-accessible through any proxies (for rules with empty `proxies` array).
 Wildcards are allowed only as prefixes (`*.`). A wildcard prefix is used to indicate matching entire domains or subdomains instead of
-specific hostnames. Note that this can be used to match multiple levels of subdomains. For example "\*.example.com"
+specific hostnames. Note that this can be used to match multiple levels of subdomains. For example, "\*.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
 Entries that include the wildcard prefix also MUST be treated as if they match
 an FQDN that only contains the string after the prefix, with no subdomain. So,
@@ -382,7 +392,7 @@ The `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 and
 written using CIDR notation {{?CIDR=RFC4632}}. Subnet-based destination information can apply to cases where
 applications are communicating directly with an IP address (without having resolved a DNS name)
 as well as cases where an application resolved a DNS name to a set of IP addresses. Note that
-if destination rules includes an empty `proxies` array (indicating that no proxy is applicable for
+if destination rules include an empty `proxies` array (indicating that no proxy is applicable for
 this subnet), an application can only reliably follow this destination rule if it resolves DNS
 names prior to proxying.
 
@@ -390,7 +400,7 @@ The `ports` array includes specific ports (used for matching TCP and/or UDP port
 ranges of ports written with a low port value and a high port value, with a `-` in between.
 For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
 If `ports` key is not present, all ports are assumed to match. The array may
-contain individual port numbers (such as "80") or inclusive ranges of ports. For example
+contain individual port numbers (such as "80") or inclusive ranges of ports. For example,
 "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
 
 ##  Using Destination Rules
@@ -415,8 +425,8 @@ the rule MUST be treated as not matching, and the client continues evaluation of
 
 A matched rule will then either point to one or more proxy `identifier` values, which correspond
 to proxies defined in the array from {{proxy-enumeration}}, or instructs the client to not send the
-matching traffic to any proxy. If a matching rule contains more then one `identifier` the client
-SHOULD treat the array as an ordered list, where the first `identifier` is the most preferred.
+matching traffic to any proxy. If a matching rule contains more than one `identifier` the client
+MUST treat the array as an ordered list, where the first `identifier` is the most preferred.
 Multiple proxy dictionaries can contain the same `identifier` value. In this case, the client
 can choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests
 to the same proxy `identifier` to increase connection reuse.
@@ -451,7 +461,7 @@ a single destination rule for "\*.internal.example.org".
 ~~~
 {
   "identifier": "proxy.example.org.",
-  "expires": "2023-06-23T06:00:00Z",
+  "expires": "2026-06-23T06:00:00Z",
   "prefixes": [],
   "proxies": [
     {
@@ -482,13 +492,13 @@ requests to hosts falling into the "\*.internal.example.org" zone to increase co
 use of the connection resumption. The client will not use the proxies defined in this configuration
 to hosts outside of the "\*.internal.example.org" zone.
 
-In the next example, two proxies are defined with a separate identifiers, and there are
+In the next example, two proxies are defined with a separate identifier, and there are
 three destination rules:
 
 ~~~
 {
   "identifier": "proxy.example.org.",
-  "expires": "2023-06-23T06:00:00Z",
+  "expires": "2026-06-23T06:00:00Z",
   "prefixes": [],
   "proxies": [
     {
@@ -533,7 +543,7 @@ separate protocols constraining the traffic that they can process.
 ~~~
 {
   "identifier": "proxy.example.org.",
-  "expires": "2023-06-23T06:00:00Z",
+  "expires": "2026-06-23T06:00:00Z",
   "prefixes": [],
   "proxies": [
     {
@@ -578,7 +588,7 @@ set with exceptions to bypass:
 ~~~
 {
   "identifier": "proxy.example.org.",
-  "expires": "2023-06-23T06:00:00Z",
+  "expires": "2026-06-23T06:00:00Z",
   "prefixes": [],
   "proxies": [
     {
@@ -598,7 +608,7 @@ set with exceptions to bypass:
       "proxies": [ ]
     },
     {
-      "subnets": [ "192.0.2.0/24", "2001:DB8::/32" ],
+      "subnets": [ "192.0.2.0/24", "2001:db8::/32" ],
       "proxies": [ ]
     },
     {
@@ -609,7 +619,7 @@ set with exceptions to bypass:
 ~~~
 
 In this case, the client will not forward TCP traffic that is destined to hosts matching
-"\*.intranet.example.org", 192.0.2.0/24 or 2001:DB8::/32, through the proxies.
+"\*.intranet.example.org", 192.0.2.0/24 or 2001:db8::/32, through the proxies.
 Due to the order in "proxies" array in the last rule of "proxy-match", the client would prefer
 "proxy.example.org:80" over "backup.example.org:80"
 
@@ -640,7 +650,7 @@ observing the traffic being proxied.
 
 Configuration advertised via PvD Additional Information, such DNS zones or associated
 proxies, can only be safely used when fetched over a secure TLS-protected connection,
-and the client has validated that that the hostname of the proxy, the identifier of
+and the client has validated that the hostname of the proxy, the identifier of
 the PvD, and the validated hostname identity on the certificate all match.
 
 When using information in destination rules ({{destinations}}), clients MUST only allow
@@ -653,7 +663,7 @@ traffic, but MUST NOT send traffic that would go beyond what is allowed by local
 
 ## New PvD Additional Information key {#proxies-key-iana}
 
-This document registers two new keys in the "Additional Information PvD Keys" registry.
+This document registers two new keys in the "Additional Information PvD Keys" registry {{IANA_PVD}}.
 
 ### `proxies` Key
 
@@ -726,7 +736,8 @@ in the names (since underscores are reserved for vendor-specific keys).
 
 ## New DNS SVCB Service Parameter Key (SvcParamKey) {#svcparamkey-iana}
 
-IANA is requested to add a new entry to the "DNS SVCB Service Parameter Keys (SvcParamKeys)" registry:
+IANA is requested to add a new entry to the "DNS SVCB Service Parameter Keys (SvcParamKeys)" registry
+{{IANA_SVCB}}:
 
 * Number: TBD
 * Name: pvd
