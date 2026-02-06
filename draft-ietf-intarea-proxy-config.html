@@ -1291,8 +1291,11 @@ learn about other proxy options given a known proxy (<a href="#proxy-enumeration
 proxy (<a href="#destinations" class="auto internal xref">Section 4</a>).<a href="#section-1-6.3.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-1-7">Additionally, this document partly describes how these mechanisms might be used
-to discover proxies associated with a network (<a href="#network-proxies" class="auto internal xref">Section 5</a>).<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-7">Additionally, this document outlines how these mechanisms might be used
+to discover proxies associated with a network (<a href="#network-proxies" class="auto internal xref">Section 5</a>). However, this approach is not described for the
+purpose of generic proxy discovery, and requires careful
+security considerations for clients to limit usage to trusted
+scenarios.<a href="#section-1-7" class="pilcrow">¶</a></p>
 <p id="section-1-8">Using this mechanism a client can learn that a legacy insecure HTTP proxy that
 the client is configured with is also accessible using HTTPS. In this way,
 clients can upgrade to a more secure connection to the proxy.<a href="#section-1-8" class="pilcrow">¶</a></p>
@@ -1308,7 +1311,7 @@ scripts that take URLs as input and provide an output of a proxy configuration
 to use.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 <p id="section-1.1-3">Web Proxy Auto-Discovery Protocol (WPAD) <span><a href="https://rfc-editor.org/rfc/rfc3040#section-6.4" class="relref">Section 6.4</a> of [<a href="#RFC3040" class="cite xref">RFC3040</a>]</span> allows
 networks to advertise proxies to use by advertising a PAC file. This solution
-squats on DHCP option 252.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+uses the DHCPv4 option 252, reserved for private use according to <span><a href="https://rfc-editor.org/rfc/rfc2939#section-2.1" class="relref">Section 2.1</a> of [<a href="#IANA-DHCP" class="cite xref">IANA-DHCP</a>]</span>.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
 <p id="section-1.1-4">These common (but non-standard) mechanisms only support defining proxies by
 hostname and port, and do not support configuring a full URI template
 <span>[<a href="#URITEMPLATE" class="cite xref">URITEMPLATE</a>]</span>.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
@@ -2256,6 +2259,10 @@ in the names (since underscores are reserved for vendor-specific keys).<a href="
 <dt id="CONNECT-UDP">[CONNECT-UDP]</dt>
         <dd>
 <span class="refAuthor">Schinazi, D.</span>, <span class="refTitle">"Proxying UDP in HTTP"</span>, <span class="seriesInfo">RFC 9298</span>, <span class="seriesInfo">DOI 10.17487/RFC9298</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9298">https://www.rfc-editor.org/rfc/rfc9298</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA-DHCP">[IANA-DHCP]</dt>
+        <dd>
+<span class="refAuthor">Droms, R.</span>, <span class="refTitle">"Procedures and IANA Guidelines for Definition of New DHCP Options and Message Types"</span>, <span class="seriesInfo">BCP 43</span>, <span class="seriesInfo">RFC 2939</span>, <span class="seriesInfo">DOI 10.17487/RFC2939</span>, <time datetime="2000-09" class="refDate">September 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2939">https://www.rfc-editor.org/rfc/rfc2939</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IKEV2SPLIT">[IKEV2SPLIT]</dt>
         <dd>
