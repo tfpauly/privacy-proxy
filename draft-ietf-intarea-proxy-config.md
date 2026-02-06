@@ -623,6 +623,43 @@ In this case, the client will not forward TCP traffic that is destined to hosts 
 Due to the order in "proxies" array in the last rule of "proxy-match", the client would prefer
 "proxy.example.org:80" over "backup.example.org:80"
 
+The following example provides a configuration of proxies that enable setting different proxy
+for "example.org" and all its subdomains, i.e. "\*.example.org":
+
+~~~
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2026-06-23T06:00:00Z",
+  "prefixes": [],
+  "proxies": [
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy1.example.org:80",
+      "identifier": "proxy1"
+    },
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy2.example.org:80",
+      "identifier": "proxy2"
+    }
+  ],
+  "proxy-match": [
+    {
+      "domains": [ "example.org" ],
+      "proxies": [proxy1]
+    },
+    {
+      "domains": [ "*.example.org" ],
+      "proxies": [ "proxy2" ]
+    }
+  ]
+}
+~~~
+
+In this case, the client will forward TCP traffic that is destined to host "example.org"
+to "proxy1.example.org:80" and all traffic to the subdomains of "example.org", i.e.
+"\*.example.org" will be forwarded to "proxy2.example.org:80".
+
 # Discovering proxies from network PvDs {#network-proxies}
 
 {{PVDDATA}} defines how PvD Additional Information is discovered based
