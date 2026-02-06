@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 9 August 2026</td>
+<td class="center">Expires 10 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-05" class="published">5 February 2026</time>
+<time datetime="2026-02-06" class="published">6 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-09">9 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-10">10 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ and information about which destinations are accessible using a proxy.<a href="#
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 10 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1371,14 +1371,14 @@ accept = application/pvd+json
 </div>
 <p id="section-2-8">A client would send the same request as above for the PvD
 associated with an HTTP CONNECT proxy on "proxy.example.org:8080".
-Note that the client will not make a request to port 8080, but
+Note that the client will not make the GET request for the PvD to port 8080, but
 to port 443.<a href="#section-2-8" class="pilcrow">¶</a></p>
 <p id="section-2-9">Note that all proxies that are co-located on the same host share the same PvD
 Additional Information. Proxy deployments that need separate PvD configuration properties
-SHOULD use different hosts.<a href="#section-2-9" class="pilcrow">¶</a></p>
+MUST use different hosts.<a href="#section-2-9" class="pilcrow">¶</a></p>
 <p id="section-2-10">PvD Additional Information is required to contain the "identifier", "expires", and
 "prefixes" keys. For proxy PvDs as defined in this document, the "identifier" MUST
-match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.<a href="#section-2-10" class="pilcrow">¶</a></p>
+match the hostname of the HTTP proxy. The "prefixes" array MUST be empty for cases when the PvD identifier is not provided by a Router Advertisement as defined in <span>[<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>.<a href="#section-2-10" class="pilcrow">¶</a></p>
 <div id="svcparamkey">
 <section id="section-2.1">
         <h3 id="name-discovery-via-https-svcb-re">

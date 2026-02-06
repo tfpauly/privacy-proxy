@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 9 August 2026                                         Microsoft
+Expires: 10 August 2026                                        Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                         5 February 2026
+                                                         6 February 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 August 2026.
+   This Internet-Draft will expire on 10 August 2026.
 
 Copyright Notice
 
@@ -213,16 +213,18 @@ Table of Contents
 
    A client would send the same request as above for the PvD associated
    with an HTTP CONNECT proxy on "proxy.example.org:8080".  Note that
-   the client will not make a request to port 8080, but to port 443.
+   the client will not make the GET request for the PvD to port 8080,
+   but to port 443.
 
    Note that all proxies that are co-located on the same host share the
    same PvD Additional Information.  Proxy deployments that need
-   separate PvD configuration properties SHOULD use different hosts.
+   separate PvD configuration properties MUST use different hosts.
 
    PvD Additional Information is required to contain the "identifier",
    "expires", and "prefixes" keys.  For proxy PvDs as defined in this
    document, the "identifier" MUST match the hostname of the HTTP proxy.
-   The "prefixes" array SHOULD be empty by default.
+   The "prefixes" array MUST be empty for cases when the PvD identifier
+   is not provided by a Router Advertisement as defined in [PVDDATA].
 
 2.1.  Discovery via HTTPS/SVCB Records
 
