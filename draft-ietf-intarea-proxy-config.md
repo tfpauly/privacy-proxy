@@ -147,16 +147,16 @@ accept = application/pvd+json
 
 A client would send the same request as above for the PvD
 associated with an HTTP CONNECT proxy on "proxy.example.org:8080".
-Note that the client will not make a request to port 8080, but
+Note that the client will not make the GET request for the PvD to port 8080, but
 to port 443.
 
 Note that all proxies that are co-located on the same host share the same PvD
 Additional Information. Proxy deployments that need separate PvD configuration properties
-SHOULD use different hosts.
+MUST use different hosts.
 
 PvD Additional Information is required to contain the "identifier", "expires", and
 "prefixes" keys. For proxy PvDs as defined in this document, the "identifier" MUST
-match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.
+match the hostname of the HTTP proxy. The "prefixes" array MUST be empty for cases when the PvD identifier is not provided by a Router Advertisement as defined in {{PVDDATA}}.
 
 ## Discovery via HTTPS/SVCB Records {#svcparamkey}
 
