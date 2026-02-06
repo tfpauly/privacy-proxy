@@ -92,7 +92,7 @@ to use.
 
 Web Proxy Auto-Discovery Protocol (WPAD) {{Section 6.4 of RFC3040}} allows
 networks to advertise proxies to use by advertising a PAC file. This solution
-uses the DHCP option 252, reserved for private use {{?RFC2132}}.
+uses the DHCPv4 option 252, reserved for private use according to {{Section 2.1 of ?IANA-DHCP=RFC2939}}.
 
 These common (but non-standard) mechanisms only support defining proxies by
 hostname and port, and do not support configuring a full URI template
