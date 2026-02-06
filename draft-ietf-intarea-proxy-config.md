@@ -146,7 +146,7 @@ accept = application/pvd+json
 ~~~
 
 A client would send the same request as above for the PvD
-assocated with an HTTP CONNECT proxy on "proxy.example.org:8080".
+associated with an HTTP CONNECT proxy on "proxy.example.org:8080".
 Note that the client will not make the GET request for the PvD to port 8080, but
 to port 443.
 
