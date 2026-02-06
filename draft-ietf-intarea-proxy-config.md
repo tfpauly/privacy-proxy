@@ -646,7 +646,7 @@ for "example.org" and all its subdomains, i.e. "\*.example.org":
   "proxy-match": [
     {
       "domains": [ "example.org" ],
-      "proxies": [proxy1]
+      "proxies": [ "proxy1" ]
     },
     {
       "domains": [ "*.example.org" ],
