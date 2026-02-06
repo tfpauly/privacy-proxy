@@ -156,7 +156,7 @@ MUST use different hosts.
 
 PvD Additional Information is required to contain the "identifier", "expires", and
 "prefixes" keys. For proxy PvDs as defined in this document, the "identifier" MUST
-match the hostname of the HTTP proxy. The "prefixes" array MUST be empty by default for cases when the PvD identifier is not provided by a Router Advertisement as defined in {{PVDDATA}}.
+match the hostname of the HTTP proxy. The "prefixes" array MUST be empty for cases when the PvD identifier is not provided by a Router Advertisement as defined in {{PVDDATA}}.
 
 ## Discovery via HTTPS/SVCB Records {#svcparamkey}
 
