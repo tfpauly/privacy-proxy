@@ -623,8 +623,8 @@ In this case, the client will not forward TCP traffic that is destined to hosts 
 Due to the order in "proxies" array in the last rule of "proxy-match", the client would prefer
 "proxy.example.org:80" over "backup.example.org:80"
 
-The following example provides a configuration of proxies that enable setting different proxy
-for "example.org" and all its subdomains, i.e. "\*.example.org":
+The following example provides a configuration of proxies that enable setting one proxy
+for "example.org" and a different proxy for all of its subdomains, i.e. "\*.example.org":
 
 ~~~
 {
