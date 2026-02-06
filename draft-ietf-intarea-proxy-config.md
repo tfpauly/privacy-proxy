@@ -79,8 +79,11 @@ learn about other proxy options given a known proxy ({{proxy-enumeration}}).
 1. A way to define the set of destinations that are accessible through the
 proxy ({{destinations}}).
 
-Additionally, this document partly describes how these mechanisms might be used
-to discover proxies associated with a network ({{network-proxies}}).
+Additionally, this document outlines how these mechanisms might be used
+to discover proxies associated with a network ({{network-proxies}}). However, this approach is not described for the
+purpose of generic proxy discovery, and requires careful
+security considerations for clients to limit usage to trusted
+scenarios.
 
 Using this mechanism a client can learn that a legacy insecure HTTP proxy that
 the client is configured with is also accessible using HTTPS. In this way,
@@ -97,7 +100,7 @@ to use.
 
 Web Proxy Auto-Discovery Protocol (WPAD) {{Section 6.4 of RFC3040}} allows
 networks to advertise proxies to use by advertising a PAC file. This solution
-squats on DHCP option 252.
+uses the DHCPv4 option 252, reserved for private use according to {{Section 2.1 of ?IANA-DHCP=RFC2939}}.
 
 These common (but non-standard) mechanisms only support defining proxies by
 hostname and port, and do not support configuring a full URI template
