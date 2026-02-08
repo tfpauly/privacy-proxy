@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-05T00:29:17.552203+00:00",
+  "timestamp": "2026-02-08T00:36:31.503178+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -22548,24 +22548,26 @@
       "id": "PR_kwDOEwrMS87BAflX",
       "title": "Comments in Section 1 from the AD review.",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/328",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ddragana",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-02-02T20:37:34Z",
-      "updatedAt": "2026-02-03T16:33:18Z",
+      "updatedAt": "2026-02-06T22:58:15Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "39cae734397a1ce655c335358876994049c6b4a4",
       "headRepository": "ddragana/privacy-proxy",
       "headRefName": "patch_2",
-      "headRefOid": "de4e1963c127cfeff3354c28fe343dee5e5dd4d9",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "a50d8e261eb212538a5ac7575d192501fdbd3593",
+      "closedAt": "2026-02-06T22:58:15Z",
+      "mergedAt": "2026-02-06T22:58:15Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "d8e1353f736ca58731bc02e88003abbd4ee25262"
+      },
       "comments": [],
       "reviews": [
         {
@@ -22619,6 +22621,59 @@
               "updatedAt": "2026-02-03T16:33:18Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87gRePW",
+          "commit": {
+            "abbreviatedOid": "de4e196"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-06T11:54:47Z",
+          "updatedAt": "2026-02-06T11:54:47Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "I would rather leave the sentence as is.",
+              "createdAt": "2026-02-06T11:54:47Z",
+              "updatedAt": "2026-02-06T11:54:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87gRgke",
+          "commit": {
+            "abbreviatedOid": "de4e196"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-06T11:57:16Z",
+          "updatedAt": "2026-02-06T11:57:16Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "Fine with me!",
+              "createdAt": "2026-02-06T11:57:16Z",
+              "updatedAt": "2026-02-06T11:57:16Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87gRhBo",
+          "commit": {
+            "abbreviatedOid": "a50d8e2"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-06T11:57:50Z",
+          "updatedAt": "2026-02-06T11:57:50Z",
+          "comments": []
         }
       ]
     },
@@ -22627,24 +22682,26 @@
       "id": "PR_kwDOEwrMS87BAsu2",
       "title": "Comments in Section 2 from the AD review.",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/329",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ddragana",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-02-02T21:03:42Z",
-      "updatedAt": "2026-02-03T16:35:21Z",
+      "updatedAt": "2026-02-06T11:59:30Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
-      "baseRefOid": "39cae734397a1ce655c335358876994049c6b4a4",
+      "baseRefOid": "f85aed1a07284fa0645ed50204215b373388d68b",
       "headRepository": "ddragana/privacy-proxy",
       "headRefName": "patch_3",
-      "headRefOid": "2ab9f706595ac44769c5ce1fa77aff86d07f7c59",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "ce69deec7a4e5227d0b1f2e769bcdd7959c4e409",
+      "closedAt": "2026-02-06T11:59:24Z",
+      "mergedAt": "2026-02-06T11:59:23Z",
+      "mergedBy": "ddragana",
+      "mergeCommit": {
+        "oid": "d6c5a6d4892c798bbb5758c84511c0e3ef4c0da8"
+      },
       "comments": [],
       "reviews": [
         {
@@ -22712,6 +22769,72 @@
               "updatedAt": "2026-02-03T16:35:21Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87gHpbr",
+          "commit": {
+            "abbreviatedOid": "2ab9f70"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-06T00:31:21Z",
+          "updatedAt": "2026-02-06T00:31:21Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "Agreed!",
+              "createdAt": "2026-02-06T00:31:21Z",
+              "updatedAt": "2026-02-06T00:31:21Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87gHpju",
+          "commit": {
+            "abbreviatedOid": "f6a87c2"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-06T00:31:39Z",
+          "updatedAt": "2026-02-06T00:31:39Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\nassociated with an HTTP CONNECT proxy on \"proxy.example.org:8080\".\n```",
+              "createdAt": "2026-02-06T00:31:39Z",
+              "updatedAt": "2026-02-06T00:31:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87gHpwk",
+          "commit": {
+            "abbreviatedOid": "ce69dee"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-06T00:32:08Z",
+          "updatedAt": "2026-02-06T00:32:08Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87gRhYw",
+          "commit": {
+            "abbreviatedOid": "ce69dee"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-06T11:58:13Z",
+          "updatedAt": "2026-02-06T11:58:13Z",
+          "comments": []
         }
       ]
     },
@@ -22720,24 +22843,26 @@
       "id": "PR_kwDOEwrMS87BJfdU",
       "title": "Address AD comments part 4.",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/330",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ddragana",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-02-03T10:07:21Z",
-      "updatedAt": "2026-02-03T18:36:36Z",
+      "updatedAt": "2026-02-06T12:00:27Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "1a328f1e3af05ffbe53b30f7d04961f3a80e844f",
       "headRepository": "ddragana/privacy-proxy",
       "headRefName": "patch_4",
       "headRefOid": "c25955c9e103b4d4d6a4d3d56729940a13ad79ee",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-02-05T21:52:19Z",
+      "mergedAt": "2026-02-05T21:52:19Z",
+      "mergedBy": "yaroslavros",
+      "mergeCommit": {
+        "oid": "f85aed1a07284fa0645ed50204215b373388d68b"
+      },
       "comments": [],
       "reviews": [
         {
@@ -22803,6 +22928,96 @@
           "createdAt": "2026-02-03T17:30:46Z",
           "updatedAt": "2026-02-03T17:30:46Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 331,
+      "id": "PR_kwDOEwrMS87B_EIz",
+      "title": "Add an example of a different configuration for example.org and *.example.org.",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/331",
+      "state": "MERGED",
+      "author": "ddragana",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-02-06T12:31:35Z",
+      "updatedAt": "2026-02-06T22:58:24Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "d6c5a6d4892c798bbb5758c84511c0e3ef4c0da8",
+      "headRepository": "ddragana/privacy-proxy",
+      "headRefName": "patch_5",
+      "headRefOid": "1cb424b7db2931412883645d46ceacd8e47cb0ce",
+      "closedAt": "2026-02-06T22:58:24Z",
+      "mergedAt": "2026-02-06T22:58:24Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "392b34d3dad51f229fdfe5bd1a9e2617c3f0bf85"
+      },
+      "comments": [
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks great! Just one minor nit.",
+          "createdAt": "2026-02-06T12:51:36Z",
+          "updatedAt": "2026-02-06T12:51:36Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87gScS5",
+          "commit": {
+            "abbreviatedOid": "8145def"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-06T12:51:07Z",
+          "updatedAt": "2026-02-06T12:51:07Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "```suggestion\n      \"proxies\": [ \"proxy1\" ]\n```",
+              "createdAt": "2026-02-06T12:51:07Z",
+              "updatedAt": "2026-02-06T12:51:07Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87gaQYa",
+          "commit": {
+            "abbreviatedOid": "6dbf4d7"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-06T20:21:50Z",
+          "updatedAt": "2026-02-06T20:21:50Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87gcSYS",
+          "commit": {
+            "abbreviatedOid": "6dbf4d7"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-06T22:57:19Z",
+          "updatedAt": "2026-02-06T22:57:30Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\nThe following example provides a configuration of proxies that enable setting one proxy\nfor \"example.org\" and a different proxy for all of its subdomains, i.e. \"\\*.example.org\":\n```",
+              "createdAt": "2026-02-06T22:57:19Z",
+              "updatedAt": "2026-02-06T22:57:30Z"
+            }
+          ]
         }
       ]
     }
