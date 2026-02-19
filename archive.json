@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-08T00:36:31.503178+00:00",
+  "timestamp": "2026-02-19T00:30:34.072790+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -23020,6 +23020,32 @@
           ]
         }
       ]
+    },
+    {
+      "number": 332,
+      "id": "PR_kwDOEwrMS87EsGQp",
+      "title": "Addressed dnsdir nits",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/332",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-02-18T18:28:04Z",
+      "updatedAt": "2026-02-18T18:28:04Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "392b34d3dad51f229fdfe5bd1a9e2617c3f0bf85",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "clunky",
+      "headRefOid": "9bde12167ef5befe23e1931c0deb2cb775488cd5",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
