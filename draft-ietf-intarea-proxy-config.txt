@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 10 August 2026                                        Microsoft
+Expires: 26 August 2026                                        Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                         6 February 2026
+                                                        22 February 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 August 2026.
+   This Internet-Draft will expire on 26 August 2026.
 
 Copyright Notice
 
@@ -240,8 +240,8 @@ Table of Contents
    defined in Section 4.1 of [PVDDATA].  The presence of this key in an
    HTTPS or SVCB record signals that the proxy's PvD Additional
    Information can be fetched using the "https" scheme from the proxy
-   host on port 443 using the well-known path.  The presentation and
-   wire-format values for pvd SvcParamKey MUST be empty.
+   host on port 443 using the well-known path.  The value of the pvd
+   SvcParamKey MUST be empty.
 
    A client receiving a DNS record like the following:
 
@@ -898,7 +898,7 @@ content-length = 322
    observable by entities along the network path; however it does not
    prevent the proxy itself from observing the traffic being proxied.
 
-   Configuration advertised via PvD Additional Information, such DNS
+   Configuration advertised via PvD Additional Information, such as DNS
    zones or associated proxies, can only be safely used when fetched
    over a secure TLS-protected connection, and the client has validated
    that the hostname of the proxy, the identifier of the PvD, and the
