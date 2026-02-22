@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-19T00:30:34.072790+00:00",
+  "timestamp": "2026-02-22T00:29:10.373964+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -23033,7 +23033,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-02-18T18:28:04Z",
-      "updatedAt": "2026-02-18T18:28:04Z",
+      "updatedAt": "2026-02-19T05:23:31Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "392b34d3dad51f229fdfe5bd1a9e2617c3f0bf85",
@@ -23045,7 +23045,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87j5vA6",
+          "commit": {
+            "abbreviatedOid": "9bde121"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-19T05:23:31Z",
+          "updatedAt": "2026-02-19T05:23:31Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
