@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-24T00:28:17.808180+00:00",
+  "timestamp": "2026-03-03T00:29:37.602470+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4840,6 +4840,22 @@
       "createdAt": "2025-11-04T21:31:44Z",
       "updatedAt": "2025-11-12T04:11:23Z",
       "closedAt": "2025-11-12T04:11:23Z",
+      "comments": []
+    },
+    {
+      "number": 333,
+      "id": "I_kwDOEwrMS87vQHzX",
+      "title": "proxy-config: make domain matching deterministic (case-insensitive + IDNA A-label canonicalization)",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/333",
+      "state": "OPEN",
+      "author": "fazoncore",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The draft specifies wildcard semantics and trailing-dot equivalence. One remaining interop ambiguity is domain canonicalization: DNS names are case-insensitive and internationalized domains require IDNA processing.\n\nImpact:\nDifferent implementations may match domains differently (Example.COM vs example.com; U-label vs A-label), leading to inconsistent application of destination rules.\n\nSuggested normative clarification:\n- Clients MUST compare domain names case-insensitively.\n- Clients MUST perform matching on a canonical IDNA A-label form (convert any U-label input to A-label before matching).\n- Keep existing trailing-dot equivalence and \u201cno search suffix\u201d behavior as already specified.",
+      "createdAt": "2026-03-03T00:10:15Z",
+      "updatedAt": "2026-03-03T00:10:15Z",
+      "closedAt": null,
       "comments": []
     }
   ],
