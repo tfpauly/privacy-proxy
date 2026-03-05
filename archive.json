@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-03T00:29:37.602470+00:00",
+  "timestamp": "2026-03-05T00:29:04.812613+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4854,9 +4854,17 @@
       "labels": [],
       "body": "The draft specifies wildcard semantics and trailing-dot equivalence. One remaining interop ambiguity is domain canonicalization: DNS names are case-insensitive and internationalized domains require IDNA processing.\n\nImpact:\nDifferent implementations may match domains differently (Example.COM vs example.com; U-label vs A-label), leading to inconsistent application of destination rules.\n\nSuggested normative clarification:\n- Clients MUST compare domain names case-insensitively.\n- Clients MUST perform matching on a canonical IDNA A-label form (convert any U-label input to A-label before matching).\n- Keep existing trailing-dot equivalence and \u201cno search suffix\u201d behavior as already specified.",
       "createdAt": "2026-03-03T00:10:15Z",
-      "updatedAt": "2026-03-03T00:10:15Z",
+      "updatedAt": "2026-03-03T09:59:17Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "fazoncore",
+          "authorAssociation": "NONE",
+          "body": "Suggested minimal interop clarification (no design change):\n\n- Domain matching MUST be case-insensitive (DNS names are case-insensitive).\n- Internationalized domain names MUST be matched on a canonical IDNA A-label form (convert any U-label input to A-label before comparison).\n\nThis keeps existing wildcard/trailing-dot/no-search-suffix behavior, but removes cross-implementation ambiguity for domain matching.",
+          "createdAt": "2026-03-03T09:59:17Z",
+          "updatedAt": "2026-03-03T09:59:17Z"
+        }
+      ]
     }
   ],
   "pulls": [
