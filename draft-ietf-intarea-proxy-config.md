@@ -38,7 +38,7 @@ normative:
 
 --- abstract
 
-This document defines a mechanism for accessing provisioning domain information
+This document defines a mechanism for accessing Provisioning Domain Additional Information
 associated with a proxy, such as other proxy URIs that support different protocols
 and information about which destinations are accessible using a proxy.
 
