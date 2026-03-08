@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-05T00:29:04.812613+00:00",
+  "timestamp": "2026-03-08T00:29:01.249902+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -23083,6 +23083,76 @@
           "body": "",
           "createdAt": "2026-02-19T05:23:31Z",
           "updatedAt": "2026-02-19T05:23:31Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 334,
+      "id": "PR_kwDOEwrMS87IoNSK",
+      "title": "Clarification on PvD URI usage",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/334",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Address David's comments. Clarify that the fetch is of a URI, and that URI has a default derivation (well-known using the hostname) but can be anything else if configured.",
+      "createdAt": "2026-03-06T23:47:15Z",
+      "updatedAt": "2026-03-07T01:09:50Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "e4feac50322ccb3990f4aab2a70883e952fc747f",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-29",
+      "headRefOid": "a95a991a0dbd7313a0beff12235cb76027703449",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87o2v1h",
+          "commit": {
+            "abbreviatedOid": "215aea1"
+          },
+          "author": "DavidSchinazi",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Overall this looks good, but I'd make the text normative since following that SHOULD and MAY is required for things to work",
+          "createdAt": "2026-03-07T00:02:44Z",
+          "updatedAt": "2026-03-07T00:04:01Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "```suggestion\nwhich it wants to look up PvD Additional Information, the client SHALL use the\n```",
+              "createdAt": "2026-03-07T00:02:44Z",
+              "updatedAt": "2026-03-07T00:04:01Z"
+            },
+            {
+              "originalPosition": 21,
+              "body": "```suggestion\nfetch SHALL be made to that configured URI.\n```",
+              "createdAt": "2026-03-07T00:02:52Z",
+              "updatedAt": "2026-03-07T00:04:01Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87o3bdU",
+          "commit": {
+            "abbreviatedOid": "a95a991"
+          },
+          "author": "DavidSchinazi",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Thanks! That addresses my concerns",
+          "createdAt": "2026-03-07T01:09:50Z",
+          "updatedAt": "2026-03-07T01:09:50Z",
           "comments": []
         }
       ]
