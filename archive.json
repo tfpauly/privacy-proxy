@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-08T00:29:01.249902+00:00",
+  "timestamp": "2026-03-10T00:25:48.017676+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -23103,7 +23103,7 @@
       ],
       "body": "Address David's comments. Clarify that the fetch is of a URI, and that URI has a default derivation (well-known using the hostname) but can be anything else if configured.",
       "createdAt": "2026-03-06T23:47:15Z",
-      "updatedAt": "2026-03-07T01:09:50Z",
+      "updatedAt": "2026-03-08T00:39:00Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e4feac50322ccb3990f4aab2a70883e952fc747f",
@@ -23154,8 +23154,54 @@
           "createdAt": "2026-03-07T01:09:50Z",
           "updatedAt": "2026-03-07T01:09:50Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87pEnIa",
+          "commit": {
+            "abbreviatedOid": "a95a991"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-08T00:38:59Z",
+          "updatedAt": "2026-03-08T00:39:00Z",
+          "comments": [
+            {
+              "originalPosition": 21,
+              "body": "I think technically \"provisioned with the hostname of a proxy\" applies to everything as hostname is a part of URI.\n\n```suggestion\n{{PVDDATA}} defines the well-known PvD URI, \".well-known/pvd\", that is served on the\nstardard port for HTTP over TLS (HTTPS), port 443. When a client is provisioned\nwith a proxy defined by a hostname rather than full URI (such as a SOCKS proxy or an HTTP CONNECT proxy) for\nwhich it wants to look up PvD Additional Information, the client SHALL use the\nwell-known PvD URI using the host authority of the proxy. A client can also be directly\nconfigured with a HTTPS URI on which to fetch the PvD Information, in which case the\nfetch SHALL be made to that configured URI.\n```",
+              "createdAt": "2026-03-08T00:39:00Z",
+              "updatedAt": "2026-03-08T00:39:00Z"
+            }
+          ]
         }
       ]
+    },
+    {
+      "number": 335,
+      "id": "PR_kwDOEwrMS87Iy66N",
+      "title": "Unify terminology",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/335",
+      "state": "CLOSED",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This should address terminology feedback from genart review as \"provisioning domain\", \"Provisioning Domain Additional Information\" and \"PvD\" are clearly defined through references.",
+      "createdAt": "2026-03-08T00:45:29Z",
+      "updatedAt": "2026-03-08T00:46:17Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "e4feac50322ccb3990f4aab2a70883e952fc747f",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "main",
+      "headRefOid": "c05d28ce9340d927777fe1c0738bc6213b9a5d42",
+      "closedAt": "2026-03-08T00:46:17Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
