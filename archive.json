@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-10T00:25:48.017676+00:00",
+  "timestamp": "2026-03-12T00:24:21.867656+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -23103,7 +23103,7 @@
       ],
       "body": "Address David's comments. Clarify that the fetch is of a URI, and that URI has a default derivation (well-known using the hostname) but can be anything else if configured.",
       "createdAt": "2026-03-06T23:47:15Z",
-      "updatedAt": "2026-03-08T00:39:00Z",
+      "updatedAt": "2026-03-10T09:04:37Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e4feac50322ccb3990f4aab2a70883e952fc747f",
@@ -23174,6 +23174,19 @@
               "updatedAt": "2026-03-08T00:39:00Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87ps1Qc",
+          "commit": {
+            "abbreviatedOid": "a95a991"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-10T09:04:37Z",
+          "updatedAt": "2026-03-10T09:04:37Z",
+          "comments": []
         }
       ]
     },
@@ -23197,6 +23210,32 @@
       "headRefName": "main",
       "headRefOid": "c05d28ce9340d927777fe1c0738bc6213b9a5d42",
       "closedAt": "2026-03-08T00:46:17Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 336,
+      "id": "PR_kwDOEwrMS87JsX_Z",
+      "title": "Address comments from the Gen-ART reviewer.",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/336",
+      "state": "OPEN",
+      "author": "ddragana",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-03-11T12:22:14Z",
+      "updatedAt": "2026-03-11T12:22:14Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "e4feac50322ccb3990f4aab2a70883e952fc747f",
+      "headRepository": "ddragana/privacy-proxy",
+      "headRefName": "patch_6",
+      "headRefOid": "0be10c4312db84f5c6ef32a8a6bddbdf06325979",
+      "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
