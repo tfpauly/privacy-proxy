@@ -126,7 +126,7 @@ type as defined in {{Section 4.1 of PVDDATA}}. The fetch MUST use the "https" sc
 
 {{PVDDATA}} defines the well-known PvD URI, ".well-known/pvd", that is served on the
 stardard port for HTTP over TLS (HTTPS), port 443. When a client is provisioned
-with the hostname of a proxy (such as a SOCKS proxy or an HTTP CONNECT proxy) for
+with the hostname of a proxy for
 which it wants to look up PvD Additional Information, the client SHALL use the
 well-known PvD URI using the host authority of the proxy. A client can also be directly
 configured with a HTTPS URI on which to fetch the PvD Information, in which case the
