@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-12T00:24:21.867656+00:00",
+  "timestamp": "2026-03-17T00:28:32.302926+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4851,10 +4851,12 @@
       "author": "fazoncore",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "The draft specifies wildcard semantics and trailing-dot equivalence. One remaining interop ambiguity is domain canonicalization: DNS names are case-insensitive and internationalized domains require IDNA processing.\n\nImpact:\nDifferent implementations may match domains differently (Example.COM vs example.com; U-label vs A-label), leading to inconsistent application of destination rules.\n\nSuggested normative clarification:\n- Clients MUST compare domain names case-insensitively.\n- Clients MUST perform matching on a canonical IDNA A-label form (convert any U-label input to A-label before matching).\n- Keep existing trailing-dot equivalence and \u201cno search suffix\u201d behavior as already specified.",
       "createdAt": "2026-03-03T00:10:15Z",
-      "updatedAt": "2026-03-03T09:59:17Z",
+      "updatedAt": "2026-03-16T08:02:41Z",
       "closedAt": null,
       "comments": [
         {
@@ -4865,6 +4867,24 @@
           "updatedAt": "2026-03-03T09:59:17Z"
         }
       ]
+    },
+    {
+      "number": 337,
+      "id": "I_kwDOEwrMS87zL4Je",
+      "title": "SvcParamKey semantics",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/337",
+      "state": "OPEN",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "The current text says\n\n>    While this key is particularly useful for detecting proxy\n>    configurations when looking up a DNS record for a known proxy name,\n>    this key generically provides a hint that PvD Additional Information\n>    is available, and can be used for use cases unrelated to proxies.\n\nI fully support this but:\n\n1. It's not clear to me what other use cases might exist.  It would be nice to mention some here.\n2. This section serves as the specification of the \"pvd\" SvcParam for all use cases, not only the proxy use case.  As such, I would prefer if this section defined the parameter generically before applying it to the proxy use case (and ideally also mentioning other use cases).",
+      "createdAt": "2026-03-16T03:14:42Z",
+      "updatedAt": "2026-03-16T07:22:43Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -23092,7 +23112,7 @@
       "id": "PR_kwDOEwrMS87IoNSK",
       "title": "Clarification on PvD URI usage",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/334",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -23103,17 +23123,19 @@
       ],
       "body": "Address David's comments. Clarify that the fetch is of a URI, and that URI has a default derivation (well-known using the hostname) but can be anything else if configured.",
       "createdAt": "2026-03-06T23:47:15Z",
-      "updatedAt": "2026-03-10T09:04:37Z",
+      "updatedAt": "2026-03-16T08:01:32Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e4feac50322ccb3990f4aab2a70883e952fc747f",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "tfpauly-patch-29",
-      "headRefOid": "a95a991a0dbd7313a0beff12235cb76027703449",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "6990ff8cfaa943f480ea59b45689f60d5f45d270",
+      "closedAt": "2026-03-16T08:01:32Z",
+      "mergedAt": "2026-03-16T08:01:32Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "e80a3e5ff9ae25d71e247b2ba8166ae074a11d71"
+      },
       "comments": [],
       "reviews": [
         {
@@ -23187,6 +23209,112 @@
           "createdAt": "2026-03-10T09:04:37Z",
           "updatedAt": "2026-03-10T09:04:37Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87rjVys",
+          "commit": {
+            "abbreviatedOid": "a95a991"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-16T07:28:59Z",
+          "updatedAt": "2026-03-16T07:28:59Z",
+          "comments": [
+            {
+              "originalPosition": 21,
+              "body": "I want to make sure it's clear that when you have a masque-style URI, you still look up the PvD based on the hostname (unless you know a full URL some other way)\n\n\n```suggestion\n{{PVDDATA}} defines the well-known PvD URI, \".well-known/pvd\", that is served on the\nstardard port for HTTP over TLS (HTTPS), port 443. When a client is provisioned\nwith the hostname of a proxy (such as for a SOCKS proxy or an HTTP CONNECT proxy, or as part of a complete proxy URI) for\nwhich it wants to look up PvD Additional Information, the client SHALL use the\nwell-known PvD URI using the host authority of the proxy. A client can also be directly\nconfigured with a HTTPS URI on which to fetch the PvD Information, in which case the\nfetch SHALL be made to that configured URI.\n```",
+              "createdAt": "2026-03-16T07:28:59Z",
+              "updatedAt": "2026-03-16T07:28:59Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87rjV7E",
+          "commit": {
+            "abbreviatedOid": "a95a991"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-16T07:29:08Z",
+          "updatedAt": "2026-03-16T07:29:08Z",
+          "comments": [
+            {
+              "originalPosition": 21,
+              "body": "@yaroslavros thoughts?",
+              "createdAt": "2026-03-16T07:29:08Z",
+              "updatedAt": "2026-03-16T07:29:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87rjhPI",
+          "commit": {
+            "abbreviatedOid": "a95a991"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-16T07:41:33Z",
+          "updatedAt": "2026-03-16T07:41:33Z",
+          "comments": [
+            {
+              "originalPosition": 21,
+              "body": "I'm a bit lost now... Is there a way to configure a proxy that would not allow client to derive the well-known PvD URI? Even if the proxy is known by IP address client may try `https://[IP-address]/.well-known/pvd` - or is this what we want to prevent?\r\n\r\nPerhaps we should just remove the unnecessary qualifier?\r\n\r\n```suggestion\r\n{{PVDDATA}} defines the well-known PvD URI, \".well-known/pvd\", that is served on the\r\nstardard port for HTTP over TLS (HTTPS), port 443. When a client is provisioned\r\nwith the hostname of a proxy for\r\nwhich it wants to look up PvD Additional Information, the client SHALL use the\r\nwell-known PvD URI using the host authority of the proxy. A client can also be directly\r\nconfigured with a HTTPS URI on which to fetch the PvD Information, in which case the\r\nfetch SHALL be made to that configured URI.\r\n```",
+              "createdAt": "2026-03-16T07:41:33Z",
+              "updatedAt": "2026-03-16T07:41:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87rjptR",
+          "commit": {
+            "abbreviatedOid": "a95a991"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-16T07:50:18Z",
+          "updatedAt": "2026-03-16T07:50:18Z",
+          "comments": [
+            {
+              "originalPosition": 21,
+              "body": "Yeah, I'm fine to remove the qualifier!",
+              "createdAt": "2026-03-16T07:50:18Z",
+              "updatedAt": "2026-03-16T07:50:18Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87rjsZd",
+          "commit": {
+            "abbreviatedOid": "6990ff8"
+          },
+          "author": "DavidSchinazi",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-16T07:53:18Z",
+          "updatedAt": "2026-03-16T07:53:18Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87rjt4N",
+          "commit": {
+            "abbreviatedOid": "6990ff8"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-16T07:54:55Z",
+          "updatedAt": "2026-03-16T07:54:55Z",
+          "comments": []
         }
       ]
     },
@@ -23228,7 +23356,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-03-11T12:22:14Z",
-      "updatedAt": "2026-03-11T12:22:14Z",
+      "updatedAt": "2026-03-16T07:46:56Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e4feac50322ccb3990f4aab2a70883e952fc747f",
@@ -23240,7 +23368,48 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87rjYqd",
+          "commit": {
+            "abbreviatedOid": "0be10c4"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-16T07:32:13Z",
+          "updatedAt": "2026-03-16T07:32:37Z",
+          "comments": [
+            {
+              "originalPosition": 120,
+              "body": "```suggestion\nauthentication mode defined by a vendor named \"Example Tech\".\n```\n\nMaybe this?",
+              "createdAt": "2026-03-16T07:32:13Z",
+              "updatedAt": "2026-03-16T07:32:37Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87rjkjZ",
+          "commit": {
+            "abbreviatedOid": "0be10c4"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Excellent work, @ddragana ! Just one minor suggestion from my side.",
+          "createdAt": "2026-03-16T07:45:01Z",
+          "updatedAt": "2026-03-16T07:46:56Z",
+          "comments": [
+            {
+              "originalPosition": 34,
+              "body": "```suggestion\n## Requirements Keywords\n```",
+              "createdAt": "2026-03-16T07:45:01Z",
+              "updatedAt": "2026-03-16T07:46:56Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
