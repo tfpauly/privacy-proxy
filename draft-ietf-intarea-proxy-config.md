@@ -107,7 +107,7 @@ alternative that works for URI-based proxies and avoids dependencies
 on executing Javascript scripts, which are prone to implementation inconsistencies
 and security vulnerabilities.
 
-## Requirements keywords
+## Requirements Keywords
 
 {::boilerplate bcp14}
 
@@ -287,7 +287,7 @@ A proprietary key MUST contain at least one underscore character ("_"). The righ
 as a separator between a vendor-specific namespace and the key name, i.e. the string to the right of the
 right-most underscore is the key name and the string left from the underscore specifies the
 vendor-specific namespace. For example, "example_tech_authmode" could be a proprietary key indicating an
-authentication mode defined by a vendor named "Example Technology".
+authentication mode defined by a vendor named "Example Tech".
 
 When combined with `mandatory` array, this mechanism allows implementations to extend proxy metadata while
 maintaining interoperability and ensuring safe fallback behavior for clients that do not support a given
