@@ -1393,7 +1393,7 @@ match the hostname of the HTTP proxy. The "prefixes" array MUST be empty for cas
 <p id="section-2.1-1">To allow clients to determine whether PvD Additional Information is available for a particular
 named host (which allows fetching proxy information, as well as any other information in the PvD),
 this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in <span>[<a href="#SVCB-DNS" class="cite xref">SVCB-DNS</a>]</span>.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1-2">Presence of this SvcParamKey, named <code>pvd</code> indicates that the a host supports PvD discovery via
+<p id="section-2.1-2">Presence of this SvcParamKey, named <code>pvd</code> indicates that the host supports PvD discovery via
 the well-known PvD URI defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.1" class="relref">Section 4.1</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>. The presence of this key in an HTTPS
 or SVCB record signals that PvD Additional Information can be fetched using the "https"
 scheme from the host on port 443 using the well-known path. The value of the <code>pvd</code> SvcParamKey
