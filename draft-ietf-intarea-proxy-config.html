@@ -1053,7 +1053,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 17 September 2026</td>
+<td class="center">Expires 19 September 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-16" class="published">16 March 2026</time>
+<time datetime="2026-03-18" class="published">18 March 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-17">17 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-09-19">19 September 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1123,7 @@ and information about which destinations are accessible using a proxy.<a href="#
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1159,7 +1159,7 @@ and information about which destinations are accessible using a proxy.<a href="#
                 <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-background" class="internal xref">Background</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
-                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-requirements" class="internal xref">Requirements</a></p>
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-requirements-keywords" class="internal xref">Requirements Keywords</a></p>
 </li>
             </ul>
 </li>
@@ -1305,27 +1305,26 @@ clients can upgrade to a more secure connection to the proxy.<a href="#section-1
         <h3 id="name-background">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-background" class="section-name selfRef">Background</a>
         </h3>
-<p id="section-1.1-1">Other non-standard mechanisms for proxy configuration and discovery have been
-used historically, some of which are described in <span>[<a href="#RFC3040" class="cite xref">RFC3040</a>]</span>.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
-<p id="section-1.1-2">Proxy Auto Configuration (PAC) files <span><a href="https://rfc-editor.org/rfc/rfc3040#section-6.2" class="relref">Section 6.2</a> of [<a href="#RFC3040" class="cite xref">RFC3040</a>]</span> are Javascript
+<p id="section-1.1-1">Non-standard mechanisms for proxy configuration and discovery have been
+used historically, some of which are described in the informational <span>[<a href="#RFC3040" class="cite xref">RFC3040</a>]</span>:
+Proxy Auto Configuration (PAC) files <span><a href="https://rfc-editor.org/rfc/rfc3040#section-6.2" class="relref">Section 6.2</a> of [<a href="#RFC3040" class="cite xref">RFC3040</a>]</span> are Javascript
 scripts that take URLs as input and provide an output of a proxy configuration
-to use.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
-<p id="section-1.1-3">Web Proxy Auto-Discovery Protocol (WPAD) <span><a href="https://rfc-editor.org/rfc/rfc3040#section-6.4" class="relref">Section 6.4</a> of [<a href="#RFC3040" class="cite xref">RFC3040</a>]</span> allows
+to use. Web Proxy Auto-Discovery Protocol (WPAD) <span><a href="https://rfc-editor.org/rfc/rfc3040#section-6.4" class="relref">Section 6.4</a> of [<a href="#RFC3040" class="cite xref">RFC3040</a>]</span> allows
 networks to advertise proxies to use by advertising a PAC file. This solution
-uses the DHCPv4 option 252, reserved for private use according to <span><a href="https://rfc-editor.org/rfc/rfc2939#section-2.1" class="relref">Section 2.1</a> of [<a href="#IANA-DHCP" class="cite xref">IANA-DHCP</a>]</span>.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
-<p id="section-1.1-4">These common (but non-standard) mechanisms only support defining proxies by
-hostname and port, and do not support configuring a full URI template
-<span>[<a href="#URITEMPLATE" class="cite xref">URITEMPLATE</a>]</span>.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
-<p id="section-1.1-5">The mechanisms defined in this document are intended to offer a standard
+uses the DHCPv4 option 252, reserved for private use according to
+<span><a href="https://rfc-editor.org/rfc/rfc2939#section-2.1" class="relref">Section 2.1</a> of [<a href="#IANA-DHCP" class="cite xref">IANA-DHCP</a>]</span>. These common (but non-standard) mechanisms
+only support defining proxies by hostname and port, and do not support configuring
+a full URI template <span>[<a href="#URITEMPLATE" class="cite xref">URITEMPLATE</a>]</span>.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">The mechanisms defined in this document are intended to offer a standard
 alternative that works for URI-based proxies and avoids dependencies
-on executing Javascript scripts, which are prone to implementation-specific
-inconsistencies and can open up security vulnerabilities.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+on executing Javascript scripts, which are prone to implementation inconsistencies
+and security vulnerabilities.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="requirements">
+<div id="requirements-keywords">
 <section id="section-1.2">
-        <h3 id="name-requirements">
-<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-requirements" class="section-name selfRef">Requirements</a>
+        <h3 id="name-requirements-keywords">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-requirements-keywords" class="section-name selfRef">Requirements Keywords</a>
         </h3>
 <p id="section-1.2-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
 NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
@@ -1353,8 +1352,8 @@ which it wants to look up PvD Additional Information, the client SHALL use the
 well-known PvD URI using the host authority of the proxy. A client can also be directly
 configured with a HTTPS URI on which to fetch the PvD Information, in which case the
 fetch SHALL be made to that configured URI.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">It is not necessary for the client to re‑fetch PvD Additional Information unless
-one of the following conditions occurs:<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-4">A client MAY cache the information it obtained from PvD Additional Information, but it
+MUST discard cached information if:<a href="#section-2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-5.1">
           <p id="section-2-5.1.1">The current time is beyond the "expires" value defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.3" class="relref">Section 4.3</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span><a href="#section-2-5.1.1" class="pilcrow">¶</a></p>
@@ -1394,10 +1393,10 @@ match the hostname of the HTTP proxy. The "prefixes" array MUST be empty for cas
 <p id="section-2.1-1">To allow clients to determine whether PvD Additional Information is available for a given proxy,
 this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in <span>[<a href="#SVCB-DNS" class="cite xref">SVCB-DNS</a>]</span>.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2">Presence of this SvcParamKey, named <code>pvd</code> indicates that the proxy host supports PvD discovery via
-the well-known PvD URI ".well-known/pvd" defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.1" class="relref">Section 4.1</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>. The presence of this
-key in an HTTPS or SVCB record signals that the proxy's PvD Additional Information can be fetched
-using the "https" scheme from the proxy host on port 443 using the well-known path. The value of the
-<code>pvd</code> SvcParamKey MUST be empty.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+the well-known PvD URI defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.1" class="relref">Section 4.1</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>. The presence of this key in an HTTPS
+or SVCB record signals that the proxy's PvD Additional Information can be fetched using the "https"
+scheme from the proxy host on port 443 using the well-known path. The value of the <code>pvd</code> SvcParamKey
+MUST be empty.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
 <p id="section-2.1-3">A client receiving a DNS record like the following:<a href="#section-2.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-2.1-4">
 <pre>
@@ -1408,8 +1407,8 @@ proxy.example.org. 3600 IN HTTPS 1 . alpn="h3,h2" pvd
 "https://proxy.example.org/.well-known/pvd" using HTTP GET method.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
 <p id="section-2.1-6">While this key is particularly useful for detecting proxy configurations when
 looking up a DNS record for a known proxy name, this key generically provides
-a hint that PvD Additional Information is available, and can be used for use
-cases unrelated to proxies.
+a hint that PvD Additional Information is available. The PvD Additional Information
+may contain information unrelated to proxies and can be used for use cases unrelated to proxies.
 This marker is advisory; clients MAY still attempt to fetch PvD Additional Information even if
 <code>pvd</code> SvcParamKey is not present.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
 <p id="section-2.1-7">The <code>pvd</code> SvcParamKey is registered with IANA as described in <a href="#svcparamkey-iana" class="auto internal xref">Section 7.5</a>.<a href="#section-2.1-7" class="pilcrow">¶</a></p>
@@ -1429,8 +1428,8 @@ Each proxy is defined by a proxy protocol and a proxy location (i.e., a hostname
 <span>[<a href="#URITEMPLATE" class="cite xref">URITEMPLATE</a>]</span>), along with other optional keys.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">When a PvD that contains the <code>proxies</code> key is fetched from a known proxy
 using the method described in <a href="#proxy-pvd" class="auto internal xref">Section 2</a>, the proxies array describes
-equivalent proxies (potentially supporting other protocols) that can be used
-in addition to the known proxy.<a href="#section-3-2" class="pilcrow">¶</a></p>
+proxies that can be used in addition to the known proxy. The proxies may
+potentially supporting other protocols.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">Such cases are useful for informing clients of related proxies as a discovery
 method, with the assumption that the client already is aware of one proxy.
 Many historical methods of configuring a proxy only allow configuring
@@ -1445,7 +1444,8 @@ URIs that support non-default protocols, such as <span>[<a href="#CONNECT-UDP" c
         </h3>
 <p id="section-3.1-1">This document defines two required keys for the sub-dictionaries in the
 <code>proxies</code> array: <code>protocol</code> and <code>proxy</code>. There are also optional keys, including
-<code>mandatory</code>, <code>alpn</code>, and <code>identifier</code>. Other optional keys can be added to the
+<code>mandatory</code>, <code>alpn</code>, and <code>identifier</code>. Other optional keys (keys defined in
+future extensions or proprietary key defined in <a href="#proxy-proprietary-keys" class="auto internal xref">Section 3.2</a>) can be added to the
 dictionary to further define or restrict the use of a proxy. The keys
 are registered with IANA as described in <a href="#proxy-info-iana" class="auto internal xref">Section 7.2</a>, with the initial
 content provided below.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
@@ -1458,7 +1458,7 @@ content provided below.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">JSON Key</th>
-              <th class="text-left" rowspan="1" colspan="1">Optional</th>
+              <th class="text-left" rowspan="1" colspan="1">Optional/ Required</th>
               <th class="text-left" rowspan="1" colspan="1">Description</th>
               <th class="text-left" rowspan="1" colspan="1">Type</th>
               <th class="text-left" rowspan="1" colspan="1">Example</th>
@@ -1467,35 +1467,35 @@ content provided below.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
           <tbody>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">protocol</td>
-              <td class="text-left" rowspan="1" colspan="1">No</td>
+              <td class="text-left" rowspan="1" colspan="1">required</td>
               <td class="text-left" rowspan="1" colspan="1">The protocol used to communicate with the proxy</td>
               <td class="text-left" rowspan="1" colspan="1">String</td>
               <td class="text-left" rowspan="1" colspan="1">"connect-udp"</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">proxy</td>
-              <td class="text-left" rowspan="1" colspan="1">No</td>
+              <td class="text-left" rowspan="1" colspan="1">required</td>
               <td class="text-left" rowspan="1" colspan="1">String containing the URI template or host and port of the proxy, depending on the format defined by the protocol</td>
               <td class="text-left" rowspan="1" colspan="1">String</td>
               <td class="text-left" rowspan="1" colspan="1">"https://example.org:4443/masque/<br>{?target_host,target_port}"</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">mandatory</td>
-              <td class="text-left" rowspan="1" colspan="1">Yes</td>
+              <td class="text-left" rowspan="1" colspan="1">optional</td>
               <td class="text-left" rowspan="1" colspan="1">An array of optional keys that client must understand and process to use this proxy</td>
               <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
               <td class="text-left" rowspan="1" colspan="1">["example_key"]</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">alpn</td>
-              <td class="text-left" rowspan="1" colspan="1">Yes</td>
+              <td class="text-left" rowspan="1" colspan="1">optional</td>
               <td class="text-left" rowspan="1" colspan="1">An array of Application-Layer Protocol Negotiation protocol identifiers</td>
               <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
               <td class="text-left" rowspan="1" colspan="1">["h3","h2"]</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">identifier</td>
-              <td class="text-left" rowspan="1" colspan="1">Yes</td>
+              <td class="text-left" rowspan="1" colspan="1">optional</td>
               <td class="text-left" rowspan="1" colspan="1">A string used to refer to the proxy, which can be referenced by other dictionaries, such as entries in <code>proxy-match</code>
 </td>
               <td class="text-left" rowspan="1" colspan="1">String</td>
@@ -1622,8 +1622,8 @@ array to convey additional proxy configuration information not defined in this s
 <p id="section-3.2-2">A proprietary key MUST contain at least one underscore character ("_"). The right-most underscore serves
 as a separator between a vendor-specific namespace and the key name, i.e. the string to the right of the
 right-most underscore is the key name and the string left from the underscore specifies the
-vendor-specific namespace. For example, "acme_tech_authmode" could be a proprietary key indicating an
-authentication mode defined by a vendor named "acme_tech".<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+vendor-specific namespace. For example, "example_tech_authmode" could be a proprietary key indicating an
+authentication mode defined by a vendor named "Example Tech".<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">When combined with <code>mandatory</code> array, this mechanism allows implementations to extend proxy metadata while
 maintaining interoperability and ensuring safe fallback behavior for clients that do not support a given
 extension.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
@@ -1701,8 +1701,8 @@ for a particular proxy or set of proxies.<a href="#section-4-3" class="pilcrow">
 the <code>proxies</code> key. Values corresponding to the <code>proxies</code> key may be either an empty array,
 which implies that no proxy defined in this PvD can process matching traffic, or an array of strings
 with at least one proxy <code>identifier</code> string. All destination rules MUST also contain at least one
-other key use to describe the destination properties. Each key MUST correspond to an array
-with at least one entry.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+other key use to describe the destination properties. Each key's value MUST be an array with at least
+one entry.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">Extensions or proprietary deployments can define new keys to describe destination properties.
 Any destination rules that include keys not known to the client, or values that cannot be
 parsed, MUST be ignored in their entirety.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
@@ -1760,14 +1760,14 @@ rules with non-empty <code>proxies</code> array) or non-accessible through any p
 Wildcards are allowed only as prefixes (<code>*.</code>). A wildcard prefix is used to indicate matching entire domains or subdomains instead of
 specific hostnames. Note that this can be used to match multiple levels of subdomains. For example, "*.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
-Entries that include the wildcard prefix also MUST be treated as if they match
-an FQDN that only contains the string after the prefix, with no subdomain. So,
-an entry "*.example.com" in the <code>domains</code> array of a <code>proxy-match</code> rule would match the FQDN "example.com".
+Entries that include the wildcard prefix also match an FQDN that only contains
+the string after the prefix, with no subdomain. So, an entry "*.example.com"
+in the <code>domains</code> array of a <code>proxy-match</code> rule would match the FQDN "example.com".
 This is done to prevent commonly needing to include both "*.example.com" and "example.com"
 in the <code>domains</code> array of a <code>proxy-match</code> rule.
 Matches are performed against absolute domain names, independent of the client's configured DNS search suffixes.
-Clients MUST NOT apply local DNS suffix search rules when interpreting <code>domains</code> entries. A trailing dot (".")
-at the end of a domain name is not required; the matching logic is the same regardless of its presence or absence.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+Clients MUST NOT apply local DNS suffix search rules when interpreting <code>domains</code> entries. A
+string MAY have a trailing dot ("."); it does not affect the matching logic.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 <p id="section-4.1-6">The <code>subnets</code> array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
 written using CIDR notation <span>[<a href="#CIDR" class="cite xref">CIDR</a>]</span>. Subnet-based destination information can apply to cases where
 applications are communicating directly with an IP address (without having resolved a DNS name)
@@ -1800,8 +1800,9 @@ in this PvD.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 example, if a destination rule includes a <code>domains</code> array and a <code>ports</code> array, traffic that matches
 the rule needs to match at least one of the entries in the <code>domains</code> array and one of the entries in the
 <code>ports</code> array. In addition, a destination rule is considered a match only if at least one of the
-associated proxy identifiers supports the protocol required by the connection attempt (for
-example, <code>connect-udp</code> for UDP traffic). If no listed proxy identifier is applicable to the protocol,
+associated proxy identifiers is supported by the client(client understand all mandatory keys in the
+protocol description) and supports the protocol required by the connection attempt (for
+example, <code>connect-udp</code> for UDP traffic). If no listed proxy identifier is applicable,
 the rule MUST be treated as not matching, and the client continues evaluation of subsequent rules.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.2-4">A matched rule will then either point to one or more proxy <code>identifier</code> values, which correspond
 to proxies defined in the array from <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>, or instructs the client to not send the
@@ -1832,7 +1833,7 @@ For example, "acme_processid" could be a key used to apply rules only to traffic
 defined by a vendor named "acme".<a href="#section-4.3-2" class="pilcrow">¶</a></p>
 <p id="section-4.3-3">Clients that encounter a proprietary key they do not recognize MUST ignore the entire destination rule in which the
 key appears. This ensures that unknown or unsupported matching logic does not inadvertently influence proxy selection
-or bypass security controls. This handling applies uniformly across all match rules, including fallback rules.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+or bypass security controls.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="examples">
@@ -1876,7 +1877,7 @@ all other hosts within "internal.example.org". The client will use the same prox
 requests to hosts falling into the "*.internal.example.org" zone to increase connection reuse and make
 use of the connection resumption. The client will not use the proxies defined in this configuration
 to hosts outside of the "*.internal.example.org" zone.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
-<p id="section-4.4-4">In the next example, two proxies are defined with a separate identifier, and there are
+<p id="section-4.4-4">In the next example, two proxies are defined with a distinct identifier, and there are
 three destination rules:<a href="#section-4.4-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.4-5">
 <pre>
