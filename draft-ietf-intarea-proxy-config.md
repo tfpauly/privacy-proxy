@@ -167,7 +167,7 @@ To allow clients to determine whether PvD Additional Information is available fo
 named host (which allows fetching proxy information, as well as any other information in the PvD),
 this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in {{!SVCB-DNS=RFC9460}}.
 
-Presence of this SvcParamKey, named `pvd` indicates that the a host supports PvD discovery via
+Presence of this SvcParamKey, named `pvd` indicates that the host supports PvD discovery via
 the well-known PvD URI defined in {{Section 4.1 of PVDDATA}}. The presence of this key in an HTTPS
 or SVCB record signals that PvD Additional Information can be fetched using the "https"
 scheme from the host on port 443 using the well-known path. The value of the `pvd` SvcParamKey
