@@ -91,27 +91,23 @@ clients can upgrade to a more secure connection to the proxy.
 
 ## Background {#background}
 
-Other non-standard mechanisms for proxy configuration and discovery have been
-used historically, some of which are described in {{?RFC3040}}.
-
+Non-standard mechanisms for proxy configuration and discovery have been
+used historically, some of which are described in the informational {{?RFC3040}}:
 Proxy Auto Configuration (PAC) files {{Section 6.2 of RFC3040}} are Javascript
 scripts that take URLs as input and provide an output of a proxy configuration
-to use.
-
-Web Proxy Auto-Discovery Protocol (WPAD) {{Section 6.4 of RFC3040}} allows
+to use. Web Proxy Auto-Discovery Protocol (WPAD) {{Section 6.4 of RFC3040}} allows
 networks to advertise proxies to use by advertising a PAC file. This solution
-uses the DHCPv4 option 252, reserved for private use according to {{Section 2.1 of ?IANA-DHCP=RFC2939}}.
-
-These common (but non-standard) mechanisms only support defining proxies by
-hostname and port, and do not support configuring a full URI template
-{{URITEMPLATE}}.
+uses the DHCPv4 option 252, reserved for private use according to
+{{Section 2.1 of ?IANA-DHCP=RFC2939}}. These common (but non-standard) mechanisms
+only support defining proxies by hostname and port, and do not support configuring
+a full URI template {{URITEMPLATE}}.
 
 The mechanisms defined in this document are intended to offer a standard
 alternative that works for URI-based proxies and avoids dependencies
-on executing Javascript scripts, which are prone to implementation-specific
-inconsistencies and can open up security vulnerabilities.
+on executing Javascript scripts, which are prone to implementation inconsistencies
+and security vulnerabilities.
 
-## Requirements
+## Requirements Keywords
 
 {::boilerplate bcp14}
 
@@ -132,8 +128,8 @@ well-known PvD URI using the host authority of the proxy. A client can also be d
 configured with a HTTPS URI on which to fetch the PvD Information, in which case the
 fetch SHALL be made to that configured URI.
 
-It is not necessary for the client to re‑fetch PvD Additional Information unless
-one of the following conditions occurs:
+A client MAY cache the information it obtained from PvD Additional Information, but it
+MUST discard cached information if:
 
 - The current time is beyond the "expires" value defined in {{Section 4.3 of PVDDATA}}
 - A new Sequence Number for that PvD is received in a Router Advertisement (RA)
@@ -171,10 +167,10 @@ To allow clients to determine whether PvD Additional Information is available fo
 this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in {{!SVCB-DNS=RFC9460}}.
 
 Presence of this SvcParamKey, named `pvd` indicates that the proxy host supports PvD discovery via
-the well-known PvD URI ".well-known/pvd" defined in {{Section 4.1 of PVDDATA}}. The presence of this
-key in an HTTPS or SVCB record signals that the proxy's PvD Additional Information can be fetched
-using the "https" scheme from the proxy host on port 443 using the well-known path. The value of the
-`pvd` SvcParamKey MUST be empty.
+the well-known PvD URI defined in {{Section 4.1 of PVDDATA}}. The presence of this key in an HTTPS
+or SVCB record signals that the proxy's PvD Additional Information can be fetched using the "https"
+scheme from the proxy host on port 443 using the well-known path. The value of the `pvd` SvcParamKey
+MUST be empty.
 
 A client receiving a DNS record like the following:
 
@@ -187,8 +183,8 @@ can interpret the presence of the pvd key as an indication that it MAY perform a
 
 While this key is particularly useful for detecting proxy configurations when
 looking up a DNS record for a known proxy name, this key generically provides
-a hint that PvD Additional Information is available, and can be used for use
-cases unrelated to proxies.
+a hint that PvD Additional Information is available. The PvD Additional Information
+may contain information unrelated to proxies and can be used for use cases unrelated to proxies.
 This marker is advisory; clients MAY still attempt to fetch PvD Additional Information even if
 `pvd` SvcParamKey is not present.
 
@@ -204,8 +200,8 @@ Each proxy is defined by a proxy protocol and a proxy location (i.e., a hostname
 
 When a PvD that contains the `proxies` key is fetched from a known proxy
 using the method described in {{proxy-pvd}}, the proxies array describes
-equivalent proxies (potentially supporting other protocols) that can be used
-in addition to the known proxy.
+proxies that can be used in addition to the known proxy. The proxies may
+potentially supporting other protocols.
 
 Such cases are useful for informing clients of related proxies as a discovery
 method, with the assumption that the client already is aware of one proxy.
@@ -219,18 +215,19 @@ URIs that support non-default protocols, such as {{CONNECT-UDP}} and
 
 This document defines two required keys for the sub-dictionaries in the
 `proxies` array: `protocol` and `proxy`. There are also optional keys, including
-`mandatory`, `alpn`, and `identifier`. Other optional keys can be added to the
+`mandatory`, `alpn`, and `identifier`. Other optional keys (keys defined in
+future extensions or proprietary key defined in {{proxy-proprietary-keys}}) can be added to the
 dictionary to further define or restrict the use of a proxy. The keys
 are registered with IANA as described in {{proxy-info-iana}}, with the initial
 content provided below.
 
-| JSON Key | Optional | Description | Type | Example |
+| JSON Key | Optional/ Required | Description | Type | Example |
 | --- | --- | --- | --- | --- |
-| protocol | No | The protocol used to communicate with the proxy | String | "connect-udp" |
-| proxy | No | String containing the URI template or host and port of the proxy, depending on the format defined by the protocol | String | "https://example.org:4443/masque/<br>{?target_host,target_port}" |
-| mandatory | Yes | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["example_key"] |
-| alpn | Yes | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
-| identifier | Yes | A string used to refer to the proxy, which can be referenced by other dictionaries, such as entries in `proxy-match`  | String | "udp-proxy" |
+| protocol | required | The protocol used to communicate with the proxy | String | "connect-udp" |
+| proxy | required | String containing the URI template or host and port of the proxy, depending on the format defined by the protocol | String | "https://example.org:4443/masque/<br>{?target_host,target_port}" |
+| mandatory | optional | An array of optional keys that client must understand and process to use this proxy | Array of Strings | ["example_key"] |
+| alpn | optional | An array of Application-Layer Protocol Negotiation protocol identifiers | Array of Strings | ["h3","h2"] |
+| identifier | optional | A string used to refer to the proxy, which can be referenced by other dictionaries, such as entries in `proxy-match`  | String | "udp-proxy" |
 {: #proxy-information-keys-table title="Initial Proxy Information PvD Keys Registry Contents"}
 
 The values for the `protocol` key are defined in the proxy protocol
@@ -293,8 +290,8 @@ array to convey additional proxy configuration information not defined in this s
 A proprietary key MUST contain at least one underscore character ("_"). The right-most underscore serves
 as a separator between a vendor-specific namespace and the key name, i.e. the string to the right of the
 right-most underscore is the key name and the string left from the underscore specifies the
-vendor-specific namespace. For example, "acme_tech_authmode" could be a proprietary key indicating an
-authentication mode defined by a vendor named "acme_tech".
+vendor-specific namespace. For example, "example_tech_authmode" could be a proprietary key indicating an
+authentication mode defined by a vendor named "Example Tech".
 
 When combined with `mandatory` array, this mechanism allows implementations to extend proxy metadata while
 maintaining interoperability and ensuring safe fallback behavior for clients that do not support a given
@@ -363,8 +360,8 @@ This document defines four keys for destination rules. Any destination rule MUST
 the `proxies` key. Values corresponding to the `proxies` key may be either an empty array,
 which implies that no proxy defined in this PvD can process matching traffic, or an array of strings
 with at least one proxy `identifier` string. All destination rules MUST also contain at least one
-other key use to describe the destination properties. Each key MUST correspond to an array
-with at least one entry.
+other key use to describe the destination properties. Each key's value MUST be an array with at least
+one entry.
 
 Extensions or proprietary deployments can define new keys to describe destination properties.
 Any destination rules that include keys not known to the client, or values that cannot be
@@ -386,14 +383,14 @@ rules with non-empty `proxies` array) or non-accessible through any proxies (for
 Wildcards are allowed only as prefixes (`*.`). A wildcard prefix is used to indicate matching entire domains or subdomains instead of
 specific hostnames. Note that this can be used to match multiple levels of subdomains. For example, "\*.example.com"
 matches "internal.example.com" as well as "www.public.example.com".
-Entries that include the wildcard prefix also MUST be treated as if they match
-an FQDN that only contains the string after the prefix, with no subdomain. So,
-an entry "\*.example.com" in the `domains` array of a `proxy-match` rule would match the FQDN "example.com".
+Entries that include the wildcard prefix also match an FQDN that only contains
+the string after the prefix, with no subdomain. So, an entry "\*.example.com"
+in the `domains` array of a `proxy-match` rule would match the FQDN "example.com".
 This is done to prevent commonly needing to include both "\*.example.com" and "example.com"
 in the `domains` array of a `proxy-match` rule.
 Matches are performed against absolute domain names, independent of the client's configured DNS search suffixes.
-Clients MUST NOT apply local DNS suffix search rules when interpreting `domains` entries. A trailing dot (".")
-at the end of a domain name is not required; the matching logic is the same regardless of its presence or absence.
+Clients MUST NOT apply local DNS suffix search rules when interpreting `domains` entries. A
+string MAY have a trailing dot ("."); it does not affect the matching logic.
 
 The `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
 written using CIDR notation {{?CIDR=RFC4632}}. Subnet-based destination information can apply to cases where
@@ -426,8 +423,9 @@ In order to match a destination rule in the `proxy-match` array, all properties 
 example, if a destination rule includes a `domains` array and a `ports` array, traffic that matches
 the rule needs to match at least one of the entries in the `domains` array and one of the entries in the
 `ports` array. In addition, a destination rule is considered a match only if at least one of the
-associated proxy identifiers supports the protocol required by the connection attempt (for
-example, `connect-udp` for UDP traffic). If no listed proxy identifier is applicable to the protocol,
+associated proxy identifiers is supported by the client(client understand all mandatory keys in the
+protocol description) and supports the protocol required by the connection attempt (for
+example, `connect-udp` for UDP traffic). If no listed proxy identifier is applicable,
 the rule MUST be treated as not matching, and the client continues evaluation of subsequent rules.
 
 A matched rule will then either point to one or more proxy `identifier` values, which correspond
@@ -458,7 +456,7 @@ defined by a vendor named "acme".
 
 Clients that encounter a proprietary key they do not recognize MUST ignore the entire destination rule in which the
 key appears. This ensures that unknown or unsupported matching logic does not inadvertently influence proxy selection
-or bypass security controls. This handling applies uniformly across all match rules, including fallback rules.
+or bypass security controls.
 
 ## Examples
 
@@ -499,7 +497,7 @@ requests to hosts falling into the "\*.internal.example.org" zone to increase co
 use of the connection resumption. The client will not use the proxies defined in this configuration
 to hosts outside of the "\*.internal.example.org" zone.
 
-In the next example, two proxies are defined with a separate identifier, and there are
+In the next example, two proxies are defined with a distinct identifier, and there are
 three destination rules:
 
 ~~~
