@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-17T00:28:32.302926+00:00",
+  "timestamp": "2026-03-19T00:30:51.785770+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -23349,24 +23349,26 @@
       "id": "PR_kwDOEwrMS87JsX_Z",
       "title": "Address comments from the Gen-ART reviewer.",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/336",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ddragana",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-03-11T12:22:14Z",
-      "updatedAt": "2026-03-16T07:46:56Z",
+      "updatedAt": "2026-03-18T22:11:17Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "e4feac50322ccb3990f4aab2a70883e952fc747f",
       "headRepository": "ddragana/privacy-proxy",
       "headRefName": "patch_6",
-      "headRefOid": "0be10c4312db84f5c6ef32a8a6bddbdf06325979",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "00a59bdee24f76ce1197d4ac2be0df78b4200494",
+      "closedAt": "2026-03-18T22:11:17Z",
+      "mergedAt": "2026-03-18T22:11:17Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "ea378277deb55470f3ab0b0a3e74573ce7e8bd3d"
+      },
       "comments": [],
       "reviews": [
         {
@@ -23406,6 +23408,55 @@
               "body": "```suggestion\n## Requirements Keywords\n```",
               "createdAt": "2026-03-16T07:45:01Z",
               "updatedAt": "2026-03-16T07:46:56Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 338,
+      "id": "PR_kwDOEwrMS87Lrnoy",
+      "title": "Update description of PvD discovery via SvcParamKey",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/338",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Clarify that this is a generic hint about PvD Additional Information availability, and can be used in non-proxy scenarios for future use cases.\r\n\r\nCloses #337 ",
+      "createdAt": "2026-03-18T22:16:54Z",
+      "updatedAt": "2026-03-18T23:50:33Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "ea378277deb55470f3ab0b0a3e74573ce7e8bd3d",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-30",
+      "headRefOid": "faf9925a73386efbe87d06ade79ae602d3d6d88e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87sttw7",
+          "commit": {
+            "abbreviatedOid": "4f937d4"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-18T23:08:43Z",
+          "updatedAt": "2026-03-18T23:09:35Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "```suggestion\nPresence of this SvcParamKey, named `pvd` indicates that the host supports PvD discovery via\n```",
+              "createdAt": "2026-03-18T23:08:43Z",
+              "updatedAt": "2026-03-18T23:09:35Z"
             }
           ]
         }
