@@ -166,7 +166,7 @@ match the hostname of the HTTP proxy. The "prefixes" array MUST be empty for cas
 To allow clients to determine whether PvD Additional Information is available for a given proxy,
 this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in {{!SVCB-DNS=RFC9460}}.
 
-Presence of this SvcParamKey, named `pvd` indicates that the proxy host supports PvD discovery via
+Presence of this SvcParamKey, named `pvd`, indicates that the proxy host supports PvD discovery via
 the well-known PvD URI defined in {{Section 4.1 of PVDDATA}}. The presence of this key in an HTTPS
 or SVCB record signals that the proxy's PvD Additional Information can be fetched using the "https"
 scheme from the proxy host on port 443 using the well-known path. The value of the `pvd` SvcParamKey
@@ -269,7 +269,7 @@ If the `alpn` key is present, it provides a hint for the Application-Layer Proto
 (ALPN) {{!ALPN=RFC7301}} protocol identifiers associated with this server. For HTTP proxies,
 this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
 
-The value of `identifier` key is a string that can be used to refer to a particular
+The value of the `identifier` key is a string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in {{destinations}}. The
 string value is an arbitrary non-empty JSON string using UTF-8 encoding
 as discussed in {{Section 8.1 of JSON}}. Characters that need to be escaped in JSON strings
