@@ -393,7 +393,7 @@ Clients MUST NOT apply local DNS suffix search rules when interpreting `domains`
 string MAY have a trailing dot ("."); it does not affect the matching logic.
 
 The `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 address subnets
-represented using CIDR notation {{?CIDR=RFC4632}} and IPv6 address prefixes {{Section 2.3 of ?RFC4291}}.
+represented using CIDR notation {{!CIDR=RFC4632}} and IPv6 address prefixes {{Section 2.3 of !RFC4291}}.
 Subnet-based destination information can apply to cases where
 applications are communicating directly with an IP address (without having resolved a DNS name)
 as well as cases where an application resolved a DNS name to a set of IP addresses. Note that
