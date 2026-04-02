@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-19T00:30:51.785770+00:00",
+  "timestamp": "2026-04-02T00:31:13.025786+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4885,6 +4885,86 @@
       "updatedAt": "2026-03-16T07:22:43Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 340,
+      "id": "I_kwDOEwrMS875t_eL",
+      "title": "Provide a terminology section",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/340",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "After the introduction, add a terminology section to provide easy references for Provisioning Domain, Provisioning Domain Additional Information, etc.",
+      "createdAt": "2026-04-01T20:09:15Z",
+      "updatedAt": "2026-04-01T20:09:15Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 341,
+      "id": "I_kwDOEwrMS875uBcR",
+      "title": "Make informational nature of PvD content clear in introduction",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/341",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "The introduction should be clearer in summary that the information about proxies is indeed informational, and providing details about options to clients, but not requiring that clients use a proxy. In all cases, this information should only be used when the client already has intention and permission to use a proxy.\n",
+      "createdAt": "2026-04-01T20:10:56Z",
+      "updatedAt": "2026-04-01T20:10:56Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 342,
+      "id": "I_kwDOEwrMS875uSQQ",
+      "title": "Spell out destination rule matching algorithm explicitly",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/342",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "As mentioned in the genart review, https://datatracker.ietf.org/doc/review-ietf-intarea-proxy-config-11-genart-lc-worley-2026-03-03/, it would be useful to specify the steps of the algorithm to apply destination matching rules as a simple set of steps. This is currently derivable in the text, but implementations will be less error-prone with clear steps to follow.",
+      "createdAt": "2026-04-01T20:25:34Z",
+      "updatedAt": "2026-04-01T20:25:34Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 343,
+      "id": "I_kwDOEwrMS875uW3Y",
+      "title": "Security Considerations: reference 8801's rate limiting guidance",
+      "url": "https://github.com/tfpauly/privacy-proxy/issues/343",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "https://www.rfc-editor.org/rfc/rfc8801.html#name-security-considerations specifies guidance for rate limiting PvD Additional Information fetching. This document should reference that, since it applies.",
+      "createdAt": "2026-04-01T20:29:33Z",
+      "updatedAt": "2026-04-01T20:33:38Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "We can also reference and re-iterate that the communication and fetches MUST be over HTTPS.",
+          "createdAt": "2026-04-01T20:33:38Z",
+          "updatedAt": "2026-04-01T20:33:38Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -23461,6 +23541,36 @@
           ]
         }
       ]
+    },
+    {
+      "number": 339,
+      "id": "PR_kwDOEwrMS87PU3E4",
+      "title": "Add reference for IPv6 prefix format",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/339",
+      "state": "OPEN",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Clarified the description of the `subnets` array to include IPv6 address prefixes and improved explanation of its application.\r\n\r\nAddresses TSVART review: https://datatracker.ietf.org/doc/review-ietf-intarea-proxy-config-11-tsvart-telechat-eddy-2026-03-27/",
+      "createdAt": "2026-04-01T17:20:58Z",
+      "updatedAt": "2026-04-01T17:21:14Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "ea378277deb55470f3ab0b0a3e74573ce7e8bd3d",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-31",
+      "headRefOid": "3e2704bb139304548a62245743df81b0458003f3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
