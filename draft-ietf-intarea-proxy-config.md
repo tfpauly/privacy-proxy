@@ -402,10 +402,9 @@ names prior to proxying.
 
 The `ports` array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a `-` in between.
-For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
+For example, "1024-2048" matches all ports from 1024 to 2048, including port 1024 and 2048.
 If `ports` key is not present, all ports are assumed to match. The array may
-contain individual port numbers (such as "80") or inclusive ranges of ports. For example,
-"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
+contain individual port numbers (such as "80") or inclusive ranges of ports.
 
 ##  Using Destination Rules
 
