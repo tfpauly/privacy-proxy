@@ -28,7 +28,7 @@ author:
     organization: Zscaler
     email: yrosomakho@zscaler.com
 
-normative:
+informative:
   IANA_PVD:
     target: https://www.iana.org/assignments/pvds/pvds.xhtml#additional-information-pvd-keys
     title: Additional Information PvD Keys Registry
