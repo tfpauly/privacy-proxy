@@ -233,8 +233,8 @@ Table of Contents
    available for a given proxy, this document defines a new SvcParamKey
    in HTTPS and SVCB DNS records defined in [SVCB-DNS].
 
-   Presence of this SvcParamKey, named pvd indicates that the proxy host
-   supports PvD discovery via the well-known PvD URI defined in
+   Presence of this SvcParamKey, named pvd, indicates that the proxy
+   host supports PvD discovery via the well-known PvD URI defined in
    Section 4.1 of [PVDDATA].  The presence of this key in an HTTPS or
    SVCB record signals that the proxy's PvD Additional Information can
    be fetched using the "https" scheme from the proxy host on port 443
@@ -408,8 +408,8 @@ Table of Contents
    associated with this server.  For HTTP proxies, this can indicate if
    the proxy supports HTTP/3, HTTP/2, etc.
 
-   The value of identifier key is a string that can be used to refer to
-   a particular proxy from other dictionaries, specifically those
+   The value of the identifier key is a string that can be used to refer
+   to a particular proxy from other dictionaries, specifically those
    defined in Section 4.  The string value is an arbitrary non-empty
    JSON string using UTF-8 encoding as discussed in Section 8.1 of
    [JSON].  Characters that need to be escaped in JSON strings per

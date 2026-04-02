@@ -1392,7 +1392,7 @@ match the hostname of the HTTP proxy. The "prefixes" array MUST be empty for cas
         </h3>
 <p id="section-2.1-1">To allow clients to determine whether PvD Additional Information is available for a given proxy,
 this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in <span>[<a href="#SVCB-DNS" class="cite xref">SVCB-DNS</a>]</span>.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1-2">Presence of this SvcParamKey, named <code>pvd</code> indicates that the proxy host supports PvD discovery via
+<p id="section-2.1-2">Presence of this SvcParamKey, named <code>pvd</code>, indicates that the proxy host supports PvD discovery via
 the well-known PvD URI defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.1" class="relref">Section 4.1</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>. The presence of this key in an HTTPS
 or SVCB record signals that the proxy's PvD Additional Information can be fetched using the "https"
 scheme from the proxy host on port 443 using the well-known path. The value of the <code>pvd</code> SvcParamKey
@@ -1598,7 +1598,7 @@ the value of a key from the array MUST ignore the entire proxy dictionary.<a hre
 <p id="section-3.1-10">If the <code>alpn</code> key is present, it provides a hint for the Application-Layer Protocol Negotiation
 (ALPN) <span>[<a href="#ALPN" class="cite xref">ALPN</a>]</span> protocol identifiers associated with this server. For HTTP proxies,
 this can indicate if the proxy supports HTTP/3, HTTP/2, etc.<a href="#section-3.1-10" class="pilcrow">¶</a></p>
-<p id="section-3.1-11">The value of <code>identifier</code> key is a string that can be used to refer to a particular
+<p id="section-3.1-11">The value of the <code>identifier</code> key is a string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in <a href="#destinations" class="auto internal xref">Section 4</a>. The
 string value is an arbitrary non-empty JSON string using UTF-8 encoding
 as discussed in <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.1" class="relref">Section 8.1</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span>. Characters that need to be escaped in JSON strings
