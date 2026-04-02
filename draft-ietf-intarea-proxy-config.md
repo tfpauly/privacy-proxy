@@ -278,8 +278,8 @@ string comparisons as discussed in {{Section 8.3 of JSON}}. Identifier values MA
 across different proxy dictionaries in the `proxies` array. References to a particular identifier
 apply to the set of proxies sharing that identifier. Proxies without the `identifier` key are
 expected to accept any traffic since their destinations cannot be contained in `proxy-match` array defined
-in {{destinations}}. Proxies with `identifier` keys are expected to accept only traffic
-matching rules in the `proxy-match` array and SHOULD NOT be used if they are not included in
+in {{destinations}}. Proxies with `identifier` keys are expected to accept traffic based on
+matching rules in the `proxy-match` array and MUST NOT be used if they are not included in
 the `proxy-match` array.
 
 ## Proprietary keys in proxy configurations {#proxy-proprietary-keys}
@@ -415,7 +415,7 @@ order, a consistent behavior for usage can be achieved.
 Rules in the `proxy-match` array are provided in order of priority, such that a client
 can evaluate the rules from the first in the array to the last in the array, and attempt
 using the matching proxy or proxies from the earliest matching rule first. If earliest matching
-rule has empty array of `proxies` client SHOULD NOT send matching traffic to any proxy defined
+rule has empty array of `proxies`, a client MUST NOT send matching traffic to any proxy defined
 in this PvD.
 
 In order to match a destination rule in the `proxy-match` array, all properties MUST apply. For
