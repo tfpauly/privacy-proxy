@@ -1274,7 +1274,7 @@ to only allow access to a limited set of destinations.<a href="#section-1-3" cla
 <p id="section-1-4">These improvements to client behavior can be achieved through the use of
 Provisioning Domains. Provisioning Domains (PvDs) are defined in <span>[<a href="#PVD" class="cite xref">PVD</a>]</span>
 as consistent sets of network configuration information, which can include proxy
-configuration details <span><a href="https://rfc-editor.org/rfc/rfc7556#section-2" class="relref">Section 2</a> of [<a href="#PVD" class="cite xref">PVD</a>]</span>. <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.3" class="relref">Section 4.3</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span> defines a JSON
+configuration details (<span><a href="https://rfc-editor.org/rfc/rfc7556#section-2" class="relref">Section 2</a> of [<a href="#PVD" class="cite xref">PVD</a>]</span>). <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.3" class="relref">Section 4.3</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span> defines a JSON
 <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> format for describing Provisioning Domain Additional Information,
 which is an extensible dictionary of properties of the Provisioning Domain.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">This document defines several mechanisms to use PvDs to help clients understand how
@@ -1805,7 +1805,7 @@ example, <code>connect-udp</code> for UDP traffic). If no listed proxy identifie
 the rule MUST be treated as not matching, and the client continues evaluation of subsequent rules.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.2-4">A matched rule will then either point to one or more proxy <code>identifier</code> values, which correspond
 to proxies defined in the array from <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>, or instructs the client to not send the
-matching traffic to any proxy. If a matching rule contains more than one <code>identifier</code> the client
+matching traffic to any proxy. If a matching rule contains more than one <code>identifier</code>, the client
 MUST treat the array as an ordered list, where the first <code>identifier</code> is the most preferred.
 Multiple proxy dictionaries can contain the same <code>identifier</code> value. In this case, the client
 can choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests

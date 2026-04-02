@@ -112,7 +112,7 @@ Table of Contents
    These improvements to client behavior can be achieved through the use
    of Provisioning Domains.  Provisioning Domains (PvDs) are defined in
    [PVD] as consistent sets of network configuration information, which
-   can include proxy configuration details Section 2 of [PVD].
+   can include proxy configuration details (Section 2 of [PVD]).
    Section 4.3 of [PVDDATA] defines a JSON [JSON] format for describing
    Provisioning Domain Additional Information, which is an extensible
    dictionary of properties of the Provisioning Domain.
@@ -621,7 +621,7 @@ content-length = 322
    A matched rule will then either point to one or more proxy identifier
    values, which correspond to proxies defined in the array from
    Section 3, or instructs the client to not send the matching traffic
-   to any proxy.  If a matching rule contains more than one identifier
+   to any proxy.  If a matching rule contains more than one identifier,
    the client MUST treat the array as an ordered list, where the first
    identifier is the most preferred.  Multiple proxy dictionaries can
    contain the same identifier value.  In this case, the client can
