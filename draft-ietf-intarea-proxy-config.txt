@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 19 September 2026                                     Microsoft
+Expires: 4 October 2026                                        Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                           18 March 2026
+                                                            2 April 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 September 2026.
+   This Internet-Draft will expire on 4 October 2026.
 
 Copyright Notice
 
@@ -586,11 +586,10 @@ content-length = 322
    The ports array includes specific ports (used for matching TCP and/or
    UDP ports), as well as ranges of ports written with a low port value
    and a high port value, with a - in between.  For example, "1024-2048"
-   matches all ports from 1024 to 2048, including the 1024 and 2048.  If
-   ports key is not present, all ports are assumed to match.  The array
-   may contain individual port numbers (such as "80") or inclusive
-   ranges of ports.  For example, "1024-2048" matches all ports from
-   1024 to 2048, including the 1024 and 2048.
+   matches all ports from 1024 to 2048, including port 1024 and 2048.
+   If ports key is not present, all ports are assumed to match.  The
+   array may contain individual port numbers (such as "80") or inclusive
+   ranges of ports.
 
 4.2.  Using Destination Rules
 
@@ -1091,9 +1090,9 @@ content-length = 322
    [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-10, 5 December 2025,
+              httpbis-connect-tcp-11, 20 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-10>.
+              connect-tcp-11>.
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
