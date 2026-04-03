@@ -1292,14 +1292,9 @@ learn about other proxy options given a known proxy (<a href="#proxy-enumeration
 proxy (<a href="#destinations" class="auto internal xref">Section 4</a>).<a href="#section-1-6.3.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-1-7">Additionally, this document outlines how these mechanisms might be used
-to discover proxies associated with a network (<a href="#network-proxies" class="auto internal xref">Section 5</a>). However, this approach is not described for the
-purpose of generic proxy discovery, and requires careful
-security considerations for clients to limit usage to trusted
-scenarios.<a href="#section-1-7" class="pilcrow">¶</a></p>
-<p id="section-1-8">Using this mechanism a client can learn that a legacy insecure HTTP proxy that
+<p id="section-1-7">Using this mechanism a client can learn that a legacy insecure HTTP proxy that
 the client is configured with is also accessible using HTTPS. In this way,
-clients can upgrade to a more secure connection to the proxy.<a href="#section-1-8" class="pilcrow">¶</a></p>
+clients can upgrade to a more secure connection to the proxy.<a href="#section-1-7" class="pilcrow">¶</a></p>
 <div id="background">
 <section id="section-1.1">
         <h3 id="name-background">
@@ -2062,17 +2057,16 @@ to "proxy1.example.org:80" and all traffic to the subdomains of "example.org", i
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-discovering-proxies-from-ne" class="section-name selfRef">Discovering proxies from network PvDs</a>
       </h2>
 <p id="section-5-1"><span>[<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span> defines how PvD Additional Information is discovered based
-on network advertisements using Router Advertisements <span>[<a href="#RFC4861" class="cite xref">RFC4861</a>]</span>. A network
-defining its configuration via PvD information can include the <code>proxies</code>
-key (<a href="#proxy-enumeration" class="auto internal xref">Section 3</a>) to inform clients of a list of proxies available
-on the network.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">This association of proxies with the network's PvD can be used as a mechanism
-to discover proxies, as an alternative to PAC files. However, client systems MUST
-NOT automatically send traffic over proxies advertised in this way without
-explicit configuration, policy, or user permission. For example, a client
-can use this mechanism to choose between known proxies, such as if the client was
-already proxying traffic and has multiple options to choose between.<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">Further security and experience considerations are needed for these cases.<a href="#section-5-3" class="pilcrow">¶</a></p>
+on network advertisements using Router Advertisements <span>[<a href="#RFC4861" class="cite xref">RFC4861</a>]</span>. This means
+that a network defining its configuration via PvD information can include
+the <code>proxies</code> key (<a href="#proxy-enumeration" class="auto internal xref">Section 3</a>). However, clients MUST NOT automatically
+use these proxy configurations, unless the device has been explicitly provisioned
+to trust this configuration from the network for specific proxy hosts; for example,
+a corporate-managed device could use this mechanism on an authenticated corporate
+network to learn which of an allowed set of proxy URIs are available at this
+particular location.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">Future specifications can define ways to dynamically trust proxy configurations delivered
+by a network, but such mechanisms are out of scope for this document.<a href="#section-5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-considerations">
@@ -2096,6 +2090,9 @@ the PvD configuration to narrow the scope of traffic that they will send through
 Clients that are configured by policy to only send a particular set of traffic through
 a particular proxy can learn about rules that will cause them to send more narrowly-scoped
 traffic, but MUST NOT send traffic that would go beyond what is allowed by local policy.<a href="#section-6-4" class="pilcrow">¶</a></p>
+<p id="section-6-5">As described in <a href="#network-proxies" class="auto internal xref">Section 5</a>, proxy configuration discovered based on RAs from a network
+MUST NOT be automatically used by clients to start using proxies when they would otherwise
+not proxy traffic.<a href="#section-6-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
