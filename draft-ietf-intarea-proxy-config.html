@@ -1608,8 +1608,8 @@ string comparisons as discussed in <span><a href="https://rfc-editor.org/rfc/rfc
 across different proxy dictionaries in the <code>proxies</code> array. References to a particular identifier
 apply to the set of proxies sharing that identifier. Proxies without the <code>identifier</code> key are
 expected to accept any traffic since their destinations cannot be contained in <code>proxy-match</code> array defined
-in <a href="#destinations" class="auto internal xref">Section 4</a>. Proxies with <code>identifier</code> keys are expected to accept only traffic
-matching rules in the <code>proxy-match</code> array and SHOULD NOT be used if they are not included in
+in <a href="#destinations" class="auto internal xref">Section 4</a>. Proxies with <code>identifier</code> keys are expected to accept traffic based on
+matching rules in the <code>proxy-match</code> array and MUST NOT be used if they are not included in
 the <code>proxy-match</code> array.<a href="#section-3.1-11" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1796,7 +1796,7 @@ order, a consistent behavior for usage can be achieved.<a href="#section-4.2-1" 
 <p id="section-4.2-2">Rules in the <code>proxy-match</code> array are provided in order of priority, such that a client
 can evaluate the rules from the first in the array to the last in the array, and attempt
 using the matching proxy or proxies from the earliest matching rule first. If earliest matching
-rule has empty array of <code>proxies</code> client SHOULD NOT send matching traffic to any proxy defined
+rule has empty array of <code>proxies</code>, a client MUST NOT send matching traffic to any proxy defined
 in this PvD.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 <p id="section-4.2-3">In order to match a destination rule in the <code>proxy-match</code> array, all properties MUST apply. For
 example, if a destination rule includes a <code>domains</code> array and a <code>ports</code> array, traffic that matches
