@@ -289,8 +289,9 @@ the `proxy-match` array.
 Implementations MAY include proprietary or vendor-specific keys in the sub-dictionaries of the `proxies`
 array to convey additional proxy configuration information not defined in this specification.
 
-A proprietary key MUST contain at least one underscore character ("_"). The right-most underscore serves
-as a separator between a vendor-specific namespace and the key name, i.e. the string to the right of the
+A proprietary key MUST contain at least one underscore character ("_") as a delimiter in the string, with
+characters both before and after the underscore. The right-most underscore serves
+as a separator between a vendor-specific namespace and the key name; i.e., the string to the right of the
 right-most underscore is the key name and the string left from the underscore specifies the
 vendor-specific namespace. For example, "example_tech_authmode" could be a proprietary key indicating an
 authentication mode defined by a vendor named "Example Tech".
