@@ -93,7 +93,7 @@ clients can upgrade to a more secure connection to the proxy.
 
 Non-standard mechanisms for proxy configuration and discovery have been
 used historically, some of which are described in the informational {{?RFC3040}}:
-Proxy Auto Configuration (PAC) files {{Section 6.2 of RFC3040}} are Javascript
+Proxy Auto Configuration (PAC) files {{Section 6.2 of RFC3040}} are JavaScript
 scripts that take URLs as input and provide an output of a proxy configuration
 to use. Web Proxy Auto-Discovery Protocol (WPAD) {{Section 6.4 of RFC3040}} allows
 networks to advertise proxies to use by advertising a PAC file. This solution
@@ -104,7 +104,7 @@ a full URI template {{URITEMPLATE}}.
 
 The mechanisms defined in this document are intended to offer a standard
 alternative that works for URI-based proxies and avoids dependencies
-on executing Javascript scripts, which are prone to implementation inconsistencies
+on executing JavaScript scripts, which are prone to implementation inconsistencies
 and security vulnerabilities.
 
 ## Requirements Keywords
@@ -292,7 +292,7 @@ array to convey additional proxy configuration information not defined in this s
 A proprietary key MUST contain at least one underscore character ("_") as a delimiter in the string, with
 characters both before and after the underscore. The right-most underscore serves
 as a separator between a vendor-specific namespace and the key name; i.e., the string to the right of the
-right-most underscore is the key name and the string left from the underscore specifies the
+right-most underscore is the key name and the string to the left of the right-most underscore specifies the
 vendor-specific namespace. For example, "example_tech_authmode" could be a proprietary key indicating an
 authentication mode defined by a vendor named "Example Tech".
 
