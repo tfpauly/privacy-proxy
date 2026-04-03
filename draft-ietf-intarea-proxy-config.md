@@ -699,7 +699,7 @@ and the client has validated that the hostname of the proxy, the identifier of
 the PvD, and the validated hostname identity on the certificate all match.
 
 The lists of proxies and destination rules provided by the PvD Additional Information might
-exceed the memory constraints or processing capabilities clients, particularly for constrained
+exceed the memory constraints or processing capabilities of clients, particularly for constrained
 devices. A client that is not able to process all of the content of either the proxies list
 or destination rules due to resource limitations MUST ignore the proxy configuration entirely.
 Clients MUST implement limits for the maximum number of proxy configurations and destination rules
