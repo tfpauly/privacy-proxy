@@ -394,8 +394,9 @@ Matches are performed against absolute domain names, independent of the client's
 Clients MUST NOT apply local DNS suffix search rules when interpreting `domains` entries. A
 string MAY have a trailing dot ("."); it does not affect the matching logic.
 
-The `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
-written using CIDR notation {{?CIDR=RFC4632}}. Subnet-based destination information can apply to cases where
+The `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 address subnets
+represented using CIDR notation {{!CIDR=RFC4632}} and IPv6 address prefixes {{Section 2.3 of !IPv6-ADDR=RFC4291}}.
+Subnet-based destination information can apply to cases where
 applications are communicating directly with an IP address (without having resolved a DNS name)
 as well as cases where an application resolved a DNS name to a set of IP addresses. Note that
 if destination rules include an empty `proxies` array (indicating that no proxy is applicable for
