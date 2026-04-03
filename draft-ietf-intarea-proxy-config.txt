@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 4 October 2026                                        Microsoft
+Expires: 5 October 2026                                        Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                            2 April 2026
+                                                            3 April 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 October 2026.
+   This Internet-Draft will expire on 5 October 2026.
 
 Copyright Notice
 
@@ -230,16 +230,17 @@ Table of Contents
 2.1.  Discovery via HTTPS/SVCB Records
 
    To allow clients to determine whether PvD Additional Information is
-   available for a given proxy, this document defines a new SvcParamKey
-   in HTTPS and SVCB DNS records defined in [SVCB-DNS].
+   available for a particular named host (which allows fetching proxy
+   information, as well as any other information in the PvD), this
+   document defines a new SvcParamKey in HTTPS and SVCB DNS records
+   defined in [SVCB-DNS].
 
-   Presence of this SvcParamKey, named pvd, indicates that the proxy
-   host supports PvD discovery via the well-known PvD URI defined in
+   Presence of this SvcParamKey, named pvd, indicates that the host
+   supports PvD discovery via the well-known PvD URI defined in
    Section 4.1 of [PVDDATA].  The presence of this key in an HTTPS or
-   SVCB record signals that the proxy's PvD Additional Information can
-   be fetched using the "https" scheme from the proxy host on port 443
-   using the well-known path.  The value of the pvd SvcParamKey MUST be
-   empty.
+   SVCB record signals that PvD Additional Information can be fetched
+   using the "https" scheme from the host on port 443 using the well-
+   known path.  The value of the pvd SvcParamKey MUST be empty.
 
    A client receiving a DNS record like the following:
 
@@ -249,13 +250,14 @@ Table of Contents
    MAY perform a PvD fetch from "https://proxy.example.org/.well-known/
    pvd" using HTTP GET method.
 
-   While this key is particularly useful for detecting proxy
-   configurations when looking up a DNS record for a known proxy name,
-   this key generically provides a hint that PvD Additional Information
-   is available.  The PvD Additional Information may contain information
-   unrelated to proxies and can be used for use cases unrelated to
-   proxies.  This marker is advisory; clients MAY still attempt to fetch
-   PvD Additional Information even if pvd SvcParamKey is not present.
+   This key is useful for detecting proxy configurations when looking up
+   a DNS record for a known proxy name, but is a generic hint that PvD
+   Additional Information is available.  Future extensions to PvD
+   Additional Information can also take advantage of this discovery
+   mechanism.
+
+   This hint is advisory; clients MAY still attempt to fetch PvD
+   Additional Information even if pvd SvcParamKey is not present.
 
    The pvd SvcParamKey is registered with IANA as described in
    Section 7.5.
