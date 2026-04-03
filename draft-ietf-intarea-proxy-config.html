@@ -1769,8 +1769,9 @@ in the <code>domains</code> array of a <code>proxy-match</code> rule.
 Matches are performed against absolute domain names, independent of the client's configured DNS search suffixes.
 Clients MUST NOT apply local DNS suffix search rules when interpreting <code>domains</code> entries. A
 string MAY have a trailing dot ("."); it does not affect the matching logic.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
-<p id="section-4.1-6">The <code>subnets</code> array includes IPv4 and IPv6 address literals, as well as IPv4 and IPv6 address subnets
-written using CIDR notation <span>[<a href="#CIDR" class="cite xref">CIDR</a>]</span>. Subnet-based destination information can apply to cases where
+<p id="section-4.1-6">The <code>subnets</code> array includes IPv4 and IPv6 address literals, as well as IPv4 address subnets
+represented using CIDR notation <span>[<a href="#CIDR" class="cite xref">CIDR</a>]</span> and IPv6 address prefixes <span><a href="https://rfc-editor.org/rfc/rfc4291#section-2.3" class="relref">Section 2.3</a> of [<a href="#IPv6-ADDR" class="cite xref">IPv6-ADDR</a>]</span>.
+Subnet-based destination information can apply to cases where
 applications are communicating directly with an IP address (without having resolved a DNS name)
 as well as cases where an application resolved a DNS name to a set of IP addresses. Note that
 if destination rules include an empty <code>proxies</code> array (indicating that no proxy is applicable for
@@ -2232,6 +2233,10 @@ in the names (since underscores are reserved for vendor-specific keys).<a href="
         <dd>
 <span class="refAuthor">Friedl, S.</span>, <span class="refAuthor">Popov, A.</span>, <span class="refAuthor">Langley, A.</span>, and <span class="refAuthor">E. Stephan</span>, <span class="refTitle">"Transport Layer Security (TLS) Application-Layer Protocol Negotiation Extension"</span>, <span class="seriesInfo">RFC 7301</span>, <span class="seriesInfo">DOI 10.17487/RFC7301</span>, <time datetime="2014-07" class="refDate">July 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7301">https://www.rfc-editor.org/rfc/rfc7301</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="CIDR">[CIDR]</dt>
+        <dd>
+<span class="refAuthor">Fuller, V.</span> and <span class="refAuthor">T. Li</span>, <span class="refTitle">"Classless Inter-domain Routing (CIDR): The Internet Address Assignment and Aggregation Plan"</span>, <span class="seriesInfo">BCP 122</span>, <span class="seriesInfo">RFC 4632</span>, <span class="seriesInfo">DOI 10.17487/RFC4632</span>, <time datetime="2006-08" class="refDate">August 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4632">https://www.rfc-editor.org/rfc/rfc4632</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="HTTP">[HTTP]</dt>
         <dd>
 <span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>
@@ -2243,6 +2248,10 @@ in the names (since underscores are reserved for vendor-specific keys).<a href="
 <dt id="IANA_SVCB">[IANA_SVCB]</dt>
         <dd>
 <span class="refTitle">"SvcParamKeys Registry"</span>, <span>n.d.</span>, <span>&lt;<a href="https://www.iana.org/assignments/dns-svcb/dns-svcb.xhtml#dns-svcparamkeys">https://www.iana.org/assignments/dns-svcb/dns-svcb.xhtml#dns-svcparamkeys</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IPv6-ADDR">[IPv6-ADDR]</dt>
+        <dd>
+<span class="refAuthor">Hinden, R.</span> and <span class="refAuthor">S. Deering</span>, <span class="refTitle">"IP Version 6 Addressing Architecture"</span>, <span class="seriesInfo">RFC 4291</span>, <span class="seriesInfo">DOI 10.17487/RFC4291</span>, <time datetime="2006-02" class="refDate">February 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4291">https://www.rfc-editor.org/rfc/rfc4291</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="JSON">[JSON]</dt>
         <dd>
@@ -2285,10 +2294,6 @@ in the names (since underscores are reserved for vendor-specific keys).<a href="
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
-<dt id="CIDR">[CIDR]</dt>
-        <dd>
-<span class="refAuthor">Fuller, V.</span> and <span class="refAuthor">T. Li</span>, <span class="refTitle">"Classless Inter-domain Routing (CIDR): The Internet Address Assignment and Aggregation Plan"</span>, <span class="seriesInfo">BCP 122</span>, <span class="seriesInfo">RFC 4632</span>, <span class="seriesInfo">DOI 10.17487/RFC4632</span>, <time datetime="2006-08" class="refDate">August 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4632">https://www.rfc-editor.org/rfc/rfc4632</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="CONNECT-IP">[CONNECT-IP]</dt>
         <dd>
 <span class="refAuthor">Pauly, T., Ed.</span>, <span class="refAuthor">Schinazi, D.</span>, <span class="refAuthor">Chernyakhovsky, A.</span>, <span class="refAuthor">Kühlewind, M.</span>, and <span class="refAuthor">M. Westerlund</span>, <span class="refTitle">"Proxying IP in HTTP"</span>, <span class="seriesInfo">RFC 9484</span>, <span class="seriesInfo">DOI 10.17487/RFC9484</span>, <time datetime="2023-10" class="refDate">October 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9484">https://www.rfc-editor.org/rfc/rfc9484</a>&gt;</span>. </dd>
