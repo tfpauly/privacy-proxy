@@ -64,7 +64,7 @@ to only allow access to a limited set of destinations.
 These improvements to client behavior can be achieved through the use of
 Provisioning Domains. Provisioning Domains (PvDs) are defined in {{?PVD=RFC7556}}
 as consistent sets of network configuration information, which can include proxy
-configuration details {{Section 2 of PVD}}. {{Section 4.3 of !PVDDATA=RFC8801}} defines a JSON
+configuration details ({{Section 2 of PVD}}). {{Section 4.3 of !PVDDATA=RFC8801}} defines a JSON
 {{!JSON=RFC8259}} format for describing Provisioning Domain Additional Information,
 which is an extensible dictionary of properties of the Provisioning Domain.
 
@@ -167,7 +167,7 @@ To allow clients to determine whether PvD Additional Information is available fo
 named host (which allows fetching proxy information, as well as any other information in the PvD),
 this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in {{!SVCB-DNS=RFC9460}}.
 
-Presence of this SvcParamKey, named `pvd` indicates that the host supports PvD discovery via
+Presence of this SvcParamKey, named `pvd`, indicates that the host supports PvD discovery via
 the well-known PvD URI defined in {{Section 4.1 of PVDDATA}}. The presence of this key in an HTTPS
 or SVCB record signals that PvD Additional Information can be fetched using the "https"
 scheme from the host on port 443 using the well-known path. The value of the `pvd` SvcParamKey
@@ -271,7 +271,7 @@ If the `alpn` key is present, it provides a hint for the Application-Layer Proto
 (ALPN) {{!ALPN=RFC7301}} protocol identifiers associated with this server. For HTTP proxies,
 this can indicate if the proxy supports HTTP/3, HTTP/2, etc.
 
-The value of `identifier` key is a string that can be used to refer to a particular
+The value of the `identifier` key is a string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in {{destinations}}. The
 string value is an arbitrary non-empty JSON string using UTF-8 encoding
 as discussed in {{Section 8.1 of JSON}}. Characters that need to be escaped in JSON strings
@@ -404,10 +404,9 @@ names prior to proxying.
 
 The `ports` array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a `-` in between.
-For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
+For example, "1024-2048" matches all ports from 1024 to 2048, including port 1024 and 2048.
 If `ports` key is not present, all ports are assumed to match. The array may
-contain individual port numbers (such as "80") or inclusive ranges of ports. For example,
-"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
+contain individual port numbers (such as "80") or inclusive ranges of ports.
 
 ##  Using Destination Rules
 
@@ -432,7 +431,7 @@ the rule MUST be treated as not matching, and the client continues evaluation of
 
 A matched rule will then either point to one or more proxy `identifier` values, which correspond
 to proxies defined in the array from {{proxy-enumeration}}, or instructs the client to not send the
-matching traffic to any proxy. If a matching rule contains more than one `identifier` the client
+matching traffic to any proxy. If a matching rule contains more than one `identifier`, the client
 MUST treat the array as an ordered list, where the first `identifier` is the most preferred.
 Multiple proxy dictionaries can contain the same `identifier` value. In this case, the client
 can choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests
