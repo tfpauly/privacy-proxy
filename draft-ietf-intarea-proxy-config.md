@@ -163,13 +163,14 @@ match the hostname of the HTTP proxy. The "prefixes" array MUST be empty for cas
 
 ## Discovery via HTTPS/SVCB Records {#svcparamkey}
 
-To allow clients to determine whether PvD Additional Information is available for a given proxy,
+To allow clients to determine whether PvD Additional Information is available for a particular
+named host (which allows fetching proxy information, as well as any other information in the PvD),
 this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in {{!SVCB-DNS=RFC9460}}.
 
-Presence of this SvcParamKey, named `pvd`, indicates that the proxy host supports PvD discovery via
+Presence of this SvcParamKey, named `pvd`, indicates that the host supports PvD discovery via
 the well-known PvD URI defined in {{Section 4.1 of PVDDATA}}. The presence of this key in an HTTPS
-or SVCB record signals that the proxy's PvD Additional Information can be fetched using the "https"
-scheme from the proxy host on port 443 using the well-known path. The value of the `pvd` SvcParamKey
+or SVCB record signals that PvD Additional Information can be fetched using the "https"
+scheme from the host on port 443 using the well-known path. The value of the `pvd` SvcParamKey
 MUST be empty.
 
 A client receiving a DNS record like the following:
@@ -178,14 +179,15 @@ A client receiving a DNS record like the following:
 proxy.example.org. 3600 IN HTTPS 1 . alpn="h3,h2" pvd
 ~~~
 
-can interpret the presence of the pvd key as an indication that it MAY perform a PvD fetch from
+can interpret the presence of the `pvd` key as an indication that it MAY perform a PvD fetch from
 "https://proxy.example.org/.well-known/pvd" using HTTP GET method.
 
-While this key is particularly useful for detecting proxy configurations when
-looking up a DNS record for a known proxy name, this key generically provides
-a hint that PvD Additional Information is available. The PvD Additional Information
-may contain information unrelated to proxies and can be used for use cases unrelated to proxies.
-This marker is advisory; clients MAY still attempt to fetch PvD Additional Information even if
+This key is useful for detecting proxy configurations when looking up a DNS
+record for a known proxy name, but is a generic hint that PvD Additional Information
+is available. Future extensions to PvD Additional Information can also take advantage
+of this discovery mechanism.
+
+This hint is advisory; clients MAY still attempt to fetch PvD Additional Information even if
 `pvd` SvcParamKey is not present.
 
 The `pvd` SvcParamKey is registered with IANA as described in {{svcparamkey-iana}}.
