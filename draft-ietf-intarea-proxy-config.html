@@ -2085,14 +2085,20 @@ observing the traffic being proxied.<a href="#section-6-2" class="pilcrow">¶</a
 proxies, can only be safely used when fetched over a secure TLS-protected connection,
 and the client has validated that the hostname of the proxy, the identifier of
 the PvD, and the validated hostname identity on the certificate all match.<a href="#section-6-3" class="pilcrow">¶</a></p>
-<p id="section-6-4">When using information in destination rules (<a href="#destinations" class="auto internal xref">Section 4</a>), clients MUST only allow
+<p id="section-6-4">The lists of proxies and destination rules provided by the PvD Additional Information might
+exceed the memory constraints or processing capabilities of clients, particularly for constrained
+devices. A client that is not able to process all of the content of either the proxies list
+or destination rules due to resource limitations MUST ignore the proxy configuration entirely.
+Clients MUST implement limits for the maximum number of proxy configurations and destination rules
+that they are able to process; the specific limits will vary based on device capabilities.<a href="#section-6-4" class="pilcrow">¶</a></p>
+<p id="section-6-5">When using information in destination rules (<a href="#destinations" class="auto internal xref">Section 4</a>), clients MUST only allow
 the PvD configuration to narrow the scope of traffic that they will send through a proxy.
 Clients that are configured by policy to only send a particular set of traffic through
 a particular proxy can learn about rules that will cause them to send more narrowly-scoped
-traffic, but MUST NOT send traffic that would go beyond what is allowed by local policy.<a href="#section-6-4" class="pilcrow">¶</a></p>
-<p id="section-6-5">As described in <a href="#network-proxies" class="auto internal xref">Section 5</a>, proxy configuration discovered based on RAs from a network
+traffic, but MUST NOT send traffic that would go beyond what is allowed by local policy.<a href="#section-6-5" class="pilcrow">¶</a></p>
+<p id="section-6-6">As described in <a href="#network-proxies" class="auto internal xref">Section 5</a>, proxy configuration discovered based on RAs from a network
 MUST NOT be automatically used by clients to start using proxies when they would otherwise
-not proxy traffic.<a href="#section-6-5" class="pilcrow">¶</a></p>
+not proxy traffic.<a href="#section-6-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
