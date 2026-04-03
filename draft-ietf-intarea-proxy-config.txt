@@ -146,7 +146,7 @@ Table of Contents
    Non-standard mechanisms for proxy configuration and discovery have
    been used historically, some of which are described in the
    informational [RFC3040]: Proxy Auto Configuration (PAC) files
-   Section 6.2 of [RFC3040] are Javascript scripts that take URLs as
+   Section 6.2 of [RFC3040] are JavaScript scripts that take URLs as
    input and provide an output of a proxy configuration to use.  Web
    Proxy Auto-Discovery Protocol (WPAD) Section 6.4 of [RFC3040] allows
    networks to advertise proxies to use by advertising a PAC file.  This
@@ -158,7 +158,7 @@ Table of Contents
 
    The mechanisms defined in this document are intended to offer a
    standard alternative that works for URI-based proxies and avoids
-   dependencies on executing Javascript scripts, which are prone to
+   dependencies on executing JavaScript scripts, which are prone to
    implementation inconsistencies and security vulnerabilities.
 
 1.2.  Requirements Keywords
@@ -437,10 +437,10 @@ Table of Contents
    after the underscore.  The right-most underscore serves as a
    separator between a vendor-specific namespace and the key name; i.e.,
    the string to the right of the right-most underscore is the key name
-   and the string left from the underscore specifies the vendor-specific
-   namespace.  For example, "example_tech_authmode" could be a
-   proprietary key indicating an authentication mode defined by a vendor
-   named "Example Tech".
+   and the string to the left of the right-most underscore specifies the
+   vendor-specific namespace.  For example, "example_tech_authmode"
+   could be a proprietary key indicating an authentication mode defined
+   by a vendor named "Example Tech".
 
    When combined with mandatory array, this mechanism allows
    implementations to extend proxy metadata while maintaining
