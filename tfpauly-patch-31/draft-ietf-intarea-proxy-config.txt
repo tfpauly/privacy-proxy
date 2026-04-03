@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 4 October 2026                                        Microsoft
+Expires: 5 October 2026                                        Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                            2 April 2026
+                                                            3 April 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 October 2026.
+   This Internet-Draft will expire on 5 October 2026.
 
 Copyright Notice
 
@@ -574,14 +574,14 @@ content-length = 322
 
    The subnets array includes IPv4 and IPv6 address literals, as well as
    IPv4 address subnets represented using CIDR notation [CIDR] and IPv6
-   address prefixes Section 2.3 of [RFC4291].  Subnet-based destination
-   information can apply to cases where applications are communicating
-   directly with an IP address (without having resolved a DNS name) as
-   well as cases where an application resolved a DNS name to a set of IP
-   addresses.  Note that if destination rules include an empty proxies
-   array (indicating that no proxy is applicable for this subnet), an
-   application can only reliably follow this destination rule if it
-   resolves DNS names prior to proxying.
+   address prefixes Section 2.3 of [IPv6-ADDR].  Subnet-based
+   destination information can apply to cases where applications are
+   communicating directly with an IP address (without having resolved a
+   DNS name) as well as cases where an application resolved a DNS name
+   to a set of IP addresses.  Note that if destination rules include an
+   empty proxies array (indicating that no proxy is applicable for this
+   subnet), an application can only reliably follow this destination
+   rule if it resolves DNS names prior to proxying.
 
    The ports array includes specific ports (used for matching TCP and/or
    UDP ports), as well as ranges of ports written with a low port value
@@ -1040,6 +1040,11 @@ content-length = 322
               <https://www.iana.org/assignments/dns-svcb/dns-
               svcb.xhtml#dns-svcparamkeys>.
 
+   [IPv6-ADDR]
+              Hinden, R. and S. Deering, "IP Version 6 Addressing
+              Architecture", RFC 4291, DOI 10.17487/RFC4291, February
+              2006, <https://www.rfc-editor.org/rfc/rfc4291>.
+
    [JSON]     Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
               Interchange Format", STD 90, RFC 8259,
               DOI 10.17487/RFC8259, December 2017,
@@ -1054,10 +1059,6 @@ content-length = 322
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
-
-   [RFC4291]  Hinden, R. and S. Deering, "IP Version 6 Addressing
-              Architecture", RFC 4291, DOI 10.17487/RFC4291, February
-              2006, <https://www.rfc-editor.org/rfc/rfc4291>.
 
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
