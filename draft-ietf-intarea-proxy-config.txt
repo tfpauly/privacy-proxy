@@ -1033,15 +1033,6 @@ content-length = 322
               DOI 10.17487/RFC9110, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9110>.
 
-   [IANA_PVD] "Additional Information PvD Keys Registry", n.d.,
-              <https://www.iana.org/assignments/pvds/
-              pvds.xhtml#additional-information-pvd-keys>.
-
-   [IANA_SVCB]
-              "SvcParamKeys Registry", n.d.,
-              <https://www.iana.org/assignments/dns-svcb/dns-
-              svcb.xhtml#dns-svcparamkeys>.
-
    [IPv6-ADDR]
               Hinden, R. and S. Deering, "IP Version 6 Addressing
               Architecture", RFC 4291, DOI 10.17487/RFC4291, February
@@ -1112,6 +1103,15 @@ content-length = 322
               of New DHCP Options and Message Types", BCP 43, RFC 2939,
               DOI 10.17487/RFC2939, September 2000,
               <https://www.rfc-editor.org/rfc/rfc2939>.
+
+   [IANA_PVD] "Additional Information PvD Keys Registry", n.d.,
+              <https://www.iana.org/assignments/pvds/
+              pvds.xhtml#additional-information-pvd-keys>.
+
+   [IANA_SVCB]
+              "SvcParamKeys Registry", n.d.,
+              <https://www.iana.org/assignments/dns-svcb/dns-
+              svcb.xhtml#dns-svcparamkeys>.
 
    [IKEV2SPLIT]
               Pauly, T. and P. Wouters, "Split DNS Configuration for the
