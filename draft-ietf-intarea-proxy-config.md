@@ -672,7 +672,7 @@ use these proxy configurations, unless the device has been explicitly provisione
 to trust this configuration from the network for specific proxy hosts; for example,
 a corporate-managed device could use this mechanism on an authenticated corporate
 network to learn which of an allowed set of proxy URIs are available at this
-particular location. 
+particular location.
 
 Future specifications can define ways to dynamically trust proxy configurations delivered
 by a network, but such mechanisms are out of scope for this document.
