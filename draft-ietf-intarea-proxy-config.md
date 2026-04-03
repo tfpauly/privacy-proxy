@@ -693,6 +693,13 @@ proxies, can only be safely used when fetched over a secure TLS-protected connec
 and the client has validated that the hostname of the proxy, the identifier of
 the PvD, and the validated hostname identity on the certificate all match.
 
+The lists of proxies and destination rules provided by the PvD Additional Information might
+exceed the memory constraints or processing capabilities of clients, particularly for constrained
+devices. A client that is not able to process all of the content of either the proxies list
+or destination rules due to resource limitations MUST ignore the proxy configuration entirely.
+Clients MUST implement limits for the maximum number of proxy configurations and destination rules
+that they are able to process; the specific limits will vary based on device capabilities.
+
 When using information in destination rules ({{destinations}}), clients MUST only allow
 the PvD configuration to narrow the scope of traffic that they will send through a proxy.
 Clients that are configured by policy to only send a particular set of traffic through
