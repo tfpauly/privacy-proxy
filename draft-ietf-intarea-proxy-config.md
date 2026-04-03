@@ -120,8 +120,8 @@ Clients fetch PvD Additional Information associated with a proxy by issuing
 an HTTP GET request for a PvD URI using the "application/pvd+json" media
 type as defined in {{Section 4.1 of PVDDATA}}. The fetch MUST use the "https" scheme.
 
-{{PVDDATA}} defines the well-known PvD URI, ".well-known/pvd", that is served on the
-stardard port for HTTP over TLS (HTTPS), port 443. When a client is provisioned
+{{PVDDATA}} defines the well-known PvD URI, that uses a path of "/.well-known/pvd" and is
+served on the standard port for HTTP over TLS (HTTPS), port 443. When a client is provisioned
 with the hostname of a proxy for
 which it wants to look up PvD Additional Information, the client SHALL use the
 well-known PvD URI using the host authority of the proxy. A client can also be directly
