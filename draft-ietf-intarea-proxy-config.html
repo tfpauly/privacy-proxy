@@ -2080,20 +2080,22 @@ already proxying traffic and has multiple options to choose between.<a href="#se
       <h2 id="name-security-considerations">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-6-1">The mechanisms in this document allow clients using a proxy to "upgrade" a configuration
+<p id="section-6-1">This document extends the PvD Additional Information defined in <span>[<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>; as such,
+all security considerations from <span>[<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span> apply here.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">The mechanisms in this document allow clients using a proxy to "upgrade" a configuration
 for a cleartext HTTP/1.1 or SOCKS proxy into a configuration that uses TLS to communication to the proxy.
 This upgrade can add protection to the proxied traffic so it is less observable by
 entities along the network path; however it does not prevent the proxy itself from
-observing the traffic being proxied.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">Configuration advertised via PvD Additional Information, such as DNS zones or associated
+observing the traffic being proxied.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">Configuration advertised via PvD Additional Information, such as DNS zones or associated
 proxies, can only be safely used when fetched over a secure TLS-protected connection,
 and the client has validated that the hostname of the proxy, the identifier of
-the PvD, and the validated hostname identity on the certificate all match.<a href="#section-6-2" class="pilcrow">¶</a></p>
-<p id="section-6-3">When using information in destination rules (<a href="#destinations" class="auto internal xref">Section 4</a>), clients MUST only allow
+the PvD, and the validated hostname identity on the certificate all match.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-4">When using information in destination rules (<a href="#destinations" class="auto internal xref">Section 4</a>), clients MUST only allow
 the PvD configuration to narrow the scope of traffic that they will send through a proxy.
 Clients that are configured by policy to only send a particular set of traffic through
 a particular proxy can learn about rules that will cause them to send more narrowly-scoped
-traffic, but MUST NOT send traffic that would go beyond what is allowed by local policy.<a href="#section-6-3" class="pilcrow">¶</a></p>
+traffic, but MUST NOT send traffic that would go beyond what is allowed by local policy.<a href="#section-6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
