@@ -687,6 +687,9 @@ Further security and experience considerations are needed for these cases.
 
 # Security Considerations {#sec-considerations}
 
+This document extends the PvD Additional Information defined in {{PVDDATA}}; as such,
+all security considerations from {{PVDDATA}} apply here.
+
 The mechanisms in this document allow clients using a proxy to "upgrade" a configuration
 for a cleartext HTTP/1.1 or SOCKS proxy into a configuration that uses TLS to communication to the proxy.
 This upgrade can add protection to the proxied traffic so it is less observable by
