@@ -79,12 +79,6 @@ learn about other proxy options given a known proxy ({{proxy-enumeration}}).
 1. A way to define the set of destinations that are accessible through the
 proxy ({{destinations}}).
 
-Additionally, this document outlines how these mechanisms might be used
-to discover proxies associated with a network ({{network-proxies}}). However, this approach is not described for the
-purpose of generic proxy discovery, and requires careful
-security considerations for clients to limit usage to trusted
-scenarios.
-
 Using this mechanism a client can learn that a legacy insecure HTTP proxy that
 the client is configured with is also accessible using HTTPS. In this way,
 clients can upgrade to a more secure connection to the proxy.
@@ -671,19 +665,17 @@ to "proxy1.example.org:80" and all traffic to the subdomains of "example.org", i
 # Discovering proxies from network PvDs {#network-proxies}
 
 {{PVDDATA}} defines how PvD Additional Information is discovered based
-on network advertisements using Router Advertisements {{?RFC4861}}. A network
-defining its configuration via PvD information can include the `proxies`
-key ({{proxy-enumeration}}) to inform clients of a list of proxies available
-on the network.
+on network advertisements using Router Advertisements {{?RFC4861}}. This means
+that a network defining its configuration via PvD information can include
+the `proxies` key ({{proxy-enumeration}}). However, clients MUST NOT automatically
+use these proxy configurations, unless the device has been explicitly provisioned
+to trust this configuration from the network for specific proxy hosts; for example,
+a corporate-managed device could use this mechanism on an authenticated corporate
+network to learn which of an allowed set of proxy URIs are available at this
+particular location.
 
-This association of proxies with the network's PvD can be used as a mechanism
-to discover proxies, as an alternative to PAC files. However, client systems MUST
-NOT automatically send traffic over proxies advertised in this way without
-explicit configuration, policy, or user permission. For example, a client
-can use this mechanism to choose between known proxies, such as if the client was
-already proxying traffic and has multiple options to choose between.
-
-Further security and experience considerations are needed for these cases.
+Future specifications can define ways to dynamically trust proxy configurations delivered
+by a network, but such mechanisms are out of scope for this document.
 
 # Security Considerations {#sec-considerations}
 
@@ -706,6 +698,10 @@ the PvD configuration to narrow the scope of traffic that they will send through
 Clients that are configured by policy to only send a particular set of traffic through
 a particular proxy can learn about rules that will cause them to send more narrowly-scoped
 traffic, but MUST NOT send traffic that would go beyond what is allowed by local policy.
+
+As described in {{network-proxies}}, proxy configuration discovered based on RAs from a network
+MUST NOT be automatically used by clients to start using proxies when they would otherwise
+not proxy traffic.
 
 # IANA Considerations
 
