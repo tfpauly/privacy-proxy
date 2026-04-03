@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 19 September 2026                                     Microsoft
+Expires: 5 October 2026                                        Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                           18 March 2026
+                                                            3 April 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 September 2026.
+   This Internet-Draft will expire on 5 October 2026.
 
 Copyright Notice
 
@@ -112,7 +112,7 @@ Table of Contents
    These improvements to client behavior can be achieved through the use
    of Provisioning Domains.  Provisioning Domains (PvDs) are defined in
    [PVD] as consistent sets of network configuration information, which
-   can include proxy configuration details Section 2 of [PVD].
+   can include proxy configuration details (Section 2 of [PVD]).
    Section 4.3 of [PVDDATA] defines a JSON [JSON] format for describing
    Provisioning Domain Additional Information, which is an extensible
    dictionary of properties of the Provisioning Domain.
@@ -235,7 +235,7 @@ Table of Contents
    document defines a new SvcParamKey in HTTPS and SVCB DNS records
    defined in [SVCB-DNS].
 
-   Presence of this SvcParamKey, named pvd indicates that the host
+   Presence of this SvcParamKey, named pvd, indicates that the host
    supports PvD discovery via the well-known PvD URI defined in
    Section 4.1 of [PVDDATA].  The presence of this key in an HTTPS or
    SVCB record signals that PvD Additional Information can be fetched
@@ -410,8 +410,8 @@ Table of Contents
    associated with this server.  For HTTP proxies, this can indicate if
    the proxy supports HTTP/3, HTTP/2, etc.
 
-   The value of identifier key is a string that can be used to refer to
-   a particular proxy from other dictionaries, specifically those
+   The value of the identifier key is a string that can be used to refer
+   to a particular proxy from other dictionaries, specifically those
    defined in Section 4.  The string value is an arbitrary non-empty
    JSON string using UTF-8 encoding as discussed in Section 8.1 of
    [JSON].  Characters that need to be escaped in JSON strings per
@@ -588,11 +588,10 @@ content-length = 322
    The ports array includes specific ports (used for matching TCP and/or
    UDP ports), as well as ranges of ports written with a low port value
    and a high port value, with a - in between.  For example, "1024-2048"
-   matches all ports from 1024 to 2048, including the 1024 and 2048.  If
-   ports key is not present, all ports are assumed to match.  The array
-   may contain individual port numbers (such as "80") or inclusive
-   ranges of ports.  For example, "1024-2048" matches all ports from
-   1024 to 2048, including the 1024 and 2048.
+   matches all ports from 1024 to 2048, including port 1024 and 2048.
+   If ports key is not present, all ports are assumed to match.  The
+   array may contain individual port numbers (such as "80") or inclusive
+   ranges of ports.
 
 4.2.  Using Destination Rules
 
@@ -624,7 +623,7 @@ content-length = 322
    A matched rule will then either point to one or more proxy identifier
    values, which correspond to proxies defined in the array from
    Section 3, or instructs the client to not send the matching traffic
-   to any proxy.  If a matching rule contains more than one identifier
+   to any proxy.  If a matching rule contains more than one identifier,
    the client MUST treat the array as an ordered list, where the first
    identifier is the most preferred.  Multiple proxy dictionaries can
    contain the same identifier value.  In this case, the client can
@@ -1093,9 +1092,9 @@ content-length = 322
    [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-10, 5 December 2025,
+              httpbis-connect-tcp-11, 20 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-10>.
+              connect-tcp-11>.
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,

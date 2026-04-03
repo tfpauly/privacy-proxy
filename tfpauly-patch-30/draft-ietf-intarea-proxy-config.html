@@ -1049,11 +1049,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Proxy Configuration PvDs</td>
-<td class="right">March 2026</td>
+<td class="right">April 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 19 September 2026</td>
+<td class="center">Expires 5 October 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-18" class="published">18 March 2026</time>
+<time datetime="2026-04-03" class="published">3 April 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-19">19 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-10-05">5 October 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1123,7 @@ and information about which destinations are accessible using a proxy.<a href="#
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1274,7 +1274,7 @@ to only allow access to a limited set of destinations.<a href="#section-1-3" cla
 <p id="section-1-4">These improvements to client behavior can be achieved through the use of
 Provisioning Domains. Provisioning Domains (PvDs) are defined in <span>[<a href="#PVD" class="cite xref">PVD</a>]</span>
 as consistent sets of network configuration information, which can include proxy
-configuration details <span><a href="https://rfc-editor.org/rfc/rfc7556#section-2" class="relref">Section 2</a> of [<a href="#PVD" class="cite xref">PVD</a>]</span>. <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.3" class="relref">Section 4.3</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span> defines a JSON
+configuration details (<span><a href="https://rfc-editor.org/rfc/rfc7556#section-2" class="relref">Section 2</a> of [<a href="#PVD" class="cite xref">PVD</a>]</span>). <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.3" class="relref">Section 4.3</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span> defines a JSON
 <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> format for describing Provisioning Domain Additional Information,
 which is an extensible dictionary of properties of the Provisioning Domain.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">This document defines several mechanisms to use PvDs to help clients understand how
@@ -1393,7 +1393,7 @@ match the hostname of the HTTP proxy. The "prefixes" array MUST be empty for cas
 <p id="section-2.1-1">To allow clients to determine whether PvD Additional Information is available for a particular
 named host (which allows fetching proxy information, as well as any other information in the PvD),
 this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in <span>[<a href="#SVCB-DNS" class="cite xref">SVCB-DNS</a>]</span>.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1-2">Presence of this SvcParamKey, named <code>pvd</code> indicates that the host supports PvD discovery via
+<p id="section-2.1-2">Presence of this SvcParamKey, named <code>pvd</code>, indicates that the host supports PvD discovery via
 the well-known PvD URI defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.1" class="relref">Section 4.1</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>. The presence of this key in an HTTPS
 or SVCB record signals that PvD Additional Information can be fetched using the "https"
 scheme from the host on port 443 using the well-known path. The value of the <code>pvd</code> SvcParamKey
@@ -1599,7 +1599,7 @@ the value of a key from the array MUST ignore the entire proxy dictionary.<a hre
 <p id="section-3.1-10">If the <code>alpn</code> key is present, it provides a hint for the Application-Layer Protocol Negotiation
 (ALPN) <span>[<a href="#ALPN" class="cite xref">ALPN</a>]</span> protocol identifiers associated with this server. For HTTP proxies,
 this can indicate if the proxy supports HTTP/3, HTTP/2, etc.<a href="#section-3.1-10" class="pilcrow">¶</a></p>
-<p id="section-3.1-11">The value of <code>identifier</code> key is a string that can be used to refer to a particular
+<p id="section-3.1-11">The value of the <code>identifier</code> key is a string that can be used to refer to a particular
 proxy from other dictionaries, specifically those defined in <a href="#destinations" class="auto internal xref">Section 4</a>. The
 string value is an arbitrary non-empty JSON string using UTF-8 encoding
 as discussed in <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.1" class="relref">Section 8.1</a> of [<a href="#JSON" class="cite xref">JSON</a>]</span>. Characters that need to be escaped in JSON strings
@@ -1778,10 +1778,9 @@ this subnet), an application can only reliably follow this destination rule if i
 names prior to proxying.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
 <p id="section-4.1-7">The <code>ports</code> array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a <code>-</code> in between.
-For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
+For example, "1024-2048" matches all ports from 1024 to 2048, including port 1024 and 2048.
 If <code>ports</code> key is not present, all ports are assumed to match. The array may
-contain individual port numbers (such as "80") or inclusive ranges of ports. For example,
-"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
+contain individual port numbers (such as "80") or inclusive ranges of ports.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="using-destination-rules">
@@ -1807,7 +1806,7 @@ example, <code>connect-udp</code> for UDP traffic). If no listed proxy identifie
 the rule MUST be treated as not matching, and the client continues evaluation of subsequent rules.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.2-4">A matched rule will then either point to one or more proxy <code>identifier</code> values, which correspond
 to proxies defined in the array from <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>, or instructs the client to not send the
-matching traffic to any proxy. If a matching rule contains more than one <code>identifier</code> the client
+matching traffic to any proxy. If a matching rule contains more than one <code>identifier</code>, the client
 MUST treat the array as an ordered list, where the first <code>identifier</code> is the most preferred.
 Multiple proxy dictionaries can contain the same <code>identifier</code> value. In this case, the client
 can choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests
@@ -2296,7 +2295,7 @@ in the names (since underscores are reserved for vendor-specific keys).<a href="
 <dd class="break"></dd>
 <dt id="CONNECT-TCP">[CONNECT-TCP]</dt>
         <dd>
-<span class="refAuthor">Schwartz, B. M.</span>, <span class="refTitle">"Template-Driven HTTP CONNECT Proxying for TCP"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-connect-tcp-10</span>, <time datetime="2025-12-05" class="refDate">5 December 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-10">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-10</a>&gt;</span>. </dd>
+<span class="refAuthor">Schwartz, B. M.</span>, <span class="refTitle">"Template-Driven HTTP CONNECT Proxying for TCP"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-connect-tcp-11</span>, <time datetime="2026-03-20" class="refDate">20 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-11">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-11</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="CONNECT-UDP">[CONNECT-UDP]</dt>
         <dd>
