@@ -758,7 +758,7 @@ The initial contents of this registry are given in {{proxy-information-keys-tabl
 New assignments in the "Proxy Information PvD Keys" registry will be administered by IANA through Expert Review {{!RFC8126}}.
 Experts are requested to ensure that defined keys do not overlap in names or semantics, do not contain an underscore character ("\_")
 in the names (since underscores are reserved for vendor-specific keys), and have clear format definitions.
-The reference and notes fields MAY be empty.
+The reference and notes fields may be empty.
 
 ## New PvD Proxy Protocol Registry {#proxy-protocol-iana}
 
@@ -767,7 +767,7 @@ This new registry reserves JSON values for the `protocol` key in `proxies` sub-d
 The initial contents of this registry are given in {{proxy-protocol-value-table}}.
 
 New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review {{RFC8126}}.
-Experts are requested to ensure that defined keys do not overlap in names. The reference and notes fields MAY be empty.
+Experts are requested to ensure that defined keys do not overlap in names. The reference and notes fields may be empty.
 
 ## New PvD Proxy Destination Rule Registry {#proxy-destination-iana}
 
