@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-02T00:31:13.025786+00:00",
+  "timestamp": "2026-04-05T00:34:54.393591+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -4211,18 +4211,20 @@
       "id": "I_kwDOEwrMS86bCpSv",
       "title": "Do limited clients need special guidance?",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/266",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
-      "assignees": [],
+      "assignees": [
+        "yaroslavros"
+      ],
       "labels": [
         "Proxy PvDs",
         "Discuss"
       ],
       "body": "From #259, there was a section I wanted to not add immediately but discuss more first:\r\n\r\n> Note that clients with limited resources MAY not be able to process and utilize all\r\n>  entries of an excessively long list. In the case if the provided list is too long for a given\r\n>  client, it SHOULD process as many records from the beginning of `matchDomains`, `matchSubnets` and\r\n>  `matchPorts` lists. These lists SHOULD be sorted with the most important elements placed at\r\n>  the start of the list. If a client cannot consume all the entries in `excludedDomains` or\r\n>  `excludedIPs` it SHOULD NOT use given proxy configuration to avoid sending traffic that the proxy\r\n>  cannot process.",
       "createdAt": "2024-10-21T03:06:41Z",
-      "updatedAt": "2025-02-28T18:41:07Z",
-      "closedAt": null,
+      "updatedAt": "2026-04-03T23:21:59Z",
+      "closedAt": "2026-04-03T23:21:59Z",
       "comments": [
         {
           "author": "ddragana",
@@ -4237,6 +4239,27 @@
           "body": "I think we could suggest including `matchDomain` and friends into `mandatory` list (https://github.com/tfpauly/privacy-proxy/pull/272) if matching criteria is critical for correct proxy operation and the list must be parsed in full.",
           "createdAt": "2025-02-28T18:41:06Z",
           "updatedAt": "2025-02-28T18:41:06Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "From the SEC AD review, we should probably mention such limits in the security considerations and that constrained clients should have a cap for the number of entries of destination rules and proxies they will process.",
+          "createdAt": "2026-04-02T02:29:54Z",
+          "updatedAt": "2026-04-02T02:29:54Z"
+        },
+        {
+          "author": "nacho319",
+          "authorAssociation": "NONE",
+          "body": "Does that approach (from the above text) work?  As I read the draft, the algorithm is first  `accept` succeeds.   Would that leave you with lists of basically useless piles of `reject` rules with no hope of getting to an `accept` with a default deny posture to start with?\n\nMaybe I'm arguing for a slightly smarter drop / trim algorithm.  (I should probably also get more sleep to think straight and not do this the night before telechat - but I would love to switch my ballot before the telechat if I can.)",
+          "createdAt": "2026-04-02T04:01:35Z",
+          "updatedAt": "2026-04-02T04:01:35Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "body": "Discussed with Yaroslav; we think it makes most sense to have the configuration simply be dropped/ignored if the lists go beyond the lengths acceptable to clients. This applies to both the list of proxies and the list of destination rules.",
+          "createdAt": "2026-04-03T22:47:35Z",
+          "updatedAt": "2026-04-03T22:47:35Z"
         }
       ]
     },
@@ -4873,7 +4896,7 @@
       "id": "I_kwDOEwrMS87zL4Je",
       "title": "SvcParamKey semantics",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/337",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bemasc",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -4882,8 +4905,8 @@
       ],
       "body": "The current text says\n\n>    While this key is particularly useful for detecting proxy\n>    configurations when looking up a DNS record for a known proxy name,\n>    this key generically provides a hint that PvD Additional Information\n>    is available, and can be used for use cases unrelated to proxies.\n\nI fully support this but:\n\n1. It's not clear to me what other use cases might exist.  It would be nice to mention some here.\n2. This section serves as the specification of the \"pvd\" SvcParam for all use cases, not only the proxy use case.  As such, I would prefer if this section defined the parameter generically before applying it to the proxy use case (and ideally also mentioning other use cases).",
       "createdAt": "2026-03-16T03:14:42Z",
-      "updatedAt": "2026-03-16T07:22:43Z",
-      "closedAt": null,
+      "updatedAt": "2026-04-03T22:30:59Z",
+      "closedAt": "2026-04-03T22:30:59Z",
       "comments": []
     },
     {
@@ -4894,13 +4917,16 @@
       "state": "OPEN",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
-      "assignees": [],
+      "assignees": [
+        "tfpauly"
+      ],
       "labels": [
+        "editorial",
         "Proxy PvDs"
       ],
       "body": "After the introduction, add a terminology section to provide easy references for Provisioning Domain, Provisioning Domain Additional Information, etc.",
       "createdAt": "2026-04-01T20:09:15Z",
-      "updatedAt": "2026-04-01T20:09:15Z",
+      "updatedAt": "2026-04-03T22:48:40Z",
       "closedAt": null,
       "comments": []
     },
@@ -4912,13 +4938,15 @@
       "state": "OPEN",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
-      "assignees": [],
+      "assignees": [
+        "tfpauly"
+      ],
       "labels": [
         "Proxy PvDs"
       ],
       "body": "The introduction should be clearer in summary that the information about proxies is indeed informational, and providing details about options to clients, but not requiring that clients use a proxy. In all cases, this information should only be used when the client already has intention and permission to use a proxy.\n",
       "createdAt": "2026-04-01T20:10:56Z",
-      "updatedAt": "2026-04-01T20:10:56Z",
+      "updatedAt": "2026-04-03T22:48:07Z",
       "closedAt": null,
       "comments": []
     },
@@ -4930,13 +4958,15 @@
       "state": "OPEN",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
-      "assignees": [],
+      "assignees": [
+        "yaroslavros"
+      ],
       "labels": [
         "Proxy PvDs"
       ],
       "body": "As mentioned in the genart review, https://datatracker.ietf.org/doc/review-ietf-intarea-proxy-config-11-genart-lc-worley-2026-03-03/, it would be useful to specify the steps of the algorithm to apply destination matching rules as a simple set of steps. This is currently derivable in the text, but implementations will be less error-prone with clear steps to follow.",
       "createdAt": "2026-04-01T20:25:34Z",
-      "updatedAt": "2026-04-01T20:25:34Z",
+      "updatedAt": "2026-04-03T23:21:48Z",
       "closedAt": null,
       "comments": []
     },
@@ -4945,17 +4975,19 @@
       "id": "I_kwDOEwrMS875uW3Y",
       "title": "Security Considerations: reference 8801's rate limiting guidance",
       "url": "https://github.com/tfpauly/privacy-proxy/issues/343",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
-      "assignees": [],
+      "assignees": [
+        "tfpauly"
+      ],
       "labels": [
         "Proxy PvDs"
       ],
       "body": "https://www.rfc-editor.org/rfc/rfc8801.html#name-security-considerations specifies guidance for rate limiting PvD Additional Information fetching. This document should reference that, since it applies.",
       "createdAt": "2026-04-01T20:29:33Z",
-      "updatedAt": "2026-04-01T20:33:38Z",
-      "closedAt": null,
+      "updatedAt": "2026-04-03T23:20:15Z",
+      "closedAt": "2026-04-03T23:20:15Z",
       "comments": [
         {
           "author": "tfpauly",
@@ -23498,7 +23530,7 @@
       "id": "PR_kwDOEwrMS87Lrnoy",
       "title": "Update description of PvD discovery via SvcParamKey",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/338",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [],
@@ -23507,17 +23539,19 @@
       ],
       "body": "Clarify that this is a generic hint about PvD Additional Information availability, and can be used in non-proxy scenarios for future use cases.\r\n\r\nCloses #337 ",
       "createdAt": "2026-03-18T22:16:54Z",
-      "updatedAt": "2026-03-18T23:50:33Z",
+      "updatedAt": "2026-04-03T22:30:58Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
-      "baseRefOid": "ea378277deb55470f3ab0b0a3e74573ce7e8bd3d",
+      "baseRefOid": "5ba0eb66c7dc240c78feb57fb37eb064494f8483",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "tfpauly-patch-30",
-      "headRefOid": "faf9925a73386efbe87d06ade79ae602d3d6d88e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "4aa900c8f5733fee841b39bf683b601a5476e5c5",
+      "closedAt": "2026-04-03T22:30:57Z",
+      "mergedAt": "2026-04-03T22:30:57Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "79f36c968ec45f5819d7b7095094c3e0e417ec79"
+      },
       "comments": [],
       "reviews": [
         {
@@ -23547,7 +23581,7 @@
       "id": "PR_kwDOEwrMS87PU3E4",
       "title": "Add reference for IPv6 prefix format",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/339",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tfpauly",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -23558,19 +23592,462 @@
       ],
       "body": "Clarified the description of the `subnets` array to include IPv6 address prefixes and improved explanation of its application.\r\n\r\nAddresses TSVART review: https://datatracker.ietf.org/doc/review-ietf-intarea-proxy-config-11-tsvart-telechat-eddy-2026-03-27/",
       "createdAt": "2026-04-01T17:20:58Z",
-      "updatedAt": "2026-04-01T17:21:14Z",
+      "updatedAt": "2026-04-03T22:31:16Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "ea378277deb55470f3ab0b0a3e74573ce7e8bd3d",
       "headRepository": "tfpauly/privacy-proxy",
       "headRefName": "tfpauly-patch-31",
-      "headRefOid": "3e2704bb139304548a62245743df81b0458003f3",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "310895e998c4e0b299e8f9e14bd3be28b39c4c2b",
+      "closedAt": "2026-04-03T22:31:16Z",
+      "mergedAt": "2026-04-03T22:31:16Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "76a158a8a3e53a38da45ae2c544d27e73ea61c68"
+      },
+      "comments": [
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks good. One minor suggestion to avoid overwhelming reader with all the RFC numbers across various technologies.",
+          "createdAt": "2026-04-02T15:26:40Z",
+          "updatedAt": "2026-04-02T15:26:40Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87xSUrE",
+          "commit": {
+            "abbreviatedOid": "3e2704b"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-04-02T03:13:47Z",
+          "updatedAt": "2026-04-02T03:13:48Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "```suggestion\nThe `subnets` array includes IPv4 and IPv6 address literals, as well as IPv4 address subnets\nrepresented using CIDR notation {{!CIDR=RFC4632}} and IPv6 address prefixes {{Section 2.3 of !RFC4291}}.\nSubnet-based destination information can apply to cases where\n```",
+              "createdAt": "2026-04-02T03:13:47Z",
+              "updatedAt": "2026-04-02T03:13:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87xfGA_",
+          "commit": {
+            "abbreviatedOid": "54ce7c2"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-04-02T15:25:54Z",
+          "updatedAt": "2026-04-02T15:25:54Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "```suggestion\nrepresented using CIDR notation {{!CIDR=RFC4632}} and IPv6 address prefixes {{Section 2.3 of !IPv6-ADDR=RFC4291}}.\n```",
+              "createdAt": "2026-04-02T15:25:54Z",
+              "updatedAt": "2026-04-02T15:25:54Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS87xfHWf",
+          "commit": {
+            "abbreviatedOid": "54ce7c2"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-04-02T15:26:55Z",
+          "updatedAt": "2026-04-02T15:26:55Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 344,
+      "id": "PR_kwDOEwrMS87Pbh1U",
+      "title": "Clarify underscore placement",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/344",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Addresses comment from SEC AD review",
+      "createdAt": "2026-04-02T02:49:52Z",
+      "updatedAt": "2026-04-03T22:31:57Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "40dcadf9ddee4a9fe5c737cb2ad5b6c92979c3e4",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-32",
+      "headRefOid": "95fd60c3a3e952147b8a2d946f23dde044fc70ad",
+      "closedAt": "2026-04-03T22:31:57Z",
+      "mergedAt": "2026-04-03T22:31:57Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "bc812b85ef58290fa2c7b50c57a4ad8eef84b888"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87xfITs",
+          "commit": {
+            "abbreviatedOid": "95fd60c"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-04-02T15:27:37Z",
+          "updatedAt": "2026-04-02T15:27:37Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 345,
+      "id": "PR_kwDOEwrMS87PblQp",
+      "title": "Make IANA references informative",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/345",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "From SEC AD review",
+      "createdAt": "2026-04-02T02:56:13Z",
+      "updatedAt": "2026-04-03T22:32:10Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "40dcadf9ddee4a9fe5c737cb2ad5b6c92979c3e4",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-33",
+      "headRefOid": "9514c000d31f2181f489689631172aa7bb04bce9",
+      "closedAt": "2026-04-03T22:32:10Z",
+      "mergedAt": "2026-04-03T22:32:10Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "1f88aebd5caae9613884463373e4733cd30ba2d0"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87xfI2k",
+          "commit": {
+            "abbreviatedOid": "9514c00"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-04-02T15:28:00Z",
+          "updatedAt": "2026-04-02T15:28:00Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 346,
+      "id": "PR_kwDOEwrMS87Pbvpa",
+      "title": "MAY -> may in IANA considerations",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/346",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "From IESG review",
+      "createdAt": "2026-04-02T03:16:00Z",
+      "updatedAt": "2026-04-03T22:32:30Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "40dcadf9ddee4a9fe5c737cb2ad5b6c92979c3e4",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-34",
+      "headRefOid": "6fb29ff46209e2e6912385cc666858fe559278ca",
+      "closedAt": "2026-04-03T22:32:29Z",
+      "mergedAt": "2026-04-03T22:32:29Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "02134c1d92c55f61ab2e4d806df9b082ec2a6da5"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87xfJPl",
+          "commit": {
+            "abbreviatedOid": "6fb29ff"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-04-02T15:28:16Z",
+          "updatedAt": "2026-04-02T15:28:16Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 347,
+      "id": "PR_kwDOEwrMS87PbxFQ",
+      "title": "Update PvD URI text",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/347",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "From IESG review",
+      "createdAt": "2026-04-02T03:19:00Z",
+      "updatedAt": "2026-04-03T22:32:47Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "40dcadf9ddee4a9fe5c737cb2ad5b6c92979c3e4",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-35",
+      "headRefOid": "8032ae8cd54ed64d6882b46f9d5f8c962011c2d8",
+      "closedAt": "2026-04-03T22:32:47Z",
+      "mergedAt": "2026-04-03T22:32:47Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "60578040f5ecf5dd308c2bf756ffbe219046c288"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87xfJzT",
+          "commit": {
+            "abbreviatedOid": "8032ae8"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-04-02T15:28:39Z",
+          "updatedAt": "2026-04-02T15:28:39Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 348,
+      "id": "PR_kwDOEwrMS87PcD5P",
+      "title": "Update SHOULDs to MUSTs for matching",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/348",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Response to Charles' IESG review",
+      "createdAt": "2026-04-02T03:49:14Z",
+      "updatedAt": "2026-04-03T22:33:40Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "5ba0eb66c7dc240c78feb57fb37eb064494f8483",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-36",
+      "headRefOid": "c33410cde7baa66c45cf12dbe1bd4851c36bc138",
+      "closedAt": "2026-04-03T22:33:40Z",
+      "mergedAt": "2026-04-03T22:33:40Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "d50bf258e22afb2af1f8881c8896889e169c6ed4"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87xfKU5",
+          "commit": {
+            "abbreviatedOid": "c33410c"
+          },
+          "author": "yaroslavros",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-04-02T15:29:01Z",
+          "updatedAt": "2026-04-02T15:29:01Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87xgMY6",
+          "commit": {
+            "abbreviatedOid": "c33410c"
+          },
+          "author": "eckelcu",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "These changes look good to me and address the DISCUSS that I raised on -11 of this draft.",
+          "createdAt": "2026-04-02T16:19:25Z",
+          "updatedAt": "2026-04-02T16:19:25Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 349,
+      "id": "PR_kwDOEwrMS87P4xrW",
+      "title": "Revise network-based proxy discovery text",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/349",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Clarify security considerations for proxy discovery and usage.\r\n\r\nBased on IESG review",
+      "createdAt": "2026-04-03T23:09:01Z",
+      "updatedAt": "2026-04-03T23:21:14Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "b89b9b02d94d7055cd828e2ed20076a47dffe75e",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-37",
+      "headRefOid": "241a118902b43014753c6523db354b3e22abf925",
+      "closedAt": "2026-04-03T23:21:13Z",
+      "mergedAt": "2026-04-03T23:21:13Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "37cb88acc8d3536c88dfebe3d9de713164e22e2a"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87x2lW4",
+          "commit": {
+            "abbreviatedOid": "86fd4d4"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-04-03T23:19:46Z",
+          "updatedAt": "2026-04-03T23:19:46Z",
+          "comments": [
+            {
+              "originalPosition": 37,
+              "body": "```suggestion\nparticular location.\n```",
+              "createdAt": "2026-04-03T23:19:46Z",
+              "updatedAt": "2026-04-03T23:19:46Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 350,
+      "id": "PR_kwDOEwrMS87P4yxK",
+      "title": "Reference security considerations of 8801",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/350",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Closes #343",
+      "createdAt": "2026-04-03T23:11:55Z",
+      "updatedAt": "2026-04-03T23:20:13Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "b89b9b02d94d7055cd828e2ed20076a47dffe75e",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-38",
+      "headRefOid": "2759ca2fdd98fe3ed95c6406c45f6fd0fee6253d",
+      "closedAt": "2026-04-03T23:20:13Z",
+      "mergedAt": "2026-04-03T23:20:13Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "5bcde83e01eea97003f9b71d09cda3564774ae73"
+      },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 351,
+      "id": "PR_kwDOEwrMS87P42IC",
+      "title": "Enforce processing limits for constrained devices",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/351",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "Proxy PvDs"
+      ],
+      "body": "Closes #266",
+      "createdAt": "2026-04-03T23:18:30Z",
+      "updatedAt": "2026-04-03T23:21:58Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "b89b9b02d94d7055cd828e2ed20076a47dffe75e",
+      "headRepository": "tfpauly/privacy-proxy",
+      "headRefName": "tfpauly-patch-39",
+      "headRefOid": "845c9d76867d734a0c47935be685b51950fa5f30",
+      "closedAt": "2026-04-03T23:21:57Z",
+      "mergedAt": "2026-04-03T23:21:57Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "02aa1922acec6ccaafb93844f667a53f12027d16"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87x2mAk",
+          "commit": {
+            "abbreviatedOid": "12b7fd7"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-04-03T23:20:41Z",
+          "updatedAt": "2026-04-03T23:20:41Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\nexceed the memory constraints or processing capabilities of clients, particularly for constrained\n```",
+              "createdAt": "2026-04-03T23:20:41Z",
+              "updatedAt": "2026-04-03T23:20:41Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
