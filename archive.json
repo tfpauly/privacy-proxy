@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-05T00:34:54.393591+00:00",
+  "timestamp": "2026-04-09T00:28:37.737422+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -24048,6 +24048,32 @@
           ]
         }
       ]
+    },
+    {
+      "number": 352,
+      "id": "PR_kwDOEwrMS87QrHjI",
+      "title": "Include a note to the RFC editor in the draft to edit the `code` examples in TXT and PDF outputs",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/352",
+      "state": "OPEN",
+      "author": "nacho319",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Adding a note to the RFC editor to help with formatting for terms marked as `code` in the markdown but only clearly rendered in the HTML version.",
+      "createdAt": "2026-04-08T02:35:10Z",
+      "updatedAt": "2026-04-08T02:35:10Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "02aa1922acec6ccaafb93844f667a53f12027d16",
+      "headRepository": "nacho319/privacy-proxy",
+      "headRefName": "main",
+      "headRefOid": "7991c41c326dee7b18d747fdbff8c8a86d75ec0c",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
