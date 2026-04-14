@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 5 October 2026                                        Microsoft
+Expires: 16 October 2026                                       Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                            3 April 2026
+                                                           14 April 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 October 2026.
+   This Internet-Draft will expire on 16 October 2026.
 
 Copyright Notice
 
@@ -64,6 +64,7 @@ Table of Contents
    1.  Introduction
      1.1.  Background
      1.2.  Requirements Keywords
+     1.3.  Note to the RFC Editor
    2.  Fetching PvD Additional Information for proxies
      2.1.  Discovery via HTTPS/SVCB Records
    3.  Enumerating proxies within a PvD
@@ -162,6 +163,17 @@ Table of Contents
    "OPTIONAL" in this document are to be interpreted as described in
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
+
+1.3.  Note to the RFC Editor
+
+   RFC EDITOR: Please remove this section before publication.
+
+   Various identifier words are used in this draft using the code
+   markdown and are easily noted in the HTML rendering of this draft.
+   The authors kindly request that the RFC editor makes these instances
+   noticeable via appropriate markings in the TXT and PDF renderings of
+   this draft.  The term include, but may not be limited to the
+   following: proxies protocol proxy mandatory alpn identifier
 
 2.  Fetching PvD Additional Information for proxies
 
