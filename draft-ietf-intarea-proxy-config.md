@@ -42,14 +42,6 @@ This document defines a mechanism for accessing provisioning domain information
 associated with a proxy, such as other proxy URIs that support different protocols
 and information about which destinations are accessible using a proxy.
 
---- note_Note_To_RFC_Editor
-
-**To be REMOVED by the RFC Editor during editing.**
-
-Various identifier words are used in this draft using the `code` markdown and are easily noted in the HTML rendering of this draft.  The Author kindly requests that the RFC editor makes these instances noticeable via appropriate markings in the `TXT` and `PDF` renderings of this draft.  The term include, but may not be limited to the following: 
-`proxies` `protocol` `proxy` `mandatory` `alpn` `identifier`
-
-
 --- middle
 
 # Introduction
@@ -112,6 +104,17 @@ and security vulnerabilities.
 ## Requirements Keywords
 
 {::boilerplate bcp14}
+
+## Note to the RFC Editor
+
+RFC EDITOR: Please remove this section before publication.
+
+Various identifier words are used in this draft using the `code` markdown
+and are easily noted in the HTML rendering of this draft. The authors kindly
+request that the RFC editor makes these instances noticeable via appropriate
+markings in the `TXT` and `PDF` renderings of this draft.  The term include,
+but may not be limited to the following:
+`proxies` `protocol` `proxy` `mandatory` `alpn` `identifier`
 
 # Fetching PvD Additional Information for proxies {#proxy-pvd}
 
