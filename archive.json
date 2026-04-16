@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-09T00:28:37.737422+00:00",
+  "timestamp": "2026-04-16T00:39:44.566638+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -24054,26 +24054,42 @@
       "id": "PR_kwDOEwrMS87QrHjI",
       "title": "Include a note to the RFC editor in the draft to edit the `code` examples in TXT and PDF outputs",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/352",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "nacho319",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Adding a note to the RFC editor to help with formatting for terms marked as `code` in the markdown but only clearly rendered in the HTML version.",
       "createdAt": "2026-04-08T02:35:10Z",
-      "updatedAt": "2026-04-08T02:35:10Z",
+      "updatedAt": "2026-04-14T21:50:18Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "02aa1922acec6ccaafb93844f667a53f12027d16",
       "headRepository": "nacho319/privacy-proxy",
       "headRefName": "main",
-      "headRefOid": "7991c41c326dee7b18d747fdbff8c8a86d75ec0c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "f55d46f8c99e36bf50a22afd9ed23e4ead852f68",
+      "closedAt": "2026-04-14T21:50:17Z",
+      "mergedAt": "2026-04-14T21:50:17Z",
+      "mergedBy": "tfpauly",
+      "mergeCommit": {
+        "oid": "73f9b4a9bdb3503f017746ee651fdeaeb8161d13"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS8708Mme",
+          "commit": {
+            "abbreviatedOid": "f55d46f"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-04-14T21:49:52Z",
+          "updatedAt": "2026-04-14T21:49:52Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
