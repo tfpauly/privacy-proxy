@@ -367,9 +367,11 @@ for a particular proxy or set of proxies.
 This document defines four keys for destination rules. Any destination rule MUST contain
 the `proxies` key. Values corresponding to the `proxies` key may be either an empty array,
 which implies that no proxy defined in this PvD can process matching traffic, or an array of strings
-with at least one proxy `identifier` string. All destination rules MUST also contain at least one
-other key use to describe the destination properties. Each key's value MUST be an array with at least
-one entry.
+with at least one proxy `identifier` string. A destination rule MAY contain one or more additional
+keys that describe destination properties. If no destination property keys are present, the
+rule matches all destinations, subject to proxy protocol and proxy applicability checks
+described in {{using-destination-rules}}. Each destination property key's value MUST be an
+array with at least one entry.
 
 Extensions or proprietary deployments can define new keys to describe destination properties.
 Any destination rules that include keys not known to the client, or values that cannot be
@@ -415,7 +417,7 @@ For example, "1024-2048" matches all ports from 1024 to 2048, including port 102
 If `ports` key is not present, all ports are assumed to match. The array may
 contain individual port numbers (such as "80") or inclusive ranges of ports.
 
-##  Using Destination Rules
+##  Using Destination Rules {#using-destination-rules}
 
 The destination rules can be used to determine which traffic can be sent through proxies, and
 which specific set of proxies to use for any particular connection. By evaluating the rules in
@@ -427,14 +429,43 @@ using the matching proxy or proxies from the earliest matching rule first. If ea
 rule has empty array of `proxies`, a client MUST NOT send matching traffic to any proxy defined
 in this PvD.
 
-In order to match a destination rule in the `proxy-match` array, all properties MUST apply. For
-example, if a destination rule includes a `domains` array and a `ports` array, traffic that matches
-the rule needs to match at least one of the entries in the `domains` array and one of the entries in the
-`ports` array. In addition, a destination rule is considered a match only if at least one of the
-associated proxy identifiers is supported by the client(client understand all mandatory keys in the
-protocol description) and supports the protocol required by the connection attempt (for
-example, `connect-udp` for UDP traffic). If no listed proxy identifier is applicable,
-the rule MUST be treated as not matching, and the client continues evaluation of subsequent rules.
+When evaluating a destination rule, all destination properties that are present MUST apply.
+For example, if a destination rule includes a `domains` array and a `ports` array, traffic
+that matches the rule needs to match at least one of the entries in the `domains` array and
+one of the entries in the `ports` array.
+
+For clarity, a client evaluates each destination rule in the `proxy-match` array as follows:
+
+1. If the rule contains any key that the client does not understand, or any value that the
+   client cannot parse, the client MUST ignore the rule and continue evaluating subsequent rules.
+
+1. The client evaluates all destination properties present in the rule. If the `domains` key
+   is present, the connection attempt MUST have a DNS name available for matching, and that
+   DNS name MUST match at least one entry in the `domains` array. If the `subnets` key is
+   present, the connection attempt MUST have one or more destination IP addresses available
+   for matching, and at least one of those IP addresses MUST match at least one entry in the
+   `subnets` array. The destination IP addresses can be IP address literals supplied by the
+   application or IP addresses obtained by resolving a DNS name. If the `ports`
+   key is present, the destination port MUST match at least one entry in the
+   `ports` array. Any other understood destination property keys that are present
+   MUST also match.
+
+1. If the destination properties do not all match, the client continues
+   evaluating subsequent rules.
+
+1. If the destination properties match and the `proxies` array is empty, the
+   client MUST NOT send the matching traffic to any proxy defined in this PvD,
+   and evaluation of the `proxy-match` array for this PvD stops.
+
+1. If the destination properties match and the `proxies` array is not empty, the
+   client determines whether at least one listed proxy identifier corresponds to
+   a proxy dictionary that the client can use for the requested proxy protocol.
+   A proxy dictionary is usable only if its `protocol` value matches the proxy
+   protocol required by the connection attempt and the client understands and can
+   process all keys listed in the proxy dictionary's `mandatory` array. If no
+   listed proxy identifier provides a usable proxy dictionary, the rule does not
+   provide a usable proxy for this connection attempt and the client continues
+   evaluating subsequent rules.
 
 A matched rule will then either point to one or more proxy `identifier` values, which correspond
 to proxies defined in the array from {{proxy-enumeration}}, or instructs the client to not send the
