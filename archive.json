@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-16T00:39:44.566638+00:00",
+  "timestamp": "2026-05-05T00:41:03.257763+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -17174,7 +17174,7 @@
       ],
       "body": "This is more flexible and consistent.",
       "createdAt": "2024-07-26T16:00:52Z",
-      "updatedAt": "2025-03-03T17:56:45Z",
+      "updatedAt": "2026-05-03T18:44:47Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "cc89d6c5d6bcba25a86d60b746695591cbd81ac2",
@@ -17201,7 +17201,21 @@
           "updatedAt": "2024-07-29T16:02:10Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS877VZDK",
+          "commit": {
+            "abbreviatedOid": "41cf1f1"
+          },
+          "author": "Aundras",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-05-03T18:44:47Z",
+          "updatedAt": "2026-05-03T18:44:47Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 257,
@@ -24090,6 +24104,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 353,
+      "id": "PR_kwDOEwrMS87X1hfJ",
+      "title": "Spelled out algorithm",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/353",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Also corrected a mistake in a previous section\r\n\r\nAddresses https://github.com/tfpauly/privacy-proxy/issues/342",
+      "createdAt": "2026-05-03T22:48:53Z",
+      "updatedAt": "2026-05-03T22:49:22Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "73f9b4a9bdb3503f017746ee651fdeaeb8161d13",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "main",
+      "headRefOid": "03f96aaaf01b6b771510be67f70b6beb830bb14f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
