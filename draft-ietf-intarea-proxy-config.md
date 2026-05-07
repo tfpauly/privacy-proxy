@@ -40,7 +40,8 @@ informative:
 
 This document defines a mechanism for accessing provisioning domain information
 associated with a proxy, such as other proxy URIs that support different protocols
-and information about which destinations are accessible using a proxy.
+and information about which destinations are accessible using a proxy. Note that this
+mechanism is not intended to be used as a generic method for any type of proxies (SIP, etc.).
 
 --- middle
 
@@ -99,7 +100,8 @@ a full URI template {{URITEMPLATE}}.
 The mechanisms defined in this document are intended to offer a standard
 alternative that works for URI-based proxies and avoids dependencies
 on executing JavaScript scripts, which are prone to implementation inconsistencies
-and security vulnerabilities.
+and security vulnerabilities. However, the mechanism is applicable only when an IPv6
+connectivity is provided.
 
 ## Requirements Keywords
 
