@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-05T00:41:03.257763+00:00",
+  "timestamp": "2026-05-10T00:46:28.393112+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -24130,6 +24130,159 @@
       "mergeCommit": null,
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 354,
+      "id": "PR_kwDOEwrMS87ZBUJ0",
+      "title": "be explicit this is not a generic proxy discovery mechanism + IPv6",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/354",
+      "state": "CLOSED",
+      "author": "boucadair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-05-07T05:30:55Z",
+      "updatedAt": "2026-05-08T05:27:14Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "73f9b4a9bdb3503f017746ee651fdeaeb8161d13",
+      "headRepository": "boucadair/privacy-proxy",
+      "headRefName": "patch-1",
+      "headRefOid": "4d1ca2df27e9d0d740a212f0173ec7b71a95dead",
+      "closedAt": "2026-05-07T20:48:34Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS879H0ec",
+          "commit": {
+            "abbreviatedOid": "4d1ca2d"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2026-05-07T18:23:18Z",
+          "updatedAt": "2026-05-07T18:25:04Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "I don't think this is correct to state. SIP proxies are configurable via URLs (see [example](https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cust_contact/contact_center/customer_voice_portal/cvp_12_5/configuration/guide/ccvp_b_configuration-guide-12-5-1/ccvp_b_configuration-guide-12-5-1_chapter_01110.pdf)).\n\nSIP proxies could be easily added to Table 2 (Initial PvD Proxy Protocol Registry Contents).\n\nI'm not aware of any types of proxies that would not be appropriate to advertise in this mechanism.",
+              "createdAt": "2026-05-07T18:23:18Z",
+              "updatedAt": "2026-05-07T18:25:04Z"
+            },
+            {
+              "originalPosition": 16,
+              "body": "This is not correct \u2014\u00a0nothing in sections 2-4 has any requirement for clients to have IPv6 connectivity. In section 5, the \"out of scope\" mechanism we refer to does require being able to receive RAs, but that doesn't require non-link-local connectivity over IPv6 to work.",
+              "createdAt": "2026-05-07T18:25:00Z",
+              "updatedAt": "2026-05-07T18:25:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS879ITMZ",
+          "commit": {
+            "abbreviatedOid": "4d1ca2d"
+          },
+          "author": "boucadair",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-05-07T18:42:40Z",
+          "updatedAt": "2026-05-07T18:42:41Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "There are already existing mechanisms to configure such proxies. I'm concerned that we are adding yet another mechanisms to discover these services. If we focus on SIP, do we have an operational problem todat to provision these services? What about conflict of various discovery channels, etc.\r\n\r\nThe pb you had in the draft (PAC, limitations etc.) was reasonable as it is seemed to me that it targeted a very specific set of proxies.",
+              "createdAt": "2026-05-07T18:42:40Z",
+              "updatedAt": "2026-05-07T18:42:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS879IcOu",
+          "commit": {
+            "abbreviatedOid": "4d1ca2d"
+          },
+          "author": "boucadair",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-05-07T18:48:56Z",
+          "updatedAt": "2026-05-07T18:48:56Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "I'm may be missing something, but I understood PvD Additional Information as defined in rfc8801#section-4. I need to recheck the text.\r\n\r\n",
+              "createdAt": "2026-05-07T18:48:56Z",
+              "updatedAt": "2026-05-07T18:48:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS879LXCU",
+          "commit": {
+            "abbreviatedOid": "4d1ca2d"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-05-07T20:48:12Z",
+          "updatedAt": "2026-05-07T20:48:12Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "I'm not suggesting that people use this instead of other mechanisms specifically for SIP, but there is no inherent limitation here that would make this mechanism inappropriate for SIP discovery. There's not a limited set of proxies.",
+              "createdAt": "2026-05-07T20:48:12Z",
+              "updatedAt": "2026-05-07T20:48:12Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS879LXkR",
+          "commit": {
+            "abbreviatedOid": "4d1ca2d"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-05-07T20:48:31Z",
+          "updatedAt": "2026-05-07T20:48:31Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "Yeah, the PvD Additional Information is not specific to IPv6.",
+              "createdAt": "2026-05-07T20:48:31Z",
+              "updatedAt": "2026-05-07T20:48:31Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEwrMS879TVlK",
+          "commit": {
+            "abbreviatedOid": "4d1ca2d"
+          },
+          "author": "evyncke",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-05-08T05:27:14Z",
+          "updatedAt": "2026-05-08T05:27:14Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "I can only second Tommy's point:\r\n> hat doesn't require non-link-local connectivity over IPv6 to work.",
+              "createdAt": "2026-05-08T05:27:14Z",
+              "updatedAt": "2026-05-08T05:27:15Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
