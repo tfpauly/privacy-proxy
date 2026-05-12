@@ -367,9 +367,11 @@ for a particular proxy or set of proxies.
 This document defines four keys for destination rules. Any destination rule MUST contain
 the `proxies` key. Values corresponding to the `proxies` key may be either an empty array,
 which implies that no proxy defined in this PvD can process matching traffic, or an array of strings
-with at least one proxy `identifier` string. All destination rules MUST also contain at least one
-other key use to describe the destination properties. Each key's value MUST be an array with at least
-one entry.
+with at least one proxy `identifier` string. A destination rule MAY contain one or more additional
+keys that describe destination properties. If no destination property keys are present, the
+rule matches all destinations, subject to proxy protocol and proxy applicability checks
+described in {{using-destination-rules}}. Each destination property key's value MUST be an
+array with at least one entry.
 
 Extensions or proprietary deployments can define new keys to describe destination properties.
 Any destination rules that include keys not known to the client, or values that cannot be
@@ -415,7 +417,7 @@ For example, "1024-2048" matches all ports from 1024 to 2048, including port 102
 If `ports` key is not present, all ports are assumed to match. The array may
 contain individual port numbers (such as "80") or inclusive ranges of ports.
 
-##  Using Destination Rules
+##  Using Destination Rules {#using-destination-rules}
 
 The destination rules can be used to determine which traffic can be sent through proxies, and
 which specific set of proxies to use for any particular connection. By evaluating the rules in
