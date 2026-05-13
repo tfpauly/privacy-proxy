@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 16 October 2026                                       Microsoft
+Expires: 14 November 2026                                      Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                           14 April 2026
+                                                             13 May 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 October 2026.
+   This Internet-Draft will expire on 14 November 2026.
 
 Copyright Notice
 
@@ -517,10 +517,13 @@ content-length = 322
    destination rule MUST contain the proxies key.  Values corresponding
    to the proxies key may be either an empty array, which implies that
    no proxy defined in this PvD can process matching traffic, or an
-   array of strings with at least one proxy identifier string.  All
-   destination rules MUST also contain at least one other key use to
-   describe the destination properties.  Each key's value MUST be an
-   array with at least one entry.
+   array of strings with at least one proxy identifier string.  A
+   destination rule MAY contain one or more additional keys that
+   describe destination properties.  If no destination property keys are
+   present, the rule matches all destinations, subject to proxy protocol
+   and proxy applicability checks described in Section 4.2.  Each
+   destination property key's value MUST be an array with at least one
+   entry.
 
    Extensions or proprietary deployments can define new keys to describe
    destination properties.  Any destination rules that include keys not
