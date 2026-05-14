@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-10T00:46:28.393112+00:00",
+  "timestamp": "2026-05-14T00:48:33.996745+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -24110,21 +24110,21 @@
       "id": "PR_kwDOEwrMS87X1hfJ",
       "title": "Spelled out algorithm",
       "url": "https://github.com/tfpauly/privacy-proxy/pull/353",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Also corrected a mistake in a previous section\r\n\r\nAddresses https://github.com/tfpauly/privacy-proxy/issues/342",
       "createdAt": "2026-05-03T22:48:53Z",
-      "updatedAt": "2026-05-03T22:49:22Z",
+      "updatedAt": "2026-05-12T19:51:19Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "73f9b4a9bdb3503f017746ee651fdeaeb8161d13",
       "headRepository": "yaroslavros/privacy-proxy",
       "headRefName": "main",
       "headRefOid": "03f96aaaf01b6b771510be67f70b6beb830bb14f",
-      "closedAt": null,
+      "closedAt": "2026-05-12T19:51:19Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -24281,6 +24281,61 @@
               "updatedAt": "2026-05-08T05:27:15Z"
             }
           ]
+        }
+      ]
+    },
+    {
+      "number": 355,
+      "id": "PR_kwDOEwrMS87a04vA",
+      "title": "Resolved contradiction",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/355",
+      "state": "MERGED",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-05-12T19:51:06Z",
+      "updatedAt": "2026-05-13T14:27:08Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "73f9b4a9bdb3503f017746ee651fdeaeb8161d13",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "correction",
+      "headRefOid": "53d5c9159be5808fc024d703c4c7f66644d78584",
+      "closedAt": "2026-05-13T14:27:07Z",
+      "mergedAt": "2026-05-13T14:27:07Z",
+      "mergedBy": "yaroslavros",
+      "mergeCommit": {
+        "oid": "eab80c182ecfd6334267ba6919050623a5bfccf7"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS87-2zOI",
+          "commit": {
+            "abbreviatedOid": "53d5c91"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-05-12T20:05:13Z",
+          "updatedAt": "2026-05-12T20:05:13Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS87_E7xb",
+          "commit": {
+            "abbreviatedOid": "53d5c91"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-05-13T07:48:08Z",
+          "updatedAt": "2026-05-13T07:48:08Z",
+          "comments": []
         }
       ]
     }
