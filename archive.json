@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-14T00:48:33.996745+00:00",
+  "timestamp": "2026-05-17T00:48:22.402741+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -24338,6 +24338,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 356,
+      "id": "PR_kwDOEwrMS87cCTXT",
+      "title": "Added acknowledgements",
+      "url": "https://github.com/tfpauly/privacy-proxy/pull/356",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-05-15T19:06:28Z",
+      "updatedAt": "2026-05-15T19:07:13Z",
+      "baseRepository": "tfpauly/privacy-proxy",
+      "baseRefName": "main",
+      "baseRefOid": "eab80c182ecfd6334267ba6919050623a5bfccf7",
+      "headRepository": "yaroslavros/privacy-proxy",
+      "headRefName": "ack",
+      "headRefOid": "d323feb34a1c40aa29cbce2051da97105a583f68",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
