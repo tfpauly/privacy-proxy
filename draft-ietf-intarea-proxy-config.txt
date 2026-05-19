@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 14 November 2026                                      Microsoft
+Expires: 20 November 2026                                      Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                             13 May 2026
+                                                             19 May 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 November 2026.
+   This Internet-Draft will expire on 20 November 2026.
 
 Copyright Notice
 
@@ -89,6 +89,7 @@ Table of Contents
    8.  References
      8.1.  Normative References
      8.2.  Informative References
+   Acknowledgments
    Authors' Addresses
 
 1.  Introduction
@@ -1162,6 +1163,13 @@ content-length = 322
               L. Jones, "SOCKS Protocol Version 5", RFC 1928,
               DOI 10.17487/RFC1928, March 1996,
               <https://www.rfc-editor.org/rfc/rfc1928>.
+
+Acknowledgments
+
+   The authors would like to thank Phil Lisiecki, David Schinazi, Dale
+   Worley, Tomas Dragoun, Keith Holleman, James Taft, Tommy Jensen, and
+   Ryan Globus for their detailed reviews, feedback, and suggestions
+   during the development of this document.
 
 Authors' Addresses
 
