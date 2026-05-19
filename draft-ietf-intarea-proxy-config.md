@@ -808,3 +808,10 @@ IANA is requested to add a new entry to the "DNS SVCB Service Parameter Keys (Sv
 * Meaning: PvD configuration is available at the well-known path
 * Change Controller: IETF
 * Reference: this document, {{svcparamkey}}
+
+--- back
+
+# Acknowledgments
+{:numbered="false"}
+
+The authors would like to thank Phil Lisiecki, David Schinazi, Dale Worley, Tomas Dragoun, Keith Holleman, James Taft, Tommy Jensen, and Ryan Globus for their detailed reviews, feedback, and suggestions during the development of this document.
