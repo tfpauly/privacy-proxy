@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-17T00:48:22.402741+00:00",
+  "timestamp": "2026-05-19T00:49:59.790433+00:00",
   "repo": "tfpauly/privacy-proxy",
   "labels": [
     {
@@ -24348,10 +24348,12 @@
       "author": "yaroslavros",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Proxy PvDs"
+      ],
       "body": "",
       "createdAt": "2026-05-15T19:06:28Z",
-      "updatedAt": "2026-05-15T19:07:13Z",
+      "updatedAt": "2026-05-18T21:41:54Z",
       "baseRepository": "tfpauly/privacy-proxy",
       "baseRefName": "main",
       "baseRefOid": "eab80c182ecfd6334267ba6919050623a5bfccf7",
@@ -24363,7 +24365,34 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOEwrMS88AAAABASN1IQ",
+          "commit": {
+            "abbreviatedOid": "d323feb"
+          },
+          "author": "ddragana",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-05-18T21:25:04Z",
+          "updatedAt": "2026-05-18T21:25:04Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOEwrMS88AAAABASVS7Q",
+          "commit": {
+            "abbreviatedOid": "d323feb"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-05-18T21:41:54Z",
+          "updatedAt": "2026-05-18T21:41:54Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
